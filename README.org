@@ -1,25 +1,25 @@
-#+TITLE: Engagemint: the FOSS contact management system
+#+TITLE: Swoptact: the FOSS contact management system
 
-Engagemint: free software (AGPL licensed!) contact management for you
+Swoptact: free software (AGPL licensed!) contact management for you
 and your org!
 
 Built by the fine folks at [[http://opentechstrategies.com/][Open Tech Strategies]].  Want to integrate
-Engagemint into your org?  [[http://opentechstrategies.com/contact][OTS can help]]!
+Swoptact into your org?  [[http://opentechstrategies.com/contact][OTS can help]]!
 
 * Overview
 
 ** Abstract
 
-We should have a high level overview of what Engagemint is and how it
+We should have a high level overview of what Swoptact is and how it
 could be useful to people here.
 
 ** User stories
 
-These are stories about how various users make use of Engagemint
+These are stories about how various users make use of Swoptact
 
-*** Why Sarah chose Engagemint
+*** Why Sarah chose Swoptact
 
-This is a high level overview of why Sarah thinks Engagemint will be
+This is a high level overview of why Sarah thinks Swoptact will be
 useful to her.
 
 *** Sarah's big event
