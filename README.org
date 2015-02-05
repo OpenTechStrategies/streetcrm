@@ -13,14 +13,21 @@ Swoptact into your org?  [[http://opentechstrategies.com/contact][OTS can help]]
 We should have a high level overview of what Swoptact is and how it
 could be useful to people here.
 
+Swoptact is a list of contacts with a history of their event
+attendance (making it also a list of events over time).  Use it to
+keep track of people your organization comes into contact with over
+time, and see how their engagement with your mission grows.
+
+
 ** User stories
 
-These are stories about how various users make use of Swoptact
+These are stories about how various users make use of Swoptact.
 
 *** Why Sarah chose Swoptact
 
 This is a high level overview of why Sarah thinks Swoptact will be
 useful to her.
+
 
 *** Sarah's big event
 
@@ -29,13 +36,33 @@ information she kept after the event.
 
 **** Before the conference
 
-Is there anything to do pre-conference?
+1. Sarah makes the conference, including its name and date, in
+   Swoptact.
+2. ?
 
 **** Immediately after the conference
 
-Does she record information here?
+1. Sarah takes the paper sign-in sheet and enters the attendees into
+   Swoptact. TBD: maybe some of them already have records and others
+   don't?
+2. Sarah realizes that one of the people she is entering has a new
+   phone number, so she changes it to the new (correct) number.
+3. Sarah sees that a person she added already had a record in
+   Swoptact, so she merges the new record with the pre-existing one.
+4. Sarah sees that that person doesn't exist after all, so she deletes
+   the record.
 
 **** Later usage
+1. Sarah looks at a list of conference participants.
+2. Sarah finds the emails of all conference participants so she can
+   send them a follow-up. TBD: does she send the email from Swoptact?
+3. Sarah realizes the conference name has a typo, so she changes it. 
+4. Sarah reports on one person's attendance at events and conferences
+   over time.
+5. Sarah looks for people who went to both the conference and to
+   another meeting.
+6. Sarah reports to the board on attendance over time at conferences. 
+7. Sarah looks up a contact's phone number.
 
 ** Interface
 ** Database
