@@ -53,6 +53,7 @@ Making use of Django's builtins
 
 This one's easy ;)
 
+** TODO Add license stuff                                           :cwebber:
 ** TODO Add user stories in README.org                            :cdonnelly:
 
 ** TODO Fill in database needs in README.org                      :cdonnelly:
