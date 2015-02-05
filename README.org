@@ -49,8 +49,8 @@ information she kept after the event.
    phone number, so she changes it to the new (correct) number.
 3. Sarah sees that a person she added already had a record in
    Swoptact, so she merges the new record with the pre-existing one.
-4. Sarah sees that that person doesn't exist after all, so she deletes
-   the record.
+4. Sarah sees that that person doesn't exist in real life after all,
+   so she deletes the record.
 
 **** Later usage
 1. Sarah looks at a list of conference participants.
