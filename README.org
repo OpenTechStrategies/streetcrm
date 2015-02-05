@@ -1,0 +1,68 @@
+#+TITLE: Engagemint: the FOSS contact management system
+
+Engagemint: free software (AGPL licensed!) contact management for you
+and your org!
+
+Built by the fine folks at [[http://opentechstrategies.com/][Open Tech Strategies]].  Want to integrate
+Engagemint into your org?  [[http://opentechstrategies.com/contact][OTS can help]]!
+
+* Overview
+
+** Abstract
+
+We should have a high level overview of what Engagemint is and how it
+could be useful to people here.
+
+** User stories
+
+These are stories about how various users make use of Engagemint
+
+*** Why Sarah chose Engagemint
+
+This is a high level overview of why Sarah thinks Engagemint will be
+useful to her.
+
+*** Sarah's big event
+
+This user story talks about Sarah, the event she ran, and what
+information she kept after the event.
+
+**** Before the conference
+
+Is there anything to do pre-conference?
+
+**** Immediately after the conference
+
+Does she record information here?
+
+**** Later usage
+
+** Interface
+** Database
+
+*** Users and permissions
+
+Making use of Django's builtins
+
+*** Contacts
+*** Events
+
+
+* Tasks
+** TODO Refactor tasks into TASKS.org                               :cwebber:
+
+This one's easy ;)
+
+** TODO Add user stories in README.org                            :cdonnelly:
+
+** TODO Fill in database needs in README.org                      :cdonnelly:
+
+
+** TODO Database-driven bootstrap                                  :tsyesika:
+
+Use a combination of Django ORM and the Django Admin to spec out the
+models
+
+*** TODO Write out models
+*** TODO Hook up to admin
+*** TODO Verify with cdonnelly / kfogel that structure seems right
