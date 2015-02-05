@@ -55,7 +55,8 @@ This one's easy ;)
 
 ** DONE Add AUTHORS.org                                             :cwebber:
    CLOSED: [2015-02-05 Thu 11:51]
-** TODO Add license stuff                                           :cwebber:
+** DONE Add license stuff                                           :cwebber:
+   CLOSED: [2015-02-05 Thu 12:13]
 ** TODO Add user stories in README.org                            :cdonnelly:
 
 ** TODO Fill in database needs in README.org                      :cdonnelly:
