@@ -1,0 +1,31 @@
+* Tasks
+** DONE Refactor tasks into TODO.org                                :cwebber:
+   CLOSED: [2015-02-05 Thu 12:23]
+
+This one's easy ;)
+
+** DONE Add AUTHORS.org                                             :cwebber:
+   CLOSED: [2015-02-05 Thu 11:51]
+** DONE Add license stuff                                           :cwebber:
+   CLOSED: [2015-02-05 Thu 12:13]
+** TODO Add user stories in README.org                            :cdonnelly:
+
+** TODO Fill in database needs in README.org                      :cdonnelly:
+
+
+** TODO Database-driven bootstrap                                  :tsyesika:
+
+Use a combination of Django ORM and the Django Admin to spec out the
+models
+
+*** TODO Write out models
+*** TODO Hook up to admin
+*** TODO Verify with cdonnelly / kfogel that structure seems right
+** TODO Add extlib stuff to extlib/                                :tsyesika:
+** TODO Add INSTALL.org                                            :tsyesika:
+** TODO Switch over to github issues for tasks
+
+This doesn't need to happen till after the first alpha lands, probably
+easier to handle here for now
+
+
