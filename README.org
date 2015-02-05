@@ -70,6 +70,8 @@ models
 *** TODO Write out models
 *** TODO Hook up to admin
 *** TODO Verify with cdonnelly / kfogel that structure seems right
+** TODO Add extlib stuff to extlib/                                :tsyesika:
+** TODO Add INSTALL.org                                            :tsyesika:
 ** TODO Switch over to github issues for tasks
 
 This doesn't need to happen till after the first alpha lands, probably
