@@ -53,7 +53,8 @@ Making use of Django's builtins
 
 This one's easy ;)
 
-** TODO Add AUTHORS.org                                             :cwebber:
+** DONE Add AUTHORS.org                                             :cwebber:
+   CLOSED: [2015-02-05 Thu 11:51]
 ** TODO Add license stuff                                           :cwebber:
 ** TODO Add user stories in README.org                            :cdonnelly:
 
