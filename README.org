@@ -23,6 +23,12 @@ time, and see how their engagement with your mission grows.
 
 These are stories about how various users make use of Swoptact.
 
+Three kinds of users:
+Sarah does data entry and is the most frequest user of Swoptact.
+Colleen is an organizer and uses Swoptact to find information about
+her contacts and occasionally update their information.
+Michelle is a supervisor and runs reports from Swoptact.
+
 *** Why Sarah chose Swoptact
 
 This is a high level overview of why Sarah thinks Swoptact will be
@@ -51,6 +57,8 @@ information she kept after the event.
    Swoptact, so she merges the new record with the pre-existing one.
 4. Sarah sees that that person doesn't exist in real life after all,
    so she deletes the record.
+5. Sarah realizes that one person didn't come to the conference, so
+   she removes him from the attendees list.
 
 **** Later usage
 1. Sarah looks at a list of conference participants.
@@ -61,10 +69,19 @@ information she kept after the event.
    over time.
 5. Sarah looks for people who went to both the conference and to
    another meeting.
-6. Sarah reports to the board on attendance over time at conferences. 
-7. Sarah looks up a contact's phone number.
+6. Michelle reports to the board on attendance over time at conferences. 
+7. Colleen looks up a contact's phone number to schedule a one-on-one
+   meeting. 
+8. Colleen looks up phone numbers for all the people who attended the
+   conference, so she can invite them to another event.
 
 ** Interface
+*** Data Fields
+Participants: first name, last name, phone number, address (street
+number, street direction, street name, street type), email address
+Events: name, date, location (site name and all address fields)
+
+
 ** Database
 
 *** Users and permissions
