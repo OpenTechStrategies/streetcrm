@@ -16,7 +16,7 @@ import warnings
 import configobj
 import validate
 
-from django.core import exceptions
+from django.core import exceptions, urlresolvers
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -63,6 +63,10 @@ ALLOWED_HOSTS = config["general"]["allowed_hosts"]
 
 
 # Application definition
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, "swoptact", "templates"),
+)
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,6 +89,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'swoptact.urls'
 
 WSGI_APPLICATION = 'swoptact.wsgi.application'
+
+LOGIN_URL = urlresolvers.reverse_lazy("login")
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
