@@ -37,7 +37,7 @@ her constituents (used loosely) and to view their involvement over
 time (meaning their event attendance over time).  She can search for
 people when she only remembers a first or last name, and look for
 people who live on a specific street when she wants to plan block-wide
-events. 
+events.
 
 *** Sarah's big event
 
@@ -70,14 +70,14 @@ information she kept after the event.
 1. Sarah looks at a list of conference participants.
 2. Sarah finds the emails of all conference participants so she can
    send them a follow-up. TBD: does she send the email from Swoptact?
-3. Sarah realizes the conference name has a typo, so she changes it. 
+3. Sarah realizes the conference name has a typo, so she changes it.
 4. Sarah reports on one person's attendance at events and conferences
    over time.
 5. Sarah looks for people who went to both the conference and to
    another meeting.
-6. Michelle reports to the board on attendance over time at conferences. 
+6. Michelle reports to the board on attendance over time at conferences.
 7. Colleen looks up a contact's phone number to schedule a one-on-one
-   meeting. 
+   meeting.
 8. Colleen looks up phone numbers for all the people who attended the
    conference, so she can invite them to another event.
 
@@ -90,7 +90,7 @@ Events: name, date, location (site name and all address fields)
 *** Functionality
 **** Participants:
      search, create, modify, delete, merge, link to event, unlink from
-     event  
+     event
 **** Events:
      search, create, modify, delete, merge, link to participant,
      unlink from participant
@@ -131,5 +131,40 @@ Making use of Django's builtins
 
 *** Contacts
 *** Events
+* Installation
+  You need python 3.4 or and python's virtualenv to use this. I
+  believe you should be able to install these in debian jessie via:
 
+  #+BEGIN_SRC sh
+    sudo apt-get install python3 python-virtualenv
+  #+END_SRC
 
+  Then ensure you're in the top directory of the swoptact project and
+  run:
+
+  #+BEGIN_SRC sh
+    virtualenv --python=python3.4 .
+    source ./bin/activate
+    pip install -r requirements.txt
+  #+END_SRC
+
+  This will install setup the virtual enviroment and install all the
+  nessessery dependencies. You then will want to edit a configuration
+  file and put all the settings. This can be in several places
+  including the location set by an enviroment variable.
+
+  The minimium configuration you need is:
+  #+BEGIN_SRC python
+    [general]
+    secret_key = myverysecretkeyhere
+  #+END_SRC
+
+  You also might want to set the debug flag to true. More information
+  in the configuration file.
+
+* Run
+  You can run the python server for testing by running.
+
+  #+BEGIN_SRC sh
+    python manage.py runserver
+  #+END_SRC
