@@ -132,36 +132,7 @@ Making use of Django's builtins
 *** Contacts
 *** Events
 * Installation
-  You need python 3.4 or and python's virtualenv to use this. I
-  believe you should be able to install these in debian jessie via:
-
-  #+BEGIN_SRC sh
-    sudo apt-get install python3 python-virtualenv
-  #+END_SRC
-
-  Then ensure you're in the top directory of the swoptact project and
-  run:
-
-  #+BEGIN_SRC sh
-    virtualenv --python=python3.4 .
-    source ./bin/activate
-    pip install -r requirements.txt
-  #+END_SRC
-
-  This will install setup the virtual enviroment and install all the
-  nessessery dependencies. You then will want to edit a configuration
-  file and put all the settings. This can be in several places
-  including the location set by an enviroment variable.
-
-  The minimium configuration you need is:
-  #+BEGIN_SRC python
-    [general]
-    secret_key = myverysecretkeyhere
-  #+END_SRC
-
-  You also might want to set the debug flag to true. More information
-  in the configuration file.
-
+  See INSTALL.md.
 * Run
   You can run the python server for testing by running.
 
