@@ -1,12 +1,31 @@
+{% load i18n staticfiles %}
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Contact Management System</title>
+		<title>{% trans "Contact Management System" %}</title>
+
+		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "css/swoptact.css" %}">
 
 		{% block header %}{% endblock %}
 	</head>
 	<body>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">{% trans "SWOP Contact Database" %}</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+						{% if user.is_authenticated %}
+						{% endif %}
+					</ul>
+				</div>
+				</div>
+			</div>
+		</nav>
 		{% block content %}{% endblock %}
 	</body>
 </html>

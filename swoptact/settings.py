@@ -123,3 +123,7 @@ USE_TZ = config["general"]["use_tz"]
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = config["general"]["static_url"]
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "swoptact", "static"),
+)
