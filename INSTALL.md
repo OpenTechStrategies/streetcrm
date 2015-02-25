@@ -26,9 +26,10 @@ The minimum configuration you need is:
     [general]
     secret_key = myverysecretkeyhere
 
-This configuration file is referenced in /settings.py.  You can set  
-the path to it in CONFIG_SPEC.  
+This configuration file is referenced in /settings.py.  You can set
+the path to it in CONFIG_SPEC.  The path of that configuration file is
+set by default to ~/.config/swoptact/, but you can change it to
+wherever you'd like to keep the file.
 
 You also might want to set the debug flag to true. 
 
-  
