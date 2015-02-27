@@ -17,38 +17,38 @@
 from django.db import models
 
 class Address(models.Model):
-	""" Representation of an address in Chicago """
-	STREET_TYPES = (
-		("st", "Street"),
-		("av", "Avenue"),
-		("blvd", "Boulevard"),
-		("rd", "Road"),
-	)
+    """ Representation of an address in Chicago """
+    STREET_TYPES = (
+        ("st", "Street"),
+        ("av", "Avenue"),
+        ("blvd", "Boulevard"),
+        ("rd", "Road"),
+    )
 
-	STREET_DIRECTIONS = (
-		("n", "North"),
-		("e", "East"),
-		("s", "South"),
-		("w", "West"),
-	)
+    STREET_DIRECTIONS = (
+        ("n", "North"),
+        ("e", "East"),
+        ("s", "South"),
+        ("w", "West"),
+    )
 
-	street_number = models.IntegerField()
-	street_direction = models.CharField(max_length=1, choices=STREET_DIRECTIONS)
-	street_name = models.CharField(max_length=255)
-	street_type = models.CharField(max_length=20, choices=STREET_TYPES)
+    street_number = models.IntegerField()
+    street_direction = models.CharField(max_length=1, choices=STREET_DIRECTIONS)
+    street_name = models.CharField(max_length=255)
+    street_type = models.CharField(max_length=20, choices=STREET_TYPES)
 
 class Participant(models.Model):
-	""" Representation of a person who can participate in a Event """
-	first_name = models.CharField(max_length=255)
-	last_name = models.CharField(max_length=255)
-	phone_number = models.IntegerField()
-	email = models.EmailField()
-	address = models.ForeignKey(Address)
+    """ Representation of a person who can participate in a Event """
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    phone_number = models.IntegerField()
+    email = models.EmailField()
+    address = models.ForeignKey(Address)
 
 class Event(models.Model):
 
-	name = models.CharField(max_length=255)
-	date = models.DateTimeField()
-	site = models.CharField(max_length=255)
-	address = models.ForeignKey(Address)
-	participants = models.ManyToManyField(Participant)
+    name = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    site = models.CharField(max_length=255)
+    address = models.ForeignKey(Address)
+    participants = models.ManyToManyField(Participant)

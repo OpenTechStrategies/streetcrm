@@ -1,0 +1,7 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% block title %}{{ title }}{% endblock %}
+{% block branding %}
+<a href="{% url 'admin:index' %}" class="navbar-brand">{% trans "Contact Management System" %}</a>
+{% endblock %}
+{% block nav-global %}{% endblock %}
