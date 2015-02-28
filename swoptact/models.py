@@ -18,24 +18,35 @@ from django.db import models
 
 class Address(models.Model):
     """ Representation of an address in Chicago """
-    STREET_TYPES = (
+    TYPES = (
         ("st", "Street"),
         ("av", "Avenue"),
         ("blvd", "Boulevard"),
         ("rd", "Road"),
     )
 
-    STREET_DIRECTIONS = (
+    DIRECTIONS = (
         ("n", "North"),
         ("e", "East"),
         ("s", "South"),
         ("w", "West"),
     )
 
-    street_number = models.IntegerField()
-    street_direction = models.CharField(max_length=1, choices=STREET_DIRECTIONS)
-    street_name = models.CharField(max_length=255)
-    street_type = models.CharField(max_length=20, choices=STREET_TYPES)
+    class Meta:
+        verbose_name_plural = "Addresses"
+
+    number = models.IntegerField()
+    direction = models.CharField(max_length=1, choices=DIRECTIONS)
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=20, choices=TYPES)
+
+    def __unicode__(self):
+        return "{number} {direction} {name} {type}".format(
+            number=self.number,
+            direction=self.direction,
+            name=self.name,
+            type=self.type
+        )
 
 class Participant(models.Model):
     """ Representation of a person who can participate in a Event """
@@ -45,6 +56,12 @@ class Participant(models.Model):
     email = models.EmailField()
     address = models.ForeignKey(Address)
 
+    def __unicode__(self):
+        return "{first_name} {last_name}".format(
+            first_name=self.first_name,
+            last_name=self.last_name
+        )
+
 class Event(models.Model):
 
     name = models.CharField(max_length=255)
@@ -52,3 +69,6 @@ class Event(models.Model):
     site = models.CharField(max_length=255)
     address = models.ForeignKey(Address)
     participants = models.ManyToManyField(Participant)
+
+    def __unicode__(self):
+        return self.name
