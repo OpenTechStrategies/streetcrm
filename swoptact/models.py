@@ -19,17 +19,17 @@ from django.db import models
 class Address(models.Model):
     """ Representation of an address in Chicago """
     TYPES = (
-        ("st", "Street"),
-        ("av", "Avenue"),
-        ("blvd", "Boulevard"),
-        ("rd", "Road"),
+        ("St", "Street"),
+        ("Av", "Avenue"),
+        ("Blvd", "Boulevard"),
+        ("Rd", "Road"),
     )
 
     DIRECTIONS = (
-        ("n", "North"),
-        ("e", "East"),
-        ("s", "South"),
-        ("w", "West"),
+        ("N", "North"),
+        ("E", "East"),
+        ("S", "South"),
+        ("W", "West"),
     )
 
     class Meta:
@@ -40,7 +40,7 @@ class Address(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=TYPES)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{number} {direction} {name} {type}".format(
             number=self.number,
             direction=self.direction,
@@ -56,7 +56,7 @@ class Participant(models.Model):
     email = models.EmailField()
     address = models.ForeignKey(Address)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{first_name} {last_name}".format(
             first_name=self.first_name,
             last_name=self.last_name
@@ -70,5 +70,5 @@ class Event(models.Model):
     address = models.ForeignKey(Address)
     participants = models.ManyToManyField(Participant)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
