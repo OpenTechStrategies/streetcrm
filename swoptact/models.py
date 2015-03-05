@@ -15,21 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from phonenumber_field import modelfields
 
 class Address(models.Model):
     """ Representation of an address in Chicago """
     TYPES = (
-        ("St", "Street"),
-        ("Av", "Avenue"),
-        ("Blvd", "Boulevard"),
-        ("Rd", "Road"),
+        ("St", "street"),
+        ("Av", "avenue"),
+        ("Blvd", "boulevard"),
+        ("Rd", "road"),
     )
 
     DIRECTIONS = (
-        ("N", "North"),
-        ("E", "East"),
-        ("S", "South"),
-        ("W", "West"),
+        ("N", "north"),
+        ("E", "east"),
+        ("S", "south"),
+        ("W", "west"),
     )
 
     class Meta:
@@ -40,19 +41,26 @@ class Address(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=TYPES)
 
+    def __init__(self, *args, **kwargs):
+        super(Address, self).__init__(*args, **kwargs)
+
+        # Compile a dictionary of the choices so we can quickly use them
+        self.DICT_TYPES = dict(self.TYPES)
+        self.DICT_DIRECTIONS = dict(self.DIRECTIONS)
+
     def __str__(self):
         return "{number} {direction} {name} {type}".format(
             number=self.number,
-            direction=self.direction,
+            direction=self.DICT_DIRECTIONS[self.direction],
             name=self.name,
-            type=self.type
+            type=self.DICT_TYPES[self.type],
         )
 
 class Participant(models.Model):
     """ Representation of a person who can participate in a Event """
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
+    phone_number = modelfields.PhoneNumberField()
     email = models.EmailField()
     address = models.ForeignKey(Address)
 
@@ -61,6 +69,19 @@ class Participant(models.Model):
             first_name=self.first_name,
             last_name=self.last_name
         )
+
+    def name(self):
+        """ The full name of the participant """
+        return "{first} {last}".format(
+            first=self.first_name,
+            last=self.last_name
+        )
+
+    @property
+    def events(self):
+        """ List of all events participant is in """
+        return Event.objects.filter(participants__in=[self]).all()
+
 
 class Event(models.Model):
 
