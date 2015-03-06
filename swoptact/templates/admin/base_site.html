@@ -2,6 +2,8 @@
 {% load i18n %}
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
-<a href="{% url 'admin:index' %}" class="navbar-brand">{% trans "Contact Management System" %}</a>
+<a href="{% url 'admin:index' %}" class="navbar-brand">
+    {% trans "SWOP Contacts" %}
+</a>
 {% endblock %}
 {% block nav-global %}{% endblock %}

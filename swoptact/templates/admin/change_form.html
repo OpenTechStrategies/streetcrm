@@ -23,85 +23,71 @@
 {% if not is_popup %}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-<li><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{% with app_label=opts.app_config.verbose_name|default:opts.app_label %}{{ app_label|title }}{% endwith %}</a></li>
-<li>{% if has_change_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}</li>
-<li>{% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
+    <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+    <li><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{% with app_label=opts.app_config.verbose_name|default:opts.app_label %}{{ app_label|title }}{% endwith %}</a></li>
+    <li>{% if has_change_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}</li>
+    <li>{% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
 </ul>
 {% endblock %}
 {% endif %}
 
-{% block object-tools %}
-{% if change %}{% if not is_popup %}
-<div id="content-navbar-collapse" class="navbar-collapse collapse">
-  <ul class="nav navbar-nav navbar-right">
-    {% block object-tools-items %}
-    <li>
-        {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
-        <a role="button" href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a>
-    </li>
-    {% if has_absolute_url %}<li><a href="{% url 'admin:view_on_site' content_type_id original.pk %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
-    {% endblock %}
-  </ul>
-</div>
-{% endif %}{% endif %}
-{% endblock %}
+{% block content_title %}{% endblock %}
 
 {% block content %}
+{% if errors %}
+<div class="alert alert-danger">
+    {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    {{ adminform.form.non_field_errors }}
+</div>
+{% endif %}
 
-{% with module_name=opts.model_name|lower|slugify %}
-    {% render_with_template_if_exist opts.app_label|lower|add:"/admin_model_"|add:module_name|add:"_change_form.html" "" %}
-{% endwith %}
-
-
-<form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
-    {% if errors %}
-    <div class="alert alert-danger">
-        {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
-        {{ adminform.form.non_field_errors }}
-    </div>
+<div class="change-content">
+    {% if title %}
+    <h1 class="change-title">{{ title }}</h1>
     {% endif %}
+    <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 
-    {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+        {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
 
-    <div id="content-main">
-        <div>
-        {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+        <div id="content-main">
+            <div>
+            {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
 
-        {% block field_sets %}
-        {% for fieldset in adminform %}
-          {% include "admin/includes/fieldset.html" with group_column_width=adminform|form_fieldset_column_width %}
-        {% endfor %}
-        {% endblock %}
+            {% block field_sets %}
+            {% for fieldset in adminform %}
+              {% include "admin/includes/fieldset.html" with group_column_width=adminform|form_fieldset_column_width %}
+            {% endfor %}
+            {% endblock %}
 
-        {% block after_field_sets %}{% endblock %}
+            {% block after_field_sets %}{% endblock %}
 
-        {% block inline_field_sets %}
-        {% for inline_admin_formset in inline_admin_formsets %}
-            {% include inline_admin_formset.opts.template %}
-        {% endfor %}
-        {% endblock %}
+            {% block inline_field_sets %}
+            {% for inline_admin_formset in inline_admin_formsets %}
+                {% include inline_admin_formset.opts.template %}
+            {% endfor %}
+            {% endblock %}
 
-        {% block after_related_objects %}{% endblock %}
+            {% block after_related_objects %}{% endblock %}
 
-        {% if adminform and add %}
-        <script type="text/javascript">
-            (function($) {
-                $(document).ready(function() {
-                    $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus();
-                });
-            })(django.jQuery);
-        </script>
-        {% endif %}
+            {% if adminform and add %}
+            <script type="text/javascript">
+                (function($) {
+                    $(document).ready(function() {
+                        $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus();
+                    });
+                })(django.jQuery);
+            </script>
+            {% endif %}
 
-        {# JavaScript for prepopulated fields #}
-        {% prepopulated_fields_js %}
+            {# JavaScript for prepopulated fields #}
+            {% prepopulated_fields_js %}
 
+            </div>
         </div>
-    </div>
 
-    <div class="form-actions">
-        {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
-    </div>
-</form>
+        <div class="form-actions">
+            {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+        </div>
+    </form>
+</div>
 {% endblock %}

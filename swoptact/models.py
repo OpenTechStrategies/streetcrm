@@ -20,17 +20,17 @@ from phonenumber_field import modelfields
 class Address(models.Model):
     """ Representation of an address in Chicago """
     TYPES = (
-        ("St", "street"),
-        ("Av", "avenue"),
-        ("Blvd", "boulevard"),
-        ("Rd", "road"),
+        ("St", "Street"),
+        ("Av", "Avenue"),
+        ("Blvd", "Boulevard"),
+        ("Rd", "Road"),
     )
 
     DIRECTIONS = (
-        ("N", "north"),
-        ("E", "east"),
-        ("S", "south"),
-        ("W", "west"),
+        ("N", "North"),
+        ("E", "East"),
+        ("S", "South"),
+        ("W", "West"),
     )
 
     class Meta:
