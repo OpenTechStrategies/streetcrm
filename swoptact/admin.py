@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, staticfiles
 from swoptact.models import Address, Participant, Event
 
 class ParticipantAdmin(admin.ModelAdmin):

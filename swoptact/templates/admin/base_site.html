@@ -2,6 +2,8 @@
 {% load i18n %}
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
+{% load staticfiles %}
+<img src="{% static "images/logo-swop.jpg" %}" alt="SWOP logo" height="100" width="250">
 <a href="{% url 'admin:index' %}" class="navbar-brand">
     {% trans "SWOP Contacts" %}
 </a>
