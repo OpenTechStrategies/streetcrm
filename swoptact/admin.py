@@ -29,7 +29,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         # Add the data
         for event in obj.events:
             table.append("<tr>")
-            table.append("<td>{name}</td>".format(name=event.name))
+            table.append("<td><a href = '../../event/{id}/'>{name}</a></td>".format(name=event.name, id=Event.id(event)))
             table.append("<td>{date}</td>".format(date=event.date))
             table.append("</tr>")
 
