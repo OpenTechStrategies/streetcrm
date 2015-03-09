@@ -17,6 +17,8 @@
 from django.db import models
 from phonenumber_field import modelfields
 
+from swoptact import mixins
+
 class Address(models.Model):
     """ Representation of an address in Chicago """
     TYPES = (
@@ -83,7 +85,7 @@ class Participant(models.Model):
         return Event.objects.filter(participants__in=[self]).all()
 
 
-class Event(models.Model):
+class Event(models.Model, mixins.AdminURLMixin):
 
     name = models.CharField(max_length=255)
     date = models.DateTimeField()
@@ -93,6 +95,3 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
-
-    def id(self):
-        return self.id

@@ -1,4 +1,6 @@
+from django import template
 from django.contrib import admin, staticfiles
+from django.template import loader
 from swoptact.models import Address, Participant, Event
 
 class ParticipantAdmin(admin.ModelAdmin):
@@ -16,26 +18,17 @@ class ParticipantAdmin(admin.ModelAdmin):
     )
 
     def event_history(self, obj):
-        # Table contents
-        table = []
+        """ HTML history of the events attended by the participant """
+        template_name = "admin/includes/event_history.html"
+        event_history_template = loader.get_template(template_name)
+        context = template.Context({
+            "events": obj.events,
+        })
+        return event_history_template.render(context)
 
-        # Add the headers
-        table.append('<table class="table table-bordered">')
-        table.append("<tr>")
-        table.append("<th>Event</td>")
-        table.append("<th>Date</td>")
-        table.append("</tr>")
-
-        # Add the data
-        for event in obj.events:
-            table.append("<tr>")
-            table.append("<td><a href = '../../event/{id}/'>{name}</a></td>".format(name=event.name, id=Event.id(event)))
-            table.append("<td>{date}</td>".format(date=event.date))
-            table.append("</tr>")
-
-        # And the closing tags
-        table.append("</table>")
-        return "".join(table)
+    # To prevent django from distorting how the event_history method looks tell
+    # it to allow HTML using the allow_tags method attribute.
+    event_history.allow_tags = True
 
 
 
