@@ -30,9 +30,10 @@ class ParticipantAdmin(admin.ModelAdmin):
     # it to allow HTML using the allow_tags method attribute.
     event_history.allow_tags = True
 
-
+class EventAdmin(admin.ModelAdmin):
+    filter_horizontal = ("participants",)
 
 
 admin.site.register(Address)
 admin.site.register(Participant, ParticipantAdmin)
-admin.site.register(Event)
+admin.site.register(Event, EventAdmin)
