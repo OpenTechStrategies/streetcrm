@@ -1,14 +1,12 @@
-#+TITLE: Swoptact: the FOSS contact management system
+Swoptact: a FOSS contact management system
+==========================================
 
-Swoptact: free software (AGPL licensed!) contact management for you
-and your org!
+Swoptact is an [free & open source software](LICENSE.md) contact
+management system for you and your organization.
 
-Built by the fine folks at [[http://opentechstrategies.com/][Open Tech Strategies]].  Want to integrate
-Swoptact into your org?  [[http://opentechstrategies.com/contact][OTS can help]]!
+# Overview
 
-* Overview
-
-** Abstract
+## Abstract
 
 Swoptact is a list of contacts with a history of their event
 attendance (making it also a list of events over time).  Use it to
@@ -16,7 +14,7 @@ keep track of people your organization comes into contact with over
 time, and see how their engagement with your mission grows.
 
 
-** User stories
+## User stories
 
 These are stories about how various users make use of Swoptact.
 
@@ -26,7 +24,7 @@ Colleen is an organizer and uses Swoptact to find information about
 her contacts and occasionally update their information.
 Michelle is a supervisor and runs reports from Swoptact.
 
-*** Why Sarah chose Swoptact
+### Why Sarah chose Swoptact
 
 This is a high level overview of why Sarah thinks Swoptact will be
 useful to her.
@@ -39,18 +37,18 @@ people when she only remembers a first or last name, and look for
 people who live on a specific street when she wants to plan block-wide
 events.
 
-*** Sarah's big event
+### Sarah's big event
 
 This user story talks about Sarah, the event she ran, and what
 information she kept after the event.
 
-**** Before the conference
+#### Before the conference
 
 1. Sarah makes the conference, including its name and date, in
    Swoptact.
 2. ?
 
-**** Immediately after the conference
+#### Immediately after the conference
 
 1. Sarah takes the paper sign-in sheet and enters the attendees into
    Swoptact. TBD: maybe some of them already have records and others
@@ -66,7 +64,7 @@ information she kept after the event.
 5. Sarah realizes that one person didn't come to the conference, so
    she removes him from the attendees list.
 
-**** Later usage
+#### Later usage
 1. Sarah looks at a list of conference participants.
 2. Sarah finds the emails of all conference participants so she can
    send them a follow-up. TBD: does she send the email from Swoptact?
@@ -81,61 +79,52 @@ information she kept after the event.
 8. Colleen looks up phone numbers for all the people who attended the
    conference, so she can invite them to another event.
 
-** Interface
-*** Data Fields
+## Interface
+### Data Fields
 Participants: first name, last name, phone number, address (street
 number, street direction, street name, street type), email address
 Events: name, date, location (site name and all address fields)
 
-*** Functionality
-**** Participants:
-     search, create, modify, delete, merge, link to event, unlink from
-     event
-**** Events:
-     search, create, modify, delete, merge, link to participant,
-     unlink from participant
+### Functionality
+#### Participants:
+search, create, modify, delete, merge, link to event, unlink from event
+#### Events:
+search, create, modify, delete, merge, link to participant, unlink from participant
+
+## Database
+### Participants
+#### id
+#### first name
+#### last name
+#### phone number
+#### street number
+#### street direction
+#### street name
+#### street type
+#### email address
+### Events
+#### id
+#### name
+#### date
+#### site name
+#### street number
+#### street direction
+#### street name
+#### street type
 
 
-** Database
-*** Participants
-**** id
-**** first name
-**** last name
-**** phone number
-**** street number
-**** street direction
-**** street name
-**** street type
-**** email address
-*** Events
-**** id
-**** name
-**** date
-**** site name
-**** street number
-**** street direction
-**** street name
-**** street type
+### Participants_Events
+#### primary key...!
+#### participant id
+#### event id
+#### date linked
+#### date unlinked?
 
-
-*** Participants_Events
-**** primary key...!
-**** participant id
-**** event id
-**** date linked
-**** date unlinked?
-
-*** Users and permissions
+### Users and permissions
 
 Making use of Django's builtins
 
-*** Contacts
-*** Events
-* Installation
-  See INSTALL.md.
-* Run
-  You can run the python server for testing by running.
-
-  #+BEGIN_SRC sh
-    python manage.py runserver
-  #+END_SRC
+### Contacts
+### Events
+# Installation
+See (INSTALL.md)[INSTALL.md].

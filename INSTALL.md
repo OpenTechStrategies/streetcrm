@@ -1,4 +1,4 @@
-#How to Install Swoptact
+#How to Deploy Swoptact
 
 Installation
 --------------------
@@ -33,3 +33,8 @@ wherever you'd like to keep the file.
 
 You also might want to set the debug flag to true. 
 
+Running
+--------------------
+You can run the python server for testing by running.
+
+    python manage.py runserver
