@@ -1,0 +1,1032 @@
+[
+{
+    "fields": {
+        "model": "logentry",
+        "app_label": "admin",
+        "name": "log entry"
+    },
+    "pk": 1,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "permission",
+        "app_label": "auth",
+        "name": "permission"
+    },
+    "pk": 2,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "group",
+        "app_label": "auth",
+        "name": "group"
+    },
+    "pk": 3,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "user",
+        "app_label": "auth",
+        "name": "user"
+    },
+    "pk": 4,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "contenttype",
+        "app_label": "contenttypes",
+        "name": "content type"
+    },
+    "pk": 5,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "session",
+        "app_label": "sessions",
+        "name": "session"
+    },
+    "pk": 6,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "address",
+        "app_label": "swoptact",
+        "name": "address"
+    },
+    "pk": 7,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "participant",
+        "app_label": "swoptact",
+        "name": "participant"
+    },
+    "pk": 8,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "model": "event",
+        "app_label": "swoptact",
+        "name": "event"
+    },
+    "pk": 9,
+    "model": "contenttypes.contenttype"
+},
+{
+    "fields": {
+        "session_data": "N2M1ZTRjMTM4MDY5ZmI1ZGJjYTY0MDZlZTc5Y2NhNjE3MThlMzQzZTp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2lkIjoxLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9",
+        "expire_date": "2015-03-16T15:29:30.464Z"
+    },
+    "pk": "6kepjk40sbteihz7hrmta73bvddqiuvj",
+    "model": "sessions.session"
+},
+{
+    "fields": {
+        "session_data": "ZDEyZmJiZjE4OTMxOGYxZjkzNmMxNGQ4OGZkNDA5M2ZiZmUxNTk2Mjp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9",
+        "expire_date": "2015-03-17T17:51:56.002Z"
+    },
+    "pk": "cyppnw4qiouy5opwc65d91idktjmsh85",
+    "model": "sessions.session"
+},
+{
+    "fields": {
+        "number": 17,
+        "name": "State",
+        "type": "St",
+        "direction": "N"
+    },
+    "pk": 1,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 6300,
+        "name": "Ashland",
+        "type": "Av",
+        "direction": "S"
+    },
+    "pk": 2,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 310,
+        "name": "Lake",
+        "type": "St",
+        "direction": "E"
+    },
+    "pk": 3,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 10,
+        "name": "Lawndale",
+        "type": "Av",
+        "direction": "W"
+    },
+    "pk": 4,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 3100,
+        "name": "93rd",
+        "type": "St",
+        "direction": "E"
+    },
+    "pk": 5,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 1215,
+        "name": "Damen",
+        "type": "Av",
+        "direction": "N"
+    },
+    "pk": 6,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "number": 2800,
+        "name": "Roosevelt",
+        "type": "Rd",
+        "direction": "W"
+    },
+    "pk": 7,
+    "model": "swoptact.address"
+},
+{
+    "fields": {
+        "first_name": "Winter",
+        "email": "wdae@example.com",
+        "phone_number": "7735551234",
+        "address": 1,
+        "last_name": "Dae"
+    },
+    "pk": 1,
+    "model": "swoptact.participant"
+},
+{
+    "fields": {
+        "first_name": "Maria",
+        "email": "mrussell@example.com",
+        "phone_number": "+13123339911",
+        "address": 7,
+        "last_name": "Russell"
+    },
+    "pk": 2,
+    "model": "swoptact.participant"
+},
+{
+    "fields": {
+        "first_name": "Marcia",
+        "email": "marciar@company.com",
+        "phone_number": "+15083377123",
+        "address": 5,
+        "last_name": "Ramirez"
+    },
+    "pk": 3,
+    "model": "swoptact.participant"
+},
+{
+    "fields": {
+        "first_name": "Marybeth",
+        "email": "m.c.tennant@realmail.com",
+        "phone_number": "+12245657711",
+        "address": 3,
+        "last_name": "Tennant"
+    },
+    "pk": 4,
+    "model": "swoptact.participant"
+},
+{
+    "fields": {
+        "first_name": "Winston",
+        "email": "locke@leviathan.mail",
+        "phone_number": "+12245657712",
+        "address": 4,
+        "last_name": "Locke"
+    },
+    "pk": 5,
+    "model": "swoptact.participant"
+},
+{
+    "fields": {
+        "participants": [
+            1
+        ],
+        "date": "2015-02-27T13:00:00Z",
+        "site": "St. Rita's",
+        "address": 2,
+        "name": "Housing Group Meeting"
+    },
+    "pk": 1,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "participants": [
+            1
+        ],
+        "date": "2015-03-01T11:00:00Z",
+        "site": "SWOP",
+        "address": 1,
+        "name": "New Homeowners Support Group"
+    },
+    "pk": 2,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "participants": [
+            2,
+            3
+        ],
+        "date": "2015-03-10T14:00:00Z",
+        "site": "Conference Center",
+        "address": 1,
+        "name": "Swoptact Initiation Forum"
+    },
+    "pk": 3,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "participants": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "date": "2015-03-08T15:00:00Z",
+        "site": "Global",
+        "address": 4,
+        "name": "International Women's Day"
+    },
+    "pk": 4,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "participants": [
+            1,
+            5
+        ],
+        "date": "2015-03-04T20:00:00Z",
+        "site": "SWOP Auxiliary Office",
+        "address": 6,
+        "name": "Organizer Retreat"
+    },
+    "pk": 5,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "add_logentry",
+        "name": "Can add log entry"
+    },
+    "pk": 1,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "change_logentry",
+        "name": "Can change log entry"
+    },
+    "pk": 2,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "delete_logentry",
+        "name": "Can delete log entry"
+    },
+    "pk": 3,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "add_permission",
+        "name": "Can add permission"
+    },
+    "pk": 4,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "change_permission",
+        "name": "Can change permission"
+    },
+    "pk": 5,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "delete_permission",
+        "name": "Can delete permission"
+    },
+    "pk": 6,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "add_group",
+        "name": "Can add group"
+    },
+    "pk": 7,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "change_group",
+        "name": "Can change group"
+    },
+    "pk": 8,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "delete_group",
+        "name": "Can delete group"
+    },
+    "pk": 9,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "add_user",
+        "name": "Can add user"
+    },
+    "pk": 10,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "change_user",
+        "name": "Can change user"
+    },
+    "pk": 11,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "delete_user",
+        "name": "Can delete user"
+    },
+    "pk": 12,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "add_contenttype",
+        "name": "Can add content type"
+    },
+    "pk": 13,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "change_contenttype",
+        "name": "Can change content type"
+    },
+    "pk": 14,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "delete_contenttype",
+        "name": "Can delete content type"
+    },
+    "pk": 15,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "add_session",
+        "name": "Can add session"
+    },
+    "pk": 16,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "change_session",
+        "name": "Can change session"
+    },
+    "pk": 17,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "delete_session",
+        "name": "Can delete session"
+    },
+    "pk": 18,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "codename": "add_address",
+        "name": "Can add address"
+    },
+    "pk": 19,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "codename": "change_address",
+        "name": "Can change address"
+    },
+    "pk": 20,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "codename": "delete_address",
+        "name": "Can delete address"
+    },
+    "pk": 21,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "codename": "add_participant",
+        "name": "Can add participant"
+    },
+    "pk": 22,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "codename": "change_participant",
+        "name": "Can change participant"
+    },
+    "pk": 23,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "codename": "delete_participant",
+        "name": "Can delete participant"
+    },
+    "pk": 24,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "codename": "add_event",
+        "name": "Can add event"
+    },
+    "pk": 25,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "codename": "change_event",
+        "name": "Can change event"
+    },
+    "pk": 26,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "codename": "delete_event",
+        "name": "Can delete event"
+    },
+    "pk": 27,
+    "model": "auth.permission"
+},
+{
+    "fields": {
+        "user_permissions": [],
+        "is_superuser": true,
+        "email": "me@me.com",
+        "last_name": "",
+        "last_login": "2015-03-03T17:51:55.975Z",
+        "groups": [],
+        "is_staff": true,
+        "date_joined": "2015-03-02T15:29:13.658Z",
+        "first_name": "",
+        "password": "pbkdf2_sha256$12000$9Aq7TYDIvsMf$A7t0dY2BzZbAG6rS2cE9Qp5lIM+TwpKJqEHlrggEmMw=",
+        "username": "sample_writer",
+        "is_active": true
+    },
+    "pk": 1,
+    "model": "auth.user"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Address object",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-02T15:48:49.333Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "1"
+    },
+    "pk": 1,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Participant object",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-02T15:49:44.058Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "1"
+    },
+    "pk": 2,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 2,
+        "object_repr": "17 N State St",
+        "change_message": "Changed direction and type.",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-02T17:18:52.123Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "1"
+    },
+    "pk": 3,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "6300 S Ashland Av",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-03T17:14:47.972Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "2"
+    },
+    "pk": 4,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Housing Group Meeting 2015-02-27 19:00:00-06:00",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-03T17:15:43.072Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "1"
+    },
+    "pk": 5,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 2,
+        "object_repr": "Housing Group Meeting 2015-02-27 09:00:00-06:00",
+        "change_message": "Changed date.",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-03T17:16:06.293Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "1"
+    },
+    "pk": 6,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 2,
+        "object_repr": "Housing Group Meeting 2015-02-27 07:00:00-06:00",
+        "change_message": "Changed date.",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-03T17:16:15.280Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "1"
+    },
+    "pk": 7,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "New Homeowners Support Group",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-05T17:32:32.735Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "2"
+    },
+    "pk": 8,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 2,
+        "object_repr": "17 North State Street",
+        "change_message": "No fields changed.",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-06T16:06:24.976Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "1"
+    },
+    "pk": 9,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "310 East Lake Street",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-06T16:06:43.698Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "3"
+    },
+    "pk": 10,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "10 West Lawndale Avenue",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T14:57:57.727Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "4"
+    },
+    "pk": 11,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "3100 East 93rd Street",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T14:58:18.205Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "5"
+    },
+    "pk": 12,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "1215 North Damen Avenue",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T14:58:34.698Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "6"
+    },
+    "pk": 13,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "2800 West Roosevelt Road",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T14:59:04.971Z",
+        "content_type": [
+            "swoptact",
+            "address"
+        ],
+        "object_id": "7"
+    },
+    "pk": 14,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Maria Russell",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:02:56.950Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "2"
+    },
+    "pk": 15,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Marcia Ramirez",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:04:17.143Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "3"
+    },
+    "pk": 16,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Marybeth Tennant",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:05:14.209Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "4"
+    },
+    "pk": 17,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Winston Locke",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:07:35.872Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "5"
+    },
+    "pk": 18,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 2,
+        "object_repr": "Winston Locke",
+        "change_message": "Changed phone_number.",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:07:43.261Z",
+        "content_type": [
+            "swoptact",
+            "participant"
+        ],
+        "object_id": "5"
+    },
+    "pk": 19,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Swoptact Initiation Forum",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:08:57.652Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "3"
+    },
+    "pk": 20,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "International Women's Day",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:10:37.937Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "4"
+    },
+    "pk": 21,
+    "model": "admin.logentry"
+},
+{
+    "fields": {
+        "action_flag": 1,
+        "object_repr": "Organizer Retreat",
+        "change_message": "",
+        "user": [
+            "sample_writer"
+        ],
+        "action_time": "2015-03-10T15:13:56.173Z",
+        "content_type": [
+            "swoptact",
+            "event"
+        ],
+        "object_id": "5"
+    },
+    "pk": 22,
+    "model": "admin.logentry"
+}
+]
