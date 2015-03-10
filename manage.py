@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015
+# Copyright (C) 2015  Open Tech Strategies, LLC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
