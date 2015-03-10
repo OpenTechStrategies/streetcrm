@@ -3,9 +3,9 @@
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}
-<img src="{% static "images/logo-swop.jpg" %}" alt="SWOP logo" height="100" width="250">
+<img src="{% static "images/logo-swop.jpg" %}" alt="SWOP logo" height="50" style="float: left;">
 <a href="{% url 'admin:index' %}" class="navbar-brand">
-    {% trans "SWOP Contacts" %}
+    {% trans "Contacts" %}
 </a>
 {% endblock %}
 {% block nav-global %}{% endblock %}
