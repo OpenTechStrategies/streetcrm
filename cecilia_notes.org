@@ -1,46 +1,30 @@
 ** swoptact prep for demo
 1. cosmetics
+- add space between logo and title
+- make swoptact logo not so transparent
+- event history shouldn't show up on "add person" screen
+- event history title: "events that (name) attended"
+- add location to event history table
+- remove headers from event history table
+- call participants people
+- change person list to show name, address, phone, email
+- adding people to event:
+    - arrows further apart, labeled unchoose instead of remove
+    - get rid of "filter"  (string)
+    - add new person link/button if zero results
+    - remove plus from participants:
+    - change available to "choose" and "chosen" to "attendees"
+    - remove helptext
+    - unchoose all should gray out when none to unchoose (And vice versa)
+- event list: show location (and date?) and number of participants
+- save and stay here (not continue editing) and save and return to list (not save)
+
 2. map
-*** need to make "add existing participant to event" bit prettier
-*** add space between logo and title
-*** make "clock" show more times?
-*** make swoptact logo not...quite so transparent?
-*** make address fields slide down on person profile (not new window)
-*** make address dropdown narrow by substring
-*** event history shouldnt' show up on "add" screen
-*** add location to event history table
-*** remove headers from event history table
-*** change root/group/users to "swoptact admin page"
-*** change directory/url stuff to create /admin and change /swoptact to /
-*** logo should point to root of swoptact (not admin)
-*** remove addresses from root list
-*** on root list: add new event and browse/edit events as only options (same for people)
-*** add export option to all lists
-*** person list: change "action" to delete button, move to bottom, remove title text
-*** call participants people
-*** change person list to show name, address, phone, email
-*** add "map!" function (or pin icon) (for one or multiple people)
-*** event history title: "events that (name) attended"
-*** move buttons up above event history on people page (into white space) and same on event page
-*** save and stay here (not continue editing) and save and return to list (not save)
-*** event list: show location (and date?) and number of participants
-*** event page: remove "now" in time and remove "today" (change words to icons on cal and clock)
+- include pin icon allowing users to map one or more people
 - add map showing where event is
-*** adding people to event:
-- arrows further apart, labeled unchoose instead of remove
-- get rid of "filter"  (string)
-- add new person link/button if zero results
-- remove plus from participants:
-- change available to "choose" and "chosen" to "attendees"
-- remove helptext
-- unchoose all should gray out when none to unchoose (And vice versa)
-*** Things to demo:
-- start at localhost:8000/swoptact (do we want to deploy this to a
-  server before the demo, so they can look at it afterward?)
-- adding a person
-- adding an event
-- adding a person to an event
-*** Things to come:
+
+
+3. actual demo
 - q: notes fields? narrative?
 - question: same name, how do you tell people apart? phone?
 - question: venues v institutions -- same list? see "sites"
@@ -50,4 +34,24 @@
   very far away)
 - narrow the frame so that add/change are next to the list of model
   types 
+4. Things to demo:
+- start at localhost:8000/swoptact (do we want to deploy this to a
+  server before the demo, so they can look at it afterward?)
+- adding a person
+- adding an event
+- adding a person to an event
 
+
+5. and then:
+- change root/group/users to "swoptact admin page"
+- change directory/url stuff to create /admin and change /swoptact to /
+- logo should point to root of swoptact (not admin)
+- remove addresses from root list
+- on root list: add new event and browse/edit events as only options (same for people)
+- add export option to all lists
+- person and events lists: change "action" to delete button, move to bottom, remove title text
+- move buttons up above event history on people page (into white space) and same on event page
+- event page: remove "now" in time and remove "today" (change words to icons on cal and clock)
+- make "clock" show more times?
+- make address fields slide down on person profile (not new window)
+- make address dropdown narrow by substring
