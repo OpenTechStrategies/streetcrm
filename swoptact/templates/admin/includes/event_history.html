@@ -1,13 +1,10 @@
 {% load i18n %}
 <table class="table table-bordered">
-  <tr>
-    <th>{% trans "Event" %}</th>
-    <th>{% trans "Date" %}</th>
-  </tr>
   {% for event in events %}
   <tr>
     <th><a href="{{ event.admin_change_url }}">{{ event.name }}</th>
     <th>{{ event.date }}</th>
+    <th>{{ event.site }}: {{ event.address }}</th>
   </tr>
   {% endfor %}
 </table>

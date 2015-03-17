@@ -2,12 +2,8 @@
 1. cosmetics
 - add space between logo and title
 - make swoptact logo not so transparent
+- save and stay here (not continue editing) and save and return to list (not save)
 - event history shouldn't show up on "add person" screen
-- event history title: "events that (name) attended"
-- add location to event history table
-- remove headers from event history table
-- call participants people
-- change person list to show name, address, phone, email
 - adding people to event:
     - arrows further apart, labeled unchoose instead of remove
     - get rid of "filter"  (string)
@@ -16,8 +12,8 @@
     - change available to "choose" and "chosen" to "attendees"
     - remove helptext
     - unchoose all should gray out when none to unchoose (And vice versa)
-- event list: show location (and date?) and number of participants
-- save and stay here (not continue editing) and save and return to list (not save)
+- event history title: "events that (name) attended" (changed this to "Personal Event History" for now)
+- call participants people
 
 2. map
 - include pin icon allowing users to map one or more people

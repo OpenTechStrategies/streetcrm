@@ -95,3 +95,6 @@ class Event(models.Model, mixins.AdminURLMixin):
 
     def __str__(self):
         return self.name
+
+    def attendee_count(self):
+        return self.participants.count()

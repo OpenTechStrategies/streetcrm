@@ -5,17 +5,25 @@ from swoptact.models import Address, Participant, Event
 
 class ParticipantAdmin(admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "email", "phone_number")
-    readonly_fields = ("event_history",)
+    list_display = ("name", "phone_number", "address", "email",)
+    readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
             "fields": ("first_name", "last_name", "phone_number", "email",
                         "address")
         }),
-        ("Events", {
+        ("Personal Event History",   {
             "fields": ("event_history",),
         })
     )
+
+    @property
+    def event_history_name(self, obj):
+        """ Name of event history fieldset """
+        return "Events that {first} {last} attended".format(
+            first=obj.first_name,
+            last=obj.last_name
+        )
 
     def event_history(self, obj):
         """ HTML history of the events attended by the participant """
@@ -31,7 +39,10 @@ class ParticipantAdmin(admin.ModelAdmin):
     event_history.allow_tags = True
 
 class EventAdmin(admin.ModelAdmin):
+    list_display = ("name", "site", "address", "date", "attendee_count",)
     filter_horizontal = ("participants",)
+
+
 
 
 admin.site.register(Address)
