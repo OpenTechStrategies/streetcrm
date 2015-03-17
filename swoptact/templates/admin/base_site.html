@@ -3,10 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}
-<img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50" style="float: left;">
-<span>&nbsp&nbsp&nbsp</span>
-<a href="{% url 'admin:index' %}" class="navbar-brand">
-    {% trans "Contacts" %}
-</a>
+<a href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50" style="float: left; padding-right: 30px"></a>
+<a href="{% url 'admin:app_list' app_label='swoptact' %}" class="navbar-brand">{% trans "Contacts" %}</a>
 {% endblock %}
 {% block nav-global %}{% endblock %}

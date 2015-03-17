@@ -22,7 +22,7 @@ body {
 
 /* Set the background to housestyle colours and remove borders */
 .navbar-default {
-    background-color: #48328F;
+    background-color: #D9D4E8;
     border: 0;
     border-radius: 0;
 }
@@ -30,7 +30,7 @@ body {
 .navbar-default .navbar-brand,
 .navbar-default .navbar-text,
 .navbar-default .navbar-nav > li > a {
-    color: #DDDDDD;
+    color: #48328F;
 }
 
 /* Links should be white when you hover over them */
@@ -40,7 +40,7 @@ body {
 }
 
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color: #DDDDDD;
+    color: #FFFFFF;
 }
 
 /* Pad the "Welcome, <username>" text 15px away from right */

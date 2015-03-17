@@ -33,6 +33,15 @@ wherever you'd like to keep the file.
 
 You also might want to set the debug flag to true. 
 
+Notes for a change to the default template: ------------------- 
+
+In
+lib/python3.4/site-packages/django_admin_bootstrapped/templates/admin/,
+change "Save and continue editing" to "Save and stay here" and change
+"Save" to "Save and return to the list."  Unfortunately this file is
+not in version control because it is created when you start the django
+project.
+
 Running
 --------------------
 You can run the python server for testing by running.

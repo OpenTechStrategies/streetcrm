@@ -1,8 +1,5 @@
 ** swoptact prep for demo
 1. cosmetics
-- add space between logo and title
-- make swoptact logo not so transparent
-- save and stay here (not continue editing) and save and return to list (not save)
 - event history shouldn't show up on "add person" screen
 - adding people to event:
     - arrows further apart, labeled unchoose instead of remove
@@ -41,7 +38,6 @@
 5. and then:
 - change root/group/users to "swoptact admin page"
 - change directory/url stuff to create /admin and change /swoptact to /
-- logo should point to root of swoptact (not admin)
 - remove addresses from root list
 - on root list: add new event and browse/edit events as only options (same for people)
 - add export option to all lists
