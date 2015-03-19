@@ -51,7 +51,7 @@ if not os.path.exists(CONFIG_PATH):
 mode = os.stat(CONFIG_PATH).st_mode
 if mode & stat.S_IRWXO != 0:
     warnings.warn(
-        "Check permissions on settings files, it contains sensative data."
+        "Check permissions on settings file, it contains sensitive data."
     )
 
 # Open config file
@@ -90,7 +90,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'swoptact'
+    'swoptact',
+    'django_google_maps',
 )
 
 MIDDLEWARE_CLASSES = (

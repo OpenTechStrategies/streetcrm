@@ -14,7 +14,7 @@
 
 2. map
 - include pin icon allowing users to map one or more people
-- add map showing where event is
+- add map showing address of event or person on the edit page
 
 
 3. actual demo

@@ -8,7 +8,7 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0002_auto_20150302_1118'),
+        ('swoptact', '0003_auto_20150305_1131'),
     ]
 
     operations = [
@@ -16,6 +16,5 @@ class Migration(migrations.Migration):
             model_name='participant',
             name='phone_number',
             field=phonenumber_field.modelfields.PhoneNumberField(max_length=128),
-#            preserve_default=True,
         ),
     ]

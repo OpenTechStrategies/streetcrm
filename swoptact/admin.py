@@ -1,7 +1,10 @@
 from django import template
 from django.contrib import admin, staticfiles
 from django.template import loader
-from swoptact.models import Address, Participant, Event
+from swoptact.models import Address, Participant, Event, mapTest
+
+from django_google_maps import widgets as map_widgets
+from django_google_maps import fields as mapfields
 
 class ParticipantAdmin(admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
@@ -43,8 +46,14 @@ class EventAdmin(admin.ModelAdmin):
     filter_horizontal = ("participants",)
 
 
+class mapTestAdmin(admin.ModelAdmin):
+    list_display = ("address", "geolocation")
+    formfield_overrides = {
+        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},    
+    }
 
 
 admin.site.register(Address)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(mapTest, mapTestAdmin)

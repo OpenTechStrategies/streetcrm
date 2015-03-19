@@ -18,6 +18,11 @@ from django.db import models
 from phonenumber_field import modelfields
 
 from swoptact import mixins
+from django_google_maps import fields as mapfields
+
+class mapTest(models.Model):
+    address = mapfields.AddressField(max_length=200)
+    geolocation = mapfields.GeoLocationField(max_length=100)    
 
 class Address(models.Model):
     """ Representation of an address in Chicago """
@@ -65,6 +70,7 @@ class Participant(models.Model):
     phone_number = modelfields.PhoneNumberField()
     email = models.EmailField()
     address = models.ForeignKey(Address)
+    
 
     def __str__(self):
         return "{first_name} {last_name}".format(
