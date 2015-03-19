@@ -70,7 +70,8 @@ class Participant(models.Model):
     phone_number = modelfields.PhoneNumberField()
     email = models.EmailField()
     address = models.ForeignKey(Address)
-    
+    map_display = mapfields.AddressField(max_length=200)
+    geolocation = mapfields.GeoLocationField(max_length=100)    
 
     def __str__(self):
         return "{first_name} {last_name}".format(

@@ -106,3 +106,18 @@ body {
     margin-top: 0;
 }
 
+/* django_google_maps css*/
+.map_canvas_wrapper {
+}
+#map_canvas {
+    width: 50%;
+    height: 100%;
+    right: 45px;
+    left: 45px;
+    height: 300px;
+    float: center;
+}
+#id_map_display{
+    display: none;
+}
+

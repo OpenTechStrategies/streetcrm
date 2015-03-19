@@ -6563,17 +6563,4 @@ button.close {
     display: none !important;
   }
 }
-/* django_google_maps css*/
-.map_canvas_wrapper {
-}
-#map_canvas {
-    width: 50%;
-    height: 100%;
-    position: fixed;
-    top: 30px;
-    right: 5px;
-    height: 300px;
-    float: right;
-}
-
 /*# sourceMappingURL=bootstrap.css.map */

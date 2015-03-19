@@ -50,7 +50,7 @@ function googleMapAdmin() {
             var myOptions = {
               zoom: zoom,
               center: latlng,
-              mapTypeId: google.maps.MapTypeId.HYBRID
+              mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
             if (existinglocation) {
@@ -68,12 +68,14 @@ function googleMapAdmin() {
         },
 
         codeAddress: function() {
-            var address = $("#id_address").val();
+            var address_start = $("#id_address option:selected").text();
+            var address = address_start + '+Chicago+IL';
             geocoder.geocode({'address': address}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     var latlng = results[0].geometry.location;
                     map.setCenter(latlng);
                     map.setZoom(18);
+                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 
                     self.setMarker(latlng);
                     self.updateGeolocation(latlng);

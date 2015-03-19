@@ -13,12 +13,15 @@ class ParticipantAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": ("first_name", "last_name", "phone_number", "email",
-                        "address")
+                        "address", "map_display")
         }),
         ("Personal Event History",   {
             "fields": ("event_history",),
         })
     )
+    formfield_overrides = {
+        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},    
+    }
 
     @property
     def event_history_name(self, obj):
