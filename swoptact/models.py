@@ -63,11 +63,11 @@ class Participant(models.Model):
     """ Representation of a person who can participate in a Event """
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = modelfields.PhoneNumberField()
-    email = models.EmailField()
-    address = models.ForeignKey(Address)
-    map_display = mapfields.AddressField(max_length=200)
-    geolocation = mapfields.GeoLocationField(max_length=100)    
+    phone_number = modelfields.PhoneNumberField(blank=True)
+    email = models.EmailField(blank=True)
+    address = models.ForeignKey(Address, blank=True)
+    map_display = mapfields.AddressField(max_length=200, blank=True)
+    geolocation = mapfields.GeoLocationField(max_length=100, blank=True)    
 
     def __str__(self):
         return "{first_name} {last_name}".format(
@@ -91,12 +91,12 @@ class Participant(models.Model):
 class Event(models.Model, mixins.AdminURLMixin):
 
     name = models.CharField(max_length=255)
-    date = models.DateTimeField()
-    site = models.CharField(max_length=255)
-    address = models.ForeignKey(Address)
-    participants = models.ManyToManyField(Participant)
-    map_display = mapfields.AddressField(max_length=200)
-    geolocation = mapfields.GeoLocationField(max_length=100)    
+    date = models.DateTimeField(blank=True)
+    site = models.CharField(max_length=255, blank=True)
+    address = models.ForeignKey(Address, blank=True)
+    participants = models.ManyToManyField(Participant, blank=True)
+    map_display = mapfields.AddressField(max_length=200, blank=True)
+    geolocation = mapfields.GeoLocationField(max_length=100, blank=True)    
 
     def __str__(self):
         return self.name

@@ -50,7 +50,7 @@ class EventAdmin(admin.ModelAdmin):
     formfield_overrides = {
         mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},    
     }
-
+    exclude = ("geolocation",)
 
 
 admin.site.register(Address)
