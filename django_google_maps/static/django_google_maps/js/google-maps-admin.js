@@ -45,15 +45,7 @@ function googleMapAdmin() {
             var lat = 0;
             var lng = 0;
             var zoom = 2;
-            // set up initial map to be world view. also, add change
-            // event so changing address will update the map
-            existinglocation = self.getExistingLocation();
-            if (existinglocation) {
-                lat = existinglocation[0];
-                lng = existinglocation[1];
-                zoom = 18;
-            }
-
+            self.codeAddress();
             var latlng = new google.maps.LatLng(lat,lng);
             var myOptions = {
               zoom: zoom,
@@ -61,9 +53,6 @@ function googleMapAdmin() {
               mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-            if (existinglocation) {
-                self.setMarker(latlng);
-            }
 
             $("#id_address").change(function() {self.codeAddress();});
         },

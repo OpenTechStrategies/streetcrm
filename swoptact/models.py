@@ -20,10 +20,6 @@ from phonenumber_field import modelfields
 from swoptact import mixins
 from django_google_maps import fields as mapfields
 
-class mapTest(models.Model):
-    address = mapfields.AddressField(max_length=200)
-    geolocation = mapfields.GeoLocationField(max_length=100)    
-
 class Address(models.Model):
     """ Representation of an address in Chicago """
     TYPES = (
@@ -99,6 +95,8 @@ class Event(models.Model, mixins.AdminURLMixin):
     site = models.CharField(max_length=255)
     address = models.ForeignKey(Address)
     participants = models.ManyToManyField(Participant)
+    map_display = mapfields.AddressField(max_length=200)
+    geolocation = mapfields.GeoLocationField(max_length=100)    
 
     def __str__(self):
         return self.name
