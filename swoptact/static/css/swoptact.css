@@ -129,3 +129,28 @@ body {
     display: none;
 }
 
+/* Override design of filter list selector - Issue #7 */
+.selector select {
+    height: 17.2em;
+}
+
+.selector ul.selector-chooser {
+    background-color: #FFF;
+}
+
+.selector-chooser li {
+    margin-bottom: 20px;
+}
+
+.selector .selector-available h2, .selector .selector-chosen h2 {
+    background: none; /* Gets ride of set image by Django */
+    background-color: #F7F7F7;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #EEE;
+}
+
+.selector-filter input {
+    color: #000;
+}
