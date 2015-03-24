@@ -3,37 +3,38 @@
 Installation
 --------------------
 
-You need python 3.4 and python's virtualenv to use this. I believe you  
-should be able to install these in debian jessie via:  
+You need python 3.4 and python's virtualenv to use this. I believe you
+should be able to install these in debian jessie via:
 
     `sudo apt-get install python3 python-virtualenv`
 
-Then ensure you're in the top directory of the swoptact project and run:  
+Then ensure you're in the top directory of the swoptact project and run:
 
     virtualenv --python=python3.4 .
     source ./bin/activate
     pip install -r requirements.txt
 
-This will setup the virtual enviroment and install all the necessary  
+This will setup the virtual enviroment and install all the necessary
 dependencies.
 
-You then will want to edit a configuration file and add all the  
-settings.  See our example config file at /config.example.ini.  You'll  
-need to change the secret_key to one of your creation.  
+You then will want to copy the config.example.ini file at the root
+directory of the project to $XDG_CONFIG_PATH/swoptact/config.ini
+(if XDG_CONFIG_PATH is not set, it will default to ~/.config/). If you
+would rather put the config file in another directory you can by
+setting the enviroment variable $SWOPTACT_CONFIG. You'll then need to
+edit a configuration file and add all the settings.
 
-The minimum configuration you need is:  
+The minimum configuration you need is:
 
     [general]
     secret_key = myverysecretkeyhere
 
-This configuration file is referenced in /settings.py.  You can set
-the path to it in CONFIG_SPEC.  The path of that configuration file is
-set by default to ~/.config/swoptact/, but you can change it to
-wherever you'd like to keep the file.
+If this is not a production instance you will also want to set:
 
-You also might want to set the debug flag to true. 
+   [general]
+   debug = true
 
-Notes for a change to the default template: ------------------- 
+Notes for a change to the default template: -------------------
 
 In
 lib/python3.4/site-packages/django_admin_bootstrapped/templates/admin/,

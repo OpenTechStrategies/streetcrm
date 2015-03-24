@@ -39,7 +39,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG_PATH = os.path.join(
     os.path.expanduser(os.getenv("XDG_CONFIG_PATH", "~/.config")),
     "swoptact",
-    "settings.ini"
+    "config.ini"
 )
 CONFIG_PATH = os.getenv("SWOPTACT_CONFIG", CONFIG_PATH)
 
