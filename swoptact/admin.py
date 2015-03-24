@@ -52,7 +52,12 @@ class EventAdmin(admin.ModelAdmin):
     }
     exclude = ("geolocation",)
 
+class AddressAdmin(admin.ModelAdmin):
 
-admin.site.register(Address)
+    def get_model_perms(self, *args, **kwargs):
+        """ Hide the address from the admin index """
+        return {}
+
+admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
