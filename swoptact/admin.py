@@ -13,14 +13,14 @@ class ParticipantAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": ("first_name", "last_name", "phone_number", "email",
-                        "address", "map_display")
+                       "address", "map_display")
         }),
-        ("Personal Event History",   {
+        ("Personal Event History", {
             "fields": ("event_history",),
         })
     )
     formfield_overrides = {
-        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},    
+        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},
     }
 
     @property
@@ -48,7 +48,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "site", "address", "date", "attendee_count",)
     filter_horizontal = ("participants",)
     formfield_overrides = {
-        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},    
+        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},
     }
 
 
