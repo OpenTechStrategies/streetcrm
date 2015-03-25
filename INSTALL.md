@@ -18,8 +18,12 @@ This will setup the virtual enviroment and install all the necessary
 dependencies.
 
 Then copy `config.example.ini` file from the root directory of the
-project to `$XDG_CONFIG_PATH/swoptact/config.ini` (if `XDG_CONFIG_PATH`
-is not set, it will default to `~/.config/`).
+project to `$XDG_CONFIG_PATH/swoptact/config.ini`.  If `XDG_CONFIG_PATH`
+is not set, it will default to `~/.config/`, so that command probably
+looks like this for you:
+
+        $ mkdir -p ~/.config/swoptact
+        $ cp config.example.ini ~/.config/swoptact/config.ini
 
 If you would rather put the config file somewhere else, you can do so
 and set the enviroment variable `$SWOPTACT_CONFIG` to indicate where.
@@ -72,6 +76,9 @@ application -- a reasonable default username will usually be offered.)
 Optionally, you may load sample data too (but see the warning below):
 
         $ python manage.py loaddata sample_data.json
+
+(The sample data is located in `swoptact/fixtures/sample_data.json`,
+but Django knows where to find it if you just say `sample_data.json`.)
 
 WARNING: If you load sample data with the above command, any user you
 created with `python manage.py syncdb` in a previous step will be
