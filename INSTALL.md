@@ -92,3 +92,13 @@ Running
 You can now run the python server for testing & development:
 
         $ python manage.py runserver
+
+Note that this assumes you are still in the `virtualenv` environment.
+If you're not, you'll need to set that up again, which is done with
+these two commands seen earlier:
+
+        $ virtualenv --python=python3.4 .
+        $ source ./bin/activate
+
+Now you can invoke `python manage.py runserver` from the proper
+environment.
