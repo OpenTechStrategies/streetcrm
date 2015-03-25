@@ -1,6 +1,5 @@
 ** swoptact prep for demo
 1. cosmetics
-- event history shouldn't show up on "add person" screen
 - adding people to event:
     - arrows further apart, labeled unchoose instead of remove
     - get rid of "filter"  (string)
@@ -9,36 +8,14 @@
     - change available to "choose" and "chosen" to "attendees"
     - remove helptext
     - unchoose all should gray out when none to unchoose (And vice versa)
-- event history title: "events that (name) attended" (changed this to "Personal Event History" for now)
 - call participants people
 
 2. map
 - include pin icon allowing users to map one or more people
-- add map showing address of event or person on the edit page
-
-
-3. actual demo
-- q: notes fields? narrative?
-- question: same name, how do you tell people apart? phone?
-- question: venues v institutions -- same list? see "sites"
-- searching for people, including on event attendance (multiple events?)
-- adding a new (not in db) person from an event page 
-- add new model instance from the change list page, maybe? (add seems
-  very far away)
-- narrow the frame so that add/change are next to the list of model
-  types 
-4. Things to demo:
-- start at localhost:8000/swoptact (do we want to deploy this to a
-  server before the demo, so they can look at it afterward?)
-- adding a person
-- adding an event
-- adding a person to an event
-
 
 5. and then:
 - change root/group/users to "swoptact admin page"
 - change directory/url stuff to create /admin and change /swoptact to /
-- remove addresses from root list
 - on root list: add new event and browse/edit events as only options (same for people)
 - add export option to all lists
 - person and events lists: change "action" to delete button, move to bottom, remove title text
@@ -47,3 +24,70 @@
 - make "clock" show more times?
 - make address fields slide down on person profile (not new window)
 - make address dropdown narrow by substring
+
+** notes from demo
+- Models: archive/deactivate instead of delete.  After being archived, people will no
+  longer show up in certain contexts (notably reports).  People can be
+  reactivated/unarchived.
+- Models: Add fields: need institution field,  primary and secondary phone numbers for person, 
+- Models: Remove fields: maps on individual people and events, address from event
+- People: add zip code, apartment number to address, default/autofill chicago,
+  il
+- Events: binary decision between "terminal" event or "prep" event.  May be
+  expressed via "is prep for" with space for the terminal event (i.e., they will
+  have several planning/prep meetings before any action.  The prep meetings
+  would have the action event as their terminal event)
+- Events: tag system for admins, who will control tag namespace.  Use for
+  reporting (e.g. "housing," "TTM")
+- Events: add 200-char description field ("education, parent mentors,
+  pre-vacation meeting")
+- Event: horizontally shows name, description, tags
+- Event: add person to the event (regardless of spreadsheet), but not the
+  current horizontal filter setup
+- Event: remove address
+- Addresses: autofill on street names
+
+- Reports: "do we have leaders from multiple groups in the same block?"
+  maps are interesting, but in a report way, not a per-person-page way.
+- Report: add primary key to reports (optionally)
+- Report: "what's been added recently?" by default, shows all changes since it
+  was last run
+- Report: quality control.  Flag missing data on review every few weeks (so and
+  so is missing a phone number, this event is missing people, etc)
+
+- Cosmetic: three save buttons need a rethink (use just one?) (will change with
+  "spreadsheet" format addition, anyway)
+- Cosmetic: bold name and phone number but not everything else (in list of people)
+- Cosmetic: make checkboxes bigger
+- Cosmetic: increase font/target size on action buttons/links; italicize too
+- Cosmetic: make nav bar event title bold.  Put time next to date, and use am/pm
+  instead of 24.  Remove "now and "today" options
+- Cosmetic: label "date of event" and "time of event"
+- Cosmetic: on event, rename "site" to "location"
+
+
+- Deduplication: For people with same number, use phone number as disambiguator;
+  will need (manual) dedup ability regardless (e.g., run some report or tool to
+  find potential duplicates and resolve them one way or another)
+- K says tab should work (?)
+- Audit trail: date-stamping of every change
+- User administration: different access levels: e.g. leader just adds/enters, but can't archive
+- Navigation: from people list, have direct link to events
+- Navigation: have "add" button on people and events list pages
+- ADA: higher contrast, no lavender background, & screen-reader compliance
+- Other: test mobile-friendliness = "increasingly important"
+- Other: batch spreadsheet data load
+- Other: placeholder/shell person ("Mary Gonzales") for cases where we can't
+  know for sure which person (of two or more people with the same name) attended
+  a given event
+- Other: Search! (of course)
+
+- MAJOR NEW FEATURE: add sign-in-sheet handling page.  At top, search/create
+  event information: name, date, site.  Then add a table with name, institution,
+  phone (etc...) (in that order) so a user can start typing a name and see
+  options below (e.g., typing "Ma" shows "Maria, Mary, Matthew" below, where
+  Maria, Mary, and Matthew are previously entered people in the database).  When
+  the user chooses one of these previously entered people, his/her information
+  fills in the remaining columns.  If the person being entered is a *new*
+  person, then that new record is saved in the db, along with a link to this
+  event.
