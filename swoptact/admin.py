@@ -8,20 +8,17 @@ from django_google_maps import fields as mapfields
 
 class ParticipantAdmin(admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "phone_number", "address", "email",)
+    list_display = ("name", "phone_number",  "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "phone_number", "email",
-                       "address", "map_display")
+            "fields": ("first_name", "last_name", "phone_number", "secondary_phone", "email",
+                        "address")
         }),
         ("Personal Event History", {
             "fields": ("event_history",),
         })
     )
-    formfield_overrides = {
-        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},
-    }
 
     @property
     def event_history_name(self, obj):
@@ -45,12 +42,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     event_history.allow_tags = True
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("name", "site", "address", "date", "attendee_count",)
-    filter_horizontal = ("participants",)
-    formfield_overrides = {
-        mapfields.AddressField: {'widget': map_widgets.GoogleMapsAddressWidget},
-    }
-    exclude = ("geolocation",)
+    list_display = ("name", "location", "date", "attendee_count",)
 
 class AddressAdmin(admin.ModelAdmin):
 

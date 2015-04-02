@@ -43,6 +43,9 @@ class Address(models.Model):
     direction = models.CharField(max_length=1, choices=DIRECTIONS)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=TYPES)
+    apartment = models.CharField(max_length=20, null=True, blank=True)
+    zipcode = models.IntegerField(null=True, blank=True)
+    
 
     def __init__(self, *args, **kwargs):
         super(Address, self).__init__(*args, **kwargs)
@@ -59,15 +62,18 @@ class Address(models.Model):
             type=self.DICT_TYPES[self.type],
         )
 
+class Institution(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.ForeignKey(Address, blank=True)
+
 class Participant(models.Model):
     """ Representation of a person who can participate in a Event """
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = modelfields.PhoneNumberField(blank=True)
+    phone_number = modelfields.PhoneNumberField(null=True, blank=True)
+    secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
     address = models.ForeignKey(Address, blank=True)
-    map_display = mapfields.AddressField(max_length=200, blank=True)
-    geolocation = mapfields.GeoLocationField(max_length=100, blank=True)    
 
     def __str__(self):
         return "{first_name} {last_name}".format(
@@ -91,15 +97,16 @@ class Participant(models.Model):
 class Event(models.Model, mixins.AdminURLMixin):
 
     name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateTimeField(blank=True)
-    site = models.CharField(max_length=255, blank=True)
-    address = models.ForeignKey(Address, blank=True)
+    location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
-    map_display = mapfields.AddressField(max_length=200, blank=True)
-    geolocation = mapfields.GeoLocationField(max_length=100, blank=True)    
+    is_prep = models.BooleanField(default=False, blank=True)
+    
 
     def __str__(self):
         return self.name
 
     def attendee_count(self):
         return self.participants.count()
+
