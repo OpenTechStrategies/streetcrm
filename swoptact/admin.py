@@ -1,18 +1,18 @@
 from django import template
 from django.contrib import admin, staticfiles
 from django.template import loader
-from swoptact.models import Address, Participant, Event
+from swoptact.models import Address, Participant, Event, Institution
 
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
 class ParticipantAdmin(admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "phone_number",  "address",)
+    list_display = ("name", "phone_number",  "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "phone_number", "secondary_phone", "email",
+            "fields": ("first_name", "last_name", "phone_number", "institution", "secondary_phone", "email",
                         "address")
         }),
         ("Personal Event History", {
@@ -44,6 +44,9 @@ class ParticipantAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
 
+class InstitutionAdmin(admin.ModelAdmin):
+    list_display = ("name", )
+
 class AddressAdmin(admin.ModelAdmin):
 
     def get_model_perms(self, *args, **kwargs):
@@ -53,3 +56,4 @@ class AddressAdmin(admin.ModelAdmin):
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(Institution, InstitutionAdmin)

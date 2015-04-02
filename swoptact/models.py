@@ -65,6 +65,10 @@ class Address(models.Model):
 class Institution(models.Model):
     name = models.CharField(max_length=255)
     address = models.ForeignKey(Address, blank=True)
+    def __str__(self):
+        return "{name}".format(
+            name=self.name,
+        )
 
 class Participant(models.Model):
     """ Representation of a person who can participate in a Event """
@@ -74,6 +78,7 @@ class Participant(models.Model):
     secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
     address = models.ForeignKey(Address, blank=True)
+    institution = models.ForeignKey(Institution, null=True, blank=True)
 
     def __str__(self):
         return "{first_name} {last_name}".format(
