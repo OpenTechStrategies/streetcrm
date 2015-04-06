@@ -102,3 +102,11 @@ these two commands seen earlier:
 
 Now you can invoke `python manage.py runserver` from the proper
 environment.
+
+Updating
+--------
+
+When you've updated you should run:
+
+        $ pip install -r requirements -U
+        $ python manage.py migrate
