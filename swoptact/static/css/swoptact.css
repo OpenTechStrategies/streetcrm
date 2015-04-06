@@ -17,30 +17,54 @@
 */
 
 body {
-    background-color: #D9D4E8;
+    font-family: Verdana,Arial,sans-serif;
+    background-color: #F8F2EB;
+}
+
+h1, h1 a, legend {
+    font-family: Georgia,"Times New Roman",Times,serif;
+    color: #82532E;
+}
+
+/* Purple hrefs that are underlined until you hover over them */
+a {
+    color: #48328F;
+    text-decoration: underline;
+}
+
+a:hover,
+a:focus,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #48328F;
+    text-decoration: none;
+}
+
+/* Push the legend down so it's in the box */
+
+
+/* Try and make the brand fit in with the logo image */
+.navbar-brand,
+.navbar-brand a:focus,
+.navbar-brand a:hover {
+    font-size: 24pt;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 /* Set the background to housestyle colours and remove borders */
 .navbar-default {
-    background-color: #D9D4E8;
+    height: 70px;
     border: 0;
+    padding-top: 10px;
     border-radius: 0;
+    background-color: #FFFFFF;
 }
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-text,
 .navbar-default .navbar-nav > li > a {
     color: #48328F;
-}
-
-/* Links should be white when you hover over them */
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-    color: #FFFFFF;
-}
-
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color: #FFFFFF;
 }
 
 /* Pad the "Welcome, <username>" text 15px away from right */
@@ -61,35 +85,52 @@ body {
 }
 
 .change-content fieldset {
-    border-left: 1px solid #DDD;
-    border-right: 1px solid #DDD;
-    border-bottom: 1px solid #DDD;
+    border-left: 10px solid ##EDDDCF;
+    border-right: 10px solid ##EDDDCF;
+    border-bottom: 10px solid ##EDDDCF;
 
     margin-bottom: 15px;
 }
 
-.change-content h1, .change-content fieldset legend {
+.change-content h1 {
+    color: #82532E;
+    font-size: 18pt;
     padding-top: 5px;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 5px;
     margin-bottom: 0px;
+    background-color: #FFFFFF;
 
-    border-bottom: 1px solid #EEE;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border: 10px;
+    border-bottom: 0px;
+    border-style: solid;
+    border-color: #EDDDCF;
+}
 
-    background-color: #F7F7F7;
-    color: #555555;
-
-    font-size: 18pt;
+.content-main {
+    background-bottom: 0px;
 }
 
 .change-content fieldset {
     padding-top: 5px;
     background-color: #FFFFFF;
+
+    border: 10px;
+    border-style: solid;
+    border-color: #EDDDCF;
+    border-top: 0px;
 }
 
+.change-content legend {
+    padding: 5px 15px;
+    border: 10px solid #EDDDCF;
+    border-bottom: 0px;
+    background-color: #FFF;
+
+    /* Push the boarders out to line up with fieldset borders - is there a better way? */
+    margin-left: -10px;
+}
 
 .breadcrumbs,
 .table-bordered > thead > tr > th,
@@ -138,15 +179,41 @@ body {
     margin-bottom: 20px;
 }
 
+.selector .selector-filter {
+    border: 1px;
+    border-style: solid;
+    border-color: #777;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
 .selector .selector-available h2, .selector .selector-chosen h2 {
+    color: #BF7A42;
+    border: 1px;
+    border-style: solid;
+    border-color: #777;
+    border-bottom: 0px;
     background: none; /* Gets ride of set image by Django */
-    background-color: #F7F7F7;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     margin-bottom: 0;
-    border-bottom: 1px solid #EEE;
+
+}
+
+.selector select {
+    border: 1px;
+    border-style: solid;
+    border-color: #777;
 }
 
 .selector-filter input {
     color: #000;
+}
+
+/* Hide the "save an add another" and "save and continue editing" buttons */
+input[name="_addanother"],input[name="_continue"],input[name="_saveasnew"]{
+    display: none;
+}
+
+/* Make checkboxes bigger */
+input[type="checkbox"] {
+    font-size: 1em;
 }
