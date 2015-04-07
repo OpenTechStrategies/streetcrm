@@ -3,6 +3,7 @@ from django.contrib import admin, staticfiles
 from django.template import loader
 from django.conf.urls import patterns, url
 from django.shortcuts import render_to_response
+from django.forms.models import modelform_factory
 
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
@@ -32,7 +33,14 @@ class SignInSheetAdminMixin(object):
 
 
     def sheet_view(self, request):
-        return render_to_response(self.sheet_template, {})
+        """ View for the sign in sheet """
+
+        return render_to_response(self.sheet_template, {
+            "opts": self.model._meta,
+            "event_form": modelform_factory(Event, exclude=tuple()),
+            "participant_form": modelform_factory(Participant, exclude=tuple()),
+            "institution_form": modelform_factory(Institution, exclude=tuple()),
+        })
 
 class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
