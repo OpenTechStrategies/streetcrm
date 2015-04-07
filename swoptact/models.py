@@ -44,6 +44,8 @@ class Address(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=TYPES)
     apartment = models.CharField(max_length=20, null=True, blank=True)
+    city = models.CharField(max_length=255, default='Chicago', null=True, blank=True)
+    state = models.CharField(max_length=2, default='IL', null=True, blank=True)
     zipcode = models.IntegerField(null=True, blank=True)
     
 
