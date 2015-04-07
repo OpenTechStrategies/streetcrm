@@ -3,11 +3,29 @@ from django.contrib import admin, staticfiles
 from django.template import loader
 from django.conf.urls import patterns, url
 from django.shortcuts import render_to_response
+from django.forms.models import modelform_factory
 
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
 from swoptact.models import Address, Participant, Event, Institution
+
+
+class AttendeesInline(admin.TabularInline):
+    model = Event.participants.through
+    exclude = ("secondary_phone", "email")
+    extra = 1
+#    raw_id_fields = ("address",)
+    verbose_name = "Attendee"
+    verbose_name_plural = "Attendees"
+
+class ParticipantInline(admin.TabularInline):
+    model = Participant
+    exclude = ("secondary_phone", "email")
+    extra = 1
+    raw_id_fields = ("address",)
+    verbose_name = "Attendee"
+    verbose_name_plural = "Attendees"
 
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
@@ -17,6 +35,7 @@ class SignInSheetAdminMixin(object):
     attributes and method names with "sheet_" to avoid conflict.
     """
     sheet_template = "admin/sign_in_sheet.html"
+
 
     def get_urls(self, *args, **kwargs):
         # Get the URLs of the superclass.
@@ -32,7 +51,14 @@ class SignInSheetAdminMixin(object):
 
 
     def sheet_view(self, request):
-        return render_to_response(self.sheet_template, {})
+        """ View for the sign in sheet """
+
+        return render_to_response(self.sheet_template, {
+            "opts": self.model._meta,
+            "event_form": modelform_factory(Event, exclude=("description", "participants", "is_prep")),
+            "participant_form": modelform_factory(Participant, exclude=("address", "secondary_phone", "email",)),
+            "institution_form": modelform_factory(Institution, exclude=tuple()),
+        })
 
 class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
@@ -71,9 +97,17 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
+    inlines = [
+        AttendeesInline,
+    ]
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
+    inlines = [
+        ParticipantInline,
+    ]
+
+
 
 class AddressAdmin(admin.ModelAdmin):
 
