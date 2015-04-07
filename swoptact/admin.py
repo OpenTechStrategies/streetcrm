@@ -12,7 +12,7 @@ from swoptact.models import Address, Participant, Event, Institution
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
 
-    This will be inherited by ParticipantAdmin and is only a seporate
+    This will be inherited by ParticipantAdmin and is only a separate
     class to make it easier to think about. You should prefix your
     attributes and method names with "sheet_" to avoid conflict.
     """
