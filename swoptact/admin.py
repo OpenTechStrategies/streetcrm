@@ -1,12 +1,40 @@
 from django import template
 from django.contrib import admin, staticfiles
 from django.template import loader
-from swoptact.models import Address, Participant, Event, Institution
+from django.conf.urls import patterns, url
+from django.shortcuts import render_to_response
 
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
-class ParticipantAdmin(admin.ModelAdmin):
+from swoptact.models import Address, Participant, Event, Institution
+
+class SignInSheetAdminMixin(object):
+    """ Provides a special case sign in sheet view
+
+    This will be inherited by ParticipantAdmin and is only a seporate
+    class to make it easier to think about. You should prefix your
+    attributes and method names with "sheet_" to avoid conflict.
+    """
+    sheet_template = "admin/sign_in_sheet.html"
+
+    def get_urls(self, *args, **kwargs):
+        # Get the URLs of the superclass.
+        urls = super(SignInSheetAdminMixin, self).get_urls(*args, **kwargs)
+
+        # Define the sign in sheet URL
+        sheet_view = self.admin_site.admin_view(self.sheet_view)
+        sheet_url = patterns("",
+            url(r"sign-in-sheet/$", sheet_view, name="sign-in-sheet"),
+        )
+
+        return sheet_url + urls
+
+
+    def sheet_view(self, request):
+        return render_to_response(self.sheet_template, {})
+
+class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "phone_number",  "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
