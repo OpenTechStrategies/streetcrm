@@ -109,7 +109,7 @@ class Event(models.Model, mixins.AdminURLMixin):
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
     is_prep = models.BooleanField(default=False, blank=True)
-    
+    terminal_event = models.ForeignKey("self", null=True, blank=True)
 
     def __str__(self):
         return self.name
