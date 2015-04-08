@@ -86,6 +86,12 @@ deleted, in which case you'll have to re-create the user with:
 
         $ python manage.py createsuperuser
 
+WARNING 2: (Caveat Importer:) There's every possibility that the
+fixtures were made when the database looked differently than it does
+now, and the columns don't line up, etc.  In which case this step
+might not work anyway!
+
+
 Running
 -------
 
