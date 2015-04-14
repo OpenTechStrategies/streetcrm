@@ -1,5 +1,6 @@
 from django import template
 from django.contrib import admin, staticfiles
+from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
 from django.conf.urls import patterns, url
 from django.shortcuts import render_to_response
@@ -11,14 +12,9 @@ from django_google_maps import fields as mapfields
 from swoptact.models import Address, Participant, Event, Institution
 
 
-class AttendeesInline(admin.TabularInline):
+class AttendeesInline(InlineModelAdmin):
     model = Event.participants.through
     template = "admin/inline_test.html"
-    exclude = ("secondary_phone", "email")
-    extra = 1
-#    raw_id_fields = ("address",)
-    verbose_name = "Attendee"
-    verbose_name_plural = "Attendees"
 
 class ParticipantInline(admin.TabularInline):
     model = Participant
