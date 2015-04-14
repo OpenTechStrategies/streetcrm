@@ -13,6 +13,7 @@ from swoptact.models import Address, Participant, Event, Institution
 
 class AttendeesInline(admin.TabularInline):
     model = Event.participants.through
+    template = "admin/inline_test.html"
     exclude = ("secondary_phone", "email")
     extra = 1
 #    raw_id_fields = ("address",)
@@ -100,13 +101,13 @@ class EventAdmin(admin.ModelAdmin):
     inlines = [
         AttendeesInline,
     ]
+    exclude = ('participants',)
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
     inlines = [
         ParticipantInline,
     ]
-
 
 
 class AddressAdmin(admin.ModelAdmin):
