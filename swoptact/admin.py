@@ -14,7 +14,7 @@ from swoptact.models import Address, Participant, Event, Institution
 
 class AttendeesInline(InlineModelAdmin):
     model = Event.participants.through
-    template = "admin/inline_test.html"
+    template = "admin/inline_event_participants.html"
 
 class ParticipantInline(admin.TabularInline):
     model = Participant
