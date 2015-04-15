@@ -1,3 +1,5 @@
+{% load static i18n %}
+
 <div class="_inline-group" id="participant-group">
   <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
     <fieldset class="module">
@@ -19,3 +21,5 @@
     </fieldset>
   </div>
 </div>
+
+<script type="text/javascript" src="{% static "js/inline_ajax.js" %}"></script>
