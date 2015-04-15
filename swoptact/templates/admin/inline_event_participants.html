@@ -1,25 +1,33 @@
 {% load static i18n %}
 
-<div class="_inline-group" id="participant-group">
-  <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
-    <fieldset class="module">
-      <h2>Boop boop! Ajax stuff goes here :)</h2>
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Phone number</th>
-            <th>Address</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Populated via javascript ;D -->
-        </tbody>
-      </table>
-    </fieldset>
+{% if change %}
+  <div class="_inline-group" id="participant-group">
+    <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
+      <fieldset class="module">
+        <h2>Boop boop! Ajax stuff goes here :)</h2>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Phone number</th>
+              <th>Address</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Populated via javascript ;D -->
+          </tbody>
+        </table>
+      </fieldset>
+    </div>
   </div>
-</div>
 
-<script type="text/javascript" src="{% static "js/inline_ajax.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/inline_ajax.js" %}"></script>
+{% else %}
+  <p>
+    <i>(To add participants, first save this event.)</i>
+  </p>
+
+{% endif %}
+
