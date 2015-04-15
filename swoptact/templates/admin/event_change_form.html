@@ -1,0 +1,6 @@
+{% extends "admin/change_form.html" %}
+
+{% block inline_field_sets %}
+  {{ block.super }}
+  {% include "admin/inline_event_participants.html" %}
+{% endblock %}

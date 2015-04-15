@@ -1,6 +1,9 @@
 {% load static i18n %}
 
 {% if change %}
+  {# javascript can extract what ID to talk to from here #}
+  <input type="hidden" id="event_object_id" value="{{ object_id }}" />
+
   <div class="_inline-group" id="participant-group">
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
       <fieldset class="module">

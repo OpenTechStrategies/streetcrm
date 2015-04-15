@@ -12,10 +12,6 @@ from django_google_maps import fields as mapfields
 from swoptact.models import Address, Participant, Event, Institution
 
 
-class AttendeesInline(InlineModelAdmin):
-    model = Event.participants.through
-    template = "admin/inline_event_participants.html"
-
 class ParticipantInline(admin.TabularInline):
     model = Participant
     exclude = ("secondary_phone", "email")
@@ -94,10 +90,8 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    inlines = [
-        AttendeesInline,
-    ]
     exclude = ('participants',)
+    change_form_template = "admin/event_change_form.html"
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
