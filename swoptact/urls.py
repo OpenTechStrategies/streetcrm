@@ -19,6 +19,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
+from swoptact import views
+
 urlpatterns = patterns("",
+    # Admin site URLS
     url(r"^", include(admin.site.urls)),
+
+    # API URLs
+    url(r"^api/", include(patterns("",
+        url("^participants/", include(patterns("",
+            url("^$", views.AllParticipantsAPI.as_view(), name="api-all-participants"),
+            url("^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants"),
+        ))),
+    ))),
 )

@@ -15,12 +15,48 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
-from phonenumber_field import modelfields
+from django.db.models.fields import related
 
-from swoptact import mixins
+from phonenumber_field import modelfields
 from django_google_maps import fields as mapfields
 
-class Address(models.Model):
+from swoptact import mixins
+
+class SerializeableMixin:
+    """
+    Provides a .seralize method which serializes all properties on a model
+
+    Note, this does NOT support serializing any related fields.
+    """
+
+    def serialize(self):
+        """ Provide a dictionary representation of model """
+        # Get all the fields on the model
+        fields = self._meta.fields
+
+        # Produce the dictionary that will be built
+        serialized = {}
+
+        # Iterate over each field to and add the value to serialized.
+        for field in fields:
+            # Get the value of the field
+            value = getattr(self, field.name)
+
+            # We don't want any related fields.
+            if isinstance(field, related.RelatedField):
+                continue
+
+            # Phone numbers give back PhoneNumber objects, we want a string
+            if isinstance(value, modelfields.PhoneNumber):
+                value = value.raw_input
+
+            # For all other values just add them as per usual
+            serialized[field.name] = value
+
+        return serialized
+
+
+class Address(models.Model, SerializeableMixin):
     """ Representation of an address in Chicago """
     TYPES = (
         ("St", "Street"),
@@ -64,7 +100,7 @@ class Address(models.Model):
             type=self.DICT_TYPES[self.type],
         )
 
-class Institution(models.Model):
+class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.ForeignKey(Address, blank=True)
     def __str__(self):
@@ -72,7 +108,7 @@ class Institution(models.Model):
             name=self.name,
         )
 
-class Participant(models.Model):
+class Participant(models.Model, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -101,7 +137,7 @@ class Participant(models.Model):
         return Event.objects.filter(participants__in=[self]).all()
 
 
-class Event(models.Model, mixins.AdminURLMixin):
+class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
 
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
