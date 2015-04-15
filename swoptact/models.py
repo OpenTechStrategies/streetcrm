@@ -26,7 +26,11 @@ class SerializeableMixin:
     """
     Provides a .seralize method which serializes all properties on a model
 
-    Note, this does NOT support serializing any related fields.
+    You should ensure when putting this on a model that all foreign keys also
+    have this mixin added to them.
+
+    This contains recursive functions, only use on models which you are sure
+    do not contain cyclic relations.
     """
 
     def serialize(self):
@@ -42,9 +46,9 @@ class SerializeableMixin:
             # Get the value of the field
             value = getattr(self, field.name)
 
-            # We don't want any related fields.
-            if isinstance(field, related.RelatedField):
-                continue
+            # If it's a foreign key we should run serialize on the foreign model
+            if isinstance(value, models.Model):
+                value = value.serialize()
 
             # Phone numbers give back PhoneNumber objects, we want a string
             if isinstance(value, modelfields.PhoneNumber):
@@ -54,7 +58,6 @@ class SerializeableMixin:
             serialized[field.name] = value
 
         return serialized
-
 
 class Address(models.Model, SerializeableMixin):
     """ Representation of an address in Chicago """

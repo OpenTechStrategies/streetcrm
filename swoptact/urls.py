@@ -28,8 +28,8 @@ urlpatterns = patterns("",
     # API URLs
     url(r"^api/", include(patterns("",
         url("^participants/", include(patterns("",
-            url("^$", views.AllParticipantsAPI.as_view(), name="api-all-participants"),
-            url("^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants"),
+            url("^$", views.ParticipantAPI.as_view(), name="api-participants"),
+            url("^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants-pk"),
         ))),
     ))),
 )
