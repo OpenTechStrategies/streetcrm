@@ -42,6 +42,32 @@
               </td>
             </tr>
 
+            <!-- This one specifically covers the next row's issues -->
+            <tr class="errors-below">
+              <td colspan="5">
+                <p><i>Errors were found in the entry below...</i></p>
+                <!-- Loop over and make a list of these... -->
+                <div class="alert alert-danger">
+                  Not a valid phone number.
+                </div>
+                <div class="alert alert-danger">
+                  Last name must not be blank.
+                </div>
+              </td>
+            </tr>
+
+            <tr class="form-row">
+              <td><input class="vTextField" type="text" value="Lavinia" /></td>
+              <td><input class="vTextField" type="text" value="" /></td>
+              <td><input class="vTextField" type="text" value="1234abcdefg" /></td>
+              <td><input class="vTextField" type="text" value="5432 Grand Sicily Ave, Bologna, Italy" /></td>
+              <td>
+                <button type="submit" class="btn btn-success" name="_save" {{ onclick_attrib }}>✓ {% trans 'Save' %}</button>
+                <button type="submit" class="btn btn-warning" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Cancel' %}</button>
+              </td>
+            </tr>
+
+
           </tbody>
         </table>
       </fieldset>
