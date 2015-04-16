@@ -27,9 +27,14 @@ urlpatterns = patterns("",
 
     # API URLs
     url(r"^api/", include(patterns("",
-        url("^participants/", include(patterns("",
-            url("^$", views.ParticipantAPI.as_view(), name="api-participants"),
-            url("^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants-pk"),
+        url(r"^participants/", include(patterns("",
+            url(r"^$", views.CreateParticipantAPI.as_view(), name="api-create-participants"),
+            url(r"^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants"),
+        ))),
+        url(r"^events/(?P<pk>\w+)/", include(patterns("",
+            url(r"^participants/$", views.EventParticipantsAPI.as_view(), name="api-event-participants"),
+            url(r"^available-participants/$", views.EventAvailableAPI.as_view(), name="api-event-available"),
+            url(r"participants/(?P<participant_id>\w+)/$", views.EventLinking.as_view(), name="api-event-linking"),
         ))),
     ))),
 )

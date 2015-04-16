@@ -3,6 +3,10 @@ import urllib.parse
 
 from django import http
 from django.views import generic
+from django.db.models.fields import related
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from swoptact import models
 
@@ -11,13 +15,81 @@ class APIMixin:
     Provides a JSON based to be used by the API
     """
 
+    def __init__(self, *args, **kwargs):
+        self._objects_created = []
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(APIMixin, self).dispatch(*args, **kwargs)
+
+    def produce_response(self):
+        """ Produces a HTTPResponse object with the serialized object """
+        # Serialize the object to JSON
+        json_object = self.object.serialize()
+
+        # Serialize the output and use that as the context
+        return self.render_to_response(self.get_context_data(**json_object))
+
+    def process_json(self, body):
+        """
+        Produces value for request.POST from a JSON encoded body
+
+        This initially decodes the body to UTF-8 into JSON, then looks for
+        attributes which present a relationship (ForeignKey) that needs to be
+        mapped to an ID for that object. If an ID does NOT exist then a new
+        object will be created and the newly created object's ID will be used.
+        """
+        body = json.loads(body.decode("utf-8"))
+
+        # Look for relations
+        for field, value in body.items():
+            # Find the field that the model is on.
+            field = self.model._meta.get_field(field)
+
+            if isinstance(field, related.RelatedField):
+                # Check if the object needs to be created.
+                if "id" in value:
+                    # Object already exists - just look it up.
+                    value = field.related_model.objects.get(pk=value["id"])
+                else:
+                    # Create the object.
+                    value = field.related_model(**value)
+                    value.save()
+
+                    # we need to keep track we made it
+                    self._objects_created.append(value)
+
+                # The ID of the object should be stored as the value
+                body[field.name] = value.id
+
+        return body
+
     def post(self, request, *args, **kwrgs):
-        request.POST = json.load(request.body)
+        request.POST = self.process_json(request.body)
         return super(APIMixin, self).post(request, *args, **kwrgs)
 
     def put(self, request, *args, **kwrgs):
-        request.POST = json.load(request.body)
+        request.POST = self.process_json(request.body)
         return super(APIMixin, self).put(request, *args, **kwrgs)
+
+    def form_invalid(self, *args, **kwargs):
+        """
+        Removes all created models from nested JSON
+
+        The self.process_json method can create models that are defined in the
+        JSON prior to knowing if the form is valid, this is because to validate
+        the form, it needs to have the models created. The method helpfully
+        builds up a list of any and all created models for this purpose and
+        they are deleted to prevent objects being created not associated or used
+        by anything.
+
+        If you subclass and don't call this parent method make sure you also
+        clean up these objects!
+        """
+        for obj in self._objects_created:
+            obj.delete()
+
+        return super(APIMixin, self).form_invalid(self, *args, **kwargs)
 
     def get_context_data(self, *args, **context):
         """
@@ -44,22 +116,100 @@ class APIMixin:
 
 class ParticipantAPI(APIMixin, generic.UpdateView):
     """
-    Provides the endpoint to retrive, create and update a participant
+    Provides the view to retrive, create and update a participant
 
     If called with the PUT verb this expects a JSON serialized participant
     object which is the updated participant that will be saved.
     """
-   
+
     model = models.Participant
+    fields = ["first_name", "last_name", "phone_number", "secondary_phone",
+              "email", "address"]
 
     def get(self, request, *args, **kwargs):
         """ Retrival of an existing participant """
         # Lookup the object that we want to return
         self.object = self.get_object()
+        return self.produce_response()
 
-        # Serialize the object to JSON
-        json_object = self.object.serialize()
+    def form_valid(self, form, *args, **kwargs):
+        self.object = form.save()
+        return self.produce_response()
 
-        # Serialize the output and use that as the context
-        return self.render_to_response(self.get_context_data(**json_object))
+class CreateParticipantAPI(APIMixin, generic.CreateView):
+    """
+    Creates a participant from a JSON API
+    """
 
+    model = models.Participant
+    fields = ["first_name", "last_name", "phone_number", "secondary_phone",
+              "email", "address"]
+
+    def form_valid(self, form, *args, **kwargs):
+        self.object = form.save()
+        return self.produce_response()
+
+class EventParticipantsAPI(APIMixin, generic.DetailView):
+    """
+    Provides a list of all participants linked to a event
+    """
+
+    model = models.Event
+
+    def get(self, request, *args, **kwargs):
+        """ Retrival of an existing event """
+        self.object = self.get_object()
+
+        # Iterate over pariticipants and serialize
+        participants = [p.serialize() for p in self.object.participants.all()]
+
+        return self.render_to_response(context=participants)
+
+class EventAvailableAPI(APIMixin, generic.DetailView):
+    """
+    Provides a list of all participants that are not linked to an event
+    """
+    model = models.Event
+
+    def get(self, request, *args, **kwargs):
+        """ Retrival of an existing event """
+        self.object = self.get_object()
+
+        # Iterate over participants so we can exclude from available list.
+        linked = [p.id for p in self.object.participants.all()]
+        available = models.Participant.objects.all().exclude(id__in=linked)
+        available = [a.serialize() for a in available]
+
+        return self.render_to_response(context=available)
+
+class EventLinking(APIMixin, generic.DetailView):
+    """
+    Provides a mechanism to link and unlink Participants from Events
+    """
+    model = models.Event
+
+    @property
+    def participant(self):
+        """ Looks up and returns Participant """
+        participant_pk = self.kwargs.get("participant_id")
+        return models.Participant.objects.get(pk=participant_pk)
+
+    def delete(self, request, *args, **kwargs):
+        """ Unlink a participant """
+        self.object = self.get_object()
+
+        # Remove from the event
+        self.object.participants.remove(self.participant)
+
+        # Just return a successful status code
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        """ Links a participant """
+        self.object = self.get_object()
+
+        # Remove from the event
+        self.object.participants.add(self.participant)
+
+        # Just return a successful status code
+        return self.render_to_response(self.get_context_data())
