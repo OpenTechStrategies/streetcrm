@@ -4,11 +4,12 @@ import urllib.parse
 from django import http
 from django.views import generic
 from django.db.models.fields import related
-
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import permission_required
 
 from swoptact import models
+from swoptact.decorators import swoptact_login_required
 
 class APIMixin:
     """
@@ -18,6 +19,7 @@ class APIMixin:
     def __init__(self, *args, **kwargs):
         self._objects_created = []
 
+    @method_decorator(swoptact_login_required)
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(APIMixin, self).dispatch(*args, **kwargs)
