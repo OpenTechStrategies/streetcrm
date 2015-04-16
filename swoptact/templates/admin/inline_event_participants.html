@@ -67,9 +67,35 @@
               </td>
             </tr>
 
-
+            <tr class="form-row">
+              <td>
+                <p><i>Select an existing participant:</i></p>
+                <select>
+                  <option>
+                    ----------
+                  </option>
+                  <option>
+                    Artemesia Gentileschi
+                  </option>
+                  <option>
+                    Mary Cassatt
+                  </option>
+                  <option>
+                    Louise Moillon
+                  </option>
+                </select>
+              </td>
+              <td colspan="4">
+                <button type="submit" class="btn btn-info" name="_select" {{ onclick_attrib }}>✓ {% trans 'Select' %}</button>
+                <button type="submit" class="btn btn-warning" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Cancel' %}</button>
+              </td>
+            </tr>
           </tbody>
         </table>
+        <div class="pull-right" style="padding: 10px">
+          <button type="submit" class="btn" name="_select" {{ onclick_attrib }}>✓ {% trans 'Add new' %}</button>
+          <button type="submit" class="btn" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Link existing' %}</button>
+        </div>
       </fieldset>
     </div>
   </div>
