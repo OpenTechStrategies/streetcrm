@@ -68,4 +68,4 @@ function getAttendees(){
     });
 }
 
-getAttendees(); //testing with specific id!
+getAttendees(); 
