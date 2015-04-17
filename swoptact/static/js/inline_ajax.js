@@ -37,33 +37,35 @@ function unlinkPerson(event_id, person_id){
 /*
 Loops through attendees and creates table rows to display and edit them
 */
-function displayPerson(person){
+function displayPerson(person, event){
     $('.editable').hide();
 //    $('#attendees_table').append('<tr></tr>');
     $tr = $('<tr>');
     var person_info = [person.first_name, person.last_name,
                             person.phone_number, person.institution.name];
     for	(index = 0; index < person_info.length; index++) {
-        $tr.append('<td>'+person_info[index]+'<input type=text class="editable"></td>');
+        $tr.append('<td>'+person_info[index]+'<input type=text class="editable edit_" value="'+person_info[index]+'"></td>');
     }
     $tr.append('<td>');
     $edit_btn = $('<input class="btn btn-info display_only" name="_edit" value="Edit" onclick="editPerson()">');
     $tr.append($edit_btn);
     $tr.append('<input class="btn btn-success editable" name="_save" value="✓ Save" onclick="savePerson()">');
     $tr.append('<input class="btn btn-warning editable" name="_cancel" value="✗ Cancel" onclick="editPerson()">');
-    $tr.append('<input class="btn btn-danger display_only" name="_unlink" value="Remove attendee" onclick="unlinkPerson(8, 10)">');
+    $tr.append('<input class="btn btn-danger display_only" name="_unlink" value="Remove attendee" onclick="unlinkPerson('+event+', '+person.id+')">');
     $tr.append('</td>');
     $('#attendees_table').append($tr);
     $('.editable').hide();
 }
 
 
-function getAttendees(url){
+function getAttendees(){
+    var event_id = document.getElementById('event_object_id').value;
+    var url = '/api/events/'+event_id+'/participants';
     $.get(url,  function (people_list){
     for (i = 0; i < people_list.length; i++){
-        displayPerson(people_list[i]);
+        displayPerson(people_list[i], event_id);
     }
     });
 }
 
-getAttendees('/api/events/8/participants');
+getAttendees(); //testing with specific id!
