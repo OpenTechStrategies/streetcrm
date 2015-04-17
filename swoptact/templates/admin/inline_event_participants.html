@@ -1,5 +1,7 @@
 {% load static i18n %}
 
+		<link href="{% static "js/jquery.js" %}" type="script" />
+
 {% if change %}
   {# javascript can extract what ID to talk to from here #}
   <input type="hidden" id="event_object_id" value="{{ object_id }}" />
@@ -19,77 +21,6 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Populated via javascript ;D -->
-            <tr class="form-row">
-              <td><p>Georgia</p></td>
-              <td><p>O'Keeffe</p></td>
-              <td><p>+15557132859</p></td>
-              <td><p>1234 Lily Rd, Sun Prairie, WI</p></td>
-              <td>
-                <button type="submit" class="btn btn-info" name="_edit" {{ onclick_attrib }}>✎ {% trans 'Edit' %}</button>
-                <button type="submit" class="btn btn-danger" name="_unlink" {{ onclick_attrib }}>✘ {% trans 'Unlink' %}</button>
-              </td>
-            </tr>
-
-            <tr class="form-row">
-              <td><input class="vTextField" type="text" value="Georgia" /></td>
-              <td><input class="vTextField" type="text" value="O'Keeffe" /></td>
-              <td><input class="vTextField" type="text" value="+15557132859" /></td>
-              <td><input class="vTextField" type="text" value="1234 Lily Rd, Sun Prairie, WI" /></td>
-              <td>
-                <button type="submit" class="btn btn-success" name="_save" {{ onclick_attrib }}>✓ {% trans 'Save' %}</button>
-                <button type="submit" class="btn btn-warning" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Cancel' %}</button>
-              </td>
-            </tr>
-
-            <!-- This one specifically covers the next row's issues -->
-            <tr class="errors-below">
-              <td colspan="5">
-                <p><i>Errors were found in the entry below...</i></p>
-                <!-- Loop over and make a list of these... -->
-                <div class="alert alert-danger">
-                  Not a valid phone number.
-                </div>
-                <div class="alert alert-danger">
-                  Last name must not be blank.
-                </div>
-              </td>
-            </tr>
-
-            <tr class="form-row">
-              <td><input class="vTextField" type="text" value="Lavinia" /></td>
-              <td><input class="vTextField" type="text" value="" /></td>
-              <td><input class="vTextField" type="text" value="1234abcdefg" /></td>
-              <td><input class="vTextField" type="text" value="5432 Grand Sicily Ave, Bologna, Italy" /></td>
-              <td>
-                <button type="submit" class="btn btn-success" name="_save" {{ onclick_attrib }}>✓ {% trans 'Save' %}</button>
-                <button type="submit" class="btn btn-warning" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Cancel' %}</button>
-              </td>
-            </tr>
-
-            <tr class="form-row">
-              <td>
-                <p><i>Select an existing participant:</i></p>
-                <select>
-                  <option>
-                    ----------
-                  </option>
-                  <option>
-                    Artemesia Gentileschi
-                  </option>
-                  <option>
-                    Mary Cassatt
-                  </option>
-                  <option>
-                    Louise Moillon
-                  </option>
-                </select>
-              </td>
-              <td colspan="4">
-                <button type="submit" class="btn btn-info" name="_select" {{ onclick_attrib }}>✓ {% trans 'Select' %}</button>
-                <button type="submit" class="btn btn-warning" name="_cancel" {{ onclick_attrib }}>✗ {% trans 'Cancel' %}</button>
-              </td>
-            </tr>
           </tbody>
         </table>
         <div class="pull-right" style="padding: 10px">
@@ -100,6 +31,7 @@
     </div>
   </div>
 
+  <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
   <script type="text/javascript" src="{% static "js/inline_ajax.js" %}"></script>
 {% else %}
   <p>

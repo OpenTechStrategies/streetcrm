@@ -12,33 +12,58 @@ an existing person to this event.
 Currently it does only number two (2), of the above.
 */
 
-/*
-Very basic function to get the JSON object from one of the API URL's.
-*/
-function Get(yourUrl){
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET",yourUrl,false);
-    Httpreq.send(null);
-    var model = Httpreq.responseText;
-    var obj = JSON.parse(model)
-    return obj;
-    }
+
+function editPerson(){
+    $('.editable').toggle();
+    $('.display_only').toggle();
+}
+
+function savePerson(){
+    //send info about an existing person to Jess's save endpoint
+}
+
+function unlinkPerson(event_id, person_id){
+    //send info about this person to Jess's delete endpoint
+    //this doesn't work yet
+    var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
+    $.ajax({
+        url: target_url,
+        type: 'DELETE',
+        success: function(result) {
+        }
+    });
+}
 
 /*
-Takes a URL in order to call the function above and inserts the resultant JSON
-object as a table row.
+Loops through attendees and creates table rows to display and edit them
 */
-function displayPerson(URL){
-    var person = Get(URL);
-    var target_table = document.getElementById('attendees_table');
-    var row = target_table.insertRow(1);
+function displayPerson(person){
+    $('.editable').hide();
+//    $('#attendees_table').append('<tr></tr>');
+    $tr = $('<tr>');
     var person_info = [person.first_name, person.last_name,
                             person.phone_number, person.institution.name];
     for	(index = 0; index < person_info.length; index++) {
-        var insert_cell = row.insertCell(index);
-        insert_cell.innerHTML = person_info[index];
+        $tr.append('<td>'+person_info[index]+'<input type=text class="editable"></td>');
     }
+    $tr.append('<td>');
+    $edit_btn = $('<input class="btn btn-info display_only" name="_edit" value="Edit" onclick="editPerson()">');
+    $tr.append($edit_btn);
+    $tr.append('<input class="btn btn-success editable" name="_save" value="✓ Save" onclick="savePerson()">');
+    $tr.append('<input class="btn btn-warning editable" name="_cancel" value="✗ Cancel" onclick="editPerson()">');
+    $tr.append('<input class="btn btn-danger display_only" name="_unlink" value="Remove attendee" onclick="unlinkPerson(8, 10)">');
+    $tr.append('</td>');
+    $('#attendees_table').append($tr);
+    $('.editable').hide();
 }
 
-// example
-displayPerson('/api/participants/14/');
+
+function getAttendees(url){
+    $.get(url,  function (people_list){
+    for (i = 0; i < people_list.length; i++){
+        displayPerson(people_list[i]);
+    }
+    });
+}
+
+getAttendees('/api/events/8/participants');

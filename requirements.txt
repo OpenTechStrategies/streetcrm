@@ -2,3 +2,4 @@ django<1.9
 configobj
 django-admin-bootstrapped
 django-phonenumber-field
+django-static-jquery==2.1.3
