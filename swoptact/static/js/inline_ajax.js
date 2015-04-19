@@ -263,13 +263,24 @@ function insertParticipant(participant) {
         {"class": "form-row participant-errors",
          "id": "participant-errors-" + participant.id});
     errors_row.hide()
-    // We get to skip filling errors, there's nothing to fill
-    // ... so just insert it!
+    fillErrorsRow(edit_row, participant, []);
     $("#participant-table tbody").append(errors_row);
+}
+
+/* Wipe out a row and add the hidden participant id input */
+function resetRow(row, participant) {
+    row.empty();
+    row.append($(
+        "<input/>",
+        {"type": "hidden",
+         "class": "participant-id",
+         "value": participant.id}));
 }
 
 // Stubs, for now...
 function fillStaticRow(row, participant) {
+    resetRow(row, participant);
+
     appendSimpleText = function (text) {
         td_wrap = $("<td/>");
         p_wrap = $("<p/>");
@@ -291,8 +302,13 @@ function fillStaticRow(row, participant) {
     row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Unlink</button></td>');
 }
 
-function fillEditRow(row, participant) {}
-function fillErrorsRow(row, errors) {}
+function fillEditRow(row, participant) {
+    resetRow(row, participant);
+}
+
+function fillErrorsRow(row, participant, errors) {
+    resetRow(row, participant);
+}
 
 
 function loadInitialAttendees() {
