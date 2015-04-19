@@ -125,7 +125,7 @@ function getAttendees(){
 }
 
 
-var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
+var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"__str__": "3100 93rd Street", "type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
 
 function saveNewPerson(){
     var str = ( $("form").serialize());
@@ -269,7 +269,28 @@ function insertParticipant(participant) {
 }
 
 // Stubs, for now...
-function fillStaticRow(row, participant) {}
+function fillStaticRow(row, participant) {
+    appendSimpleText = function (text) {
+        td_wrap = $("<td/>");
+        p_wrap = $("<p/>");
+        p_wrap.text(text);
+        td_wrap.append(p_wrap);
+        row.append(td_wrap);
+    }
+
+    appendSimpleText(participant.first_name);
+    appendSimpleText(participant.last_name);
+    appendSimpleText(participant.phone_number);
+    if (participant.address) {
+        appendSimpleText(participant.address.__str__);
+    } else {
+        appendSimpleText("");
+    }
+
+    // Now append the buttons...
+    row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Unlink</button></td>');
+}
+
 function fillEditRow(row, participant) {}
 function fillErrorsRow(row, errors) {}
 
