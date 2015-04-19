@@ -263,7 +263,7 @@ function insertParticipant(participant) {
         {"class": "form-row participant-errors",
          "id": "participant-errors-" + participant.id});
     errors_row.hide()
-    fillErrorsRow(edit_row, participant, []);
+    fillErrorsRow(errors_row, participant, []);
     $("#participant-table tbody").append(errors_row);
 }
 
@@ -304,6 +304,29 @@ function fillStaticRow(row, participant) {
 
 function fillEditRow(row, participant) {
     resetRow(row, participant);
+
+    appendSimpleTextField = function (text) {
+        td_wrap = $("<td/>");
+        input_wrap = $("<input/>", {
+            "class": "vTextField",
+            "type": "text",
+            "value": text});
+        input_wrap.text(text);
+        td_wrap.append(input_wrap);
+        row.append(td_wrap);
+    }
+
+    appendSimpleTextField(participant.first_name);
+    appendSimpleTextField(participant.last_name);
+    appendSimpleTextField(participant.phone_number);
+    if (participant.address) {
+        appendSimpleTextField(participant.address.__str__);
+    } else {
+        appendSimpleTextField("");
+    }
+
+    // Now append the buttons...
+    row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
 }
 
 function fillErrorsRow(row, participant, errors) {
