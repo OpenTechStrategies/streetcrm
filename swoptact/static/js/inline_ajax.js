@@ -15,7 +15,8 @@ Currently it does only number two (2), of the above.
 
 
 function makePersonEditable(person_id){
-    
+    //show all input elements in a given row, as well as the save and cancel buttons
+    //hide all display (span?) elements in a given row, as well as the edit and unlink buttons
 }
 
 function makePersonDisplayOnly(person_id){
@@ -30,7 +31,7 @@ function savePerson(person_object, event_id){
         url: target_url,
         type: 'PUT',
         dataType: 'json',
-        data: person_object,
+        data: person_parsed,
         contentType: "application/json; charset=UTF-8",
         error: function(XMLHttpRequest, textStatus, errorThrown, result){
             alert(errorThrown);
@@ -45,7 +46,7 @@ function getAvailableParticipants(){
     var event_id = document.getElementById('event_object_id').value;
     var url = '/api/events/'+event_id+'/available-participants';
     $.get(url,  function (result){
-        var $select_available = $('<select>');
+        var $select_available = $('<select id="available_participants_id">');
         for (i = 0; i < result.length; i++){
             $select_available.append('<option value="'+result[i].id+'">'+result[i].first_name+' '+result[i].last_name);
         }
@@ -55,7 +56,7 @@ function getAvailableParticipants(){
 
 
 
-function unlinkPerson(event_id, person_id){
+function unlinkPerson(person_id){
     //send info about this person to Jess's delete endpoint
     var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
     $.ajax({
@@ -68,6 +69,8 @@ function unlinkPerson(event_id, person_id){
 }
 
 function linkPerson(event_id, person_id){
+    var event_id = document.getElementById('event_object_id').value;
+    var person_id = document.getElementById('available_participants_id').value;
     var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
     $.ajax({
         url: target_url,
@@ -83,7 +86,6 @@ Loops through attendees and creates table rows to display and edit them
 */
 function displayPerson(person, event){
     $('.editable').hide();
-//    $('#attendees_table').append('<tr></tr>');
     var $tr = $('<tr>');
     $tr.append('<input class="attendee-id" type="hidden" value="'+person.id+'" />');
     var person_info = [person.first_name, person.last_name,
@@ -106,7 +108,7 @@ function displayPerson(person, event){
     var $btn_cell = $('<td>');
     $edit_btn = $('<input class="btn btn-info display_only" name="_edit" value="Edit" onclick="makePersonEditable('+person.id+')">');
     $btn_cell.append($edit_btn);
-    var $save_btn = $('<input class="btn btn-success editable" name="_save" value="✓ Save">');
+    var $save_btn = $('<input class="btn btn-success editable" name="_save" value="✓ Save" onclick="savePerson()">');
     $btn_cell.append($save_btn);
     $btn_cell.append('<input class="btn btn-warning editable" name="_cancel" value="✗ Cancel" onclick="makePersonDisplayOnly('+person.id+')">');
     $btn_cell.append('<input class="btn btn-danger display_only" name="_unlink" value="Remove attendee" onclick="unlinkPerson('+event+', '+person.id+')">');
@@ -122,10 +124,28 @@ function getAttendees(){
     var url = '/api/events/'+event_id+'/participants';
     $.get(url,  function (people_list){
     for (i = 0; i < people_list.length; i++){
-        displayPerson(people_list[i], event_id);
+            displayPerson(people_list[i], event_id);
     }
     });
 }
 
+var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
+
+function saveNewPerson(){
+    var str = ( $("form").serialize());
+    var str_arr = str.split("first");
+    var person_string = "first"+str_arr[1];
+    $('#testshow').text(person_string);
+    $.post(
+        '/api/participants/',
+        ( $("form").serialize()),
+        function (response){
+            alert(response);
+        }
+    );
+    
+}
+
 getAttendees(); 
 getAvailableParticipants();
+//saveNewPerson();

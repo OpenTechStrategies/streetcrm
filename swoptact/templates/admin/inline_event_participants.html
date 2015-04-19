@@ -97,10 +97,25 @@
             </tr>
             {% endcomment %}
           </tbody>
+          <tr>
+<form id="testform" name="_testform">
+<td><input type=text name="first_name" value="Post"></td>
+<td><input type=text name="last_name" value="Example"></td>
+<td><input type=text name="institution" value="Some_Inst"></td>
+<td><input type=text name="phone_number" value=""></td>
+<td><input type=text size="5px"  value="">
+<input type=text size="3px" value="">
+<input type=text size="15px" value="">
+<input type=text size="3px" value=""></td>
+<td>
+          <input class="btn" name="_select" onclick="saveNewPerson()" value="✚ Add new">
+</form>
+<div id="testshow"></div>
+</td>
+            </tr>
         </table>
         <div class="pull-right" style="padding: 10px">
-          <button type="submit" class="btn" name="_select" {{ onclick_attrib }}>✚ {% trans 'Add new' %}</button>
-          <button type="submit" class="btn" name="_cancel" {{ onclick_attrib }}>✚ {% trans 'Link existing' %}</button>
+          <input class="btn" name="_link" value="✚ Link existing" onclick="linkPerson()">
         </div>
       </fieldset>
     </div>
