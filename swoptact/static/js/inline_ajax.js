@@ -124,6 +124,7 @@ function getAttendees(){
     });
 }
 
+
 var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
 
 function saveNewPerson(){
@@ -181,6 +182,10 @@ function showParticipantErrorsRow(participant_id) {
 }
 
 
+function getEventId() {
+    return document.getElementById('event_object_id').value;
+}
+
 
 /* Handle the "edit" button for a participant row. */
 function makeParticipantEditable(participant_id) {
@@ -193,10 +198,10 @@ function makeParticipantEditable(participant_id) {
     showParticipantEditRow(participant_id);
 }
 
-
 /* Handle the "cancel" button for a participant edit-in-progress. */
 function cancelParticipantEdit(participant_id) {
-    // Hide edit form
+    // Revert and hide edit form
+    revertEditRow(participant_id);
     hideParticipantEditRow(participant_id);
 
     // Hide and clear errors form
@@ -205,6 +210,11 @@ function cancelParticipantEdit(participant_id) {
 
     // Show display-only form
     showParticipantStaticRow(participant_id);
+}
+
+
+function revertEditRow(participant_id) {
+    console.log("Imagine a world where we just reverted this row");
 }
 
 
@@ -217,6 +227,59 @@ function getParticipantIdForRow(jq_element) {
     // Take a jquery element for any member of a participant row
     // and extract the participant id (returned as a string)
     return jq_element.parents("tr").children(".participant-id")[0].value;
+}
+
+
+/* Insert a participant into the DOM.
+
+Here, the participant is a json object, as fetched from the API. */
+function insertParticipant(participant) {
+    // TODO: Insert the participant into a hashmap for later reference?
+    //   (eg, if canceling an edit...)
+
+    // Construct and insert static row
+    // -------------------------------
+    var static_row = $(
+        "<tr />",
+        {"class": "form-row participant-static",
+         "id": "participant-static-" + participant.id});
+    fillStaticRow(static_row, participant);
+    $("#participant-table tbody").append(static_row);
+
+    // Construct and insert edit row
+    // -----------------------------
+    var edit_row = $(
+        "<tr />",
+        {"class": "form-row participant-edit",
+         "id": "participant-edit-" + participant.id});
+    fillEditRow(edit_row, participant);
+    $("#participant-table tbody").append(edit_row);
+
+    // Construct and insert error row (empty for now)
+    // ----------------------------------------------
+    var errors_row = $(
+        "<tr />",
+        {"class": "form-row participant-errors",
+         "id": "participant-errors-" + participant.id});
+    // We get to skip filling errors, there's nothing to fill
+    // ... so just insert it!
+    $("#participant-table tbody").append(errors_row);
+}
+
+// Stubs, for now...
+function fillStaticRow(row, participant) {}
+function fillEditRow(row, participant) {}
+function fillErrorsRow(row, participant) {}
+
+
+function loadInitialAttendees() {
+    var event_id = getEventId();
+    var url = '/api/events/'+event_id+'/participants';
+    $.get(url, function (people_list) {
+        for (i = 0; i < people_list.length; i++){
+            insertParticipant(people_list[i]);
+        }
+    });
 }
 
 
@@ -234,6 +297,11 @@ function setupParticipantCallbacks() {
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
+
+    $(document).ready(function () {
+        loadInitialAttendees();
+    });
+
 }
 
 
