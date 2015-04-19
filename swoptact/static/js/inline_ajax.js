@@ -253,6 +253,7 @@ function insertParticipant(participant) {
         {"class": "form-row participant-edit",
          "id": "participant-edit-" + participant.id});
     fillEditRow(edit_row, participant);
+    edit_row.hide()
     $("#participant-table tbody").append(edit_row);
 
     // Construct and insert error row (empty for now)
@@ -261,6 +262,7 @@ function insertParticipant(participant) {
         "<tr />",
         {"class": "form-row participant-errors",
          "id": "participant-errors-" + participant.id});
+    errors_row.hide()
     // We get to skip filling errors, there's nothing to fill
     // ... so just insert it!
     $("#participant-table tbody").append(errors_row);
