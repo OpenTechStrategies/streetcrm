@@ -331,6 +331,20 @@ function fillEditRow(row, participant) {
 
 function fillErrorsRow(row, participant, errors) {
     resetRow(row, participant);
+
+    var td = $('<td colspan="5" />');
+
+    if (errors.legnth > 0) {
+        td.append($("<p><i>Errors were found in the entry below...</i></p>"));
+    }
+
+    errors.forEach(function(error_msg) {
+        warning_div = $('<div class="alert alert-danger" />');
+        warning_div.text(error_msg);
+        td.append(warning_div);
+    });
+
+    row.append(td);
 }
 
 
