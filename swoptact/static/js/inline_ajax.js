@@ -246,16 +246,6 @@ function insertParticipant(participant) {
     fillStaticRow(static_row, participant);
     $("#participant-table tbody").append(static_row);
 
-    // Construct and insert edit row
-    // -----------------------------
-    var edit_row = $(
-        "<tr />",
-        {"class": "form-row participant-edit",
-         "id": "participant-edit-" + participant.id});
-    fillEditRow(edit_row, participant);
-    edit_row.hide()
-    $("#participant-table tbody").append(edit_row);
-
     // Construct and insert error row (empty for now)
     // ----------------------------------------------
     var errors_row = $(
@@ -265,6 +255,16 @@ function insertParticipant(participant) {
     errors_row.hide()
     fillErrorsRow(errors_row, participant, []);
     $("#participant-table tbody").append(errors_row);
+
+    // Construct and insert edit row
+    // -----------------------------
+    var edit_row = $(
+        "<tr />",
+        {"class": "form-row participant-edit",
+         "id": "participant-edit-" + participant.id});
+    fillEditRow(edit_row, participant);
+    edit_row.hide()
+    $("#participant-table tbody").append(edit_row);
 }
 
 /* Wipe out a row and add the hidden participant id input */
