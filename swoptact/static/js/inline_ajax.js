@@ -269,7 +269,7 @@ function insertParticipant(participant) {
 // Stubs, for now...
 function fillStaticRow(row, participant) {}
 function fillEditRow(row, participant) {}
-function fillErrorsRow(row, participant) {}
+function fillErrorsRow(row, errors) {}
 
 
 function loadInitialAttendees() {
