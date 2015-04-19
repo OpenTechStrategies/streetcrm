@@ -10,7 +10,7 @@
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
       <fieldset class="module">
         <h2>Attendees</h2>
-        <table class="table table-striped table-bordered" id="attendees_table">
+        <table class="table table-striped table-bordered" id="participant-table">
           <thead>
             <tr>
               <th>First name</th>
@@ -33,13 +33,15 @@
               <td><p>+15557132859</p></td>
               <td><p>1234 Lily Rd, Sun Prairie, WI</p></td>
               <td>
-                <button type="submit" class="btn btn-info" name="_edit">✎ {% trans 'Edit' %}</button>
-                <button type="submit" class="btn btn-danger" name="_unlink">✘ {% trans 'Unlink' %}</button>
+                <button type="submit" class="btn btn-info participant-edit" name="_edit">✎ {% trans 'Edit' %}</button>
+                <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ {% trans 'Unlink' %}</button>
               </td>
             </tr>
 
             <!-- This one specifically covers the next row's issues -->
-            <tr class="errors-below participant-errors" id="participant-errors-1">
+            <tr class="errors-below participant-errors" id="participant-errors-1"
+                style="display: none"
+                >
               <input type="hidden" class="participant-id" value="1" />
               <td colspan="5">
                 <p><i>Errors were found in the entry below...</i></p>
@@ -53,7 +55,9 @@
               </td>
             </tr>
 
-            <tr class="form-row participant-edit" id="participant-edit-1">
+            <tr class="form-row participant-edit" id="participant-edit-1"
+                style="display: none"
+                >
               <input type="hidden" class="participant-id" value="1" />
               <td><input class="vTextField" type="text" value="Georgia" /></td>
               <td><input class="vTextField" type="text" value="O'Keeffe" /></td>

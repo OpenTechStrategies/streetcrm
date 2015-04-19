@@ -13,6 +13,10 @@ Currently it does only number two (2), of the above.
 */
 
 
+/*****************
+ *   OLD STUFF   *
+ *****************/
+
 
 function makePersonEditable(person_id){
     //show all input elements in a given row, as well as the save and cancel buttons
@@ -146,6 +150,28 @@ function saveNewPerson(){
     
 }
 
-getAttendees(); 
-getAvailableParticipants();
+
+/*****************
+ *   NEW STUFF   *
+ *****************/
+
+
+function setupParticipantCallbacks() {
+    $("#participant-table").on(
+        "click", "button.participant-edit",
+        function(event) {
+            event.preventDefault();
+            var participant_id = $(this).parent()
+                .parents("tr").children(".participant-id")[0].value;
+            console.log("Participant id: " + participant_id);
+        });
+}
+
+
+setupParticipantCallbacks();
+
+
+
+// getAttendees(); 
+// getAvailableParticipants();
 //saveNewPerson();
