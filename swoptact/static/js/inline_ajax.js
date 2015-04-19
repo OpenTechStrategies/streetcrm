@@ -334,7 +334,7 @@ function fillErrorsRow(row, participant, errors) {
 
     var td = $('<td colspan="5" />');
 
-    if (errors.legnth > 0) {
+    if (errors.length > 0) {
         td.append($("<p><i>Errors were found in the entry below...</i></p>"));
     }
 
