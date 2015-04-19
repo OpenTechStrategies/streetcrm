@@ -18,15 +18,6 @@ Currently it does only number two (2), of the above.
  *****************/
 
 
-function makePersonEditable(person_id){
-    //show all input elements in a given row, as well as the save and cancel buttons
-    //hide all display (span?) elements in a given row, as well as the edit and unlink buttons
-}
-
-function makePersonDisplayOnly(person_id){
-    
-}
-
 function savePerson(person_object, event_id){
     //send info about an existing person to Jess's save endpoint
     var target_url = '/api/participants/'+person_object.id+'/';
@@ -155,15 +146,93 @@ function saveNewPerson(){
  *   NEW STUFF   *
  *****************/
 
+// Hide and show stuff
+
+function getParticipantStaticRow(participant_id) {
+    return $("#participant-static-" + participant_id);
+}
+function hideParticipantStaticRow(participant_id) {
+    getParticipantStaticRow(participant_id).hide();
+}
+function showParticipantStaticRow(participant_id) {
+    getParticipantStaticRow(participant_id).show();
+}
+
+
+function getParticipantEditRow(participant_id) {
+    return $("#participant-edit-" + participant_id);
+}
+function hideParticipantEditRow(participant_id) {
+    getParticipantEditRow(participant_id).hide();
+}
+function showParticipantEditRow(participant_id) {
+    getParticipantEditRow(participant_id).show();
+}
+
+
+function getParticipantErrorsRow(participant_id) {
+    return $("#participant-errors-" + participant_id);
+}
+function hideParticipantErrorsRow(participant_id) {
+    getParticipantErrorsRow(participant_id).hide();
+}
+function showParticipantErrorsRow(participant_id) {
+    getParticipantErrorsRow(participant_id).show();
+}
+
+
+
+/* Handle the "edit" button for a participant row. */
+function makeParticipantEditable(participant_id) {
+    // TODO: Copy data into the edit form
+
+    // Hide display-only form
+    hideParticipantStaticRow(participant_id);
+
+    // Show edit form
+    showParticipantEditRow(participant_id);
+}
+
+
+/* Handle the "cancel" button for a participant edit-in-progress. */
+function cancelParticipantEdit(participant_id) {
+    // Hide edit form
+    hideParticipantEditRow(participant_id);
+
+    // Hide and clear errors form
+    hideParticipantErrorsRow(participant_id);
+    clearErrors(participant_id);
+
+    // Show display-only form
+    showParticipantStaticRow(participant_id);
+}
+
+
+function clearErrors(participant_id) {
+    console.log("DANGER WILMA ROBINSON!  INCOMPLETE!");
+}
+
+
+function getParticipantIdForRow(jq_element) {
+    // Take a jquery element for any member of a participant row
+    // and extract the participant id (returned as a string)
+    return jq_element.parents("tr").children(".participant-id")[0].value;
+}
+
 
 function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-edit",
         function(event) {
             event.preventDefault();
-            var participant_id = $(this).parent()
-                .parents("tr").children(".participant-id")[0].value;
-            console.log("Participant id: " + participant_id);
+            makeParticipantEditable(getParticipantIdForRow($(this)));
+        });
+
+    $("#participant-table").on(
+        "click", "button.participant-cancel",
+        function(event) {
+            event.preventDefault();
+            cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
 }
 
