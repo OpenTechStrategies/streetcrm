@@ -49,8 +49,9 @@ class SerializeableMixin:
             # If it's a foreign key we should run serialize on the foreign model
             # and also provide a handy string representation
             if isinstance(value, models.Model):
+                val_str = str(value)
                 value = value.serialize()
-                value['__str__'] = str(value)
+                value['__str__'] = val_str
 
             # Phone numbers give back PhoneNumber objects, we want a string
             if isinstance(value, modelfields.PhoneNumber):
