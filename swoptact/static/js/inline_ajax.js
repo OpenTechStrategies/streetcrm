@@ -13,45 +13,6 @@ Currently it does only number two (2), of the above.
 */
 
 
-/*****************
- *   OLD STUFF   *
- *****************/
-
-function savePerson(person_object, event_id){
-    //send info about an existing person to Jess's save endpoint
-    var target_url = '/api/participants/'+person_object.id+'/';
-    var person_parsed = JSON.stringify(person_object, null, 2);
-    $.ajax({
-        url: target_url,
-        type: 'PUT',
-        dataType: 'json',
-        data: person_parsed,
-        contentType: "application/json; charset=UTF-8",
-        error: function(XMLHttpRequest, textStatus, errorThrown, result){
-            alert(errorThrown);
-        }, 
-        success: function(result){
-        }
-    });
-}
-
-var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"__str__": "3100 93rd Street", "type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
-
-function saveNewPerson(){
-    var str = ( $("form").serialize());
-    var str_arr = str.split("first");
-    var person_string = "first"+str_arr[1];
-    $('#testshow').text(person_string);
-    $.post(
-        '/api/participants/',
-        ( $("form").serialize()),
-        function (response){
-            alert(response);
-        }
-    );
-    
-}
-
 
 /*****************
  *   NEW STUFF   *
@@ -368,18 +329,24 @@ function addNewParticipant() {
 
 
 /*
- takes a participant object and an array of new values and returns a 
- participant object filled with the new values
-*/
+ takes a participant object and returns a participant object filled with new
+ values from the input fields in that participant's row
+ */
 function updateParticipant(participant){
-    var edit_input = $('#participant-edit-'+participant.id);
+    if (participant.id){
+        var edit_input = $('#participant-edit-'+participant.id);
+    }
+    else{
+        var edit_input = $('#participant-edit-');
+        participant.address = {};  
+        participant.address.id = 1;
+    }
     var text_inputs = (edit_input.find(".vTextField"));
-    // I know the array will always be first_name, last_name,  phone_number,
-    // address (as long as our UI columns stay the same)
+    // array will be first_name, last_name, phone_number, address as long as our
+    // UI columns stay the same
     participant.first_name = text_inputs[0].value;
     participant.last_name = text_inputs[1].value;
     participant.phone_number = text_inputs[2].value;
-    participant.address.__str__ = text_inputs[3].value;
     return participant;
 }
 
@@ -394,13 +361,14 @@ function recreateRows(participant){
     fillStaticRow(row, participant);
 }
 
+
 function saveParticipant(participant_id) {
     if (participant_id != ""){
         $.get('/api/participants/'+participant_id+'/',
               function (participant) {
                   new_participant = updateParticipant(participant);
                   data = JSON.stringify(new_participant);
-                  console.log(data); //testing
+                  console.log(data);
                   $.ajax({
                       url: '/api/participants/'+participant_id+'/',
                       data: data,
@@ -413,25 +381,31 @@ function saveParticipant(participant_id) {
                   });
               }, 'json');
     }
-    
-    // TODO:
-    //  - Save an existing participant
-    //  - Save a new participant (participant_id == "")
-    //    - Be sure to *set* the participant-id hidden input
-    //      to the new number for all the existing 
-    //  - Handle displaying errors on failure
-    //    (see fillErrorsRow; you can use getParticipantErrorsRow
-    //    to pass in)
-    // - On success:
-    //   - Re-fill all 3 rows (static, edit, errors
-    //     (which you can wipe with cleanErrors)).
-    //     You could write something similar to insertParticipant
-    //     but for rows which already exist
-    //   - Hide the error and edit rows,
-    //     Show the static row
+    else{
+        //do the same thing, but different
+        //create an empty participant
+        empty_participant = {};
+        new_participant = updateParticipant(empty_participant);
+        data = JSON.stringify(new_participant);
+        console.log(data);
+        $.ajax({
+            url: '/api/participants/',
+            data: data,
+            type: 'POST',
+            error: function (response) {console.log(response)}, 
+            success: function (response) {
+                var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
+                $.post(url, function (result) {
+                    $.get('/api/participants/'+participant_id+'/',
+                          function (participant) {
+                              recreateRows(participant);
+                          }, 'json');
+                }, "json");
 
-    // Oh yeah, and once you do this, you can remove the old savePerson
-    // and saveNewPerson.  Have fun!
+            },
+            dataType: 'json'
+        });
+    }
 }
 
 
