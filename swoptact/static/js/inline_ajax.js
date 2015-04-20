@@ -316,7 +316,10 @@ function finishLinkExistingParticipants() {
 
     var url = '/api/events/'+getEventId()+'/participants/'+participant_id+"/";
     $.post(url, function (result) {
-        console.log(result);
+        $.get('/api/participants/'+participant_id+'/',
+              function (participant) {
+                  insertParticipant(participant);
+              }, 'json');
     }, "json");
     backToPreLinkParticipants();
 }
