@@ -17,6 +17,17 @@ Currently it does only number two (2), of the above.
  *   OLD STUFF   *
  *****************/
 
+function unlinkPerson(person_id){
+    //send info about this person to Jess's delete endpoint
+    var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
+    $.ajax({
+        url: target_url,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
+}
 
 function savePerson(person_object, event_id){
     //send info about an existing person to Jess's save endpoint
@@ -34,69 +45,6 @@ function savePerson(person_object, event_id){
         success: function(result){
         }
     });
-}
-
-
-function unlinkPerson(person_id){
-    //send info about this person to Jess's delete endpoint
-    var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
-    $.ajax({
-        url: target_url,
-        type: 'DELETE',
-        success: function(result) {
-            location.reload();
-        }
-    });
-}
-
-function linkPerson(event_id, person_id){
-    var event_id = document.getElementById('event_object_id').value;
-    var person_id = document.getElementById('available_participants_id').value;
-    var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
-    $.ajax({
-        url: target_url,
-        type: 'POST',
-        success: function(result) {
-            location.reload();
-        }
-    });
-}
-
-/*
-Loops through attendees and creates table rows to display and edit them
-*/
-function displayPerson(person, event){
-    $('.editable').hide();
-    var $tr = $('<tr>');
-    $tr.append('<input class="attendee-id" type="hidden" value="'+person.id+'" />');
-    var person_info = [person.first_name, person.last_name,
-                       person.institution.name, person.phone_number,
-                       person.address.number, person.address.direction,
-                       person.address.name, person.address.type]; 
-    $tr.append('<td>'+person.first_name+'<input type=text class="editable" value="'+person.first_name+'"></td>'); 
-    $tr.append('<td>'+person.last_name+'<input type=text class="editable" value="'+person.last_name+'"></td>'); 
-    $tr.append('<td>'+person.institution.name+'<input type=text class="editable" value="'+person.institution.name+'"></td>'); 
-
-    $tr.append('<td>'+person.phone_number+'<input type=text class="editable" value="'+person.phone_number+'"></td>'); 
-
-    var $address_td = $('<td>');
-    $address_td.append(person.address.number+' '+person.address.direction+' '+person.address.name+' '+person.address.type);
-    $address_td.append('<input type=text class="editable" size="5px"  value="'+person.address.number+'">');
-    $address_td.append('<input type=text class="editable" size="3px" value="'+person.address.direction+'">');
-    $address_td.append('<input type=text class="editable" size="15px" value="'+person.address.name+'">');
-    $address_td.append('<input type=text class="editable" size="3px" value="'+person.address.type+'"></td>'); 
-    $tr.append($address_td);
-    var $btn_cell = $('<td>');
-    $edit_btn = $('<input class="btn btn-info display_only" name="_edit" value="Edit" onclick="makePersonEditable('+person.id+')">');
-    $btn_cell.append($edit_btn);
-    var $save_btn = $('<input class="btn btn-success editable" name="_save" value="✓ Save" onclick="savePerson()">');
-    $btn_cell.append($save_btn);
-    $btn_cell.append('<input class="btn btn-warning editable" name="_cancel" value="✗ Cancel" onclick="makePersonDisplayOnly('+person.id+')">');
-    $btn_cell.append('<input class="btn btn-danger display_only" name="_unlink" value="Remove attendee" onclick="unlinkPerson('+event+', '+person.id+')">');
-
-    $tr.append($btn_cell);
-    $('#attendees_table').append($tr);
-    $('.editable').hide();
 }
 
 
@@ -402,6 +350,13 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             makeParticipantEditable(getParticipantIdForRow($(this)));
+        });
+
+    $("#participant-table").on(
+        "click", "button.participant-unlink",
+        function(event) {
+            event.preventDefault();
+            unlinkParticipant(getParticipantIdForRow($(this)));
         });
 
     $("#participant-table").on(
