@@ -121,7 +121,7 @@ class Participant(models.Model, SerializeableMixin):
     phone_number = modelfields.PhoneNumberField(null=True, blank=True)
     secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
-    address = models.ForeignKey(Address, blank=True)
+    address = models.CharField(max_length=500, null=True, blank=True)
     institution = models.ForeignKey(Institution, null=True, blank=True)
 
     def __str__(self):

@@ -175,11 +175,7 @@ function fillStaticRow(row, participant) {
         appendSimpleText("");
     }
     appendSimpleText(participant.phone_number);
-    if (participant.address) {
-        appendSimpleText(participant.address.__str__);
-    } else {
-        appendSimpleText("");
-    }
+    appendSimpleText(participant.address);
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Unlink</button></td>');
@@ -207,11 +203,7 @@ function fillEditRow(row, participant) {
         appendSimpleTextField("");
     }
     appendSimpleTextField(participant.phone_number);
-    if (participant.address) {
-        appendSimpleTextField(participant.address.__str__);
-    } else {
-        appendSimpleTextField("");
-    }
+    appendSimpleTextField(participant.address);
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
@@ -347,8 +339,6 @@ function updateParticipant(participant){
     }
     else{
         var edit_input = $('#participant-edit-');
-        participant.address = {};  
-        participant.address.id = 1;
     }
     var text_inputs = (edit_input.find(".vTextField"));
     // array will be first_name, last_name, phone_number, address as long as our
@@ -356,6 +346,7 @@ function updateParticipant(participant){
     participant.first_name = text_inputs[0].value;
     participant.last_name = text_inputs[1].value;
     participant.phone_number = text_inputs[3].value;
+    participant.address = text_inputs[4].value;
     return participant;
 }
 
