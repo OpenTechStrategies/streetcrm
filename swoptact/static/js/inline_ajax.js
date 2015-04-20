@@ -351,6 +351,11 @@ function unlinkParticipant(participant_id){
 
 
 function addNewParticipant() {
+    if (getParticipantEditRow("").length > 0) {
+        // We already have an empty participant in progress
+        return false;
+    }
+
     // NOTE: Not all our code is really set up to handle
     // passing in a mostly empty object as a participant :\
     // This is a hack!
