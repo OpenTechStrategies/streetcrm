@@ -17,18 +17,6 @@ Currently it does only number two (2), of the above.
  *   OLD STUFF   *
  *****************/
 
-function unlinkPerson(person_id){
-    //send info about this person to Jess's delete endpoint
-    var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
-    $.ajax({
-        url: target_url,
-        type: 'DELETE',
-        success: function(result) {
-            location.reload();
-        }
-    });
-}
-
 function savePerson(person_object, event_id){
     //send info about an existing person to Jess's save endpoint
     var target_url = '/api/participants/'+person_object.id+'/';
@@ -321,12 +309,12 @@ function startLinkExistingParticipants() {
 }
 
 function finishLinkExistingParticipants() {
-    var person_id = $("#available-participants-select option:selected").val();
-    if (person_id == "") {
+    var participant_id = $("#available-participants-select option:selected").val();
+    if (participant_id == "") {
         return false;
     }
 
-    var url = '/api/events/'+getEventId()+'/participants/'+person_id+"/";
+    var url = '/api/events/'+getEventId()+'/participants/'+participant_id+"/";
     $.post(url, function (result) {
         console.log(result);
     }, "json");
@@ -342,6 +330,20 @@ function backToPreLinkParticipants() {
 
 function cancelLinkExistingParticipants() {
     backToPreLinkParticipants();
+}
+
+function unlinkParticipant(participant_id){
+    var event_id = getEventId();
+    var target_url = '/api/events/'+event_id+'/participants/'+participant_id+'/';
+    $.ajax({
+        url: target_url,
+        type: 'DELETE',
+        success: function(result) {
+            getParticipantStaticRow(participant_id).remove();
+            getParticipantEditRow(participant_id).remove();
+            getParticipantErrorsRow(participant_id).remove();
+        }
+    });
 }
 
 function setupParticipantCallbacks() {
