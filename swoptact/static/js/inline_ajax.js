@@ -377,7 +377,6 @@ function saveParticipant(participant_id) {
     //  - Handle displaying errors on failure
     //    (see fillErrorsRow; you can use getParticipantErrorsRow
     //    to pass in)
-
     // - On success:
     //   - Re-fill all 3 rows (static, edit, errors
     //     (which you can wipe with cleanErrors)).
@@ -385,6 +384,9 @@ function saveParticipant(participant_id) {
     //     but for rows which already exist
     //   - Hide the error and edit rows,
     //     Show the edit row
+
+    // Oh yeah, and once you do this, you can remove the old savePerson
+    // and saveNewPerson.  Have fun!
 }
 
 
