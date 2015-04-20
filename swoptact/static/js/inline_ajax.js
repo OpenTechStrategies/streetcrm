@@ -369,6 +369,12 @@ function startLinkExistingParticipants() {
     }, "json");
 }
 
+function cancelLinkExistingParticipants() {
+    $("#link-existing-participant-btn").show();
+    $('#available-participants-select').hide();
+    $("#cancel-link-existing-btn").hide();
+    $("#select-existing-participant-btn").hide();
+}
 
 function setupParticipantCallbacks() {
     $("#participant-table").on(
@@ -390,6 +396,13 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             startLinkExistingParticipants();
+        });
+
+    $("#cancel-link-existing-btn").on(
+        "click",
+        function(event) {
+            event.preventDefault();
+            cancelLinkExistingParticipants();
         });
 
 
