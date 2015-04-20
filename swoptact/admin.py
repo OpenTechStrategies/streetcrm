@@ -27,13 +27,6 @@ from django_google_maps import fields as mapfields
 from swoptact.models import Address, Participant, Event, Institution
 
 
-class ParticipantInline(admin.TabularInline):
-    model = Participant
-    exclude = ("secondary_phone", "email")
-    extra = 1
-    raw_id_fields = ("address",)
-    verbose_name = "Attendee"
-    verbose_name_plural = "Attendees"
 
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
@@ -110,9 +103,6 @@ class EventAdmin(admin.ModelAdmin):
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-    inlines = [
-        ParticipantInline,
-    ]
 
 
 class AddressAdmin(admin.ModelAdmin):

@@ -124,7 +124,6 @@ function insertParticipant(participant) {
          "id": "participant-static-" + participant.id});
     fillStaticRow(static_row, participant);
     $("#participant-table tbody").append(static_row);
-
     // Construct and insert error row (empty for now)
     // ----------------------------------------------
     var errors_row = $(
@@ -170,6 +169,11 @@ function fillStaticRow(row, participant) {
     
     appendSimpleText(participant.first_name);
     appendSimpleText(participant.last_name);
+    if (participant.institution) {
+        appendSimpleText(participant.institution.name);
+    } else {
+        appendSimpleText("");
+    }
     appendSimpleText(participant.phone_number);
     if (participant.address) {
         appendSimpleText(participant.address.__str__);
@@ -197,6 +201,11 @@ function fillEditRow(row, participant) {
 
     appendSimpleTextField(participant.first_name);
     appendSimpleTextField(participant.last_name);
+    if (participant.institution) {
+        appendSimpleTextField(participant.institution.name);
+    } else {
+        appendSimpleTextField("");
+    }
     appendSimpleTextField(participant.phone_number);
     if (participant.address) {
         appendSimpleTextField(participant.address.__str__);
@@ -346,7 +355,7 @@ function updateParticipant(participant){
     // UI columns stay the same
     participant.first_name = text_inputs[0].value;
     participant.last_name = text_inputs[1].value;
-    participant.phone_number = text_inputs[2].value;
+    participant.phone_number = text_inputs[3].value;
     return participant;
 }
 
@@ -368,7 +377,6 @@ function saveParticipant(participant_id) {
               function (participant) {
                   new_participant = updateParticipant(participant);
                   data = JSON.stringify(new_participant);
-                  console.log(data);
                   $.ajax({
                       url: '/api/participants/'+participant_id+'/',
                       data: data,
@@ -382,12 +390,9 @@ function saveParticipant(participant_id) {
               }, 'json');
     }
     else{
-        //do the same thing, but different
-        //create an empty participant
         empty_participant = {};
         new_participant = updateParticipant(empty_participant);
         data = JSON.stringify(new_participant);
-        console.log(data);
         $.ajax({
             url: '/api/participants/',
             data: data,
@@ -396,9 +401,10 @@ function saveParticipant(participant_id) {
             success: function (response) {
                 var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
-                    $.get('/api/participants/'+participant_id+'/',
+                    $.get('/api/participants/'+response.id+'/',
                           function (participant) {
-                              recreateRows(participant);
+                              $('#participant-edit-').hide(); //hacky!
+                              insertParticipant(participant);
                           }, 'json');
                 }, "json");
 
