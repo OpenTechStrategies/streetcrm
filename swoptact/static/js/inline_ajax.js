@@ -349,6 +349,17 @@ function unlinkParticipant(participant_id){
     });
 }
 
+
+function addNewParticipant() {
+    // NOTE: Not all our code is really set up to handle
+    // passing in a mostly empty object as a participant :\
+    // This is a hack!
+    insertParticipant({"id": ""});
+    hideParticipantStaticRow("");
+    showParticipantEditRow("");
+}
+
+
 function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-edit",
@@ -392,6 +403,12 @@ function setupParticipantCallbacks() {
             finishLinkExistingParticipants();
         });
 
+    $("#add-new-participant-btn").on(
+        "click",
+        function(event) {
+            event.preventDefault();
+            addNewParticipant();
+        });
 
     $(document).ready(function () {
         loadInitialAttendees();
