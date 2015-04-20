@@ -122,6 +122,12 @@ function makeParticipantEditable(participant_id) {
 
 /* Handle the "cancel" button for a participant edit-in-progress. */
 function cancelParticipantEdit(participant_id) {
+    // Oh, this is the add new one... well, we don't need to switch
+    // back to a static view.  Just dump it.
+    if (participant_id == "") {
+        unlinkParticipant(participant_id);
+    }
+
     // TODO: Do a *real* revert of the data here!
     //// Revert and hide edit form
     // revertEditRow(participant_id);
@@ -336,17 +342,24 @@ function cancelLinkExistingParticipants() {
 }
 
 function unlinkParticipant(participant_id){
+    var removeRows = function () {
+        getParticipantStaticRow(participant_id).remove();
+        getParticipantEditRow(participant_id).remove();
+        getParticipantErrorsRow(participant_id).remove();
+    }
+
+    // An empty, pre-saved new participant.
+    if (participant_id == "") {
+        removeRows();
+        return false;
+    }
+        
     var event_id = getEventId();
     var target_url = '/api/events/'+event_id+'/participants/'+participant_id+'/';
     $.ajax({
         url: target_url,
         type: 'DELETE',
-        success: function(result) {
-            getParticipantStaticRow(participant_id).remove();
-            getParticipantEditRow(participant_id).remove();
-            getParticipantErrorsRow(participant_id).remove();
-        }
-    });
+        success: removeRows});
 }
 
 
