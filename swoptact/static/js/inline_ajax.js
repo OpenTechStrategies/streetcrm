@@ -214,11 +214,13 @@ function cancelParticipantEdit(participant_id) {
 
 
 function revertEditRow(participant_id) {
+    // TODO: base this on the filling system
     console.log("Imagine a world where we just reverted this row");
 }
 
 
 function clearErrors(participant_id) {
+    // TODO: base this on the filling system
     console.log("DANGER WILMA ROBINSON!  INCOMPLETE!");
 }
 
