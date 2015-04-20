@@ -122,8 +122,9 @@ function makeParticipantEditable(participant_id) {
 
 /* Handle the "cancel" button for a participant edit-in-progress. */
 function cancelParticipantEdit(participant_id) {
-    // Revert and hide edit form
-    revertEditRow(participant_id);
+    // TODO: Do a *real* revert of the data here!
+    //// Revert and hide edit form
+    // revertEditRow(participant_id);
     hideParticipantEditRow(participant_id);
 
     // Hide and clear errors form
@@ -142,8 +143,7 @@ function revertEditRow(participant_id) {
 
 
 function clearErrors(participant_id) {
-    // TODO: base this on the filling system
-    console.log("DANGER WILMA ROBINSON!  INCOMPLETE!");
+    fillErrorsRow(getParticipantErrorsRow(participant_id), participant_id, []);
 }
 
 
@@ -177,7 +177,7 @@ function insertParticipant(participant) {
         {"class": "form-row participant-errors",
          "id": "participant-errors-" + participant.id});
     errors_row.hide()
-    fillErrorsRow(errors_row, participant, []);
+    fillErrorsRow(errors_row, participant.id, []);
     $("#participant-table tbody").append(errors_row);
 
     // Construct and insert edit row
@@ -192,18 +192,18 @@ function insertParticipant(participant) {
 }
 
 /* Wipe out a row and add the hidden participant id input */
-function resetRow(row, participant) {
+function resetRow(row, participant_id) {
     row.empty();
     row.append($(
         "<input/>",
         {"type": "hidden",
          "class": "participant-id",
-         "value": participant.id}));
+         "value": participant_id}));
 }
 
 // Stubs, for now...
 function fillStaticRow(row, participant) {
-    resetRow(row, participant);
+    resetRow(row, participant.id);
 
     appendSimpleText = function (text) {
         td_wrap = $("<td/>");
@@ -227,7 +227,7 @@ function fillStaticRow(row, participant) {
 }
 
 function fillEditRow(row, participant) {
-    resetRow(row, participant);
+    resetRow(row, participant.id);
 
     appendSimpleTextField = function (text) {
         td_wrap = $("<td/>");
@@ -253,8 +253,8 @@ function fillEditRow(row, participant) {
     row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
 }
 
-function fillErrorsRow(row, participant, errors) {
-    resetRow(row, participant);
+function fillErrorsRow(row, participant_id, errors) {
+    resetRow(row, participant_id);
 
     var td = $('<td colspan="5" />');
 
