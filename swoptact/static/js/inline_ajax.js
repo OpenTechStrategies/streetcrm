@@ -35,18 +35,6 @@ function savePerson(person_object, event_id){
     });
 }
 
-
-function getAttendees(){
-    var event_id = document.getElementById('event_object_id').value;
-    var url = '/api/events/'+event_id+'/participants';
-    $.get(url,  function (people_list){
-    for (i = 0; i < people_list.length; i++){
-            displayPerson(people_list[i], event_id);
-    }
-    });
-}
-
-
 var example_person = {"email": "", "last_name": "Post", "id": 10, "address": {"__str__": "3100 93rd Street", "type": "St", "state": "IL", "id": 5, "apartment": null, "name": "93rd", "direction": "E", "city": "Chicago", "number": 3100, "zipcode": null}, "first_name": "Example", "secondary_phone": null, "institution": null, "phone_number": null};
 
 function saveNewPerson(){
@@ -372,9 +360,31 @@ function addNewParticipant() {
     // NOTE: Not all our code is really set up to handle
     // passing in a mostly empty object as a participant :\
     // This is a hack!
+    // Seems to work tho
     insertParticipant({"id": ""});
     hideParticipantStaticRow("");
     showParticipantEditRow("");
+}
+
+function saveParticipant(participant_id) {
+    alert("Cecilia, this one's yours!");
+
+    // TODO:
+    //  - Save an existing participant
+    //  - Save a new participant (participant_id == "")
+    //    - Be sure to *set* the participant-id hidden input
+    //      to the new number for all the existing 
+    //  - Handle displaying errors on failure
+    //    (see fillErrorsRow; you can use getParticipantErrorsRow
+    //    to pass in)
+
+    // - On success:
+    //   - Re-fill all 3 rows (static, edit, errors
+    //     (which you can wipe with cleanErrors)).
+    //     You could write something similar to insertParticipant
+    //     but for rows which already exist
+    //   - Hide the error and edit rows,
+    //     Show the edit row
 }
 
 
@@ -398,6 +408,13 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
+        });
+
+    $("#participant-table").on(
+        "click", "button.participant-save",
+        function(event) {
+            event.preventDefault();
+            saveParticipant(getParticipantIdForRow($(this)));
         });
 
     $("#link-existing-participant-btn").on(
