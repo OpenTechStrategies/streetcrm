@@ -206,7 +206,7 @@ function fillStaticRow(row, participant) {
         td_wrap.append(p_wrap);
         row.append(td_wrap);
     }
-
+    
     appendSimpleText(participant.first_name);
     appendSimpleText(participant.last_name);
     appendSimpleText(participant.phone_number);
@@ -366,9 +366,54 @@ function addNewParticipant() {
     showParticipantEditRow("");
 }
 
-function saveParticipant(participant_id) {
-    alert("Cecilia, this one's yours!");
 
+/*
+ takes a participant object and an array of new values and returns a 
+ participant object filled with the new values
+*/
+function updateParticipant(participant){
+    var edit_input = $('#participant-edit-'+participant.id);
+    var text_inputs = (edit_input.find(".vTextField"));
+    // I know the array will always be first_name, last_name,  phone_number,
+    // address (as long as our UI columns stay the same)
+    participant.first_name = text_inputs[0].value;
+    participant.last_name = text_inputs[1].value;
+    participant.phone_number = text_inputs[2].value;
+    participant.address.__str__ = text_inputs[3].value;
+    return participant;
+}
+
+/*
+  helper function to find the correct rows and fill them using other functions,
+  after a participant is created or updated
+*/
+function recreateRows(participant){
+    var row = $('#participant-edit-'+participant.id);
+    fillEditRow(row, participant);
+    fillErrorsRow(row, participant.id, []);
+    fillStaticRow(row, participant);
+}
+
+function saveParticipant(participant_id) {
+    if (participant_id != ""){
+        $.get('/api/participants/'+participant_id+'/',
+              function (participant) {
+                  new_participant = updateParticipant(participant);
+                  data = JSON.stringify(new_participant);
+                  console.log(data); //testing
+                  $.ajax({
+                      url: '/api/participants/'+participant_id+'/',
+                      data: data,
+                      type: 'PUT',
+                      error: function (response) {console.log(response)}, 
+                      success: function (response) {
+                          recreateRows(response);
+                      },
+                      dataType: 'json'
+                  });
+              }, 'json');
+    }
+    
     // TODO:
     //  - Save an existing participant
     //  - Save a new participant (participant_id == "")
@@ -383,7 +428,7 @@ function saveParticipant(participant_id) {
     //     You could write something similar to insertParticipant
     //     but for rows which already exist
     //   - Hide the error and edit rows,
-    //     Show the edit row
+    //     Show the static row
 
     // Oh yeah, and once you do this, you can remove the old savePerson
     // and saveNewPerson.  Have fun!

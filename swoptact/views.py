@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
 import urllib.parse
+import pdb
 
 from django import http
 from django.views import generic
@@ -67,10 +68,10 @@ class APIMixin:
                 # Check if the object needs to be created.
                 if "id" in value:
                     # Object already exists - just look it up.
-                    value = field.related_model.objects.get(pk=value["id"])
+                    value = field.rel.to.objects.get(pk=value["id"])
                 else:
                     # Create the object.
-                    value = field.related_model(**value)
+                    value = field.rel.to(**value)
                     value.save()
 
                     # we need to keep track we made it
