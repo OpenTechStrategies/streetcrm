@@ -37,20 +37,6 @@ function savePerson(person_object, event_id){
 }
 
 
-function getAvailableParticipants(){
-    var event_id = document.getElementById('event_object_id').value;
-    var url = '/api/events/'+event_id+'/available-participants';
-    $.get(url,  function (result){
-        var $select_available = $('<select id="available_participants_id">');
-        for (i = 0; i < result.length; i++){
-            $select_available.append('<option value="'+result[i].id+'">'+result[i].first_name+' '+result[i].last_name);
-        }
-        $('.module').append($select_available);
-    });
-}
-
-
-
 function unlinkPerson(person_id){
     //send info about this person to Jess's delete endpoint
     var target_url = '/api/events/'+event_id+'/participants/'+person_id+'/';
@@ -357,7 +343,30 @@ function loadInitialAttendees() {
         for (i = 0; i < people_list.length; i++){
             insertParticipant(people_list[i]);
         }
-    });
+    }, "json");
+}
+
+
+function startLinkExistingParticipants() {
+    var event_id = getEventId();
+    var url = '/api/events/'+event_id+'/available-participants';
+    $.get(url, function (result) {
+        var select_available = $('#available-participants-select');
+        select_available.empty();
+        
+        for (i = 0; i < result.length; i++) {
+            var participant = result[i];
+            var option_elt = $(
+                "<option/>", {
+                    "value": participant.id});
+            option_elt.text(participant.first_name + " " + participant.last_name);
+            select_available.append(option_elt);
+        }
+        $("#link-existing-participant-btn").hide();
+        select_available.show();
+        $("#cancel-link-existing-btn").show();
+        $("#select-existing-participant-btn").show();
+    }, "json");
 }
 
 
@@ -375,6 +384,14 @@ function setupParticipantCallbacks() {
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
+
+    $("#link-existing-participant-btn").on(
+        "click",
+        function(event) {
+            event.preventDefault();
+            startLinkExistingParticipants();
+        });
+
 
     $(document).ready(function () {
         loadInitialAttendees();
