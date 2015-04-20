@@ -353,6 +353,9 @@ function startLinkExistingParticipants() {
     $.get(url, function (result) {
         var select_available = $('#available-participants-select');
         select_available.empty();
+
+        select_available.append(
+            $('<option value="">---------</option>'));
         
         for (i = 0; i < result.length; i++) {
             var participant = result[i];
@@ -369,11 +372,28 @@ function startLinkExistingParticipants() {
     }, "json");
 }
 
-function cancelLinkExistingParticipants() {
+function finishLinkExistingParticipants() {
+    var person_id = $("#available-participants-select option:selected").val();
+    if (person_id == "") {
+        return false;
+    }
+
+    var url = '/api/events/'+getEventId()+'/participants/'+person_id+"/";
+    $.post(url, function (result) {
+        console.log(result);
+    }, "json");
+    backToPreLinkParticipants();
+}
+
+function backToPreLinkParticipants() {
     $("#link-existing-participant-btn").show();
     $('#available-participants-select').hide();
     $("#cancel-link-existing-btn").hide();
     $("#select-existing-participant-btn").hide();
+}    
+
+function cancelLinkExistingParticipants() {
+    backToPreLinkParticipants();
 }
 
 function setupParticipantCallbacks() {
@@ -403,6 +423,13 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             cancelLinkExistingParticipants();
+        });
+
+    $("#select-existing-participant-btn").on(
+        "click",
+        function(event) {
+            event.preventDefault();
+            finishLinkExistingParticipants();
         });
 
 
