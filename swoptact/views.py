@@ -66,6 +66,8 @@ class APIMixin:
 
             if isinstance(field, related.RelatedField):
                 # Check if the object needs to be created.
+                if value is None:
+                    continue
                 if "id" in value:
                     # Object already exists - just look it up.
                     value = field.rel.to.objects.get(pk=value["id"])
