@@ -208,9 +208,9 @@ function fillEditRow(row, participant) {
     }
     appendSimpleTextField(participant.phone_number);
     if (participant.address) {
-        appendSimpleText(participant.address.__str__);
+        appendSimpleTextField(participant.address.__str__);
     } else {
-        appendSimpleText("");
+        appendSimpleTextField("");
     }
 
     // Now append the buttons...
