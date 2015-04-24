@@ -1,15 +1,15 @@
 /*
-Eventually, this page should be able to do the following things:
-(1) find the relevant participants for a given event and 
-(2) display information about each of them, then 
-(3) offer textboxes populated by values from that object onclick of an edit button
+This page governs the sign-in sheet on the change event form.  It includes
+functions to:
+(1) find the relevant participants for a given event 
+(2) display information about each of them
+(3) edit textboxes populated by values from that object 
 (4) save changes made via those text boxes
-(5) remove a relationship between a person and an event, 
-(6) add an entirely new person (really the same as (4)), 
-(7) search for and 
+(5) unlink a person from an event
+(6) add an entirely new person (really the same as (4)) 
+(7) search available participants
 (8) link an existing person to this event.
 
-Currently it does only number two (2), of the above.
 */
 
 
@@ -175,7 +175,11 @@ function fillStaticRow(row, participant) {
         appendSimpleText("");
     }
     appendSimpleText(participant.phone_number);
-    appendSimpleText(participant.address);
+    if (participant.address) {
+        appendSimpleText(participant.address.__str__);
+    } else {
+        appendSimpleText("");
+    }
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Unlink</button></td>');
@@ -203,7 +207,11 @@ function fillEditRow(row, participant) {
         appendSimpleTextField("");
     }
     appendSimpleTextField(participant.phone_number);
-    appendSimpleTextField(participant.address);
+    if (participant.address) {
+        appendSimpleText(participant.address.__str__);
+    } else {
+        appendSimpleText("");
+    }
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
