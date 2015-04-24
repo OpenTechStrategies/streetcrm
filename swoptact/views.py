@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
-import urllib.parse
-import pdb
 
 from django import http
 from django.views import generic
 from django.db.models.fields import related
 from django.utils.decorators import method_decorator
+from django.forms.models import modelform_factory
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import permission_required
+
 
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
@@ -48,7 +48,12 @@ class APIMixin:
         # Serialize the output and use that as the context
         return self.render_to_response(self.get_context_data(**json_object))
 
-    def process_json(self, body):
+    def dict_to_formencoded(self, data):
+        """ Produces form-encoded data from a python dictionary """
+        pairs =  [p for p in ["{}={}".format(k, v) for k, v in data.items()]]
+        return "&".join(pairs)
+
+    def process_json(self, body, model=None):
         """
         Produces value for request.POST from a JSON encoded body
 
@@ -59,18 +64,33 @@ class APIMixin:
         """
         body = json.loads(body.decode("utf-8"))
 
+        # If the model isn't specified use the self.model value
+        if model is None:
+            model = self.model
+
         # Look for relations
         for field, value in body.items():
             # Find the field that the model is on.
-            field = self.model._meta.get_field(field)
+            field = model._meta.get_field(field)
 
             if isinstance(field, related.RelatedField):
-                # Check if the object needs to be created.
                 if value is None:
                     continue
-                if "id" in value:
+
+                # Check if the object needs to be created.
+                if "id" in value or "pk" in value:
                     # Object already exists - just look it up.
-                    value = field.rel.to.objects.get(pk=value["id"])
+                    pk = value["pk"] if "pk" in value else value["id"]
+                    instance = field.rel.to.objects.get(pk=pk)
+
+                    # Save the values onto the model
+                    for k, v in value.items():
+                        setattr(instance, k, v)
+
+                    # Save the object back
+                    instance.save()
+
+                    value = instance
                 else:
                     # Create the object.
                     value = field.rel.to(**value)
@@ -109,7 +129,7 @@ class APIMixin:
         for obj in self._objects_created:
             obj.delete()
 
-        return super(APIMixin, self).form_invalid(self, *args, **kwargs)
+        return super(APIMixin, self).form_invalid(*args, **kwargs)
 
     def get_context_data(self, *args, **context):
         """
@@ -143,7 +163,7 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     """
 
     model = models.Participant
-    fields = ["first_name", "last_name", "phone_number", "secondary_phone",
+    fields = ["id", "first_name", "last_name", "phone_number", "secondary_phone",
               "email", "address"]
 
     def get(self, request, *args, **kwargs):
