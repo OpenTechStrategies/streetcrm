@@ -221,3 +221,11 @@ input[type="checkbox"] {
 .datetimeshortcuts a:not(#calendarlink0) {
     display:none;
 }
+/* make the text inside the inputs (esp. on the sign-in sheet) larger and more
+readable, without making the inputs themselves enormous */
+input {
+    font-size: large;
+}
+input.vTextField {
+    width: 200px;
+}

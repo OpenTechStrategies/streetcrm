@@ -174,15 +174,10 @@ function fillStaticRow(row, participant) {
     } else {
         appendSimpleText("");
     }
-    appendSimpleText(participant.phone_number);
-    if (participant.address) {
-        appendSimpleText(participant.address.__str__);
-    } else {
-        appendSimpleText("");
-    }
+    appendSimpleText(participant.primary_phone);
 
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Unlink</button></td>');
+    row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Undo</button></td>');
 }
 
 function fillEditRow(row, participant) {
@@ -206,12 +201,7 @@ function fillEditRow(row, participant) {
     } else {
         appendSimpleTextField("");
     }
-    appendSimpleTextField(participant.phone_number);
-    if (participant.address) {
-        appendSimpleTextField(participant.address.__str__);
-    } else {
-        appendSimpleTextField("");
-    }
+    appendSimpleTextField(participant.primary_phone);
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
@@ -353,8 +343,7 @@ function updateParticipant(participant){
     // UI columns stay the same
     participant.first_name = text_inputs[0].value;
     participant.last_name = text_inputs[1].value;
-    participant.phone_number = text_inputs[3].value;
-    participant.address = text_inputs[4].value;
+    participant.primary_phone = text_inputs[3].value;
     return participant;
 }
 
