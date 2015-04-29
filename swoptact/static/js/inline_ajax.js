@@ -481,7 +481,3 @@ function setupParticipantCallbacks() {
 setupParticipantCallbacks();
 
 
-
-// getAttendees(); 
-// getAvailableParticipants();
-//saveNewPerson();

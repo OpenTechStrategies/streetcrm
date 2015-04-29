@@ -63,11 +63,11 @@ class SignInSheetAdminMixin(object):
 
 class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "phone_number",  "institution", "address",)
+    list_display = ("name", "primary_phone",  "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "phone_number", "institution", "secondary_phone", "email",
+            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
                         "address")
         }),
         ("Personal Event History", {

@@ -217,3 +217,7 @@ input[name="_addanother"],input[name="_continue"],input[name="_saveasnew"]{
 input[type="checkbox"] {
     font-size: 1em;
 }
+/* Hide Today link */
+.datetimeshortcuts a:not(#calendarlink0) {
+    display:none;
+}
