@@ -89,7 +89,7 @@ class Address(models.Model, SerializeableMixin):
     city = models.CharField(max_length=255, default='Chicago', null=True, blank=True)
     state = models.CharField(max_length=2, default='IL', null=True, blank=True)
     zipcode = models.IntegerField(null=True, blank=True)
-    
+
 
     def __init__(self, *args, **kwargs):
         super(Address, self).__init__(*args, **kwargs)
@@ -161,7 +161,7 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     time = models.CharField(choices = TIMES, max_length = 20, null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
-    is_prep = models.BooleanField(default=False, blank=True, 
+    is_prep = models.BooleanField(default=False, blank=True,
                                   verbose_name = "This meeting is part of a major action:")
     major_action = models.ForeignKey("self", null=True, blank=True)
 
@@ -171,3 +171,5 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     def attendee_count(self):
         return self.participants.count()
 
+# import the signals
+from swoptact.signals import *

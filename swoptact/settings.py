@@ -145,3 +145,12 @@ STATIC_URL = config["general"]["static_url"]
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "swoptact", "static"),
 )
+
+# Specify the hierarchy of the groups when a user is added the key should be
+# the group name and the value should be a list which contains the values of
+# the next level of groups. If no lower groups exist it can be omitted.
+GROUP_HIERARCHY = {
+    "admin": ["organizer"],
+    "organizer": ["leader"],
+}
+
