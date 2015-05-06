@@ -113,6 +113,10 @@ class Address(models.Model, SerializeableMixin):
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.ForeignKey(Address, blank=True)
+    is_member = models.BooleanField(default=False, blank=True, 
+                                  verbose_name = "This institution is a member of SWOP:")
+    contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
+
     def __str__(self):
         return "{name}".format(
             name=self.name,
@@ -146,19 +150,42 @@ class Participant(models.Model, SerializeableMixin):
         """ List of all events participant is in """
         return Event.objects.filter(participants__in=[self]).all()
 
+class Contact(models.Model):
+    participant = models.ForeignKey(Participant, related_name="leaders")
+    institution = models.ForeignKey(Institution, related_name="organization")
+    title = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return "{first_name} {last_name}".format(
+            first_name=self.participant.first_name,
+            last_name=self.participant.last_name
+        )
 
 class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
+    SUFFIXES = (
+        ("0", "am",),
+        ("12", "pm",)
+        )
+    
     TIMES = (
-        ("10am", "Morning"),
-        ("12pm", "Noon"),
-        ("3pm", "Afternoon"),
-        ("7pm", "Evening"),
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+        ("6", "6"),
+        ("7", "7"),
+        ("8", "8"),
+        ("9", "9"),
+        ("10", "10"),
+        ("11", "11"),
+        ("12", "12"),
     )
 
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    time = models.CharField(choices = TIMES, max_length = 20, null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
     is_prep = models.BooleanField(default=False, blank=True, 
@@ -171,3 +198,4 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     def attendee_count(self):
         return self.participants.count()
 
+        

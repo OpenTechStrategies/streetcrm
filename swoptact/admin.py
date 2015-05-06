@@ -13,7 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from django import template
+from django import template, forms
+from django.core.exceptions import ValidationError
 from django.contrib import admin, staticfiles
 from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
@@ -24,9 +25,14 @@ from django.forms.models import modelform_factory
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
-from swoptact.models import Address, Participant, Event, Institution
+from swoptact.models import Address, Participant, Event, Institution, Contact
 
 
+class ContactInline(admin.TabularInline):
+    model = Contact
+    fields("title", participant.primary_phone)
+    extra = 1
+    verbose_name = "Contact"
 
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
@@ -98,12 +104,26 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants',)
+    exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
+
+class InstitutionForm(forms.ModelForm):
+    class Meta:
+        model = Institution
+        fields = ['name', 'address', 'contact',]
+        
+    def clean(self):
+        contacts = self.data
+        if 'organization-5-participant' in contacts:
+            raise ValidationError('Maximum four contacts are allowed per institution.')
+        return self.cleaned_data
+
+
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-
+    inlines = (ContactInline,)
+    form = InstitutionForm
 
 class AddressAdmin(admin.ModelAdmin):
 
