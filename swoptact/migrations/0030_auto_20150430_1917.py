@@ -7,7 +7,6 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0008_auto_20150430_1056'),
         ('swoptact', '0029_add_groups'),
     ]
 
