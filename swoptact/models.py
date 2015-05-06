@@ -16,7 +16,6 @@
 
 from django.db import models
 from django.db.models.fields import related
-from django.contrib.auth import models as auth_models
 
 from phonenumber_field import modelfields
 from django_google_maps import fields as mapfields
@@ -63,14 +62,6 @@ class SerializeableMixin:
 
         return serialized
 
-class Tag(models.Model):
-    """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=10)
-    description = models.CharField(max_length=255)
-
-    # Group which can use this tag
-    group = models.ForeignKey(auth_models.Group)
-
 class Address(models.Model, SerializeableMixin):
     """ Representation of an address in Chicago """
     TYPES = (
@@ -98,7 +89,6 @@ class Address(models.Model, SerializeableMixin):
     city = models.CharField(max_length=255, default='Chicago', null=True, blank=True)
     state = models.CharField(max_length=2, default='IL', null=True, blank=True)
     zipcode = models.IntegerField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
 
 
     def __init__(self, *args, **kwargs):
@@ -123,8 +113,6 @@ class Address(models.Model, SerializeableMixin):
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.ForeignKey(Address, blank=True)
-    tags = models.ManyToManyField(Tag)
-
     def __str__(self):
         return "{name}".format(
             name=self.name,
@@ -176,14 +164,12 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     is_prep = models.BooleanField(default=False, blank=True,
                                   verbose_name = "This meeting is part of a major action:")
     major_action = models.ForeignKey("self", null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.name
 
     def attendee_count(self):
         return self.participants.count()
-
 
 # import the signals
 from swoptact.signals import *
