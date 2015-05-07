@@ -30,10 +30,9 @@ from swoptact.models import Address, Participant, Event, Institution, Contact
 
 class ContactInline(admin.TabularInline):
     model = Contact
-    fields("title", participant.primary_phone)
     extra = 1
     verbose_name = "Contact"
-
+    template = "admin/modified_tabular.html"
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
 
