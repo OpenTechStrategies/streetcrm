@@ -5,11 +5,17 @@ function testFcn() {
     $('#id_is_prep').on(
         "click",
  	function(){
-            $( ".row" ).last().toggle();
+            $( ".row" ).eq(-2).toggle();
         });
 
     $(document).ready(function () {
- 	$( ".row" ).last().hide();
+        if ($('#id_is_prep').prop('checked')){
+            console.log($( ".row" ).eq(-2).value);
+            $( ".row" ).eq(-2).show();
+        }
+        else{
+            $( ".row" ).eq(-2).hide();
+        }
     });
 
 
