@@ -25,7 +25,7 @@ from django.forms.models import modelform_factory
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
-from swoptact.models import Address, Participant, Event, Institution
+from swoptact.models import Address, Participant, Event, Institution, Tag
 
 
 
@@ -105,6 +105,8 @@ class EventAdmin(admin.ModelAdmin):
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
 
+class TagAdmin(admin.ModelAdmin):
+    pass
 
 class AddressAdmin(admin.ModelAdmin):
 
@@ -116,3 +118,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
+admin.site.register(Tag, TagAdmin)

@@ -44,6 +44,10 @@ class SerializeableMixin:
 
         # Iterate over each field to and add the value to serialized.
         for field in fields:
+            # Is the field in the serialize_exclude list
+            if field.name in getattr(self, "SERIALIZE_EXCLUDE", []):
+                continue
+
             # Get the value of the field
             value = getattr(self, field.name)
 
@@ -63,13 +67,19 @@ class SerializeableMixin:
 
         return serialized
 
-class Tag(models.Model):
+class Tag(models.Model, SerializeableMixin):
     """ Tags act as descriptors for such models as Event """
     name = models.CharField(max_length=10)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
 
     # Group which can use this tag
     group = models.ForeignKey(auth_models.Group)
+
+    # This should be put on Meta but sigh - issue #5793
+    SERIALIZE_EXCLUDE = ["group"]
+
+    def __str__(self):
+        return self.name
 
 class Address(models.Model, SerializeableMixin):
     """ Representation of an address in Chicago """
@@ -98,7 +108,6 @@ class Address(models.Model, SerializeableMixin):
     city = models.CharField(max_length=255, default='Chicago', null=True, blank=True)
     state = models.CharField(max_length=2, default='IL', null=True, blank=True)
     zipcode = models.IntegerField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
 
 
     def __init__(self, *args, **kwargs):
