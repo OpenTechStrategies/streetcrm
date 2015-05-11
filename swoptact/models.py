@@ -17,10 +17,9 @@
 from django.db import models
 from django.db.models.fields import related
 
-from phonenumber_field import modelfields
 from django_google_maps import fields as mapfields
 
-from swoptact import mixins
+from swoptact import mixins, modelfields
 
 class SerializeableMixin:
     """

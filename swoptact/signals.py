@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from django.contrib import auth
 from django.conf import settings
 from django.db.models import signals
 from django.contrib.auth.models import Group
@@ -31,8 +32,12 @@ def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
     if action != "post_add":
         return
 
+    # Only do this for users
+    if not isinstance(instance, auth.get_user_model()):
+        return 
+
     # Only do this for groups
-    if isinstance(model, Group):
+    if not isinstance(model, Group):
         return
 
     # Lookup all the groups

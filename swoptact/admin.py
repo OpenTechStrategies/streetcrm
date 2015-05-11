@@ -64,7 +64,7 @@ class SignInSheetAdminMixin(object):
 
 class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "primary_phone",  "institution", "address",)
+    list_display = ("name", "US_primary_phone",  "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
@@ -96,6 +96,18 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
     # To prevent django from distorting how the event_history method looks tell
     # it to allow HTML using the allow_tags method attribute.
     event_history.allow_tags = True
+
+    def US_primary_phone(self, obj):
+        if obj.primary_phone is None:
+            return None
+
+        # Is it a US number
+        if obj.primary_phone.country_code == 1:
+            return obj.primary_phone.as_national
+        else:
+            return obj.primary_phone.as_international
+
+    US_primary_phone.short_description = "Phone Number"
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
