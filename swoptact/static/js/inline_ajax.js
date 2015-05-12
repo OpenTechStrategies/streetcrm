@@ -64,7 +64,6 @@ function makeParticipantEditable(participant_id) {
 
     // Hide display-only form
     hideParticipantStaticRow(participant_id);
-
     // Show edit form
     showParticipantEditRow(participant_id);
 }
@@ -93,7 +92,6 @@ function cancelParticipantEdit(participant_id) {
 
 function revertEditRow(participant_id) {
     // TODO: base this on the filling system
-    console.log("Imagine a world where we just reverted this row");
 }
 
 
@@ -123,9 +121,7 @@ function insertParticipant(participant) {
         {"class": "form-row participant-static",
          "id": "participant-static-" + participant.id});
     fillStaticRow(static_row, participant);
-    
     $("#participant-table tbody").append(static_row);
-    $("#participant-table tbody").append(address_static_row);
     // Construct and insert error row (empty for now)
     // ----------------------------------------------
     var errors_row = $(
@@ -435,7 +431,6 @@ function saveParticipant(participant_id) {
 
 
 function createAutocomplete(user){
-    console.log(user);
     $.get('/api/users/'+user+'/available-tags/',
           function (tags) {
               var source_array = [];

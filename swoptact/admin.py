@@ -80,6 +80,7 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
             "fields": ("event_history",),
         })
     )
+    actions = None
 
     @property
     def event_history_name(self, obj):
@@ -118,6 +119,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants', 'time', 'tags')
     change_form_template = "admin/event_change_form.html"
+    actions = None
 
 class EventModelForm(autocomplete_light.ModelForm):
     class Meta:
@@ -143,9 +145,11 @@ class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
     inlines = (ContactInline,)
     form = InstitutionForm
+    actions = None
 
 class TagAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "description", "group")
+    actions = None
 
 class AddressAdmin(admin.ModelAdmin):
 

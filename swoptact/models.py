@@ -21,6 +21,7 @@ from django.contrib.auth import models as auth_models
 from django_google_maps import fields as mapfields
 
 from swoptact import mixins, modelfields
+import phonenumbers
 
 class SerializeableMixin:
     """
@@ -58,7 +59,7 @@ class SerializeableMixin:
                 value['__str__'] = val_str
 
             # Phone numbers give back PhoneNumber objects, we want a string
-            if isinstance(value, modelfields.PhoneNumber):
+            if  isinstance(value, phonenumbers.PhoneNumber):
                 value = value.raw_input
 
             # For all other values just add them as per usual

@@ -202,7 +202,7 @@ class EventParticipantsAPI(APIMixin, generic.DetailView):
         """ Retrival of an existing event """
         self.object = self.get_object()
 
-        # Iterate over pariticipants and serialize
+        # Iterate over participants and serialize
         participants = [p.serialize() for p in self.object.participants.all()]
 
         return self.render_to_response(context=participants)
