@@ -112,8 +112,8 @@
               <td><input class="vTextField" type="text" value="1234abcdefg" /></td>
               <td><input class="vTextField" type="text" value="5432 Grand Sicily Ave, Bologna, Italy" /></td>
               <td>
-                <button type="submit" class="btn btn-success" name="_save">✓ {% trans 'Save' %}</button>
-                <button type="submit" class="btn btn-warning" name="_cancel">✗ {% trans 'Cancel' %}</button>
+                <button type="submit" class="btn" name="_save">✓ {% trans 'Save' %}</button>
+                <button type="submit" class="btn" name="_cancel">✗ {% trans 'Cancel' %}</button>
               </td>
             </tr>
 
@@ -136,8 +136,8 @@
                 </select>
               </td>
               <td colspan="4">
-                <button type="submit" class="btn btn-info" name="_select">✓ {% trans 'Select' %}</button>
-                <button type="submit" class="btn btn-warning" name="_cancel">✗ {% trans 'Cancel' %}</button>
+                <button type="submit" class="btn" name="_select">✓ {% trans 'Select' %}</button>
+                <button type="submit" class="btn" name="_cancel">✗ {% trans 'Cancel' %}</button>
               </td>
             </tr>
             {% endcomment %}
@@ -156,7 +156,7 @@
                   style="display: none"
                   id="cancel-link-existing-btn">✗ {% trans 'Cancel' %}</button>
         </div>
-        <div class="pull-right" style="padding: 10px">
+        <div style="padding: 10px">
           <button type="submit" class="btn" name="_select"
                   id="add-new-participant-btn">✚ {% trans 'Add new' %}</button>
         </div>
