@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from django import template, forms
 from django.core.exceptions import ValidationError
+
 from django.contrib import admin, staticfiles
 from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
@@ -25,7 +26,7 @@ from django.forms.models import modelform_factory
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
-from swoptact.models import Address, Participant, Event, Institution, Contact
+from swoptact.models import Address, Participant, Event, Institution, Contact, Tag
 
 
 class ContactInline(admin.TabularInline):
@@ -103,7 +104,7 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants', 'time')
+    exclude = ('participants', 'time', 'tags')
     change_form_template = "admin/event_change_form.html"
 
 class InstitutionForm(forms.ModelForm):
@@ -124,6 +125,9 @@ class InstitutionAdmin(admin.ModelAdmin):
     inlines = (ContactInline,)
     form = InstitutionForm
 
+class TagAdmin(admin.ModelAdmin):
+    pass
+
 class AddressAdmin(admin.ModelAdmin):
 
     def get_model_perms(self, *args, **kwargs):
@@ -134,3 +138,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
+admin.site.register(Tag, TagAdmin)
