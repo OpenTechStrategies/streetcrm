@@ -61,7 +61,7 @@
         {% if inline_admin_formset.formset.can_delete %}
         <td>
           {% if inline_admin_form.original.participant.primary_phone %}
-              {{ inline_admin_form.original.participant.primary_phone }}
+              {{ inline_admin_form.original.participant.primary_phone.as_national }}
           {% endif %}
           <td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
         {% endif %}

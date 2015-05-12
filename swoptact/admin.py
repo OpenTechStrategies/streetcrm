@@ -31,7 +31,7 @@ import autocomplete_light
 
 class ContactInline(admin.TabularInline):
     model = Contact
-    extra = 1
+    extra = 0
     verbose_name = "Contact"
     template = "admin/modified_tabular.html"
 class SignInSheetAdminMixin(object):
