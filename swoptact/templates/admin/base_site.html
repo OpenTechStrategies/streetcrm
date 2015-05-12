@@ -1,5 +1,9 @@
 {% extends "admin/base.html" %}
-{% load i18n %}
+{% block extrahead %}
+{% load static i18n %}
+<link href="{% static "js/jquery.js" %}" type="script" />
+{% include 'autocomplete_light/static.html' %}
+{% endblock %}
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}

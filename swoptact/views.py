@@ -16,8 +16,10 @@
 import json
 
 from django import http
+from django.db.models import Q
 from django.views import generic
 from django.db.models.fields import related
+from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.forms.models import modelform_factory
 from django.views.decorators.csrf import csrf_exempt
@@ -253,3 +255,30 @@ class EventLinking(APIMixin, generic.DetailView):
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
+
+class AvailableTagsAPI(APIMixin, generic.ListView):
+    """
+    Provides a list of tags which the user has access to
+    """
+
+    model = models.Tag
+
+    def get_queryset(self):
+        """ Gets all tags that the user is able to access """
+        tags = []
+        for group in self.user.groups.all():
+            tags += list(self.model.objects.filter(group=group))
+        return tags
+
+    def get(self, request, *args, **kwargs):
+        self.user = get_user_model().objects.get(pk=kwargs["user"])
+        # Stop someone changing the URL to expose a user with more group access
+        if self.user.id != request.user.id:
+            return http.HttpResponse(status=403)
+        return self.render_to_response(self.get_context_data())
+
+
+    def get_context_data(self, **context):
+        context = super(AvailableTagsAPI, self).get_context_data(**context)
+        context["available"] = [t.serialize() for t in self.get_queryset()]
+        return context

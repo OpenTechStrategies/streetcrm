@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.contrib import auth
+
 from django.conf import settings
 from django.db.models import signals
 from django.contrib.auth.models import Group

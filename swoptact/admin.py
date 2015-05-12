@@ -13,8 +13,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from django import template, forms
+from django.core.exceptions import ValidationError
 
-from django import template
 from django.contrib import admin, staticfiles
 from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
@@ -25,10 +26,14 @@ from django.forms.models import modelform_factory
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
-from swoptact.models import Address, Participant, Event, Institution
+from swoptact.models import Address, Participant, Event, Institution, Contact, Tag
+import autocomplete_light
 
-
-
+class ContactInline(admin.TabularInline):
+    model = Contact
+    extra = 1
+    verbose_name = "Contact"
+    template = "admin/modified_tabular.html"
 class SignInSheetAdminMixin(object):
     """ Provides a special case sign in sheet view
 
@@ -111,12 +116,36 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants',)
+    exclude = ('participants', 'time', 'tags')
     change_form_template = "admin/event_change_form.html"
+
+class EventModelForm(autocomplete_light.ModelForm):
+    class Meta:
+        model = Event
+        exclude = []
+        # only enable autocompletes on 'person' and 'product' fields
+        autocomplete_fields = ('location', 'tags')
+
+class InstitutionForm(forms.ModelForm):
+    class Meta:
+        model = Institution
+        fields = ['name', 'address', 'contact',]
+        
+    def clean(self):
+        contacts = self.data
+        if 'organization-5-participant' in contacts:
+            raise ValidationError('Maximum four contacts are allowed per institution.')
+        return self.cleaned_data
+
+
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
+    inlines = (ContactInline,)
+    form = InstitutionForm
 
+class TagAdmin(admin.ModelAdmin):
+    pass
 
 class AddressAdmin(admin.ModelAdmin):
 
@@ -128,3 +157,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
+admin.site.register(Tag, TagAdmin)

@@ -3,3 +3,4 @@ configobj
 django-admin-bootstrapped
 django-phonenumber-field
 django-static-jquery==2.1.3
+django-autocomplete-light>=2.0.0a1

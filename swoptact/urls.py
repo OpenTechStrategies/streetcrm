@@ -36,5 +36,10 @@ urlpatterns = patterns("",
             url(r"^available-participants/$", views.EventAvailableAPI.as_view(), name="api-event-available"),
             url(r"participants/(?P<participant_id>\w+)/$", views.EventLinking.as_view(), name="api-event-linking"),
         ))),
+        url(r"^users/(?P<user>\w+)/", include(patterns("",
+            url(r"^available-tags/$", views.AvailableTagsAPI.as_view(), name="api-tags-available"),
+        ))),
     ))),
+    #autocomplete_light urls
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
 )
