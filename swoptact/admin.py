@@ -99,7 +99,7 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants',)
+    exclude = ('participants', 'tags')
     change_form_template = "admin/event_change_form.html"
 
 class InstitutionAdmin(admin.ModelAdmin):
