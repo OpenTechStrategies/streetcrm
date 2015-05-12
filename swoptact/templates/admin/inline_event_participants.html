@@ -2,6 +2,7 @@
 		<link href="{% static "js/jquery.js" %}" type="script" />
 		<link href="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.js" %}" type="script" />
 		<link href="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.css" %}" type="text/css" />
+                {% include 'autocomplete_light/static.html' %}
   <div class="_inline-group" id="participant-group">
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
       <fieldset class="module">

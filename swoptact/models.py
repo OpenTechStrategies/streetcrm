@@ -208,10 +208,10 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
     is_prep = models.BooleanField(default=False, blank=True,
                                   verbose_name = "This meeting is part of a major action:")
     major_action = models.ForeignKey("self", null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.name

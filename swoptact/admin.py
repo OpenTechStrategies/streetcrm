@@ -27,7 +27,7 @@ from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
 from swoptact.models import Address, Participant, Event, Institution, Contact, Tag
-
+import autocomplete_light
 
 class ContactInline(admin.TabularInline):
     model = Contact
@@ -106,6 +106,13 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants', 'time', 'tags')
     change_form_template = "admin/event_change_form.html"
+
+class EventModelForm(autocomplete_light.ModelForm):
+    class Meta:
+        model = Event
+        exclude = []
+        # only enable autocompletes on 'person' and 'product' fields
+        autocomplete_fields = ('location', 'tags')
 
 class InstitutionForm(forms.ModelForm):
     class Meta:

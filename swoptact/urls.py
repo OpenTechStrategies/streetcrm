@@ -40,4 +40,6 @@ urlpatterns = patterns("",
             url(r"^available-tags/$", views.AvailableTagsAPI.as_view(), name="api-tags-available"),
         ))),
     ))),
+    #autocomplete_light urls
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
 )
