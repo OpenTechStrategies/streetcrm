@@ -1,3 +1,4 @@
+-e git+https://github.com/yourlabs/django-autocomplete-light.git#egg=autocomplete_light
 django<1.9
 configobj
 django-admin-bootstrapped

@@ -19,50 +19,17 @@ from django.contrib import admin, staticfiles
 from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
 from django.conf.urls import patterns, url
-from django.shortcuts import render_to_response
 from django.forms.models import modelform_factory
 
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as mapfields
 
+import autocomplete_light
+
 from swoptact.models import Address, Participant, Event, Institution
+from swoptact import mixins
 
-
-
-class SignInSheetAdminMixin(object):
-    """ Provides a special case sign in sheet view
-
-    This will be inherited by ParticipantAdmin and is only a separate
-    class to make it easier to think about. You should prefix your
-    attributes and method names with "sheet_" to avoid conflict.
-    """
-    sheet_template = "admin/sign_in_sheet.html"
-
-
-    def get_urls(self, *args, **kwargs):
-        # Get the URLs of the superclass.
-        urls = super(SignInSheetAdminMixin, self).get_urls(*args, **kwargs)
-
-        # Define the sign in sheet URL
-        sheet_view = self.admin_site.admin_view(self.sheet_view)
-        sheet_url = patterns("",
-            url(r"sign-in-sheet/$", sheet_view, name="sign-in-sheet"),
-        )
-
-        return sheet_url + urls
-
-
-    def sheet_view(self, request):
-        """ View for the sign in sheet """
-
-        return render_to_response(self.sheet_template, {
-            "opts": self.model._meta,
-            "event_form": modelform_factory(Event, exclude=("description", "participants", "is_prep")),
-            "participant_form": modelform_factory(Participant, exclude=("address", "secondary_phone", "email",)),
-            "institution_form": modelform_factory(Institution, exclude=tuple()),
-        })
-
-class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
+class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "US_primary_phone",  "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
@@ -75,6 +42,7 @@ class ParticipantAdmin(SignInSheetAdminMixin, admin.ModelAdmin):
             "fields": ("event_history",),
         })
     )
+    form = autocomplete_light.modelform_factory(Participant, exclude=tuple())
 
     @property
     def event_history_name(self, obj):
@@ -113,13 +81,14 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants',)
     change_form_template = "admin/event_change_form.html"
+    form = autocomplete_light.modelform_factory(Event, exclude=tuple())
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-
+    form = autocomplete_light.modelform_factory(Institution, exclude=tuple())
 
 class AddressAdmin(admin.ModelAdmin):
-
+    address = autocomplete_light.modelform_factory(Address, exclude=tuple())
     def get_model_perms(self, *args, **kwargs):
         """ Hide the address from the admin index """
         return {}

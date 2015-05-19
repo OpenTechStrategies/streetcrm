@@ -22,6 +22,9 @@ from django.conf.urls import patterns, include, url
 from swoptact import views
 
 urlpatterns = patterns("",
+    # Autocomplete app URLs
+    url(r"^autocomplete/", include("autocomplete_light.urls")),
+
     # Admin site URLS
     url(r"^", include(admin.site.urls)),
 

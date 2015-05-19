@@ -13,7 +13,49 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from django.core import urlresolvers
+from django.conf.urls import patterns, url
+from django.shortcuts import render_to_response
+from django.forms.models import modelform_factory
+
+from autocomplete_light import widgets as dacl_widgets
+
+class SignInSheetAdminMixin:
+    """ Provides a special case sign in sheet view
+
+    This will be inherited by ParticipantAdmin and is only a separate
+    class to make it easier to think about. You should prefix your
+    attributes and method names with "sheet_" to avoid conflict.
+    """
+    sheet_template = "admin/sign_in_sheet.html"
+
+
+    def get_urls(self, *args, **kwargs):
+        # Get the URLs of the superclass.
+        urls = super(SignInSheetAdminMixin, self).get_urls(*args, **kwargs)
+
+        # Define the sign in sheet URL
+        sheet_view = self.admin_site.admin_view(self.sheet_view)
+        sheet_url = patterns("",
+            url(r"sign-in-sheet/$", sheet_view, name="sign-in-sheet"),
+        )
+
+        return sheet_url + urls
+
+
+    def sheet_view(self, request):
+        """ View for the sign in sheet """
+        # To prevent circular imports keep this here.
+        from swoptact.models import Participant, Event, Institution
+
+        return render_to_response(self.sheet_template, {
+            "opts": self.model._meta,
+            "event_form": modelform_factory(Event, exclude=("description", "participants", "is_prep")),
+            "participant_form": modelform_factory(Participant, exclude=("address", "secondary_phone", "email",)),
+            "institution_form": modelform_factory(Institution, exclude=tuple()),
+        })
+
 
 class AdminURLMixin:
     """ Provides Django's Admin URLs for a model managed by the admin app """

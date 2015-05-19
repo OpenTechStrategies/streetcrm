@@ -83,6 +83,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'autocomplete_light',
     'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
