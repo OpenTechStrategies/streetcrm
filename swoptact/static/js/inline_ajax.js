@@ -64,7 +64,6 @@ function makeParticipantEditable(participant_id) {
 
     // Hide display-only form
     hideParticipantStaticRow(participant_id);
-
     // Show edit form
     showParticipantEditRow(participant_id);
 }
@@ -93,7 +92,6 @@ function cancelParticipantEdit(participant_id) {
 
 function revertEditRow(participant_id) {
     // TODO: base this on the filling system
-    console.log("Imagine a world where we just reverted this row");
 }
 
 
@@ -141,6 +139,7 @@ function insertParticipant(participant) {
         {"class": "form-row participant-edit",
          "id": "participant-edit-" + participant.id});
     fillEditRow(edit_row, participant);
+    console.log('added edit row'+participant);
     edit_row.hide()
     $("#participant-table tbody").append(edit_row);
 }
@@ -161,7 +160,8 @@ function fillStaticRow(row, participant) {
 
     appendSimpleText = function (text) {
         td_wrap = $("<td/>");
-        p_wrap = $("<p/>");
+        p_wrap = $("<p/>",
+                   {"style": "font-size: 18"});
         p_wrap.text(text);
         td_wrap.append(p_wrap);
         row.append(td_wrap);
@@ -177,12 +177,12 @@ function fillStaticRow(row, participant) {
     appendSimpleText(participant.primary_phone);
 
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn btn-info participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn btn-danger participant-unlink" name="_unlink">✘ Undo</button></td>');
+    row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
 }
 
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
-
+    console.log('in filling edit row');
     appendSimpleTextField = function (text) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
@@ -202,10 +202,33 @@ function fillEditRow(row, participant) {
         appendSimpleTextField("");
     }
     appendSimpleTextField(participant.primary_phone);
-
+    console.log('appended all fields');
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn btn-success participant-save" name="_save">✓ Save</button> <button type="submit" class="btn btn-warning participant-cancel" name="_cancel">✗ Cancel</button></td>');
+    row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Save</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
+    console.log('appended buttons');
 }
+
+function fillAddressEditRow(row, participant) {
+    resetRow(row, participant.id);
+    //include a label cell
+    row.append('<th> Address:');
+
+    appendSimpleTextField = function (text) {
+        td_wrap = $("<td/>");
+        input_wrap = $("<input/>", {
+            "class": "vTextField",
+            "type": "text",
+            "value": text});
+        input_wrap.text(text);
+        td_wrap.append(input_wrap);
+        row.append(td_wrap);
+    }
+
+    appendSimpleTextField(participant.address.__str__);
+
+}
+
+
 
 function fillErrorsRow(row, participant_id, errors) {
     resetRow(row, participant_id);
@@ -239,6 +262,7 @@ function loadInitialAttendees() {
 
 function startLinkExistingParticipants() {
     var event_id = getEventId();
+    $("#add-new-participant-btn").hide();
     var url = '/api/events/'+event_id+'/available-participants';
     $.get(url, function (result) {
         var select_available = $('#available-participants-select');
@@ -263,6 +287,7 @@ function startLinkExistingParticipants() {
 }
 
 function finishLinkExistingParticipants() {
+    $("#add-new-participant-btn").show();
     var participant_id = $("#available-participants-select option:selected").val();
     if (participant_id == "") {
         return false;
@@ -279,6 +304,7 @@ function finishLinkExistingParticipants() {
 }
 
 function backToPreLinkParticipants() {
+    $("#add-new-participant-btn").show();
     $("#link-existing-participant-btn").show();
     $('#available-participants-select').hide();
     $("#cancel-link-existing-btn").hide();
@@ -403,6 +429,29 @@ function saveParticipant(participant_id) {
 }
 
 
+function createAutocomplete(user){
+    $.get('/api/users/'+user+'/available-tags/',
+          function (tags) {
+              var source_array = [];
+              for (i = 0; i < tags.available.length; i++){
+                  source_array.push({label: tags.available[i].name, value: tags.available[i].id});
+              }
+              $("#tag_choices").autocomplete({
+                  source: source_array,
+                  select: function(event, ui) {
+                      event.preventDefault();
+                      $("#tag_choices").val(ui.item.label);
+                      //but we need to save the value as a fk
+                  },
+                  focus: function(event, ui) {
+                      event.preventDefault();
+                      $("#tag_choices").val(ui.item.label);
+                  }
+              });
+          }, 'json');
+    
+}
+
 function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-edit",
@@ -470,3 +519,4 @@ function setupParticipantCallbacks() {
 setupParticipantCallbacks();
 
 
+createAutocomplete(1);

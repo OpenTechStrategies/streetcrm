@@ -16,10 +16,12 @@
 
 from django.db import models
 from django.db.models.fields import related
+from django.contrib.auth import models as auth_models
 
 from django_google_maps import fields as mapfields
 
 from swoptact import mixins, modelfields
+import phonenumbers
 
 class SerializeableMixin:
     """
@@ -42,6 +44,10 @@ class SerializeableMixin:
 
         # Iterate over each field to and add the value to serialized.
         for field in fields:
+            # Is the field in the serialize_exclude list
+            if field.name in getattr(self, "SERIALIZE_EXCLUDE", []):
+                continue
+
             # Get the value of the field
             value = getattr(self, field.name)
 
@@ -53,13 +59,27 @@ class SerializeableMixin:
                 value['__str__'] = val_str
 
             # Phone numbers give back PhoneNumber objects, we want a string
-            if isinstance(value, modelfields.PhoneNumber):
+            if  isinstance(value, phonenumbers.PhoneNumber):
                 value = value.raw_input
 
             # For all other values just add them as per usual
             serialized[field.name] = value
 
         return serialized
+
+class Tag(models.Model, SerializeableMixin):
+    """ Tags act as descriptors for such models as Event """
+    name = models.CharField(max_length=10)
+    description = models.CharField(max_length=255, null=True, blank=True)
+
+    # Group which can use this tag
+    group = models.ForeignKey(auth_models.Group)
+
+    # This should be put on Meta but sigh - issue #5793
+    SERIALIZE_EXCLUDE = ["group"]
+
+    def __str__(self):
+        return self.name
 
 class Address(models.Model, SerializeableMixin):
     """ Representation of an address in Chicago """
@@ -112,6 +132,11 @@ class Address(models.Model, SerializeableMixin):
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.ForeignKey(Address, blank=True)
+    is_member = models.BooleanField(default=False, blank=True, 
+                                  verbose_name = "This institution is a member of SWOP:")
+    contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
+    tags = models.ManyToManyField(Tag)
+
     def __str__(self):
         return "{name}".format(
             name=self.name,
@@ -145,21 +170,45 @@ class Participant(models.Model, SerializeableMixin):
         """ List of all events participant is in """
         return Event.objects.filter(participants__in=[self]).all()
 
+class Contact(models.Model):
+    participant = models.ForeignKey(Participant, related_name="leaders")
+    institution = models.ForeignKey(Institution, related_name="organization")
+    title = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return "{first_name} {last_name}".format(
+            first_name=self.participant.first_name,
+            last_name=self.participant.last_name
+        )
 
 class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
+    SUFFIXES = (
+        ("0", "am",),
+        ("12", "pm",)
+        )
+    
     TIMES = (
-        ("10am", "Morning"),
-        ("12pm", "Noon"),
-        ("3pm", "Afternoon"),
-        ("7pm", "Evening"),
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+        ("6", "6"),
+        ("7", "7"),
+        ("8", "8"),
+        ("9", "9"),
+        ("10", "10"),
+        ("11", "11"),
+        ("12", "12"),
     )
 
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    time = models.CharField(choices = TIMES, max_length = 20, null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
     is_prep = models.BooleanField(default=False, blank=True,
                                   verbose_name = "This meeting is part of a major action:")
     major_action = models.ForeignKey("self", null=True, blank=True)
