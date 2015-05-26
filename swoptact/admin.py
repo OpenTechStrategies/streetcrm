@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django import template
+from django import template, forms
+from django.core.exceptions import ValidationError
 from django.contrib import admin, staticfiles
 from django.contrib.admin.options import InlineModelAdmin
 from django.template import loader
 from django.conf.urls import patterns, url
+from django.shortcuts import render_to_response
 from django.forms.models import modelform_factory
 
 from django_google_maps import widgets as map_widgets
@@ -26,8 +28,14 @@ from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
-from swoptact.models import Address, Participant, Event, Institution
+from swoptact.models import Address, Participant, Event, Institution, Contact, Tag
 from swoptact import mixins
+
+class ContactInline(admin.TabularInline):
+    model = Contact
+    extra = 0
+    verbose_name = "Contact"
+    template = "admin/modified_tabular.html"
 
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
@@ -43,6 +51,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
         })
     )
     form = autocomplete_light.modelform_factory(Participant, exclude=tuple())
+    actions = None
 
     @property
     def event_history_name(self, obj):
@@ -79,13 +88,20 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants',)
+    exclude = ('participants', 'time', 'tags')
     change_form_template = "admin/event_change_form.html"
     form = autocomplete_light.modelform_factory(Event, exclude=tuple())
+    actions = None
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
     form = autocomplete_light.modelform_factory(Institution, exclude=tuple())
+    inlines = (ContactInline,)
+    actions = None
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("name", "description", "group")
+    actions = None
 
 class AddressAdmin(admin.ModelAdmin):
     address = autocomplete_light.modelform_factory(Address, exclude=tuple())
@@ -97,3 +113,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
+admin.site.register(Tag, TagAdmin)
