@@ -131,11 +131,11 @@ class Address(models.Model, SerializeableMixin):
 
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
-    address = models.ForeignKey(Address, blank=True)
+    address = models.ForeignKey(Address, null=True, blank=True)
     is_member = models.BooleanField(default=False, blank=True, 
                                   verbose_name = "This institution is a member of SWOP:")
     contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     def __str__(self):
         return "{name}".format(

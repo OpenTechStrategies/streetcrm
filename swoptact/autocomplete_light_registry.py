@@ -22,3 +22,11 @@ class InstitutionAutocomplete(BaseAutocomplete):
     model = models.Institution
 
 autocomplete_light.register(InstitutionAutocomplete)
+
+# Register the Tag
+class TagAutocomplete(BaseAutocomplete):
+    search_fields = ["name"]
+    model = models.Tag
+
+autocomplete_light.register(TagAutocomplete)
+

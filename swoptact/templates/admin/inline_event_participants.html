@@ -1,22 +1,5 @@
 {% load static i18n %}
 		<link href="{% static "js/jquery.js" %}" type="script" />
-		<link href="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.js" %}" type="script" />
-		<link href="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.css" %}" type="text/css" />
-                {% include 'autocomplete_light/static.html' %}
-  <div class="_inline-group" id="participant-group">
-    <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
-      <fieldset class="module">
-        <h2>Tags</h2>
-        <input type="hidden" id="user_object_id" value="{{ request.user.id }}" />
-        <table class="table table-striped table-bordered">
-            <tr>
-              <th>Tags:</th>
-              <td><input type="text" id="tag_choices"></td>
-            </tr>
-        </table>
-      </fieldset>
-    </div>
-  </div>
 
 {% if change %}
   {# javascript can extract what ID to talk to from here #}

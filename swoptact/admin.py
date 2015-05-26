@@ -88,7 +88,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants', 'time', 'tags')
+    exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
     form = autocomplete_light.modelform_factory(Event, exclude=tuple())
     actions = None
