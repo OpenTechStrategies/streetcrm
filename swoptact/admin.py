@@ -36,7 +36,8 @@ class ContactInline(admin.TabularInline):
     extra = 0
     verbose_name = "Contact"
     template = "admin/modified_tabular.html"
-
+    form = autocomplete_light.modelform_factory(Contact, exclude=tuple())
+    
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "US_primary_phone",  "institution", "address",)

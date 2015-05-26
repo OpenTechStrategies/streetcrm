@@ -30,3 +30,10 @@ class TagAutocomplete(BaseAutocomplete):
 
 autocomplete_light.register(TagAutocomplete)
 
+# Register the Contact
+class ContactAutocomplete(BaseAutocomplete):
+    search_fields = ["first_name", "last_name"]
+    model = models.Participant
+
+autocomplete_light.register(ContactAutocomplete)
+
