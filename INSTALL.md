@@ -12,7 +12,7 @@ Ensure you're in the top directory of the swoptact project and run:
 
         $ virtualenv --python=python3.4 .
         $ source ./bin/activate
-        $ pip install -r requirements.txt
+        $ pip install -U -r requirements.txt
 
 This will setup the virtual enviroment and install all the necessary
 dependencies.
@@ -71,14 +71,18 @@ Now initialize the database with this command:
 may be asked _"You have installed Django's auth system, and don't have
 any superusers defined.  Would you like to create one now?"_.  Answer
 "yes", and then create a user account with which to log in to the
-application -- a reasonable default username will usually be offered.)
+application.  Use a username that represents you individually, such as
+"jrandom", not a generic role name like "admin".  In the context of
+this system, a "superuser" is just a user who has all permissions, and
+there can be multiple such users -- you just happen to be creating the
+first one.)
 
 Optionally, you may load sample data too (but see the warning below):
 
         $ python manage.py loaddata sample_data.json
 
 (The sample data is located in `swoptact/fixtures/sample_data.json`,
-but Django knows where to find it if you just say `sample_data.json`.)
+but Django knows where to find it if you just say `sample_data.json`.
 
 WARNING: If you load sample data with the above command, any user you
 created with `python manage.py syncdb` in a previous step will be
@@ -86,11 +90,18 @@ deleted, in which case you'll have to re-create the user with:
 
         $ python manage.py createsuperuser
 
-WARNING 2: (Caveat Importer:) There's every possibility that the
-fixtures were made when the database looked differently than it does
-now, and the columns don't line up, etc.  In which case this step
-might not work anyway!
+WARNING 2: Note that the sample data should have been created with
 
+        python manage.py dumpdata --natural-foreign --indent=4       \
+                                  -e sessions -e admin               \
+                                  -e contenttypes -e auth.Permission \
+              > swoptact/fixtures/sample_data.json
+
+as per
+[these](http://stackoverflow.com/questions/27499030/integrity-error-when-loading-fixtures-for-selenium-testing-in-django)
+[two](http://stackoverflow.com/questions/853796/problems-with-contenttypes-when-loading-a-fixture-in-django)
+StackOverflow questions.  Otherwise, people may get ""UNIQUE
+constraint failed" errors when trying to load the data.
 
 Running
 -------
