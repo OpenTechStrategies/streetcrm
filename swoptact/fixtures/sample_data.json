@@ -1,1 +1,647 @@
-[{"pk": 1, "model": "contenttypes.contenttype", "fields": {"app_label": "admin", "model": "logentry"}}, {"pk": 2, "model": "contenttypes.contenttype", "fields": {"app_label": "auth", "model": "permission"}}, {"pk": 3, "model": "contenttypes.contenttype", "fields": {"app_label": "auth", "model": "group"}}, {"pk": 4, "model": "contenttypes.contenttype", "fields": {"app_label": "auth", "model": "user"}}, {"pk": 5, "model": "contenttypes.contenttype", "fields": {"app_label": "contenttypes", "model": "contenttype"}}, {"pk": 6, "model": "contenttypes.contenttype", "fields": {"app_label": "sessions", "model": "session"}}, {"pk": 7, "model": "contenttypes.contenttype", "fields": {"app_label": "swoptact", "model": "address"}}, {"pk": 8, "model": "contenttypes.contenttype", "fields": {"app_label": "swoptact", "model": "participant"}}, {"pk": 9, "model": "contenttypes.contenttype", "fields": {"app_label": "swoptact", "model": "event"}}, {"pk": 11, "model": "contenttypes.contenttype", "fields": {"app_label": "swoptact", "model": "institution"}}, {"pk": 18, "model": "contenttypes.contenttype", "fields": {"app_label": "swoptact", "model": "tag"}}, {"pk": "1qu9h3rus9e9jla8xxwrudh00kf0qx1f", "model": "sessions.session", "fields": {"session_data": "N2I4YzY5Yzc4Y2E1YTlkMGQzOTY5MzM5MTUyNzY2NGFmYmY3OGRjNDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MSwiX2F1dGhfdXNlcl9oYXNoIjoiZWFjMjA2NDQ2MGEyMjM2MDBlYjFiY2Q2M2U0NjBmNjhiNWIzNmE4ZCJ9", "expire_date": "2015-04-07T20:29:35.521Z"}}, {"pk": "37pcft97jhluzfyv25blbzcedkx47l6n", "model": "sessions.session", "fields": {"session_data": "ZDEyZmJiZjE4OTMxOGYxZjkzNmMxNGQ4OGZkNDA5M2ZiZmUxNTk2Mjp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9", "expire_date": "2015-04-15T20:17:59.387Z"}}, {"pk": "3vducs34thzrk83vsx4h8nlsto8t6bua", "model": "sessions.session", "fields": {"session_data": "ZWFjZTBmZjE2OGJmZTNmMjRkYjI1ZDViM2NmN2VkMWZkNTMxYThlNTp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWFjMjA2NDQ2MGEyMjM2MDBlYjFiY2Q2M2U0NjBmNjhiNWIzNmE4ZCIsIl9hdXRoX3VzZXJfaWQiOjF9", "expire_date": "2015-05-20T15:13:15.725Z"}}, {"pk": "45t2l98yei2hy8gwvb89nvp8l1yj5b7q", "model": "sessions.session", "fields": {"session_data": "MWIwMGJhZTAxOTU3MDRkNTA1MjRhYmEzM2JjZWQzM2M4YzM3YTIxZTp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWFjMjA2NDQ2MGEyMjM2MDBlYjFiY2Q2M2U0NjBmNjhiNWIzNmE4ZCJ9", "expire_date": "2015-05-13T16:56:12.136Z"}}, {"pk": "4zz8fhhcbhig0fisrwn6doyvidn7hw47", "model": "sessions.session", "fields": {"session_data": "NWEwZjJiMWVjMWI5MGFhZTBiODFkMDBiYzI4Y2Q5NzM4ZDE2MDUzZjp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiYzNmY2QxOTZlZjk3ZjUxZTRiYTMxMTVmODFkNjhhZDQzNzUwYTRhMiIsIl9hdXRoX3VzZXJfaWQiOiIxIn0=", "expire_date": "2015-05-26T18:43:31.644Z"}}, {"pk": "6kepjk40sbteihz7hrmta73bvddqiuvj", "model": "sessions.session", "fields": {"session_data": "N2M1ZTRjMTM4MDY5ZmI1ZGJjYTY0MDZlZTc5Y2NhNjE3MThlMzQzZTp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2lkIjoxLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9", "expire_date": "2015-03-16T15:29:30.464Z"}}, {"pk": "b4gvnjaptugsouuftnlbc69vcjaxeuou", "model": "sessions.session", "fields": {"session_data": "MWIwMGJhZTAxOTU3MDRkNTA1MjRhYmEzM2JjZWQzM2M4YzM3YTIxZTp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWFjMjA2NDQ2MGEyMjM2MDBlYjFiY2Q2M2U0NjBmNjhiNWIzNmE4ZCJ9", "expire_date": "2015-04-24T14:27:02.566Z"}}, {"pk": "cyppnw4qiouy5opwc65d91idktjmsh85", "model": "sessions.session", "fields": {"session_data": "ZDEyZmJiZjE4OTMxOGYxZjkzNmMxNGQ4OGZkNDA5M2ZiZmUxNTk2Mjp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9", "expire_date": "2015-03-17T17:51:56.002Z"}}, {"pk": "hyu53zgqxx9ftuagi1sij3dc7nw35pm7", "model": "sessions.session", "fields": {"session_data": "N2M1ZTRjMTM4MDY5ZmI1ZGJjYTY0MDZlZTc5Y2NhNjE3MThlMzQzZTp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2lkIjoxLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9", "expire_date": "2015-05-05T16:22:24.768Z"}}, {"pk": "nr2r4x9zj2civzg78fiqlk8tkc4rffe2", "model": "sessions.session", "fields": {"session_data": "ZDEyZmJiZjE4OTMxOGYxZjkzNmMxNGQ4OGZkNDA5M2ZiZmUxNTk2Mjp7Il9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9", "expire_date": "2015-03-31T15:57:16.427Z"}}, {"pk": "uoxdpic88u4xij1kwpatzub8sw4mohzo", "model": "sessions.session", "fields": {"session_data": "YTkwYWNmYjdiOTlhM2U5OTlmMmFiNWYxODhhN2RmZDYzMTYyZDIzYzp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9", "expire_date": "2015-03-24T20:00:07.848Z"}}, {"pk": "uy1p84qqa6mqj3h5wzldg7apjautk236", "model": "sessions.session", "fields": {"session_data": "YTkwYWNmYjdiOTlhM2U5OTlmMmFiNWYxODhhN2RmZDYzMTYyZDIzYzp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfaGFzaCI6ImVhYzIwNjQ0NjBhMjIzNjAwZWIxYmNkNjNlNDYwZjY4YjViMzZhOGQiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9", "expire_date": "2015-05-08T15:30:38.765Z"}}, {"pk": "vsysza4uld2rwioaixwzvpuebi66vrru", "model": "sessions.session", "fields": {"session_data": "ZWFjZTBmZjE2OGJmZTNmMjRkYjI1ZDViM2NmN2VkMWZkNTMxYThlNTp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZWFjMjA2NDQ2MGEyMjM2MDBlYjFiY2Q2M2U0NjBmNjhiNWIzNmE4ZCIsIl9hdXRoX3VzZXJfaWQiOjF9", "expire_date": "2015-05-05T14:06:36.840Z"}}, {"pk": 1, "model": "swoptact.address", "fields": {"name": "State", "state": "IL", "direction": "N", "number": 17, "zipcode": 60602, "type": "St", "apartment": "1700", "city": "Chicago"}}, {"pk": 2, "model": "swoptact.address", "fields": {"name": "Ashland", "state": "IL", "direction": "S", "number": 6300, "zipcode": null, "type": "Av", "apartment": null, "city": "Chicago"}}, {"pk": 3, "model": "swoptact.address", "fields": {"name": "Lake", "state": "IL", "direction": "E", "number": 310, "zipcode": null, "type": "St", "apartment": null, "city": "Chicago"}}, {"pk": 4, "model": "swoptact.address", "fields": {"name": "Lawndale", "state": "IL", "direction": "W", "number": 10, "zipcode": null, "type": "Av", "apartment": null, "city": "Chicago"}}, {"pk": 5, "model": "swoptact.address", "fields": {"name": "93rd", "state": "IL", "direction": "E", "number": 3100, "zipcode": null, "type": "St", "apartment": null, "city": "Chicago"}}, {"pk": 6, "model": "swoptact.address", "fields": {"name": "Damen", "state": "IL", "direction": "N", "number": 1215, "zipcode": null, "type": "Av", "apartment": null, "city": "Chicago"}}, {"pk": 7, "model": "swoptact.address", "fields": {"name": "Roosevelt", "state": "IL", "direction": "W", "number": 2800, "zipcode": null, "type": "Rd", "apartment": null, "city": "Chicago"}}, {"pk": 1, "model": "swoptact.institution", "fields": {"name": "Test Institution", "address": 1, "tags": [], "is_member": false}}, {"pk": 2, "model": "swoptact.institution", "fields": {"name": "Extra Venerable Institution", "address": 2, "tags": [], "is_member": true}}, {"pk": 9, "model": "swoptact.participant", "fields": {"last_name": "Russo", "secondary_phone": null, "institution": null, "address": 1, "email": "lbeethoven@test.com", "first_name": "Lauren", "primary_phone": null}}, {"pk": 14, "model": "swoptact.participant", "fields": {"last_name": "Rose", "secondary_phone": null, "institution": 1, "address": 5, "email": "", "first_name": "Theodore", "primary_phone": "+17737021234"}}, {"pk": 24, "model": "swoptact.participant", "fields": {"last_name": "Lagos", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Daria", "primary_phone": null}}, {"pk": 25, "model": "swoptact.participant", "fields": {"last_name": "NewPerson", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Adding", "primary_phone": null}}, {"pk": 26, "model": "swoptact.participant", "fields": {"last_name": "Brown", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Felicia", "primary_phone": null}}, {"pk": 27, "model": "swoptact.participant", "fields": {"last_name": "Addition", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Simple", "primary_phone": null}}, {"pk": 28, "model": "swoptact.participant", "fields": {"last_name": "Topher", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Chris", "primary_phone": null}}, {"pk": 29, "model": "swoptact.participant", "fields": {"last_name": "Glum", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Puddle", "primary_phone": null}}, {"pk": 30, "model": "swoptact.participant", "fields": {"last_name": "Solares", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Eustace", "primary_phone": null}}, {"pk": 31, "model": "swoptact.participant", "fields": {"last_name": "Martinez", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Jill", "primary_phone": null}}, {"pk": 32, "model": "swoptact.participant", "fields": {"last_name": "Stallwhether", "secondary_phone": null, "institution": null, "address": 1, "email": "", "first_name": "Dante", "primary_phone": "+13127726767"}}, {"pk": 33, "model": "swoptact.participant", "fields": {"last_name": "Guadalupe", "secondary_phone": null, "institution": null, "address": null, "email": "", "first_name": "Jesenya", "primary_phone": null}}, {"pk": 2, "model": "swoptact.contact", "fields": {"participant": 32, "title": "Pastor", "institution": 2}}, {"pk": 9, "model": "swoptact.contact", "fields": {"participant": 9, "title": "Test Title", "institution": 2}}, {"pk": 11, "model": "swoptact.contact", "fields": {"participant": 14, "title": "Test LEADER", "institution": 1}}, {"pk": 12, "model": "swoptact.contact", "fields": {"participant": 24, "title": "Primary Contact", "institution": 1}}, {"pk": 13, "model": "swoptact.contact", "fields": {"participant": 31, "title": "", "institution": 1}}, {"pk": 18, "model": "swoptact.contact", "fields": {"participant": 26, "title": "", "institution": 1}}, {"pk": 19, "model": "swoptact.contact", "fields": {"participant": 30, "title": "", "institution": 2}}, {"pk": 20, "model": "swoptact.contact", "fields": {"participant": 33, "title": "", "institution": 2}}, {"pk": 21, "model": "swoptact.contact", "fields": {"participant": 31, "title": "", "institution": 2}}, {"pk": 2, "model": "swoptact.event", "fields": {"name": "New Homeowners Support Group", "time": null, "participants": [32], "description": "A discussion group", "tags": [], "major_action": null, "location": "SWOP", "is_prep": false, "date": "2015-05-11"}}, {"pk": 3, "model": "swoptact.event", "fields": {"name": "Swoptact Initiation Forum", "time": null, "participants": [], "description": null, "tags": [], "major_action": null, "location": "Conference Center", "is_prep": false, "date": null}}, {"pk": 4, "model": "swoptact.event", "fields": {"name": "International Women's Day", "time": null, "participants": [], "description": "", "tags": [], "major_action": null, "location": "Global", "is_prep": false, "date": null}}, {"pk": 5, "model": "swoptact.event", "fields": {"name": "Organizer Retreat", "time": null, "participants": [], "description": null, "tags": [], "major_action": null, "location": "SWOP Auxiliary Office", "is_prep": false, "date": null}}, {"pk": 6, "model": "swoptact.event", "fields": {"name": "Example Meeting", "time": null, "participants": [9], "description": "", "tags": [], "major_action": null, "location": "", "is_prep": false, "date": null}}, {"pk": 7, "model": "swoptact.event", "fields": {"name": "Test", "time": null, "participants": [], "description": null, "tags": [], "major_action": null, "location": "", "is_prep": false, "date": null}}, {"pk": 8, "model": "swoptact.event", "fields": {"name": "Demo Event", "time": null, "participants": [9, 14, 24, 26, 28, 29, 30, 31, 32], "description": "This is an example event with attendees.", "tags": [], "major_action": 7, "location": "", "is_prep": false, "date": null}}, {"pk": 9, "model": "swoptact.event", "fields": {"name": "Add a new event", "time": null, "participants": [30, 31, 32, 33], "description": "This is a test of adding a new event with the sign in sheet.", "tags": [], "major_action": 3, "location": "At a location", "is_prep": true, "date": "2015-05-04"}}, {"pk": 1, "model": "auth.permission", "fields": {"name": "Can add log entry", "content_type": ["admin", "logentry"], "codename": "add_logentry"}}, {"pk": 2, "model": "auth.permission", "fields": {"name": "Can change log entry", "content_type": ["admin", "logentry"], "codename": "change_logentry"}}, {"pk": 3, "model": "auth.permission", "fields": {"name": "Can delete log entry", "content_type": ["admin", "logentry"], "codename": "delete_logentry"}}, {"pk": 4, "model": "auth.permission", "fields": {"name": "Can add permission", "content_type": ["auth", "permission"], "codename": "add_permission"}}, {"pk": 5, "model": "auth.permission", "fields": {"name": "Can change permission", "content_type": ["auth", "permission"], "codename": "change_permission"}}, {"pk": 6, "model": "auth.permission", "fields": {"name": "Can delete permission", "content_type": ["auth", "permission"], "codename": "delete_permission"}}, {"pk": 7, "model": "auth.permission", "fields": {"name": "Can add group", "content_type": ["auth", "group"], "codename": "add_group"}}, {"pk": 8, "model": "auth.permission", "fields": {"name": "Can change group", "content_type": ["auth", "group"], "codename": "change_group"}}, {"pk": 9, "model": "auth.permission", "fields": {"name": "Can delete group", "content_type": ["auth", "group"], "codename": "delete_group"}}, {"pk": 10, "model": "auth.permission", "fields": {"name": "Can add user", "content_type": ["auth", "user"], "codename": "add_user"}}, {"pk": 11, "model": "auth.permission", "fields": {"name": "Can change user", "content_type": ["auth", "user"], "codename": "change_user"}}, {"pk": 12, "model": "auth.permission", "fields": {"name": "Can delete user", "content_type": ["auth", "user"], "codename": "delete_user"}}, {"pk": 13, "model": "auth.permission", "fields": {"name": "Can add content type", "content_type": ["contenttypes", "contenttype"], "codename": "add_contenttype"}}, {"pk": 14, "model": "auth.permission", "fields": {"name": "Can change content type", "content_type": ["contenttypes", "contenttype"], "codename": "change_contenttype"}}, {"pk": 15, "model": "auth.permission", "fields": {"name": "Can delete content type", "content_type": ["contenttypes", "contenttype"], "codename": "delete_contenttype"}}, {"pk": 16, "model": "auth.permission", "fields": {"name": "Can add session", "content_type": ["sessions", "session"], "codename": "add_session"}}, {"pk": 17, "model": "auth.permission", "fields": {"name": "Can change session", "content_type": ["sessions", "session"], "codename": "change_session"}}, {"pk": 18, "model": "auth.permission", "fields": {"name": "Can delete session", "content_type": ["sessions", "session"], "codename": "delete_session"}}, {"pk": 19, "model": "auth.permission", "fields": {"name": "Can add address", "content_type": ["swoptact", "address"], "codename": "add_address"}}, {"pk": 20, "model": "auth.permission", "fields": {"name": "Can change address", "content_type": ["swoptact", "address"], "codename": "change_address"}}, {"pk": 21, "model": "auth.permission", "fields": {"name": "Can delete address", "content_type": ["swoptact", "address"], "codename": "delete_address"}}, {"pk": 22, "model": "auth.permission", "fields": {"name": "Can add participant", "content_type": ["swoptact", "participant"], "codename": "add_participant"}}, {"pk": 23, "model": "auth.permission", "fields": {"name": "Can change participant", "content_type": ["swoptact", "participant"], "codename": "change_participant"}}, {"pk": 24, "model": "auth.permission", "fields": {"name": "Can delete participant", "content_type": ["swoptact", "participant"], "codename": "delete_participant"}}, {"pk": 25, "model": "auth.permission", "fields": {"name": "Can add event", "content_type": ["swoptact", "event"], "codename": "add_event"}}, {"pk": 26, "model": "auth.permission", "fields": {"name": "Can change event", "content_type": ["swoptact", "event"], "codename": "change_event"}}, {"pk": 27, "model": "auth.permission", "fields": {"name": "Can delete event", "content_type": ["swoptact", "event"], "codename": "delete_event"}}, {"pk": 31, "model": "auth.permission", "fields": {"name": "Can add institution", "content_type": ["swoptact", "institution"], "codename": "add_institution"}}, {"pk": 32, "model": "auth.permission", "fields": {"name": "Can change institution", "content_type": ["swoptact", "institution"], "codename": "change_institution"}}, {"pk": 33, "model": "auth.permission", "fields": {"name": "Can delete institution", "content_type": ["swoptact", "institution"], "codename": "delete_institution"}}, {"pk": 43, "model": "auth.permission", "fields": {"name": "Can add tag", "content_type": ["swoptact", "tag"], "codename": "add_tag"}}, {"pk": 44, "model": "auth.permission", "fields": {"name": "Can change tag", "content_type": ["swoptact", "tag"], "codename": "change_tag"}}, {"pk": 45, "model": "auth.permission", "fields": {"name": "Can delete tag", "content_type": ["swoptact", "tag"], "codename": "delete_tag"}}, {"pk": 1, "model": "auth.group", "fields": {"name": "admin", "permissions": []}}, {"pk": 2, "model": "auth.group", "fields": {"name": "organizer", "permissions": []}}, {"pk": 3, "model": "auth.group", "fields": {"name": "leader", "permissions": []}}, {"pk": 1, "model": "auth.user", "fields": {"last_login": "2015-05-12T18:43:31.385Z", "is_active": true, "last_name": "", "date_joined": "2015-03-02T15:29:13Z", "is_staff": true, "first_name": "", "user_permissions": [], "username": "cdonnelly", "groups": [["admin"], ["organizer"], ["leader"]], "password": "pbkdf2_sha256$20000$BBQwKnUCjDr6$p2zmv/ioMssHyI2ffJJfSS4YeA+3H75bFmJ5doJNAno=", "email": "me@me.com", "is_superuser": true}}, {"pk": 1, "model": "swoptact.tag", "fields": {"name": "ttm", "group": ["organizer"], "description": "testing the model"}}, {"pk": 2, "model": "swoptact.tag", "fields": {"name": "il4kids", "group": ["admin"], "description": "Illinois grant for children"}}, {"pk": 4, "model": "swoptact.tag", "fields": {"name": "test", "group": ["organizer"], "description": "another test"}}, {"pk": 5, "model": "swoptact.tag", "fields": {"name": "New", "group": ["leader"], "description": "A new tag."}}, {"pk": 1, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "Address object", "action_time": "2015-03-02T15:48:49.333Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 2, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Participant object", "action_time": "2015-03-02T15:49:44.058Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 3, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "17 N State St", "action_time": "2015-03-02T17:18:52.123Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed direction and type.", "action_flag": 2}}, {"pk": 4, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "6300 S Ashland Av", "action_time": "2015-03-03T17:14:47.972Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 5, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Housing Group Meeting 2015-02-27 19:00:00-06:00", "action_time": "2015-03-03T17:15:43.072Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 6, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Housing Group Meeting 2015-02-27 09:00:00-06:00", "action_time": "2015-03-03T17:16:06.293Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed date.", "action_flag": 2}}, {"pk": 7, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Housing Group Meeting 2015-02-27 07:00:00-06:00", "action_time": "2015-03-03T17:16:15.280Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed date.", "action_flag": 2}}, {"pk": 8, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Homeowners Support Group", "action_time": "2015-03-05T17:32:32.735Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 9, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "17 North State Street", "action_time": "2015-03-06T16:06:24.976Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 10, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "310 East Lake Street", "action_time": "2015-03-06T16:06:43.698Z", "object_id": "3", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 11, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "10 West Lawndale Avenue", "action_time": "2015-03-10T14:57:57.727Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 12, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "3100 East 93rd Street", "action_time": "2015-03-10T14:58:18.205Z", "object_id": "5", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 13, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "1215 North Damen Avenue", "action_time": "2015-03-10T14:58:34.698Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 14, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "2800 West Roosevelt Road", "action_time": "2015-03-10T14:59:04.971Z", "object_id": "7", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 15, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Maria Russell", "action_time": "2015-03-10T15:02:56.950Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 16, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Marcia Ramirez", "action_time": "2015-03-10T15:04:17.143Z", "object_id": "3", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 17, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Marybeth Tennant", "action_time": "2015-03-10T15:05:14.209Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 18, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Winston Locke", "action_time": "2015-03-10T15:07:35.872Z", "object_id": "5", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 19, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Winston Locke", "action_time": "2015-03-10T15:07:43.261Z", "object_id": "5", "user": ["cdonnelly"], "change_message": "Changed phone_number.", "action_flag": 2}}, {"pk": 20, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Swoptact Initiation Forum", "action_time": "2015-03-10T15:08:57.652Z", "object_id": "3", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 21, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "International Women's Day", "action_time": "2015-03-10T15:10:37.937Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 22, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Organizer Retreat", "action_time": "2015-03-10T15:13:56.173Z", "object_id": "5", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 23, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Check This", "action_time": "2015-03-10T21:06:06.772Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 31, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Marybeth Tennant", "action_time": "2015-03-19T19:56:14.301Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "Changed new_address and geolocation.", "action_flag": 2}}, {"pk": 32, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Marybeth Tennant", "action_time": "2015-03-19T19:59:05.265Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "Changed geolocation.", "action_flag": 2}}, {"pk": 33, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Maria Ramirez", "action_time": "2015-03-24T20:09:16.272Z", "object_id": "7", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 34, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Maria Ramirez", "action_time": "2015-03-24T20:09:34.154Z", "object_id": "7", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 35, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Winona Rider", "action_time": "2015-03-24T20:27:55.939Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 36, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Example Meeting", "action_time": "2015-03-24T21:01:08.959Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 37, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Example Meeting", "action_time": "2015-03-24T21:01:55.080Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 38, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Test", "action_time": "2015-03-24T21:02:45.603Z", "object_id": "7", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 39, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Test", "action_time": "2015-03-24T21:02:50.233Z", "object_id": "7", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 40, "model": "admin.logentry", "fields": {"content_type": ["auth", "user"], "object_repr": "leonor", "action_time": "2015-03-24T21:03:33.839Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 41, "model": "admin.logentry", "fields": {"content_type": ["auth", "user"], "object_repr": "leonor", "action_time": "2015-03-24T21:03:50.715Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 42, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Test NewPerson", "action_time": "2015-03-25T13:36:29.560Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 43, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Maria Russell", "action_time": "2015-03-25T13:37:03.855Z", "object_id": "10", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 44, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Ludwig Beethoven", "action_time": "2015-03-25T13:37:17.976Z", "object_id": "11", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 45, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "International Women's Day", "action_time": "2015-03-25T13:37:55.756Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 46, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Example Meeting", "action_time": "2015-03-25T13:42:41.268Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 47, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Testing Again", "action_time": "2015-03-25T13:43:16.795Z", "object_id": "12", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 48, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Testing Again", "action_time": "2015-03-25T14:54:25.005Z", "object_id": "12", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 49, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Institution object", "action_time": "2015-04-02T21:48:39.464Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 50, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Ludwig Beethoven", "action_time": "2015-04-02T21:55:33.785Z", "object_id": "11", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 51, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Ludwig Beethoven", "action_time": "2015-04-06T17:42:15.779Z", "object_id": "11", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 52, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-04-06T17:54:55.712Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 53, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "address"], "object_repr": "17 North State Street", "action_time": "2015-04-07T18:49:06.019Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed apartment and zipcode.", "action_flag": 2}}, {"pk": 54, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-04-07T22:11:10.710Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added participant \"Maria Ontiveros\".", "action_flag": 2}}, {"pk": 55, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-04-07T22:11:42.853Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added participant \"Something here\". Added participant \"New Person\". Added participant \"And  another\".", "action_flag": 2}}, {"pk": 56, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-04-07T22:34:20.122Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed address for participant \"Ludwig Beethoven\".", "action_flag": 2}}, {"pk": 58, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Housing Group Meeting", "action_time": "2015-04-09T16:47:56.120Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 59, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T15:11:54.207Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 60, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T15:20:08.553Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 61, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T15:27:03.022Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 62, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T17:50:01.094Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 63, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T17:50:08.431Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 64, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T17:55:49.688Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 65, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T20:19:45.894Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 66, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T20:25:13.886Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 67, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T20:26:36.064Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed participants.", "action_flag": 2}}, {"pk": 68, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T21:25:07.432Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 69, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-17T23:22:13.900Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 70, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-18T20:32:12.672Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 71, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Test NewPerson", "action_time": "2015-04-18T21:56:14.280Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 72, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-18T21:58:13.951Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 73, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-19T23:11:54.627Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 74, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-19T23:12:02.069Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 75, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-19T23:12:07.062Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 76, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-19T23:12:24.173Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 77, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Person Only Event", "action_time": "2015-04-20T14:17:53.746Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 78, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Flick Weatherspoon", "action_time": "2015-04-20T21:21:57.680Z", "object_id": "23", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 79, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Juno Diaz", "action_time": "2015-04-20T21:29:11.486Z", "object_id": "19", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 80, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-04-20T21:31:48.041Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 81, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Haruki Murakami", "action_time": "2015-04-20T21:31:55.454Z", "object_id": "21", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 82, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Maria Russell", "action_time": "2015-04-20T21:32:32.458Z", "object_id": "10", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 83, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Test Again", "action_time": "2015-04-20T21:36:45.253Z", "object_id": "22", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 84, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "H O", "action_time": "2015-04-20T21:36:45.282Z", "object_id": "20", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 85, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Terrestrai Constella", "action_time": "2015-04-20T21:36:45.310Z", "object_id": "17", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 86, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Creatia Fortuna", "action_time": "2015-04-20T21:36:45.339Z", "object_id": "16", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 87, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "And  another", "action_time": "2015-04-20T21:36:45.367Z", "object_id": "15", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 88, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Entirely New", "action_time": "2015-04-20T21:36:55.466Z", "object_id": "18", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 89, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Laura Brussell", "action_time": "2015-04-20T21:47:29.789Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 90, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-04-20T21:50:08.446Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed name and description.", "action_flag": 2}}, {"pk": 91, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Test NewAddressThing", "action_time": "2015-04-20T23:33:33.576Z", "object_id": "35", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 92, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Lauren Russell", "action_time": "2015-04-20T23:33:58.144Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed first_name, last_name and institution.", "action_flag": 2}}, {"pk": 93, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Celeste Oliphant", "action_time": "2015-04-20T23:34:07.446Z", "object_id": "36", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 94, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Test NewAddressThing", "action_time": "2015-04-20T23:34:38.387Z", "object_id": "35", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 95, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-04-20T23:44:27.659Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 96, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Enzo Aristo", "action_time": "2015-04-20T23:45:14.776Z", "object_id": "34", "user": ["cdonnelly"], "change_message": "Changed address.", "action_flag": 2}}, {"pk": 97, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Soandso Ijest", "action_time": "2015-04-20T23:50:51.342Z", "object_id": "37", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 98, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-06T15:41:53.289Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed date and is_prep.", "action_flag": 2}}, {"pk": 99, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:15:04.669Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Contact object\".", "action_flag": 2}}, {"pk": 100, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:20:28.083Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed is_member.", "action_flag": 2}}, {"pk": 101, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:38:00.542Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Dante Stallwhether\". Added contact \"Jill Masters\".", "action_flag": 2}}, {"pk": 102, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:38:08.231Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Chris Topher\".", "action_flag": 2}}, {"pk": 103, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:38:14.920Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Eustace Scrub\".", "action_flag": 2}}, {"pk": 104, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:38:23.171Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Eustace Scrub\".", "action_flag": 2}}, {"pk": 105, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:43:23.087Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Dante Stallwhether\".", "action_flag": 2}}, {"pk": 106, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:43:33.290Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Eustace Scrub\". Deleted contact \"Dante Stallwhether\".", "action_flag": 2}}, {"pk": 107, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:47:55.319Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Puddle Glum\".", "action_flag": 2}}, {"pk": 108, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:58:00.425Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 109, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:58:17.292Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 110, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:58:33.455Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 111, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:59:41.368Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Puddle Glum\".", "action_flag": 2}}, {"pk": 112, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T16:59:56.038Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Eustace Scrub\".", "action_flag": 2}}, {"pk": 113, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Another Institution", "action_time": "2015-05-06T17:00:18.917Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Lauren Russell\".", "action_flag": 2}}, {"pk": 114, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:01:56.069Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed name.", "action_flag": 2}}, {"pk": 115, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:02:35.720Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed address. Deleted contact \"Lauren Russell\".", "action_flag": 2}}, {"pk": 116, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:18:11.778Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed title for contact \"Dante Stallwhether\".", "action_flag": 2}}, {"pk": 117, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:18:17.492Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Lauren Russell\".", "action_flag": 2}}, {"pk": 118, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:18:39.728Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Daria Lagos\".", "action_flag": 2}}, {"pk": 119, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T17:18:56.682Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 120, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:20:18.890Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 121, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:20:24.698Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added contact \"Theodore Rose\".", "action_flag": 2}}, {"pk": 122, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:20:42.951Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added contact \"Daria Lagos\". Added contact \"Jill Masters\". Added contact \"Simple Addition\". Added contact \"Felicia Brown\".", "action_flag": 2}}, {"pk": 123, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:22:35.462Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added contact \"Felicia Brown\". Deleted contact \"Felicia Brown\".", "action_flag": 2}}, {"pk": 124, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:22:44.060Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Deleted contact \"Felicia Brown\".", "action_flag": 2}}, {"pk": 125, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:22:58.251Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added contact \"Adding NewPerson\".", "action_flag": 2}}, {"pk": 126, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T17:44:37.622Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Added contact \"Felicia Brown\". Changed title for contact \"Theodore Rose\". Deleted contact \"Simple Addition\". Deleted contact \"Adding NewPerson\".", "action_flag": 2}}, {"pk": 127, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Theodore Rose", "action_time": "2015-05-06T19:29:28.246Z", "object_id": "14", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 128, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:35:37.456Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed address. Deleted contact \"Daria Lagos\".", "action_flag": 2}}, {"pk": 129, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Test Institution", "action_time": "2015-05-06T19:35:47.016Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed title for contact \"Daria Lagos\".", "action_flag": 2}}, {"pk": 130, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:41:28.182Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Lauren Russell\".", "action_flag": 2}}, {"pk": 131, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:41:34.044Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 132, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:42:58.366Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 133, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:43:05.575Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Chris Topher\".", "action_flag": 2}}, {"pk": 134, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:43:14.156Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Deleted contact \"Jill Masters\".", "action_flag": 2}}, {"pk": 135, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-06T19:43:21.551Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Eustace Scrub\".", "action_flag": 2}}, {"pk": 136, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "New Homeowners Support Group", "action_time": "2015-05-06T19:47:55.003Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed description and date.", "action_flag": 2}}, {"pk": 137, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-07T20:18:14.702Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 138, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-07T20:30:55.748Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 139, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-07T20:31:02.331Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed is_prep.", "action_flag": 2}}, {"pk": 140, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-12T00:09:40.160Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed is_prep and major_action.", "action_flag": 2}}, {"pk": 141, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-12T00:19:02.438Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed is_prep.", "action_flag": 2}}, {"pk": 142, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-12T00:19:22.260Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 143, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "ttm", "action_time": "2015-05-12T15:51:44.925Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 144, "model": "admin.logentry", "fields": {"content_type": ["auth", "user"], "object_repr": "cdonnelly", "action_time": "2015-05-12T15:52:25.342Z", "object_id": "1", "user": ["cdonnelly"], "change_message": "Changed groups.", "action_flag": 2}}, {"pk": 145, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "il4kids", "action_time": "2015-05-12T16:55:19.511Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 146, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "test", "action_time": "2015-05-12T17:14:27.752Z", "object_id": "3", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 147, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Add a new event", "action_time": "2015-05-12T17:50:03.395Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed is_prep.", "action_flag": 2}}, {"pk": 148, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-05-12T19:49:26.375Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed is_prep.", "action_flag": 2}}, {"pk": 149, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-05-12T19:49:35.042Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed major_action.", "action_flag": 2}}, {"pk": 150, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-05-12T19:49:40.675Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "Changed is_prep.", "action_flag": 2}}, {"pk": 151, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-05-12T19:54:25.850Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 152, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "test", "action_time": "2015-05-12T20:04:46.977Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 153, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "test", "action_time": "2015-05-12T20:55:06.867Z", "object_id": "3", "user": ["cdonnelly"], "change_message": "", "action_flag": 3}}, {"pk": 154, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-12T21:03:55.150Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed title for contact \"Dante Stallwhether\".", "action_flag": 2}}, {"pk": 155, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-12T21:10:05.562Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed title for contact \"Lauren Russell\".", "action_flag": 2}}, {"pk": 156, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "tag"], "object_repr": "New", "action_time": "2015-05-12T21:11:20.600Z", "object_id": "5", "user": ["cdonnelly"], "change_message": "", "action_flag": 1}}, {"pk": 157, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:26:48.055Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 158, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:27:47.875Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 159, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:28:54.207Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 160, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:29:04.337Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 161, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Lauren Russell", "action_time": "2015-05-12T21:29:40.163Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 162, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Lauren Russell", "action_time": "2015-05-12T21:30:01.050Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 163, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Theodore Rose", "action_time": "2015-05-12T21:30:16.451Z", "object_id": "14", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 164, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:30:27.713Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 165, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:31:17.737Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 166, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Dante Stallwhether", "action_time": "2015-05-12T21:32:51.572Z", "object_id": "32", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 167, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Demo Event", "action_time": "2015-05-12T21:44:53.527Z", "object_id": "8", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 168, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Example Meeting", "action_time": "2015-05-12T21:45:34.596Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 169, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Lauren Russell", "action_time": "2015-05-12T21:45:54.412Z", "object_id": "9", "user": ["cdonnelly"], "change_message": "Changed institution.", "action_flag": 2}}, {"pk": 170, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "Example Meeting", "action_time": "2015-05-12T21:46:04.401Z", "object_id": "6", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 171, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "participant"], "object_repr": "Theodore Rose", "action_time": "2015-05-12T21:47:21.486Z", "object_id": "14", "user": ["cdonnelly"], "change_message": "Changed primary_phone.", "action_flag": 2}}, {"pk": 172, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "event"], "object_repr": "International Women's Day", "action_time": "2015-05-12T21:59:29.168Z", "object_id": "4", "user": ["cdonnelly"], "change_message": "No fields changed.", "action_flag": 2}}, {"pk": 173, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-12T23:00:13.134Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Jesenya Guadalupe\".", "action_flag": 2}}, {"pk": 174, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Venerable Institution", "action_time": "2015-05-12T23:00:21.613Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Added contact \"Jill Martinez\".", "action_flag": 2}}, {"pk": 175, "model": "admin.logentry", "fields": {"content_type": ["swoptact", "institution"], "object_repr": "Extra Venerable Institution", "action_time": "2015-05-12T23:00:30.211Z", "object_id": "2", "user": ["cdonnelly"], "change_message": "Changed name.", "action_flag": 2}}]
+[
+{
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "admin",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+        "name": "organizer",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "leader",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "username": "cdonnelly",
+        "is_staff": true,
+        "last_login": "2015-05-26T15:05:20.361Z",
+        "last_name": "",
+        "is_active": true,
+        "date_joined": "2015-03-02T15:29:13Z",
+        "email": "me@me.com",
+        "is_superuser": true,
+        "user_permissions": [],
+        "first_name": "",
+        "groups": [
+            [
+                "admin"
+            ],
+            [
+                "organizer"
+            ],
+            [
+                "leader"
+            ]
+        ],
+        "password": "pbkdf2_sha256$20000$BBQwKnUCjDr6$p2zmv/ioMssHyI2ffJJfSS4YeA+3H75bFmJ5doJNAno="
+    }
+},
+{
+    "model": "swoptact.tag",
+    "pk": 1,
+    "fields": {
+        "description": "testing the model",
+        "name": "ttm",
+        "group": [
+            "organizer"
+        ]
+    }
+},
+{
+    "model": "swoptact.tag",
+    "pk": 2,
+    "fields": {
+        "description": "Illinois grant for children",
+        "name": "il4kids",
+        "group": [
+            "admin"
+        ]
+    }
+},
+{
+    "model": "swoptact.tag",
+    "pk": 4,
+    "fields": {
+        "description": "another test",
+        "name": "test",
+        "group": [
+            "organizer"
+        ]
+    }
+},
+{
+    "model": "swoptact.tag",
+    "pk": 5,
+    "fields": {
+        "description": "A new tag.",
+        "name": "New",
+        "group": [
+            "leader"
+        ]
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 1,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": 60602,
+        "direction": "N",
+        "number": 17,
+        "state": "IL",
+        "type": "St",
+        "name": "State",
+        "apartment": "1700"
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 2,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "S",
+        "number": 6300,
+        "state": "IL",
+        "type": "Av",
+        "name": "Ashland",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 3,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "E",
+        "number": 310,
+        "state": "IL",
+        "type": "St",
+        "name": "Lake",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 4,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "W",
+        "number": 10,
+        "state": "IL",
+        "type": "Av",
+        "name": "Lawndale",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 5,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "E",
+        "number": 3100,
+        "state": "IL",
+        "type": "St",
+        "name": "93rd",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 6,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "N",
+        "number": 1215,
+        "state": "IL",
+        "type": "Av",
+        "name": "Damen",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.address",
+    "pk": 7,
+    "fields": {
+        "city": "Chicago",
+        "zipcode": null,
+        "direction": "W",
+        "number": 2800,
+        "state": "IL",
+        "type": "Rd",
+        "name": "Roosevelt",
+        "apartment": null
+    }
+},
+{
+    "model": "swoptact.institution",
+    "pk": 1,
+    "fields": {
+        "is_member": false,
+        "address": null,
+        "name": "Test Institution",
+        "tags": [
+            1,
+            4
+        ]
+    }
+},
+{
+    "model": "swoptact.institution",
+    "pk": 2,
+    "fields": {
+        "is_member": true,
+        "address": 2,
+        "name": "Extra Venerable Institution",
+        "tags": [
+            2
+        ]
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 9,
+    "fields": {
+        "first_name": "Lauren",
+        "primary_phone": null,
+        "last_name": "Russo",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "lbeethoven@test.com",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 14,
+    "fields": {
+        "first_name": "Theodore",
+        "primary_phone": "+17737021233",
+        "last_name": "Rose",
+        "address": 5,
+        "secondary_phone": null,
+        "email": "",
+        "institution": 1
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 24,
+    "fields": {
+        "first_name": "Daria",
+        "primary_phone": null,
+        "last_name": "Lagos",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 25,
+    "fields": {
+        "first_name": "Adding",
+        "primary_phone": null,
+        "last_name": "NewPerson",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 26,
+    "fields": {
+        "first_name": "Felicia",
+        "primary_phone": null,
+        "last_name": "Brown",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 27,
+    "fields": {
+        "first_name": "Simple",
+        "primary_phone": null,
+        "last_name": "Addition",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 28,
+    "fields": {
+        "first_name": "Chris",
+        "primary_phone": null,
+        "last_name": "Topher",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 29,
+    "fields": {
+        "first_name": "Puddle",
+        "primary_phone": null,
+        "last_name": "Glum",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 30,
+    "fields": {
+        "first_name": "Eustace",
+        "primary_phone": null,
+        "last_name": "Solares",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 31,
+    "fields": {
+        "first_name": "Jill",
+        "primary_phone": null,
+        "last_name": "Martinez",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 32,
+    "fields": {
+        "first_name": "Dante",
+        "primary_phone": "+13127726767",
+        "last_name": "Stallworth",
+        "address": 1,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 33,
+    "fields": {
+        "first_name": "Jesenya",
+        "primary_phone": null,
+        "last_name": "Guadalupe",
+        "address": null,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 34,
+    "fields": {
+        "first_name": "Harry",
+        "primary_phone": null,
+        "last_name": "Potter",
+        "address": null,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 35,
+    "fields": {
+        "first_name": "Harry",
+        "primary_phone": null,
+        "last_name": "Potter",
+        "address": 3,
+        "secondary_phone": null,
+        "email": "",
+        "institution": 1
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 36,
+    "fields": {
+        "first_name": "Test",
+        "primary_phone": "+13127025434",
+        "last_name": "Newperson",
+        "address": null,
+        "secondary_phone": null,
+        "email": "",
+        "institution": null
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 2,
+    "fields": {
+        "participant": 32,
+        "institution": 2,
+        "title": "Pastor"
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 9,
+    "fields": {
+        "participant": 9,
+        "institution": 2,
+        "title": "Test Title"
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 11,
+    "fields": {
+        "participant": 14,
+        "institution": 1,
+        "title": "Test LEADER"
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 12,
+    "fields": {
+        "participant": 24,
+        "institution": 1,
+        "title": "Primary Contact"
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 13,
+    "fields": {
+        "participant": 31,
+        "institution": 1,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 18,
+    "fields": {
+        "participant": 26,
+        "institution": 1,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 19,
+    "fields": {
+        "participant": 30,
+        "institution": 2,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 20,
+    "fields": {
+        "participant": 33,
+        "institution": 2,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 21,
+    "fields": {
+        "participant": 14,
+        "institution": 2,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
+    "pk": 22,
+    "fields": {
+        "participant": 28,
+        "institution": 2,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 2,
+    "fields": {
+        "description": "A discussion group",
+        "date": "2015-05-11",
+        "participants": [
+            32
+        ],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "New Homeowners Support Group",
+        "is_prep": false,
+        "location": "SWOP"
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 3,
+    "fields": {
+        "description": null,
+        "date": null,
+        "participants": [],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "Swoptact Initiation Forum",
+        "is_prep": false,
+        "location": "Conference Center"
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 4,
+    "fields": {
+        "description": "",
+        "date": null,
+        "participants": [],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "International Women's Day",
+        "is_prep": false,
+        "location": "Global"
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 5,
+    "fields": {
+        "description": null,
+        "date": null,
+        "participants": [],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "Organizer Retreat",
+        "is_prep": false,
+        "location": "SWOP Auxiliary Office"
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 6,
+    "fields": {
+        "description": "",
+        "date": null,
+        "participants": [
+            9
+        ],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "Example Meeting",
+        "is_prep": false,
+        "location": ""
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 7,
+    "fields": {
+        "description": "",
+        "date": null,
+        "participants": [
+            36
+        ],
+        "time": null,
+        "tags": [],
+        "major_action": null,
+        "name": "Test",
+        "is_prep": false,
+        "location": ""
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 8,
+    "fields": {
+        "description": "This is an example event with attendees.",
+        "date": "2015-05-04",
+        "participants": [
+            9,
+            14,
+            24,
+            26,
+            28,
+            29,
+            30,
+            31,
+            32
+        ],
+        "time": null,
+        "tags": [],
+        "major_action": 9,
+        "name": "Demo Event",
+        "is_prep": true,
+        "location": ""
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 9,
+    "fields": {
+        "description": "This is a test of adding a new event with the sign in sheet.",
+        "date": "2015-05-04",
+        "participants": [
+            30,
+            31,
+            32,
+            33
+        ],
+        "time": null,
+        "tags": [],
+        "major_action": 3,
+        "name": "Add a new event",
+        "is_prep": true,
+        "location": "At a location"
+    }
+}
+]
