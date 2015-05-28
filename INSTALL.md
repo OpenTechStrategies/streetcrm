@@ -1,4 +1,113 @@
-#How to Deploy Swoptact
+# Deploy on Debian stable
+
+This assumes you have a clean Debian stable install. This should all be done as root
+unless it specifies otherwise. The first thing that you need to do is install some
+packages required:
+
+     $ apt-get install apache2 git libapache2-mod-wsgi-py3 python3 python3-dev python3-virtualenv virtualenv postgresql postgresql-client postgres postgresql-server-dev-all gcc
+
+Database
+--------
+
+We need to setup the PostgreSQL database, to do that first we need to switch to
+the "psql" user:
+
+    $ su - postgres
+
+Now create the user and db:
+
+    $ createuser --pwprompt swoptact
+    $ createdb --owner=swoptact swoptact
+
+Now we need to reload PostgreSQL:
+
+    $ systemctl restart postgresql
+
+You then need to add PostgreSQL to automatically start on boot:
+
+    $ systemctl enable postgresql
+
+SWOPTACT
+--------
+
+You should make a directory under the "www" directory and pull down the source
+code:
+
+    $ cd /var/www
+    $ git clone https://github.com/OpenTechStrategies/swoptact.git
+
+We then need to build the virtual enviroment for the website to use, you should ensure
+you're still in "/var/www/swoptact" and then:
+
+    $ virtualenv --python=python3.4 .
+    $ source bin/activate
+    $ pip install -r requirements.txt
+    $ pip install psycopg2
+
+Make the config directory and copy the config file over:
+
+    $ mkdir -p /var/www/.config/swoptact/
+    $ cp /var/www/swoptact/config.example.ini /var/www/.config/swoptact/config.ini
+
+Then edit the file and modify the contents to suit your needs, they should at minimum
+have this:
+
+     [general]
+     secret_key = THIS_SHOULD_BE_CHANGED
+     debug = false
+     time_zone = "America/Chicago"
+     allowed_hosts = ["example.com"]
+
+     [database]
+     engine = django.db.backends.postgresql_psycopg2
+     host = localhost
+     name = swoptact
+     user = swoptact
+     password = DB_PASSWORD_HERE
+
+The "allowed_hosts" must be set to the URL people will access the site on.
+
+Now create the tables in the database and setup the initial superuser:
+
+    $ export SWOPTACT_CONFIG=/var/www/.config/swoptact/config.ini
+    $ python manage.py syncdb
+
+HTTP Server
+-----------
+
+We need to copy the HTTPD configuration file from the repository to the HTTPD
+directory:
+
+    $ cp /var/www/swoptact/apache-24.conf /etc/apache2/sites-available/swoptact.conf
+
+Then edit the file you've just copied with your favorite editor:
+
+    $ favorite-editor /etc/apache2/sites-available/swoptact.conf
+
+You're looking to edit the following lines:
+
+       ServerName      - This should be the URL of the site
+       ServerAdmin     - This should be the email to contact you on
+
+That should be all, save the file and exit. You now should enable the config
+you've just created:
+
+    $ a2ensite swoptact
+
+You then should verify the config is still valid:
+
+    $ apachectl configtest
+
+Fix any errors or warnings it reports.
+
+Once you've done that we should reload the HTTPD config and tell systemd
+to start HTTPD on boot:
+
+    $ systemctl restart apache2
+    $ systemctl enable apache2
+
+
+# How to Deploy Swoptact
 
 Installation
 --------------------
