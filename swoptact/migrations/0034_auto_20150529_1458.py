@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0024_auto_20150420_1815'),
+        ('swoptact', '0033_auto_20150526_1145'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='participant',
             name='address',
-            field=models.ForeignKey(null=True, blank=True, to='swoptact.Address'),
+            field=models.ForeignKey(to='swoptact.Address', null=True, blank=True),
         ),
     ]
