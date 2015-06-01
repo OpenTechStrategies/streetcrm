@@ -47,10 +47,23 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
             "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
                         "address")
         }),
+    )
+
+    change_fieldsets = (
+        (None, {
+            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
+                        "address")
+        }),
         ("Personal Event History", {
             "fields": ("event_history",),
-        })
+        }),
     )
+
+    def get_fieldsets(self, request, obj=None):
+        if obj:
+            return self.change_fieldsets
+        return super(ParticipantAdmin, self).get_fieldsets(request, obj)
+
     form = autocomplete_light.modelform_factory(Participant, exclude=tuple())
     actions = None
 
