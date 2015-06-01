@@ -271,10 +271,7 @@ class AvailableTagsAPI(APIMixin, generic.ListView):
         return tags
 
     def get(self, request, *args, **kwargs):
-        self.user = get_user_model().objects.get(pk=kwargs["user"])
-        # Stop someone changing the URL to expose a user with more group access
-        if self.user.id != request.user.id:
-            return http.HttpResponse(status=403)
+        self.user = get_user_model().objects.get(pk=request.user.pk)
         return self.render_to_response(self.get_context_data())
 
 
