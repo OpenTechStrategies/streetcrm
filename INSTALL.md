@@ -56,7 +56,7 @@ under your home directory because you're doing a development
 deployment rather than a production deployment, then you might put the
 config file in a different location.  If so, just set the
 `SWOPTACT_CONFIG` environment variable accordingly, e.g.,
-`SWOPTACT_CONFIG=~/.config/swoptact/config.in; export SWOPTACT_CONFIG`.  
+`SWOPTACT_CONFIG=~/.config/swoptact/config.ini; export SWOPTACT_CONFIG`.  
 If later on you get errors about swoptact being unable to find its
 config file, failure to set that environment variable is probably why.)
 
