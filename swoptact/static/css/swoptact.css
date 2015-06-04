@@ -229,3 +229,12 @@ input {
 input.vTextField {
     width: 200px;
 }
+
+/* Pull the button to add new objects up a bit */
+.object-tools {
+    margin-top: -50px;
+}
+
+.object-tools a:hover {
+    background-color: #337ab7 !important;
+}

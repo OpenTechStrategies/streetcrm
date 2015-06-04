@@ -49,8 +49,9 @@
 
 {% block coltype %}flex{% endblock %}
 
+{% block content %}
 {% block object-tools %}
-<div id="content-navbar-collapse" class="navbar-collapse collapse">
+<div id="content-navbar-collapse" class="navbar-collapse collapse pull-right">
     <ul class="object-tools nav navbar-nav">
         {% block object-tools-items %}
         {% if has_add_permission %}
@@ -79,8 +80,6 @@
     {% block search %}{% search_form cl %}{% endblock %}
 </div>
 {% endblock %}
-
-{% block content %}
 <form class="" id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
 
 {% if cl.formset.errors %}
