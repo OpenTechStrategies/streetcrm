@@ -1,12 +1,12 @@
 /*
 This page governs the sign-in sheet on the change event form.  It includes
 functions to:
-(1) find the relevant participants for a given event 
+(1) find the relevant participants for a given event
 (2) display information about each of them
-(3) edit textboxes populated by values from that object 
+(3) edit textboxes populated by values from that object
 (4) save changes made via those text boxes
 (5) unlink a person from an event
-(6) add an entirely new person (really the same as (4)) 
+(6) add an entirely new person (really the same as (4))
 (7) search available participants
 (8) link an existing person to this event.
 
@@ -166,7 +166,7 @@ function fillStaticRow(row, participant) {
         td_wrap.append(p_wrap);
         row.append(td_wrap);
     }
-    
+
     appendSimpleText(participant.first_name);
     appendSimpleText(participant.last_name);
     if (participant.institution) {
@@ -270,7 +270,7 @@ function startLinkExistingParticipants() {
 
         select_available.append(
             $('<option value="">---------</option>'));
-        
+
         for (i = 0; i < result.length; i++) {
             var participant = result[i];
             var option_elt = $(
@@ -309,7 +309,7 @@ function backToPreLinkParticipants() {
     $('#available-participants-select').hide();
     $("#cancel-link-existing-btn").hide();
     $("#select-existing-participant-btn").hide();
-}    
+}
 
 function cancelLinkExistingParticipants() {
     backToPreLinkParticipants();
@@ -327,7 +327,7 @@ function unlinkParticipant(participant_id){
         removeRows();
         return false;
     }
-        
+
     var event_id = getEventId();
     var target_url = '/api/events/'+event_id+'/participants/'+participant_id+'/';
     $.ajax({
@@ -338,7 +338,7 @@ function unlinkParticipant(participant_id){
 
 
 // Save all rows that are currently being edited
-// 
+//
 // We have to rely on jquery telling us what's visible or not
 // since we don't have any other markers of what's in editing mode
 function saveAllEditing() {
@@ -420,7 +420,7 @@ function saveParticipant(participant_id) {
                           // TODO: This is where we're supposed to fill in the
                           //   errors fow
                           console.log(response)
-                      }, 
+                      },
                       success: function (response) {
                           recreateRows(response);
                       },
@@ -435,7 +435,7 @@ function saveParticipant(participant_id) {
             url: '/api/participants/',
             data: data,
             type: 'POST',
-            error: function (response) {console.log(response)}, 
+            error: function (response) {console.log(response)},
             success: function (response) {
                 var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
@@ -455,30 +455,34 @@ function saveParticipant(participant_id) {
 
 function createAutocomplete(user){
     $.get('/api/users/'+user+'/available-tags/',
-        function (tags) {
-            var source_array = [];
-            for (i = 0; i < tags.available.length; i++){
-                source_array.push({label: tags.available[i].name, value: tags.available[i].id});
-            }
-            $("#tag_choices").autocomplete({
-                source: source_array,
-                select: function(event, ui) {
-                    event.preventDefault();
-                    $("#tag_choices").val(ui.item.label);
-                    //but we need to save the value as a fk
-                },
-                focus: function(event, ui) {
-                    event.preventDefault();
-                    $("#tag_choices").val(ui.item.label);
-                }
-            });
-        }, 'json');
+          function (tags) {
+              var source_array = [];
+              for (i = 0; i < tags.available.length; i++){
+                  source_array.push({label: tags.available[i].name, value: tags.available[i].id});
+              }
+              $("#tag_choices").autocomplete({
+                  source: source_array,
+                  select: function(event, ui) {
+                      event.preventDefault();
+                      $("#tag_choices").val(ui.item.label);
+                      //but we need to save the value as a fk
+                  },
+                  focus: function(event, ui) {
+                      event.preventDefault();
+                      $("#tag_choices").val(ui.item.label);
+                  }
+              });
+          }, 'json');
 }
 
 function setupParticipantCallbacks() {
+    // Flag to check if an edit is in progress
+    var isEditing = false;
+
     $("#participant-table").on(
         "click", "button.participant-edit",
         function(event) {
+            isEditing = true;
             event.preventDefault();
             makeParticipantEditable(getParticipantIdForRow($(this)));
         });
@@ -493,6 +497,7 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-cancel",
         function(event) {
+            isEditing = false;
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
@@ -500,6 +505,7 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-save",
         function(event) {
+            isEditing = false;
             event.preventDefault();
             saveParticipant(getParticipantIdForRow($(this)));
         });
@@ -528,6 +534,7 @@ function setupParticipantCallbacks() {
     $("#add-new-participant-btn").on(
         "click",
         function(event) {
+            isEditing = true;
             event.preventDefault();
             addNewParticipant();
         });
@@ -535,6 +542,13 @@ function setupParticipantCallbacks() {
     $(document).ready(function () {
         loadInitialAttendees();
     });
+
+    window.onbeforeunload = function() {
+        if (isEditing) {
+            // In the middle of an edit, create a confirm dialuge.
+            return "You will loose any changes on any unsaved attendees.";
+        }
+    };
 
 }
 
