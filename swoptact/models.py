@@ -17,7 +17,7 @@
 from django.db import models
 from django.db.models.fields import related
 from django.contrib.auth import models as auth_models
-
+from django.contrib.admin.models import LogEntry
 from django_google_maps import fields as mapfields
 
 from swoptact import mixins, modelfields
@@ -128,6 +128,12 @@ class Address(models.Model, SerializeableMixin):
             state = self.state,
             zipcode = self.zipcode
         )
+
+class ActivityLog(LogEntry):
+    class Meta:
+        proxy = True
+        verbose_name = "Activity Log"
+        verbose_name_plural = "Activity Log"
 
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)

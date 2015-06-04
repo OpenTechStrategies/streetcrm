@@ -28,7 +28,7 @@ from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
-from swoptact.models import Address, Participant, Event, Institution, Contact, Tag
+from swoptact.models import Address, Participant, Event, Institution, Contact, Tag, ActivityLog
 from swoptact import mixins
 
 class ContactInline(admin.TabularInline):
@@ -123,8 +123,13 @@ class AddressAdmin(admin.ModelAdmin):
         """ Hide the address from the admin index """
         return {}
 
+class LogAdmin(admin.ModelAdmin):
+    actions = None
+
+
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(ActivityLog, LogAdmin)
