@@ -104,6 +104,12 @@ Now create the tables in the database and setup the initial superuser:
         $ python manage.py makemigration
         $ python manage.py migrate
 
+If you encounter a "ProgrammingError" or similar error during
+migrations, you probably have an old database interfering.  The
+solution is just to drop the database (`drop database` in PostgreSQL,
+or in SQLite just remove the database file) and run the
+`makemigration` and `migrate` steps again.
+
 Load sample data if necessary
 -----------------------------
 
