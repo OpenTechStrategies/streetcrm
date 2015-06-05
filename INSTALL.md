@@ -4,7 +4,7 @@ You need python 3.4 and python's virtualenv to use this.  In Debian
 GNU/Linux ('Jessie' release) install these packages:
 
         $ sudo apt-get update
-        $ sudo apt-get install apache2 git libapache2-mod-wsgi-py3 python3 python3-dev python3-virtualenv virtualenv postgresql postgresql-client postgres postgresql-server-dev-all gcc
+        $ sudo apt-get install apache2 git libapache2-mod-wsgi-py3 python3 python3-dev python3-virtualenv virtualenv postgresql postgresql-client postgresql-server-dev-all gcc
 
 Database
 --------
