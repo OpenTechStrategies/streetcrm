@@ -14,7 +14,7 @@
 from django.conf import settings
 from django.forms import widgets
 from django.utils.safestring import mark_safe
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 
 
 class GoogleMapsAddressWidget(widgets.TextInput):
