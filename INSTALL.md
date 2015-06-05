@@ -101,17 +101,8 @@ needs -- at a minimum you probably want something like this:
 Now create the tables in the database and setup the initial superuser:
 
         $ export SWOPTACT_CONFIG=/var/www/.config/swoptact/config.ini
-        $ python manage.py syncdb
-
-If this is the first time you've initialized Django's database, you
-may be asked _"You have installed Django's auth system, and don't have
-any superusers defined.  Would you like to create one now?"_.  Answer
-"yes", and then create a user account with which to log in to the
-application.  Use a username that represents you individually, such as
-"jrandom", not a generic role name like "admin".  In the context of
-swoptact, a "superuser" is just a user who has permission to do
-anything, and there can be multiple such users -- you just happen to
-be creating the first one.
+        $ python manage.py makemigration
+        $ python manage.py migrate
 
 Load sample data if necessary
 -----------------------------
@@ -123,13 +114,17 @@ Optionally, you may load sample data too (but see the warning below):
 The sample data is located in `swoptact/fixtures/sample_data.json`,
 but Django knows where to find it if you just say `sample_data.json`.
 
-WARNING: If you load sample data with the above command, any user you
-created with `python manage.py syncdb` in a previous step will be
-deleted, in which case you'll have to re-create the user with:
+If you're loading sample data, you probably need to create a superuser
+account too (it's something you should do the first time you
+initialize or re-initialize the database).  Use a username that
+represents you individually, such as "jrandom", not a generic role
+name like "admin".  In the context of swoptact, a "superuser" is just
+a user who has permission to do anything, and there can be multiple
+such users -- you just happen to be creating the first one.
 
         $ python manage.py createsuperuser
 
-WARNING 2: Note that the sample data should have been created with
+NOTE: The sample data should have been created with this command:
 
         python manage.py dumpdata --natural-foreign --indent=4       \
                                   -e sessions -e admin               \
