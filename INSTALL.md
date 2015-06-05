@@ -101,7 +101,7 @@ needs -- at a minimum you probably want something like this:
 Now create the tables in the database and setup the initial superuser:
 
         $ export SWOPTACT_CONFIG=/var/www/.config/swoptact/config.ini
-        $ python manage.py makemigration
+        $ python manage.py makemigrations
         $ python manage.py migrate
 
 If you encounter a "ProgrammingError" or similar error during
