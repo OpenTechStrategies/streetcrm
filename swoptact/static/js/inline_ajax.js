@@ -476,13 +476,9 @@ function createAutocomplete(user){
 }
 
 function setupParticipantCallbacks() {
-    // Flag to check if an edit is in progress
-    var isEditing = false;
-
     $("#participant-table").on(
         "click", "button.participant-edit",
         function(event) {
-            isEditing = true;
             event.preventDefault();
             makeParticipantEditable(getParticipantIdForRow($(this)));
         });
@@ -497,7 +493,6 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-cancel",
         function(event) {
-            isEditing = false;
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
@@ -505,7 +500,6 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-save",
         function(event) {
-            isEditing = false;
             event.preventDefault();
             saveParticipant(getParticipantIdForRow($(this)));
         });
@@ -534,7 +528,6 @@ function setupParticipantCallbacks() {
     $("#add-new-participant-btn").on(
         "click",
         function(event) {
-            isEditing = true;
             event.preventDefault();
             addNewParticipant();
         });
@@ -543,12 +536,11 @@ function setupParticipantCallbacks() {
         loadInitialAttendees();
     });
 
-    window.onbeforeunload = function() {
-        if (isEditing) {
-            // In the middle of an edit, create a confirm dialuge.
-            return "You will loose any changes on any unsaved attendees.";
-        }
-    };
+    $("input[name='_save'").on(
+        "click",
+        function (event) {
+
+        });
 
 }
 
