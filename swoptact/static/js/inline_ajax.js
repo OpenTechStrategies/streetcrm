@@ -337,7 +337,23 @@ function unlinkParticipant(participant_id){
 }
 
 
+// Save all rows that are currently being edited
+// 
+// We have to rely on jquery telling us what's visible or not
+// since we don't have any other markers of what's in editing mode
+function saveAllEditing() {
+    // Find all currently being edited rows and the participant thereof,
+    // then save
+    $("tr.participant-edit:visible input.participant-id").each(
+        function(index) {
+            saveParticipant(this.value);
+        });
+}
+
+
 function addNewParticipant() {
+    saveAllEditing();
+
     if (getParticipantEditRow("").length > 0) {
         // We already have an empty participant in progress
         return false;
