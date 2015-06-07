@@ -391,13 +391,18 @@ function updateParticipant(participant){
 
 /*
   helper function to find the correct rows and fill them using other functions,
-  after a participant is created or updated
+  after a participant is updated
 */
 function recreateRows(participant){
-    var row = $('#participant-edit-'+participant.id);
-    fillEditRow(row, participant);
-    fillErrorsRow(row, participant.id, []);
-    fillStaticRow(row, participant);
+    fillEditRow(getParticipantEditRow(participant.id),
+                participant);
+    fillErrorsRow(getParticipantErrorsRow(participant.id),
+                  participant.id, []);
+    fillStaticRow(getParticipantStaticRow(participant.id),
+                  participant);
+    hideParticipantEditRow(participant.id);
+    hideParticipantErrorsRow(participant.id);
+    showParticipantStaticRow(participant.id);
 }
 
 
@@ -411,7 +416,11 @@ function saveParticipant(participant_id) {
                       url: '/api/participants/'+participant_id+'/',
                       data: data,
                       type: 'PUT',
-                      error: function (response) {console.log(response)}, 
+                      error: function (response) {
+                          // TODO: This is where we're supposed to fill in the
+                          //   errors fow
+                          console.log(response)
+                      }, 
                       success: function (response) {
                           recreateRows(response);
                       },
