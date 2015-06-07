@@ -446,25 +446,24 @@ function saveParticipant(participant_id) {
 
 function createAutocomplete(user){
     $.get('/api/users/'+user+'/available-tags/',
-          function (tags) {
-              var source_array = [];
-              for (i = 0; i < tags.available.length; i++){
-                  source_array.push({label: tags.available[i].name, value: tags.available[i].id});
-              }
-              $("#tag_choices").autocomplete({
-                  source: source_array,
-                  select: function(event, ui) {
-                      event.preventDefault();
-                      $("#tag_choices").val(ui.item.label);
-                      //but we need to save the value as a fk
-                  },
-                  focus: function(event, ui) {
-                      event.preventDefault();
-                      $("#tag_choices").val(ui.item.label);
-                  }
-              });
-          }, 'json');
-    
+        function (tags) {
+            var source_array = [];
+            for (i = 0; i < tags.available.length; i++){
+                source_array.push({label: tags.available[i].name, value: tags.available[i].id});
+            }
+            $("#tag_choices").autocomplete({
+                source: source_array,
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $("#tag_choices").val(ui.item.label);
+                    //but we need to save the value as a fk
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $("#tag_choices").val(ui.item.label);
+                }
+            });
+        }, 'json');
 }
 
 function setupParticipantCallbacks() {
