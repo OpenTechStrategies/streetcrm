@@ -432,7 +432,7 @@ function saveParticipant(participant_id) {
                 $.post(url, function (result) {
                     $.get('/api/participants/'+response.id+'/',
                           function (participant) {
-                              $('#participant-edit-').hide(); //hacky!
+                              unlinkParticipant("");
                               insertParticipant(participant);
                           }, 'json');
                 }, "json");
