@@ -204,7 +204,7 @@ function fillEditRow(row, participant) {
     appendSimpleTextField(participant.primary_phone);
     console.log('appended all fields');
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Save</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
+    row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
     console.log('appended buttons');
 }
 
