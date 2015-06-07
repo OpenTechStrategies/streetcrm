@@ -418,8 +418,7 @@ function saveParticipant(participant_id) {
                       dataType: 'json'
                   });
               }, 'json');
-    }
-    else{
+    } else {
         empty_participant = {};
         new_participant = updateParticipant(empty_participant);
         data = JSON.stringify(new_participant);
