@@ -28,7 +28,7 @@ from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
-from swoptact.models import Address, Participant, Event, Institution, Contact, Tag, ActivityLog
+from swoptact.models import Participant, Event, Institution, Contact, Tag, ActivityLog
 from swoptact import mixins
 
 class ContactInline(admin.TabularInline):
@@ -37,7 +37,7 @@ class ContactInline(admin.TabularInline):
     verbose_name = "Contact"
     template = "admin/modified_tabular.html"
     form = autocomplete_light.modelform_factory(Contact, exclude=tuple())
-    
+
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "US_primary_phone",  "institution", "address",)
@@ -117,17 +117,9 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
     actions = None
 
-class AddressAdmin(admin.ModelAdmin):
-    address = autocomplete_light.modelform_factory(Address, exclude=tuple())
-    def get_model_perms(self, *args, **kwargs):
-        """ Hide the address from the admin index """
-        return {}
-
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
-
-admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)
