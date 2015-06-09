@@ -155,8 +155,19 @@ function turnOnAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.first-name").yourlabsAutocomplete({
-        url: "/autocomplete/ContactAutocomplete/",
-    });
+        url: "/autocomplete/ContactFirstNameAutocomplete/",
+        choiceSelector: 'a',
+    }).input.bind(
+      'selectChoice',
+      function(e, choice, autocomplete) {
+          alert('You selected: ' + choice.html());
+      }
+    );
+
+    // edit_row.find("input.last-name").yourlabsAutocomplete({
+    //     url: "/autocomplete/ContactLastNameAutocomplete/",
+    //     choiceSelector: 'a',
+    // }).input.bind('selectChoice', handleAutocomplete);
 
     // Provide a selection option which is an "out"
 }
@@ -205,6 +216,7 @@ function fillEditRow(row, participant) {
         input_wrap = $("<input/>", {
             "class": "vTextField " + class_identifier,
             "type": "text",
+            "id": "edit-" + class_identifier + participant.id,
             "value": text});
         input_wrap.text(text);
         td_wrap.append(input_wrap);
