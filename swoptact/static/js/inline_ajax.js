@@ -142,6 +142,23 @@ function insertParticipant(participant) {
     console.log('added edit row'+participant);
     edit_row.hide()
     $("#participant-table tbody").append(edit_row);
+
+    // Special hack for the "new" participant: turn on autocomplete for this row
+    if (participant.id === "") {
+        turnOnAutocomplete(edit_row);
+    }
+}
+
+
+function turnOnAutocomplete(edit_row) {
+    console.log("Turning on autocomplete");
+
+    // Hook in the autocomplete function
+    edit_row.find("input.first-name").yourlabsAutocomplete({
+        url: "/autocomplete/ContactAutocomplete/",
+    });
+
+    // Provide a selection option which is an "out"
 }
 
 /* Wipe out a row and add the hidden participant id input */
