@@ -71,11 +71,13 @@ def remove_address_contenttype(apps, schema_editor):
         be confused and avoidable.
     """
     ContentType = apps.get_model("contenttypes", "ContentType")
-    address_ct = ContentType.objects.get(
+    address_ct = ContentType.objects.filter(
         app_label="swoptact",
         model="address"
     )
-    address_ct.delete()
+
+    if address_ct.exists():
+        address_ct.delete()
 
 class Migration(migrations.Migration):
 
