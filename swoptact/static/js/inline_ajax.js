@@ -536,10 +536,11 @@ function setupParticipantCallbacks() {
         loadInitialAttendees();
     });
 
-    $("input[name='_save'").on(
+
+    $("input[type=\"submit\"][value=\"Done\"]").on(
         "click",
         function (event) {
-
+            console.log("Save has been clicked!");
         });
 
 }
