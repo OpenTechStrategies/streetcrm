@@ -216,7 +216,7 @@ function fillEditRow(row, participant) {
         input_wrap = $("<input/>", {
             "class": "vTextField " + class_identifier,
             "type": "text",
-            "id": "edit-" + class_identifier + participant.id,
+            "id": "edit-" + class_identifier + "-" + participant.id,
             "value": text});
         input_wrap.text(text);
         td_wrap.append(input_wrap);
