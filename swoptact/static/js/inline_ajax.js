@@ -208,27 +208,6 @@ function fillEditRow(row, participant) {
     console.log('appended buttons');
 }
 
-function fillAddressEditRow(row, participant) {
-    resetRow(row, participant.id);
-    //include a label cell
-    row.append('<th> Address:');
-
-    appendSimpleTextField = function (text) {
-        td_wrap = $("<td/>");
-        input_wrap = $("<input/>", {
-            "class": "vTextField",
-            "type": "text",
-            "value": text});
-        input_wrap.text(text);
-        td_wrap.append(input_wrap);
-        row.append(td_wrap);
-    }
-
-    appendSimpleTextField(participant.address.__str__);
-
-}
-
-
 
 function fillErrorsRow(row, participant_id, errors) {
     resetRow(row, participant_id);
