@@ -81,54 +81,6 @@ class Tag(models.Model, SerializeableMixin):
     def __str__(self):
         return self.name
 
-class Address(models.Model, SerializeableMixin):
-    """ Representation of an address in Chicago """
-    TYPES = (
-        ("St", "Street"),
-        ("Av", "Avenue"),
-        ("Blvd", "Boulevard"),
-        ("Rd", "Road"),
-    )
-
-    DIRECTIONS = (
-        ("N", "North"),
-        ("E", "East"),
-        ("S", "South"),
-        ("W", "West"),
-    )
-
-    class Meta:
-        verbose_name_plural = "Addresses"
-
-    number = models.IntegerField()
-    direction = models.CharField(max_length=1, choices=DIRECTIONS)
-    name = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, choices=TYPES)
-    apartment = models.CharField(max_length=20, null=True, blank=True)
-    city = models.CharField(max_length=255, default='Chicago', null=True, blank=True)
-    state = models.CharField(max_length=2, default='IL', null=True, blank=True)
-    zipcode = models.IntegerField(null=True, blank=True)
-
-
-    def __init__(self, *args, **kwargs):
-        super(Address, self).__init__(*args, **kwargs)
-
-        # Compile a dictionary of the choices so we can quickly use them
-        self.DICT_TYPES = dict(self.TYPES)
-        self.DICT_DIRECTIONS = dict(self.DIRECTIONS)
-
-    def __str__(self):
-        return "{number} {direction} {name} {type} #{apartment} {city}, {state} {zipcode}".format(
-            number=self.number,
-            direction=self.DICT_DIRECTIONS[self.direction],
-            name=self.name,
-            type=self.DICT_TYPES[self.type],
-            apartment = self.apartment,
-            city = self.city,
-            state = self.state,
-            zipcode = self.zipcode
-        )
-
 class ActivityLog(LogEntry):
     class Meta:
         proxy = True
@@ -137,8 +89,8 @@ class ActivityLog(LogEntry):
 
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
-    address = models.ForeignKey(Address, null=True, blank=True)
-    is_member = models.BooleanField(default=False, blank=True, 
+    address = models.TextField(null=True, blank=True)
+    is_member = models.BooleanField(default=False, blank=True,
                                   verbose_name = "This institution is a member of SWOP:")
     contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
     tags = models.ManyToManyField(Tag, blank=True)
@@ -155,7 +107,7 @@ class Participant(models.Model, SerializeableMixin):
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
-    address = models.ForeignKey(Address, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     institution = models.ForeignKey(Institution, null=True, blank=True)
 
     def __str__(self):
@@ -192,7 +144,7 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
         ("0", "am",),
         ("12", "pm",)
         )
-    
+
     TIMES = (
         ("1", "1"),
         ("2", "2"),

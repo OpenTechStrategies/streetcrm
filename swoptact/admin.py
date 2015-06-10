@@ -28,7 +28,8 @@ from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
-from swoptact.models import Address, Participant, Event, Institution, Contact, Tag, ActivityLog
+from swoptact import forms as st_forms
+from swoptact.models import Participant, Event, Institution, Contact, Tag, ActivityLog
 from swoptact import mixins
 
 class ContactInline(admin.TabularInline):
@@ -36,8 +37,8 @@ class ContactInline(admin.TabularInline):
     extra = 0
     verbose_name = "Contact"
     template = "admin/modified_tabular.html"
-    form = autocomplete_light.modelform_factory(Contact, exclude=tuple())
-    
+    form = st_forms.autocomplete_modelform_factory(Contact, exclude=tuple())
+
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "US_primary_phone",  "institution", "address",)
@@ -64,7 +65,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
             return self.change_fieldsets
         return super(ParticipantAdmin, self).get_fieldsets(request, obj)
 
-    form = autocomplete_light.modelform_factory(Participant, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(Participant, exclude=tuple())
     actions = None
 
     @property
@@ -109,7 +110,7 @@ class EventAdmin(admin.ModelAdmin):
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-    form = autocomplete_light.modelform_factory(Institution, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(Institution, exclude=tuple())
     inlines = (ContactInline,)
     actions = None
 
@@ -117,17 +118,9 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
     actions = None
 
-class AddressAdmin(admin.ModelAdmin):
-    address = autocomplete_light.modelform_factory(Address, exclude=tuple())
-    def get_model_perms(self, *args, **kwargs):
-        """ Hide the address from the admin index """
-        return {}
-
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
-
-admin.site.register(Address, AddressAdmin)
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Institution, InstitutionAdmin)

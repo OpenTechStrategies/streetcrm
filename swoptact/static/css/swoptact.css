@@ -238,3 +238,7 @@ input.vTextField {
 .object-tools a:hover {
     background-color: #337ab7 !important;
 }
+
+div.form-actions div.pull-right {
+    padding-right: 30%;
+}

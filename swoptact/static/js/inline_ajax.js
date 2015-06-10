@@ -173,7 +173,11 @@ function fillStaticRow(row, participant) {
     } else {
         appendSimpleText("");
     }
-    appendSimpleText(participant.primary_phone);
+    if (participant.primary_phone) {
+        appendSimpleText(participant.primary_phone);
+    } else {
+        appendSimpleText("");
+    }
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
@@ -181,10 +185,10 @@ function fillStaticRow(row, participant) {
 
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
-    appendSimpleTextField = function (text) {
+    appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
-            "class": "vTextField",
+            "class": "vTextField " + class_identifier,
             "type": "text",
             "value": text});
         input_wrap.text(text);
@@ -192,38 +196,17 @@ function fillEditRow(row, participant) {
         row.append(td_wrap);
     }
 
-    appendSimpleTextField(participant.first_name);
-    appendSimpleTextField(participant.last_name);
+    appendSimpleTextField(participant.first_name, "first-name");
+    appendSimpleTextField(participant.last_name, "last-name");
     if (participant.institution) {
-        appendSimpleTextField(participant.institution.name);
+        appendSimpleTextField(participant.institution.name, "institution");
     } else {
-        appendSimpleTextField("");
+        appendSimpleTextField("", "institution");
     }
-    appendSimpleTextField(participant.primary_phone);
+    appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
 }
-
-function fillAddressEditRow(row, participant) {
-    resetRow(row, participant.id);
-    //include a label cell
-    row.append('<th> Address:');
-
-    appendSimpleTextField = function (text) {
-        td_wrap = $("<td/>");
-        input_wrap = $("<input/>", {
-            "class": "vTextField",
-            "type": "text",
-            "value": text});
-        input_wrap.text(text);
-        td_wrap.append(input_wrap);
-        row.append(td_wrap);
-    }
-
-    appendSimpleTextField(participant.address.__str__);
-
-}
-
 
 
 function fillErrorsRow(row, participant_id, errors) {
@@ -454,29 +437,6 @@ function saveParticipant(participant_id, submit_flag) {
     }
 }
 
-
-function createAutocomplete(user){
-    $.get('/api/users/'+user+'/available-tags/',
-          function (tags) {
-              var source_array = [];
-              for (i = 0; i < tags.available.length; i++){
-                  source_array.push({label: tags.available[i].name, value: tags.available[i].id});
-              }
-              $("#tag_choices").autocomplete({
-                  source: source_array,
-                  select: function(event, ui) {
-                      event.preventDefault();
-                      $("#tag_choices").val(ui.item.label);
-                      //but we need to save the value as a fk
-                  },
-                  focus: function(event, ui) {
-                      event.preventDefault();
-                      $("#tag_choices").val(ui.item.label);
-                  }
-              });
-          }, 'json');
-}
-
 function setupParticipantCallbacks() {
     //keep track of row(s) in the middle of being edited
     var rows_editing = [];
@@ -579,6 +539,3 @@ function setupParticipantCallbacks() {
 
 
 setupParticipantCallbacks();
-
-
-createAutocomplete(1);
