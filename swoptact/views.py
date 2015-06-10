@@ -161,7 +161,7 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     """
 
     model = models.Participant
-    fields = ["id", "first_name", "last_name", "primary_phone",
+    fields = ["id", "name", "primary_phone",
               "secondary_phone", "email", "address"]
 
     def get(self, request, *args, **kwargs):
@@ -180,7 +180,7 @@ class CreateParticipantAPI(APIMixin, generic.CreateView):
     """
 
     model = models.Participant
-    fields = ["first_name", "last_name", "primary_phone", "secondary_phone",
+    fields = ["name", "primary_phone", "secondary_phone",
               "email", "address"]
 
     def form_valid(self, form, *args, **kwargs):

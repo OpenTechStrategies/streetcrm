@@ -39,14 +39,14 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone",
+            "fields": ("name", "primary_phone",
                        "institution", "secondary_phone", "email", "address")
         }),
     )
 
     change_fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone",
+            "fields": ("name", "primary_phone",
                        "institution", "secondary_phone", "email", "address")
         }),
         ("Personal Event History", {
@@ -68,9 +68,8 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     @property
     def event_history_name(self, obj):
         """ Name of event history fieldset """
-        return "Events that {first} {last} attended".format(
-            first=obj.first_name,
-            last=obj.last_name
+        return "Events that {name} attended".format(
+            name=obj.name
         )
 
     def event_history(self, obj):

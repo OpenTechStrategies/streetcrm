@@ -113,8 +113,7 @@ class Institution(models.Model, SerializeableMixin):
 
 class Participant(models.Model, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
@@ -122,17 +121,7 @@ class Participant(models.Model, SerializeableMixin):
     institution = models.ForeignKey(Institution, null=True, blank=True)
 
     def __str__(self):
-        return "{first_name} {last_name}".format(
-            first_name=self.first_name,
-            last_name=self.last_name
-        )
-
-    def name(self):
-        """ The full name of the participant """
-        return "{first} {last}".format(
-            first=self.first_name,
-            last=self.last_name
-        )
+        return self.name
 
     @property
     def events(self):
@@ -145,10 +134,7 @@ class Contact(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return "{first_name} {last_name}".format(
-            first_name=self.participant.first_name,
-            last_name=self.participant.last_name
-        )
+        return self.participant.name
 
 class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     SUFFIXES = (

@@ -63,8 +63,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Russo",
-        "first_name": "Lauren",
+        "name": "Lauren Russo",
         "institution": null,
         "primary_phone": null,
         "email": "lbeethoven@test.com",
@@ -76,8 +75,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Rose",
-        "first_name": "Theodore",
+        "name": "Theodore Rose",
         "institution": 1,
         "primary_phone": "+17737021233",
         "email": "",
@@ -89,8 +87,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Lagos",
-        "first_name": "Daria",
+        "name": "Daria Lagos",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -102,8 +99,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "NewPerson",
-        "first_name": "Adding",
+        "name": "Adding NewPerson",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -115,8 +111,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Brown",
-        "first_name": "Felicia",
+        "name": "Felicia Brown",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -128,8 +123,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Addition",
-        "first_name": "Simple",
+        "name": "Simple Addition",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -141,8 +135,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Topher",
-        "first_name": "Chris",
+        "name": "Chris Topher",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -154,8 +147,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Glum",
-        "first_name": "Puddle",
+        "name": "Puddle Glum",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -167,8 +159,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Solares",
-        "first_name": "Eustace",
+        "name": "Eustace Solares",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -180,8 +171,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Martinez",
-        "first_name": "Jill",
+        "name": "Jill Martinez",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -193,8 +183,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Stallworth",
-        "first_name": "Dante",
+        "name": "Dante Stallworth",
         "institution": null,
         "primary_phone": "+13127726767",
         "email": "",
@@ -206,8 +195,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Guadalupe",
-        "first_name": "Jesenya",
+        "name": "Jesenya Guadalupe",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -219,8 +207,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Potter",
-        "first_name": "Harry",
+        "name": "Harry Potter",
         "institution": null,
         "primary_phone": null,
         "email": "",
@@ -232,8 +219,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Potter",
-        "first_name": "Harry",
+        "name": "Harry Potter",
         "institution": 1,
         "primary_phone": null,
         "email": "",
@@ -245,8 +231,7 @@
 {
     "fields": {
         "secondary_phone": null,
-        "last_name": "Newperson",
-        "first_name": "Test",
+        "name": "Test Newperson",
         "institution": null,
         "primary_phone": "+13127025434",
         "email": "",

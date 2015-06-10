@@ -50,8 +50,7 @@ class APITest(test.TestCase):
         """ Tests a participant that exists can be fetched """
         # Create a participant to fetch
         participant = models.Participant(
-            first_name="John",
-            last_name="Smith"
+            name="John Smith"
         )
         participant.save()
 
@@ -69,15 +68,13 @@ class APITest(test.TestCase):
         json_participant = json.loads(response.content.decode("utf-8"))
 
         # Validate attributes in the JSON
-        self.assertEqual(json_participant["first_name"], participant.first_name)
-        self.assertEqual(json_participant["last_name"], participant.last_name)
+        self.assertEqual(json_participant["name"], participant.name)
 
     def test_create_participant(self):
         """ Test that you can create a participant via the API """
         # Create the data to post
         participant = {
-            "first_name": "Albert",
-            "last_name": "Einstein",
+            "name": "Albert Einstein",
         }
 
         # Post the participant
@@ -98,25 +95,22 @@ class APITest(test.TestCase):
         )
 
         self.assertTrue(participant_obj is not None)
-        self.assertEqual(participant_obj.first_name, participant["first_name"])
-        self.assertEqual(participant_obj.last_name, participant["last_name"])
+        self.assertEqual(participant_obj.name, participant["name"])
 
     def test_update_participant(self):
         """ Test that you can update a participant via the API """
         # Create a participant that can be modified later
         participant = models.Participant(
-            first_name="John",
-            last_name="Smith"
+            name="John Smith"
         )
         participant.save()
 
         # Verify we have the data we thought we do (we should)
-        self.assertEqual(participant.first_name, "John")
+        self.assertEqual(participant.name, "John Smith")
 
         # Now provide some data to change it
         data = {
-            "first_name": "Johan",
-            "last_name": "Smith"
+            "name": "Johan Smith"
         }
 
         # Submit it via a PUT
@@ -137,13 +131,11 @@ class APITest(test.TestCase):
         # Verify I get back the JSON I expect
         participant_json = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(participant_json["first_name"], data["first_name"])
-        self.assertEqual(participant_json["last_name"], data["last_name"])
+        self.assertEqual(participant_json["name"], data["name"])
 
         # Finally look up the original objects and verify the changes
         # are reflected in the database.
         participant = models.Participant.objects.get(pk=participant.pk)
 
         # Check the participant in the DB with submitted data
-        self.assertEqual(participant.first_name, data["first_name"])
-        self.assertEqual(participant.last_name, data["last_name"])
+        self.assertEqual(participant.name, data["name"])

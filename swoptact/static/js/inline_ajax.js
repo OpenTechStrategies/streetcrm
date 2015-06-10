@@ -166,8 +166,7 @@ function fillStaticRow(row, participant) {
         row.append(td_wrap);
     }
 
-    appendSimpleText(participant.first_name);
-    appendSimpleText(participant.last_name);
+    appendSimpleText(participant.name);
     if (participant.institution) {
         appendSimpleText(participant.institution.name);
     } else {
@@ -196,8 +195,7 @@ function fillEditRow(row, participant) {
         row.append(td_wrap);
     }
 
-    appendSimpleTextField(participant.first_name, "first-name");
-    appendSimpleTextField(participant.last_name, "last-name");
+    appendSimpleTextField(participant.name, "name");
     if (participant.institution) {
         appendSimpleTextField(participant.institution.name, "institution");
     } else {
@@ -255,7 +253,7 @@ function startLinkExistingParticipants() {
             var option_elt = $(
                 "<option/>", {
                     "value": participant.id});
-            option_elt.text(participant.first_name + " " + participant.last_name);
+            option_elt.text(participant.name);
             select_available.append(option_elt);
         }
         $("#link-existing-participant-btn").hide();
@@ -360,11 +358,10 @@ function updateParticipant(participant){
         var edit_input = $('#participant-edit-');
     }
     var text_inputs = (edit_input.find(".vTextField"));
-    // array will be first_name, last_name, phone_number, address as long as our
+    // array will be name, phone_number, address as long as our
     // UI columns stay the same
-    participant.first_name = text_inputs[0].value;
-    participant.last_name = text_inputs[1].value;
-    participant.primary_phone = text_inputs[3].value;
+    participant.name = text_inputs[0].value;
+    participant.primary_phone = text_inputs[2].value;
     return participant;
 }
 

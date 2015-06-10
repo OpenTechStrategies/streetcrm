@@ -42,16 +42,12 @@ autocomplete_light.register(TagAutocomplete)
 
 # Register the Contact
 class ContactAutocomplete(BaseAutocomplete):
-    search_fields = ["first_name", "last_name"]
+    search_fields = ["name"]
     model = models.Participant
 
     @classmethod
     def create(cls, data):
-        model = cls.model(
-            first_name=" ".join(data.split()[:-1]),
-            last_name=data.split()[-1]
-        )
-
+        model = cls.model(name=data)
         return model
 
 autocomplete_light.register(ContactAutocomplete)
