@@ -120,6 +120,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
     actions = None
+    form = st_forms.TagAdminForm
 
 class LogAdmin(admin.ModelAdmin):
     actions = None

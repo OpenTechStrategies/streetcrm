@@ -13,8 +13,20 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import django.forms
 from autocomplete_light import forms
+
+from swoptact import models
+
+class TagAdminForm(django.forms.ModelForm):
+    class Meta:
+        exclude = tuple()
+        model = models.Tag
+        widgets = {
+            "name": django.forms.TextInput(
+                attrs={"size": models.Tag.get_field("name").max_length}
+            )
+        }
 
 class AutoCompleteModelForm(forms.ModelForm):
     """ Creation of new objects from text field of autocomplete fields

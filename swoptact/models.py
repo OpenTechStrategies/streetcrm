@@ -65,14 +65,22 @@ class SerializeableMixin:
 
         return serialized
 
-class Tag(models.Model, SerializeableMixin):
+class InspectMixin(object):
+    """ Provides useful methods to inspect the model easily """
+
+    @classmethod
+    def get_field(cls, name):
+        """ Gets a field by it's name """
+        return cls._meta.get_field_by_name(name)[0]
+
+class Tag(models.Model, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
     name = models.CharField(max_length=10)
     description = models.CharField(max_length=255, null=True, blank=True)
 
     # Group which can use this tag
     group = models.ForeignKey(auth_models.Group)
-    
+
     # This should be put on Meta but sigh - issue #5793
     SERIALIZE_EXCLUDE = ["group"]
 
