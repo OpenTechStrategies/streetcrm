@@ -403,7 +403,7 @@ function recreateRows(participant){
 
 
 function saveParticipant(participant_id, submit_flag) {
-    if (participant_id != ""){
+    if (participant_id != "empty" && participant_id != ""){
         $.get('/api/participants/'+participant_id+'/',
               function (participant) {
                   new_participant = updateParticipant(participant);
@@ -543,8 +543,11 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             addNewParticipant();
+            // addNewParticipant saves all open rows, so we empty the existing
+            // array of rows being edited.
+            rows_editing = [];
             // this case still needs to be handled correctly
-            // rows_editing.push('');
+            rows_editing.push('empty');
         });
 
     $("#test_submit").on(
