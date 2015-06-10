@@ -56,3 +56,8 @@ class ContactAutocomplete(BaseAutocomplete):
 
 autocomplete_light.register(ContactAutocomplete)
 
+class EventAutocomplete(BaseAutocomplete):
+    search_fields = ["name"]
+    model = models.Event
+
+autocomplete_light.register(EventAutocomplete)

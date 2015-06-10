@@ -102,7 +102,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
-    form = autocomplete_light.modelform_factory(
+    form = st_forms.autocomplete_modelform_factory(
         model=models.Event,
         exclude=tuple()
     )

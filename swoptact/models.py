@@ -72,7 +72,7 @@ class Tag(models.Model, SerializeableMixin):
 
     # Group which can use this tag
     group = models.ForeignKey(auth_models.Group)
-
+    
     # This should be put on Meta but sigh - issue #5793
     SERIALIZE_EXCLUDE = ["group"]
 
