@@ -174,7 +174,11 @@ function fillStaticRow(row, participant) {
     } else {
         appendSimpleText("");
     }
-    appendSimpleText(participant.primary_phone);
+    if (participant.primary_phone) {
+        appendSimpleText(participant.primary_phone);
+    } else {
+        appendSimpleText("");
+    }
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
