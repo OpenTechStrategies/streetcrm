@@ -13,3 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# import the signals (needs to happen to reigster them)self.
+from swoptact import signals

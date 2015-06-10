@@ -22,7 +22,8 @@ from django.forms.models import modelform_factory
 from autocomplete_light import widgets as dacl_widgets
 
 class SignInSheetAdminMixin:
-    """ Provides a special case sign in sheet view
+    """
+    Provides a special case sign in sheet view
 
     This will be inherited by ParticipantAdmin and is only a separate
     class to make it easier to think about. You should prefix your
@@ -47,13 +48,22 @@ class SignInSheetAdminMixin:
     def sheet_view(self, request):
         """ View for the sign in sheet """
         # To prevent circular imports keep this here.
-        from swoptact.models import Participant, Event, Institution
+        from swoptact import models
 
         return render_to_response(self.sheet_template, {
             "opts": self.model._meta,
-            "event_form": modelform_factory(Event, exclude=("description", "participants", "is_prep")),
-            "participant_form": modelform_factory(Participant, exclude=("address", "secondary_phone", "email",)),
-            "institution_form": modelform_factory(Institution, exclude=tuple()),
+            "event_form": modelform_factory(
+                model=Event,
+                exclude=("description", "participants", "is_prep")
+            ),
+            "participant_form": modelform_factory(
+                model=models.Participant,
+                exclude=("address", "secondary_phone", "email")
+            ),
+            "institution_form": modelform_factory(
+                model=models.Institution,
+                exclude=tuple()
+            ),
         })
 
 

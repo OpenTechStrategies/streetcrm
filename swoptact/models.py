@@ -15,10 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
-from django.db.models.fields import related
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
-from django_google_maps import fields as mapfields
 
 from swoptact import mixins, modelfields
 import phonenumbers
@@ -90,15 +88,20 @@ class ActivityLog(LogEntry):
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.TextField(null=True, blank=True)
-    is_member = models.BooleanField(default=False, blank=True,
-                                  verbose_name = "This institution is a member of SWOP:")
-    contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
     tags = models.ManyToManyField(Tag, blank=True)
+    contact = models.ManyToManyField(
+        "Participant",
+        through='Contact',
+        related_name="main_contact"
+    )
+    is_member = models.BooleanField(
+        default=False,
+        blank=True,
+        verbose_name="This institution is a member of SWOP:"
+    )
 
     def __str__(self):
-        return "{name}".format(
-            name=self.name,
-        )
+        return "{name}".format(name=self.name)
 
 class Participant(models.Model, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
@@ -167,15 +170,15 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     location = models.CharField(max_length=255, blank=True)
     participants = models.ManyToManyField(Participant, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    is_prep = models.BooleanField(default=False, blank=True,
-                                  verbose_name = "This meeting is part of a major action:")
     major_action = models.ForeignKey("self", null=True, blank=True)
+    is_prep = models.BooleanField(
+        default=False,
+        blank=True,
+        verbose_name="This meeting is part of a major action:"
+    )
 
     def __str__(self):
         return self.name
 
     def attendee_count(self):
         return self.participants.count()
-
-# import the signals
-from swoptact.signals import *

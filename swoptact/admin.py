@@ -14,46 +14,40 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django import template, forms
-from django.core.exceptions import ValidationError
-from django.contrib import admin, staticfiles
-from django.contrib.admin.options import InlineModelAdmin
+from django import template
+from django.contrib import admin
 from django.template import loader
-from django.conf.urls import patterns, url
-from django.shortcuts import render_to_response
-from django.forms.models import modelform_factory
-
-from django_google_maps import widgets as map_widgets
-from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
 from swoptact import forms as st_forms
-from swoptact.models import Participant, Event, Institution, Contact, Tag, ActivityLog
-from swoptact import mixins
+from swoptact import mixins, models
 
 class ContactInline(admin.TabularInline):
-    model = Contact
+    model = models.Contact
     extra = 0
     verbose_name = "Contact"
     template = "admin/modified_tabular.html"
-    form = st_forms.autocomplete_modelform_factory(Contact, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Contact,
+        exclude=tuple()
+    )
 
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "US_primary_phone",  "institution", "address",)
+    list_display = ("name", "US_primary_phone", "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
-                        "address")
+            "fields": ("first_name", "last_name", "primary_phone",
+                       "institution", "secondary_phone", "email", "address")
         }),
     )
 
     change_fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
-                        "address")
+            "fields": ("first_name", "last_name", "primary_phone",
+                       "institution", "secondary_phone", "email", "address")
         }),
         ("Personal Event History", {
             "fields": ("event_history",),
@@ -65,7 +59,10 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
             return self.change_fieldsets
         return super(ParticipantAdmin, self).get_fieldsets(request, obj)
 
-    form = st_forms.autocomplete_modelform_factory(Participant, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Participant,
+        exclude=tuple()
+    )
     actions = None
 
     @property
@@ -105,12 +102,18 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
-    form = autocomplete_light.modelform_factory(Event, exclude=tuple())
+    form = autocomplete_light.modelform_factory(
+        model=models.Event,
+        exclude=tuple()
+    )
     actions = None
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-    form = st_forms.autocomplete_modelform_factory(Institution, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Institution,
+        exclude=tuple()
+    )
     inlines = (ContactInline,)
     actions = None
 
@@ -121,8 +124,8 @@ class TagAdmin(admin.ModelAdmin):
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
-admin.site.register(Participant, ParticipantAdmin)
-admin.site.register(Event, EventAdmin)
-admin.site.register(Institution, InstitutionAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(ActivityLog, LogAdmin)
+admin.site.register(models.Participant, ParticipantAdmin)
+admin.site.register(models.Event, EventAdmin)
+admin.site.register(models.Institution, InstitutionAdmin)
+admin.site.register(models.Tag, TagAdmin)
+admin.site.register(models.ActivityLog, LogAdmin)

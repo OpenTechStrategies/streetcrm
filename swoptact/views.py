@@ -16,15 +16,11 @@
 import json
 
 from django import http
-from django.db.models import Q
 from django.views import generic
 from django.db.models.fields import related
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
-from django.forms.models import modelform_factory
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import permission_required
-
 
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
@@ -52,7 +48,7 @@ class APIMixin:
 
     def dict_to_formencoded(self, data):
         """ Produces form-encoded data from a python dictionary """
-        pairs =  [p for p in ["{}={}".format(k, v) for k, v in data.items()]]
+        pairs = [p for p in ["{}={}".format(k, v) for k, v in data.items()]]
         return "&".join(pairs)
 
     def process_json(self, body, model=None):
@@ -165,8 +161,8 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     """
 
     model = models.Participant
-    fields = ["id", "first_name", "last_name", "primary_phone", "secondary_phone",
-              "email", "address"]
+    fields = ["id", "first_name", "last_name", "primary_phone",
+              "secondary_phone", "email", "address"]
 
     def get(self, request, *args, **kwargs):
         """ Retrival of an existing participant """
