@@ -27,7 +27,7 @@ class ContactInline(admin.TabularInline):
     model = models.Contact
     extra = 0
     verbose_name = "Contact"
-    template = "admin/modified_tabular.html"
+    template = "admin/institution_contacts_inline_tabular.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Contact,
         exclude=tuple()
