@@ -1,438 +1,513 @@
 [
 {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "permissions": [],
+        "name": "admin"
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+        "permissions": [],
+        "name": "organizer"
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "permissions": [],
+        "name": "leader"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "is_superuser": true,
+        "groups": [],
+        "user_permissions": [],
+        "is_staff": true,
+        "last_login": "2015-06-11T17:22:59.642Z",
+        "username": "admin",
+        "password": "pbkdf2_sha256$20000$DyH3WV0nR2ZT$IeeQcjjdfPK1flWPtAjptTQrxXuT1yrBkFilkPSFLRA=",
+        "date_joined": "2015-06-11T17:18:50.138Z",
+        "email": "jrandom@example.com",
+        "last_name": "",
+        "is_active": true,
+        "first_name": ""
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "is_superuser": true,
+        "groups": [],
+        "user_permissions": [],
+        "is_staff": true,
+        "last_login": null,
+        "username": "otheradmin",
+        "password": "pbkdf2_sha256$20000$wQL1CkVcuy9T$aJXYCzd81SPiLjxhs6/zjR9pEilJTCEtnBpCOVhkDUI=",
+        "date_joined": "2015-06-11T17:21:05.818Z",
+        "email": "jrandom@example.com",
+        "last_name": "",
+        "is_active": true,
+        "first_name": ""
+    }
+},
+{
+    "model": "swoptact.tag",
+    "pk": 1,
     "fields": {
         "description": "testing the model",
-        "group": 2,
+        "date_created": "2015-06-11",
+        "group": [
+            "organizer"
+        ],
         "name": "ttm"
-    },
-    "pk": 1,
-    "model": "swoptact.tag"
+    }
 },
 {
+    "model": "swoptact.tag",
+    "pk": 2,
     "fields": {
         "description": "Illinois grant for children",
-        "group": 1,
+        "date_created": "2015-06-11",
+        "group": [
+            "admin"
+        ],
         "name": "il4kids"
-    },
-    "pk": 2,
-    "model": "swoptact.tag"
+    }
 },
 {
+    "model": "swoptact.tag",
+    "pk": 4,
     "fields": {
         "description": "another test",
-        "group": 2,
+        "date_created": "2015-06-11",
+        "group": [
+            "organizer"
+        ],
         "name": "test"
-    },
-    "pk": 4,
-    "model": "swoptact.tag"
+    }
 },
 {
+    "model": "swoptact.tag",
+    "pk": 5,
     "fields": {
         "description": "A new tag.",
-        "group": 3,
+        "date_created": "2015-06-11",
+        "group": [
+            "leader"
+        ],
         "name": "New"
-    },
-    "pk": 5,
-    "model": "swoptact.tag"
+    }
 },
 {
+    "model": "swoptact.institution",
+    "pk": 1,
     "fields": {
-        "is_member": false,
+        "address": null,
         "tags": [
             1,
             4
         ],
-        "address": null,
+        "is_member": false,
         "name": "Test Institution"
-    },
-    "pk": 1,
-    "model": "swoptact.institution"
+    }
 },
 {
+    "model": "swoptact.institution",
+    "pk": 2,
     "fields": {
-        "is_member": true,
+        "address": "6300 South Ashland Avenue #None Chicago, IL None",
         "tags": [
             2
         ],
-        "address": "6300 South Ashland Avenue #None Chicago, IL None",
+        "is_member": true,
         "name": "Extra Venerable Institution"
-    },
-    "pk": 2,
-    "model": "swoptact.institution"
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 9,
     "fields": {
+        "institution": null,
+        "email": "lbeethoven@test.com",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Lauren Russo",
-        "institution": null,
-        "primary_phone": null,
-        "email": "lbeethoven@test.com",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 9,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 14,
     "fields": {
+        "institution": 1,
+        "email": "",
+        "address": "3100 East 93rd Street #None Chicago, IL None",
         "secondary_phone": null,
         "name": "Theodore Rose",
-        "institution": 1,
-        "primary_phone": "+17737021233",
-        "email": "",
-        "address": "3100 East 93rd Street #None Chicago, IL None"
-    },
-    "pk": 14,
-    "model": "swoptact.participant"
+        "primary_phone": "+17737021233"
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 24,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Daria Lagos",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 24,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 25,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Adding NewPerson",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 25,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 26,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Felicia Brown",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 26,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 27,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Simple Addition",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 27,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 28,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Chris Topher",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 28,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 29,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Puddle Glum",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 29,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 30,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Eustace Solares",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 30,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 31,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Jill Martinez",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 31,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 32,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
         "name": "Dante Stallworth",
-        "institution": null,
-        "primary_phone": "+13127726767",
-        "email": "",
-        "address": "17 North State Street #1700 Chicago, IL 60602"
-    },
-    "pk": 32,
-    "model": "swoptact.participant"
+        "primary_phone": "+13127726767"
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 33,
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": null,
         "secondary_phone": null,
         "name": "Jesenya Guadalupe",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": null
-    },
-    "pk": 33,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
-    "fields": {
-        "secondary_phone": null,
-        "name": "Harry Potter",
-        "institution": null,
-        "primary_phone": null,
-        "email": "",
-        "address": null
-    },
+    "model": "swoptact.participant",
     "pk": 34,
-    "model": "swoptact.participant"
-},
-{
     "fields": {
+        "institution": null,
+        "email": "",
+        "address": null,
         "secondary_phone": null,
         "name": "Harry Potter",
-        "institution": 1,
-        "primary_phone": null,
-        "email": "",
-        "address": "310 East Lake Street #None Chicago, IL None"
-    },
-    "pk": 35,
-    "model": "swoptact.participant"
+        "primary_phone": null
+    }
 },
 {
+    "model": "swoptact.participant",
+    "pk": 35,
     "fields": {
+        "institution": 1,
+        "email": "",
+        "address": "310 East Lake Street #None Chicago, IL None",
+        "secondary_phone": null,
+        "name": "Harry Potter",
+        "primary_phone": null
+    }
+},
+{
+    "model": "swoptact.participant",
+    "pk": 36,
+    "fields": {
+        "institution": null,
+        "email": "",
+        "address": null,
         "secondary_phone": null,
         "name": "Test Newperson",
-        "institution": null,
-        "primary_phone": "+13127025434",
-        "email": "",
-        "address": null
-    },
-    "pk": 36,
-    "model": "swoptact.participant"
+        "primary_phone": "+13127025434"
+    }
 },
 {
-    "fields": {
-        "title": "Pastor",
-        "institution": 2,
-        "participant": 32
-    },
+    "model": "swoptact.contact",
     "pk": 2,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 32,
+        "institution": 2,
+        "title": "Pastor"
+    }
 },
 {
-    "fields": {
-        "title": "Test Title",
-        "institution": 2,
-        "participant": 9
-    },
+    "model": "swoptact.contact",
     "pk": 9,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 9,
+        "institution": 2,
+        "title": "Test Title"
+    }
 },
 {
-    "fields": {
-        "title": "Test LEADER",
-        "institution": 1,
-        "participant": 14
-    },
+    "model": "swoptact.contact",
     "pk": 11,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 14,
+        "institution": 1,
+        "title": "Test LEADER"
+    }
 },
 {
-    "fields": {
-        "title": "Primary Contact",
-        "institution": 1,
-        "participant": 24
-    },
+    "model": "swoptact.contact",
     "pk": 12,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 24,
+        "institution": 1,
+        "title": "Primary Contact"
+    }
 },
 {
-    "fields": {
-        "title": "",
-        "institution": 1,
-        "participant": 31
-    },
+    "model": "swoptact.contact",
     "pk": 13,
-    "model": "swoptact.contact"
-},
-{
     "fields": {
-        "title": "",
+        "participant": 31,
         "institution": 1,
-        "participant": 26
-    },
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.contact",
     "pk": 18,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 26,
+        "institution": 1,
+        "title": ""
+    }
 },
 {
-    "fields": {
-        "title": "",
-        "institution": 2,
-        "participant": 30
-    },
+    "model": "swoptact.contact",
     "pk": 19,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 30,
+        "institution": 2,
+        "title": ""
+    }
 },
 {
-    "fields": {
-        "title": "",
-        "institution": 2,
-        "participant": 33
-    },
+    "model": "swoptact.contact",
     "pk": 20,
-    "model": "swoptact.contact"
+    "fields": {
+        "participant": 33,
+        "institution": 2,
+        "title": ""
+    }
 },
 {
-    "fields": {
-        "title": "",
-        "institution": 2,
-        "participant": 14
-    },
+    "model": "swoptact.contact",
     "pk": 21,
-    "model": "swoptact.contact"
-},
-{
     "fields": {
-        "title": "",
+        "participant": 14,
         "institution": 2,
-        "participant": 28
-    },
-    "pk": 22,
-    "model": "swoptact.contact"
+        "title": ""
+    }
 },
 {
+    "model": "swoptact.contact",
+    "pk": 22,
     "fields": {
-        "date": "2015-05-11",
-        "major_action": null,
+        "participant": 28,
+        "institution": 2,
+        "title": ""
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 2,
+    "fields": {
         "tags": [],
-        "is_prep": false,
         "location": "SWOP",
+        "time": null,
+        "date": "2015-05-11",
+        "name": "New Homeowners Support Group",
+        "description": "A discussion group",
         "participants": [
             32
         ],
-        "description": "A discussion group",
-        "name": "New Homeowners Support Group",
-        "time": null
-    },
-    "pk": 2,
-    "model": "swoptact.event"
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
-    "fields": {
-        "date": null,
-        "major_action": null,
-        "tags": [],
-        "is_prep": false,
-        "location": "Conference Center",
-        "participants": [],
-        "description": null,
-        "name": "Swoptact Initiation Forum",
-        "time": null
-    },
+    "model": "swoptact.event",
     "pk": 3,
-    "model": "swoptact.event"
-},
-{
     "fields": {
-        "date": null,
-        "major_action": null,
         "tags": [],
-        "is_prep": false,
-        "location": "Global",
-        "participants": [],
-        "description": "",
-        "name": "International Women's Day",
-        "time": null
-    },
-    "pk": 4,
-    "model": "swoptact.event"
-},
-{
-    "fields": {
+        "location": "Conference Center",
+        "time": null,
         "date": null,
-        "major_action": null,
-        "tags": [],
-        "is_prep": false,
-        "location": "SWOP Auxiliary Office",
-        "participants": [],
+        "name": "Swoptact Initiation Forum",
         "description": null,
-        "name": "Organizer Retreat",
-        "time": null
-    },
-    "pk": 5,
-    "model": "swoptact.event"
+        "participants": [],
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
+    "model": "swoptact.event",
+    "pk": 4,
     "fields": {
-        "date": null,
-        "major_action": null,
         "tags": [],
+        "location": "Global",
+        "time": null,
+        "date": null,
+        "name": "International Women's Day",
+        "description": "",
+        "participants": [],
         "is_prep": false,
+        "major_action": null
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 5,
+    "fields": {
+        "tags": [],
+        "location": "SWOP Auxiliary Office",
+        "time": null,
+        "date": null,
+        "name": "Organizer Retreat",
+        "description": null,
+        "participants": [],
+        "is_prep": false,
+        "major_action": null
+    }
+},
+{
+    "model": "swoptact.event",
+    "pk": 6,
+    "fields": {
+        "tags": [],
         "location": "",
+        "time": null,
+        "date": null,
+        "name": "Example Meeting",
+        "description": "",
         "participants": [
             9
         ],
-        "description": "",
-        "name": "Example Meeting",
-        "time": null
-    },
-    "pk": 6,
-    "model": "swoptact.event"
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
+    "model": "swoptact.event",
+    "pk": 7,
     "fields": {
-        "date": null,
-        "major_action": null,
         "tags": [],
-        "is_prep": false,
         "location": "",
+        "time": null,
+        "date": null,
+        "name": "Test",
+        "description": "",
         "participants": [
             36
         ],
-        "description": "",
-        "name": "Test",
-        "time": null
-    },
-    "pk": 7,
-    "model": "swoptact.event"
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
+    "model": "swoptact.event",
+    "pk": 8,
     "fields": {
-        "date": "2015-05-04",
-        "major_action": 9,
         "tags": [],
-        "is_prep": true,
         "location": "",
+        "time": null,
+        "date": "2015-05-04",
+        "name": "Demo Event",
+        "description": "This is an example event with attendees.",
         "participants": [
             9,
             14,
@@ -444,31 +519,28 @@
             31,
             32
         ],
-        "description": "This is an example event with attendees.",
-        "name": "Demo Event",
-        "time": null
-    },
-    "pk": 8,
-    "model": "swoptact.event"
+        "is_prep": true,
+        "major_action": 9
+    }
 },
 {
+    "model": "swoptact.event",
+    "pk": 9,
     "fields": {
-        "date": "2015-05-04",
-        "major_action": 3,
         "tags": [],
-        "is_prep": true,
-        "location": "At a location",
+        "location": "Home Office",
+        "time": null,
+        "date": "2015-05-04",
+        "name": "Board Meeting",
+        "description": "This is a test of adding a new event with the sign in sheet.",
         "participants": [
             30,
             31,
             32,
             33
         ],
-        "description": "This is a test of adding a new event with the sign in sheet.",
-        "name": "Add a new event",
-        "time": null
-    },
-    "pk": 9,
-    "model": "swoptact.event"
+        "is_prep": true,
+        "major_action": 3
+    }
 }
 ]

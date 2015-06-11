@@ -119,6 +119,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
     actions = None
+    readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
 
 class LogAdmin(admin.ModelAdmin):

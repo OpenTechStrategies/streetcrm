@@ -17,6 +17,7 @@
 from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
+from django.utils import timezone
 
 from swoptact import mixins, modelfields
 import phonenumbers
@@ -75,11 +76,12 @@ class InspectMixin(object):
 
 class Tag(models.Model, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, unique=True)
     description = models.CharField(max_length=255, null=True, blank=True)
-
+    date_created = models.DateField(null=True, blank=True, default=timezone.now)
     # Group which can use this tag
-    group = models.ForeignKey(auth_models.Group)
+    group = models.ForeignKey(auth_models.Group,
+                              verbose_name = "Group Assignment")
 
     # This should be put on Meta but sigh - issue #5793
     SERIALIZE_EXCLUDE = ["group"]
