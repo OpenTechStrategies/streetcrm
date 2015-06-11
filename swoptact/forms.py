@@ -16,7 +16,7 @@
 import django.forms
 from autocomplete_light import forms
 
-from swoptact import models
+from swoptact import models, widgets
 
 class TagAdminForm(django.forms.ModelForm):
     class Meta:
@@ -25,7 +25,8 @@ class TagAdminForm(django.forms.ModelForm):
         widgets = {
             "name": django.forms.TextInput(
                 attrs={"size": models.Tag.get_field("name").max_length}
-            )
+            ),
+            "group": widgets.ForeignKeyRadioWidget(),
         }
 
 class AutoCompleteModelForm(forms.ModelForm):
