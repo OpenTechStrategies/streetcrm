@@ -72,7 +72,13 @@ a:focus,
     padding-right: 15px;
 }
 
-/* Give tables and breadcrumbs a white background and boarder */
+/* Shrink tables to fit content (but don't shrink too much either) */
+.table-bordered {
+  min-width: 50%;
+  width: auto;
+}
+
+/* Give tables and breadcrumbs a white background and border */
 .breadcrumbs,
 .change-content table,
 .table-bordered > thead > tr > th,
@@ -128,7 +134,7 @@ a:focus,
     border-bottom: 0px;
     background-color: #FFF;
 
-    /* Push the boarders out to line up with fieldset borders - is there a better way? */
+    /* Push the borders out to line up with fieldset borders - is there a better way? */
     margin-left: -10px;
 }
 
