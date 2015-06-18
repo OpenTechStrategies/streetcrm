@@ -185,5 +185,8 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     def __str__(self):
         return self.name
 
+    def date_of_action(self):
+        return self.date if self.date else ""
+
     def attendee_count(self):
         return self.participants.count()

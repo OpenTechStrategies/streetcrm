@@ -99,7 +99,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     US_primary_phone.short_description = "Phone Number"
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("name", "location", "date", "attendee_count",)
+    list_display = ("name", "location", "date_of_action", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
