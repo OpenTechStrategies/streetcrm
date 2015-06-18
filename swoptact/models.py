@@ -159,19 +159,28 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
         ("12", "12"),
     )
 
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255, null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    time = models.TimeField(null=True, blank=True)
-    location = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255,
+                            verbose_name="Action Name",
+                            help_text="The name includes an issue area and a topic.")
+    description = models.CharField(max_length=255, null=True, blank=True,
+                                   verbose_name="Action Description",
+                                   help_text="Max length = 255 characters.<br> e.g." +
+                                   "\"Met with housing stakeholders.\" ")
+    date = models.DateField(null=True, blank=True, 
+                            verbose_name="Date of Action")
+    time = models.TimeField(null=True, blank=True,
+                            verbose_name="Time of Action")
+    location = models.CharField(max_length=255, blank=True,
+                                verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    major_action = models.ForeignKey("self", null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True,
+                                  verbose_name="Action Tag(s)")
     is_prep = models.BooleanField(
         default=False,
         blank=True,
         verbose_name="This meeting is part of a major action:"
     )
+    major_action = models.ForeignKey("self", null=True, blank=True)
 
     def __str__(self):
         return self.name
