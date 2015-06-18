@@ -27,5 +27,16 @@ class ContactAutocomplete(BaseAutocomplete):
     search_fields = ["first_name", "last_name"]
     model = models.Participant
 
+# Also first name / last name variations
+class ContactFirstNameAutocomplete(BaseAutocomplete):
+    search_fields = ["first_name"]
+    model = models.Participant
+
+class ContactLastNameAutocomplete(BaseAutocomplete):
+    search_fields = ["last_name"]
+    model = models.Participant
+
 autocomplete_light.register(ContactAutocomplete)
+autocomplete_light.register(ContactFirstNameAutocomplete)
+autocomplete_light.register(ContactLastNameAutocomplete)
 
