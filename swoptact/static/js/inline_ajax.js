@@ -174,9 +174,13 @@ function turnOnAutocomplete(edit_row) {
                 }});
         },
         select: function(event, ui) {
-            console.log(ui.item ?
-                "selected: " + ui.item.label :
-                "nothing selected, input was " + this.value);
+            if (ui.item) {
+                var participant_id = ui.item.value
+                // Remove this row
+                cancelParticipantEdit("");
+                // Insert the participant and make them immediately editable
+                linkParticipant(participant_id, true);
+            }
         }
     });
 }
@@ -310,15 +314,26 @@ function finishLinkExistingParticipants() {
         return false;
     }
 
+    linkParticipant(participant_id, false);
+
+    backToPreLinkParticipants();
+}
+
+// The function that both adds the participant on the backend and links
+// on the frontend
+function linkParticipant(participant_id, make_editable) {
     var url = '/api/events/'+getEventId()+'/participants/'+participant_id+"/";
     $.post(url, function (result) {
         $.get('/api/participants/'+participant_id+'/',
               function (participant) {
                   insertParticipant(participant);
+                  if (make_editable) {
+                      makeParticipantEditable(participant_id);
+                  }
               }, 'json');
     }, "json");
-    backToPreLinkParticipants();
 }
+
 
 function backToPreLinkParticipants() {
     $("#add-new-participant-btn").show();
