@@ -154,22 +154,31 @@ function turnOnAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
-    edit_row.find("input.first-name").yourlabsAutocomplete({
-        url: "/autocomplete/ContactFirstNameAutocomplete/",
-        choiceSelector: 'a',
-    }).input.bind(
-      'selectChoice',
-      function(e, choice, autocomplete) {
-          alert('You selected: ' + choice.html());
-      }
-    );
-
-    // edit_row.find("input.last-name").yourlabsAutocomplete({
-    //     url: "/autocomplete/ContactLastNameAutocomplete/",
-    //     choiceSelector: 'a',
-    // }).input.bind('selectChoice', handleAutocomplete);
-
-    // Provide a selection option which is an "out"
+    edit_row.find("input.first-name").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "/autocomplete/ContactFirstNameAutocomplete/",
+                datatype: "html",
+                data: {
+                    q: request.term
+                },
+                success: function(data) {
+                    var json_data = $.map(
+                        $.makeArray(data),
+                        function(elt) {
+                            return {
+                                "value": $(elt).attr("data-value"),
+                                "label": $(elt).text()}});
+                    // massage data or in the select func?
+                    response(json_data);
+                }});
+        },
+        select: function(event, ui) {
+            console.log(ui.item ?
+                "selected: " + ui.item.label :
+                "nothing selected, input was " + this.value);
+        }
+    });
 }
 
 /* Wipe out a row and add the hidden participant id input */
