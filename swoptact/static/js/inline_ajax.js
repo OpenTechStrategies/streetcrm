@@ -281,44 +281,6 @@ function loadInitialAttendees() {
 }
 
 
-function startLinkExistingParticipants() {
-    var event_id = getEventId();
-    $("#add-new-participant-btn").hide();
-    var url = '/api/events/'+event_id+'/available-participants';
-    $.get(url, function (result) {
-        var select_available = $('#available-participants-select');
-        select_available.empty();
-
-        select_available.append(
-            $('<option value="">---------</option>'));
-        
-        for (i = 0; i < result.length; i++) {
-            var participant = result[i];
-            var option_elt = $(
-                "<option/>", {
-                    "value": participant.id});
-            option_elt.text(participant.first_name + " " + participant.last_name);
-            select_available.append(option_elt);
-        }
-        $("#link-existing-participant-btn").hide();
-        select_available.show();
-        $("#cancel-link-existing-btn").show();
-        $("#select-existing-participant-btn").show();
-    }, "json");
-}
-
-function finishLinkExistingParticipants() {
-    $("#add-new-participant-btn").show();
-    var participant_id = $("#available-participants-select option:selected").val();
-    if (participant_id == "") {
-        return false;
-    }
-
-    linkParticipant(participant_id, false);
-
-    backToPreLinkParticipants();
-}
-
 // The function that both adds the participant on the backend and links
 // on the frontend
 function linkParticipant(participant_id, make_editable) {
@@ -337,15 +299,10 @@ function linkParticipant(participant_id, make_editable) {
 
 function backToPreLinkParticipants() {
     $("#add-new-participant-btn").show();
-    $("#link-existing-participant-btn").show();
     $('#available-participants-select').hide();
     $("#cancel-link-existing-btn").hide();
     $("#select-existing-participant-btn").hide();
 }    
-
-function cancelLinkExistingParticipants() {
-    backToPreLinkParticipants();
-}
 
 function unlinkParticipant(participant_id){
     var removeRows = function () {
@@ -511,27 +468,6 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             saveParticipant(getParticipantIdForRow($(this)));
-        });
-
-    $("#link-existing-participant-btn").on(
-        "click",
-        function(event) {
-            event.preventDefault();
-            startLinkExistingParticipants();
-        });
-
-    $("#cancel-link-existing-btn").on(
-        "click",
-        function(event) {
-            event.preventDefault();
-            cancelLinkExistingParticipants();
-        });
-
-    $("#select-existing-participant-btn").on(
-        "click",
-        function(event) {
-            event.preventDefault();
-            finishLinkExistingParticipants();
         });
 
     $("#add-new-participant-btn").on(
