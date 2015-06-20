@@ -1,12 +1,12 @@
 /*
 This page governs the sign-in sheet on the change event form.  It includes
 functions to:
-(1) find the relevant participants for a given event 
+(1) find the relevant participants for a given event
 (2) display information about each of them
-(3) edit textboxes populated by values from that object 
+(3) edit textboxes populated by values from that object
 (4) save changes made via those text boxes
 (5) unlink a person from an event
-(6) add an entirely new person (really the same as (4)) 
+(6) add an entirely new person (really the same as (4))
 (7) search available participants
 (8) link an existing person to this event.
 
@@ -139,7 +139,6 @@ function insertParticipant(participant) {
         {"class": "form-row participant-edit",
          "id": "participant-edit-" + participant.id});
     fillEditRow(edit_row, participant);
-    console.log('added edit row'+participant);
     edit_row.hide()
     $("#participant-table tbody").append(edit_row);
 
@@ -154,10 +153,10 @@ function turnOnAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
-    edit_row.find("input.first-name").autocomplete({
+    edit_row.find("input.name").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "/autocomplete/ContactFirstNameAutocomplete/",
+                url: "/autocomplete/ContactAutocomplete/",
                 datatype: "html",
                 data: {
                     q: request.term
@@ -207,15 +206,18 @@ function fillStaticRow(row, participant) {
         td_wrap.append(p_wrap);
         row.append(td_wrap);
     }
-    
-    appendSimpleText(participant.first_name);
-    appendSimpleText(participant.last_name);
+
+    appendSimpleText(participant.name);
     if (participant.institution) {
         appendSimpleText(participant.institution.name);
     } else {
         appendSimpleText("");
     }
-    appendSimpleText(participant.primary_phone);
+    if (participant.primary_phone) {
+        appendSimpleText(participant.primary_phone);
+    } else {
+        appendSimpleText("");
+    }
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
@@ -223,7 +225,6 @@ function fillStaticRow(row, participant) {
 
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
-    console.log('in filling edit row');
     appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
@@ -236,18 +237,15 @@ function fillEditRow(row, participant) {
         row.append(td_wrap);
     }
 
-    appendSimpleTextField(participant.first_name, "first-name");
-    appendSimpleTextField(participant.last_name, "last-name");
+    appendSimpleTextField(participant.name, "name");
     if (participant.institution) {
         appendSimpleTextField(participant.institution.name, "institution");
     } else {
         appendSimpleTextField("", "institution");
     }
     appendSimpleTextField(participant.primary_phone, "primary-phone");
-    console.log('appended all fields');
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
-    console.log('appended buttons');
 }
 
 
@@ -302,7 +300,7 @@ function backToPreLinkParticipants() {
     $('#available-participants-select').hide();
     $("#cancel-link-existing-btn").hide();
     $("#select-existing-participant-btn").hide();
-}    
+}
 
 function unlinkParticipant(participant_id){
     var removeRows = function () {
@@ -316,7 +314,7 @@ function unlinkParticipant(participant_id){
         removeRows();
         return false;
     }
-        
+
     var event_id = getEventId();
     var target_url = '/api/events/'+event_id+'/participants/'+participant_id+'/';
     $.ajax({
@@ -327,7 +325,7 @@ function unlinkParticipant(participant_id){
 
 
 // Save all rows that are currently being edited
-// 
+//
 // We have to rely on jquery telling us what's visible or not
 // since we don't have any other markers of what's in editing mode
 function saveAllEditing() {
@@ -335,7 +333,7 @@ function saveAllEditing() {
     // then save
     $("tr.participant-edit:visible input.participant-id").each(
         function(index) {
-            saveParticipant(this.value);
+            saveParticipant(this.value, false);
         });
 }
 
@@ -370,11 +368,10 @@ function updateParticipant(participant){
         var edit_input = $('#participant-edit-');
     }
     var text_inputs = (edit_input.find(".vTextField"));
-    // array will be first_name, last_name, phone_number, address as long as our
+    // array will be name, phone_number, address as long as our
     // UI columns stay the same
-    participant.first_name = text_inputs[0].value;
-    participant.last_name = text_inputs[1].value;
-    participant.primary_phone = text_inputs[3].value;
+    participant.name = text_inputs[0].value;
+    participant.primary_phone = text_inputs[2].value;
     return participant;
 }
 
@@ -395,8 +392,8 @@ function recreateRows(participant){
 }
 
 
-function saveParticipant(participant_id) {
-    if (participant_id != ""){
+function saveParticipant(participant_id, submit_flag) {
+    if (participant_id != "empty" && participant_id != ""){
         $.get('/api/participants/'+participant_id+'/',
               function (participant) {
                   new_participant = updateParticipant(participant);
@@ -409,9 +406,12 @@ function saveParticipant(participant_id) {
                           // TODO: This is where we're supposed to fill in the
                           //   errors fow
                           console.log(response)
-                      }, 
+                      },
                       success: function (response) {
                           recreateRows(response);
+                          if (submit_flag){
+                              $("#event_form").submit();
+                          }
                       },
                       dataType: 'json'
                   });
@@ -424,7 +424,7 @@ function saveParticipant(participant_id) {
             url: '/api/participants/',
             data: data,
             type: 'POST',
-            error: function (response) {console.log(response)}, 
+            error: function (response) {console.log(response)},
             success: function (response) {
                 var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
@@ -432,9 +432,12 @@ function saveParticipant(participant_id) {
                           function (participant) {
                               unlinkParticipant("");
                               insertParticipant(participant);
+                              if (submit_flag){
+                                  $("#event_form").submit();
+                              }
                           }, 'json');
                 }, "json");
-
+                
             },
             dataType: 'json'
         });
@@ -442,9 +445,12 @@ function saveParticipant(participant_id) {
 }
 
 function setupParticipantCallbacks() {
+    //keep track of row(s) in the middle of being edited
+    var rows_editing = [];
     $("#participant-table").on(
         "click", "button.participant-edit",
         function(event) {
+            rows_editing.push(getParticipantIdForRow($(this)));
             event.preventDefault();
             makeParticipantEditable(getParticipantIdForRow($(this)));
         });
@@ -459,6 +465,10 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-cancel",
         function(event) {
+            var index = rows_editing.indexOf(getParticipantIdForRow($(this)));
+            if (index > -1){
+                rows_editing.splice(index, 1);
+            }
             event.preventDefault();
             cancelParticipantEdit(getParticipantIdForRow($(this)));
         });
@@ -466,8 +476,12 @@ function setupParticipantCallbacks() {
     $("#participant-table").on(
         "click", "button.participant-save",
         function(event) {
+            var index = rows_editing.indexOf(getParticipantIdForRow($(this)));
+            if (index > -1){
+                rows_editing.splice(index, 1);
+            }
             event.preventDefault();
-            saveParticipant(getParticipantIdForRow($(this)));
+            saveParticipant(getParticipantIdForRow($(this)), false);
         });
 
     $("#add-new-participant-btn").on(
@@ -475,11 +489,37 @@ function setupParticipantCallbacks() {
         function(event) {
             event.preventDefault();
             addNewParticipant();
+            // addNewParticipant saves all open rows, so we empty the existing
+            // array of rows being edited.
+            rows_editing = [];
+            // this case still needs to be handled correctly
+            rows_editing.push('empty');
+        });
+
+    $("#test_submit").on(
+        "click",
+        function (event) {
+            if (rows_editing[0]){
+                for (j = 0; j < rows_editing.length; j++) {
+                    if (j == (rows_editing.length - 1) ) {
+                        //for last value, pass the flag that says "and submit"
+                        saveParticipant(rows_editing[j], true);
+                    }
+                    else{
+                        saveParticipant(rows_editing[j], false);
+                    }
+                }
+            }
+            else{
+                $("#event_form").submit();
+            }
         });
 
     $(document).ready(function () {
         loadInitialAttendees();
     });
+
+
 
 }
 

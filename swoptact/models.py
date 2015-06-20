@@ -1,5 +1,5 @@
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Open Tech Strategies, LLC
+# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
-from django.db.models.fields import related
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
-from django_google_maps import fields as mapfields
+from django.utils import timezone
 
 from swoptact import mixins, modelfields
 import phonenumbers
@@ -67,13 +66,22 @@ class SerializeableMixin:
 
         return serialized
 
-class Tag(models.Model, SerializeableMixin):
-    """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=10)
-    description = models.CharField(max_length=255, null=True, blank=True)
+class InspectMixin(object):
+    """ Provides useful methods to inspect the model easily """
 
+    @classmethod
+    def get_field(cls, name):
+        """ Gets a field by it's name """
+        return cls._meta.get_field_by_name(name)[0]
+
+class Tag(models.Model, SerializeableMixin, InspectMixin):
+    """ Tags act as descriptors for such models as Event """
+    name = models.CharField(max_length=10, unique=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    date_created = models.DateField(null=True, blank=True, default=timezone.now)
     # Group which can use this tag
-    group = models.ForeignKey(auth_models.Group)
+    group = models.ForeignKey(auth_models.Group,
+                              verbose_name = "Group Assignment")
 
     # This should be put on Meta but sigh - issue #5793
     SERIALIZE_EXCLUDE = ["group"]
@@ -90,20 +98,24 @@ class ActivityLog(LogEntry):
 class Institution(models.Model, SerializeableMixin):
     name = models.CharField(max_length=255)
     address = models.TextField(null=True, blank=True)
-    is_member = models.BooleanField(default=False, blank=True,
-                                  verbose_name = "This institution is a member of SWOP:")
-    contact = models.ManyToManyField("Participant", through='Contact', related_name="main_contact")
     tags = models.ManyToManyField(Tag, blank=True)
+    contact = models.ManyToManyField(
+        "Participant",
+        through='Contact',
+        related_name="main_contact"
+    )
+    is_member = models.BooleanField(
+        default=False,
+        blank=True,
+        verbose_name="This institution is a member of SWOP:"
+    )
 
     def __str__(self):
-        return "{name}".format(
-            name=self.name,
-        )
+        return "{name}".format(name=self.name)
 
 class Participant(models.Model, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
     email = models.EmailField(blank=True)
@@ -111,17 +123,7 @@ class Participant(models.Model, SerializeableMixin):
     institution = models.ForeignKey(Institution, null=True, blank=True)
 
     def __str__(self):
-        return "{first_name} {last_name}".format(
-            first_name=self.first_name,
-            last_name=self.last_name
-        )
-
-    def name(self):
-        """ The full name of the participant """
-        return "{first} {last}".format(
-            first=self.first_name,
-            last=self.last_name
-        )
+        return self.name
 
     @property
     def events(self):
@@ -134,10 +136,7 @@ class Contact(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return "{first_name} {last_name}".format(
-            first_name=self.participant.first_name,
-            last_name=self.participant.last_name
-        )
+        return self.participant.name
 
 class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
     SUFFIXES = (
@@ -160,22 +159,34 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
         ("12", "12"),
     )
 
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255, null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    time = models.TimeField(null=True, blank=True)
-    location = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255,
+                            verbose_name="Action Name",
+                            help_text="The name includes an issue area and a topic.")
+    description = models.CharField(max_length=255, null=True, blank=True,
+                                   verbose_name="Action Description",
+                                   help_text="Max length = 255 characters.<br> e.g." +
+                                   "\"Met with housing stakeholders.\" ")
+    date = models.DateField(null=True, blank=True, 
+                            verbose_name="Date of Action")
+    time = models.TimeField(null=True, blank=True,
+                            verbose_name="Time of Action")
+    location = models.CharField(max_length=255, blank=True,
+                                verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    is_prep = models.BooleanField(default=False, blank=True,
-                                  verbose_name = "This meeting is part of a major action:")
+    tags = models.ManyToManyField(Tag, blank=True,
+                                  verbose_name="Action Tag(s)")
+    is_prep = models.BooleanField(
+        default=False,
+        blank=True,
+        verbose_name="This meeting is part of a major action:"
+    )
     major_action = models.ForeignKey("self", null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+    def date_of_action(self):
+        return self.date if self.date else ""
+
     def attendee_count(self):
         return self.participants.count()
-
-# import the signals
-from swoptact.signals import *

@@ -1,520 +1,512 @@
 [
 {
-    "model": "contenttypes.contenttype",
+    "model": "auth.group",
+    "pk": 1,
     "fields": {
-        "model": "logentry",
-        "app_label": "admin"
-    },
-    "pk": 1
+        "permissions": [],
+        "name": "admin"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "auth.group",
+    "pk": 2,
     "fields": {
-        "model": "permission",
-        "app_label": "auth"
-    },
-    "pk": 2
+        "permissions": [],
+        "name": "organizer"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "auth.group",
+    "pk": 3,
     "fields": {
-        "model": "group",
-        "app_label": "auth"
-    },
-    "pk": 3
+        "permissions": [],
+        "name": "leader"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "auth.user",
+    "pk": 1,
     "fields": {
-        "model": "user",
-        "app_label": "auth"
-    },
-    "pk": 4
+        "is_superuser": true,
+        "groups": [],
+        "user_permissions": [],
+        "is_staff": true,
+        "last_login": "2015-06-11T17:22:59.642Z",
+        "username": "admin",
+        "password": "pbkdf2_sha256$20000$DyH3WV0nR2ZT$IeeQcjjdfPK1flWPtAjptTQrxXuT1yrBkFilkPSFLRA=",
+        "date_joined": "2015-06-11T17:18:50.138Z",
+        "email": "jrandom@example.com",
+        "last_name": "",
+        "is_active": true,
+        "first_name": ""
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "auth.user",
+    "pk": 2,
     "fields": {
-        "model": "contenttype",
-        "app_label": "contenttypes"
-    },
-    "pk": 5
+        "is_superuser": true,
+        "groups": [],
+        "user_permissions": [],
+        "is_staff": true,
+        "last_login": null,
+        "username": "otheradmin",
+        "password": "pbkdf2_sha256$20000$wQL1CkVcuy9T$aJXYCzd81SPiLjxhs6/zjR9pEilJTCEtnBpCOVhkDUI=",
+        "date_joined": "2015-06-11T17:21:05.818Z",
+        "email": "jrandom@example.com",
+        "last_name": "",
+        "is_active": true,
+        "first_name": ""
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "swoptact.tag",
+    "pk": 1,
     "fields": {
-        "model": "session",
-        "app_label": "sessions"
-    },
-    "pk": 6
+        "description": "testing the model",
+        "date_created": "2015-06-11",
+        "group": [
+            "organizer"
+        ],
+        "name": "ttm"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "swoptact.tag",
+    "pk": 2,
     "fields": {
-        "model": "tag",
-        "app_label": "swoptact"
-    },
-    "pk": 7
+        "description": "Illinois grant for children",
+        "date_created": "2015-06-11",
+        "group": [
+            "admin"
+        ],
+        "name": "il4kids"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "swoptact.tag",
+    "pk": 4,
     "fields": {
-        "model": "institution",
-        "app_label": "swoptact"
-    },
-    "pk": 9
+        "description": "another test",
+        "date_created": "2015-06-11",
+        "group": [
+            "organizer"
+        ],
+        "name": "test"
+    }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "swoptact.tag",
+    "pk": 5,
     "fields": {
-        "model": "participant",
-        "app_label": "swoptact"
-    },
-    "pk": 10
-},
-{
-    "model": "contenttypes.contenttype",
-    "fields": {
-        "model": "contact",
-        "app_label": "swoptact"
-    },
-    "pk": 11
-},
-{
-    "model": "contenttypes.contenttype",
-    "fields": {
-        "model": "event",
-        "app_label": "swoptact"
-    },
-    "pk": 12
-},
-{
-    "model": "contenttypes.contenttype",
-    "fields": {
-        "model": "activitylog",
-        "app_label": "swoptact"
-    },
-    "pk": 13
-},
-{
-    "model": "sessions.session",
-    "fields": {
-        "session_data": "ZmMyYWJlNjJmMTljY2EwMTAxNmMzODE1MjIwZjM2OTE3NjZmZTU1Nzp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiODhmNDI1YmFlNTA5YmYyZmY2ZTQ4ODVjNmU1ZDE2NzliNTQ3YTM4ZiIsIl9hdXRoX3VzZXJfaWQiOiIyIn0=",
-        "expire_date": "2015-06-23T19:36:15.830Z"
-    },
-    "pk": "slpuastsfd8gngqo0rais631ilerewdr"
+        "description": "A new tag.",
+        "date_created": "2015-06-11",
+        "group": [
+            "leader"
+        ],
+        "name": "New"
+    }
 },
 {
     "model": "swoptact.institution",
+    "pk": 1,
     "fields": {
-        "name": "Test Institution",
         "address": null,
-        "is_member": false,
         "tags": [
             1,
             4
-        ]
-    },
-    "pk": 1
+        ],
+        "is_member": false,
+        "name": "Test Institution"
+    }
 },
 {
     "model": "swoptact.institution",
+    "pk": 2,
     "fields": {
-        "name": "Extra Venerable Institution",
         "address": "6300 South Ashland Avenue #None Chicago, IL None",
-        "is_member": true,
         "tags": [
             2
-        ]
-    },
-    "pk": 2
+        ],
+        "is_member": true,
+        "name": "Extra Venerable Institution"
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 9,
     "fields": {
-        "last_name": "Russo",
-        "primary_phone": null,
-        "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Lauren",
+        "institution": null,
         "email": "lbeethoven@test.com",
+        "address": "17 North State Street #1700 Chicago, IL 60602",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 9
+        "name": "Lauren Russo",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 14,
     "fields": {
-        "last_name": "Rose",
-        "primary_phone": "+17737021233",
+        "institution": 1,
+        "email": "",
         "address": "3100 East 93rd Street #None Chicago, IL None",
-        "first_name": "Theodore",
-        "email": "",
         "secondary_phone": null,
-        "institution": 1
-    },
-    "pk": 14
+        "name": "Theodore Rose",
+        "primary_phone": "+17737021233"
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 24,
     "fields": {
-        "last_name": "Lagos",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Daria",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 24
+        "name": "Daria Lagos",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 25,
     "fields": {
-        "last_name": "NewPerson",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Adding",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 25
+        "name": "Adding NewPerson",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 26,
     "fields": {
-        "last_name": "Brown",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Felicia",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 26
+        "name": "Felicia Brown",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 27,
     "fields": {
-        "last_name": "Addition",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Simple",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 27
+        "name": "Simple Addition",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 28,
     "fields": {
-        "last_name": "Topher",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Chris",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 28
+        "name": "Chris Topher",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 29,
     "fields": {
-        "last_name": "Glum",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Puddle",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 29
+        "name": "Puddle Glum",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 30,
     "fields": {
-        "last_name": "Solares",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Eustace",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 30
+        "name": "Eustace Solares",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 31,
     "fields": {
-        "last_name": "Martinez",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Jill",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 31
+        "name": "Jill Martinez",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 32,
     "fields": {
-        "last_name": "Stallworth",
-        "primary_phone": "+13127726767",
+        "institution": null,
+        "email": "",
         "address": "17 North State Street #1700 Chicago, IL 60602",
-        "first_name": "Dante",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 32
+        "name": "Dante Stallworth",
+        "primary_phone": "+13127726767"
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 33,
     "fields": {
-        "last_name": "Guadalupe",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": null,
-        "first_name": "Jesenya",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 33
+        "name": "Jesenya Guadalupe",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 34,
     "fields": {
-        "last_name": "Potter",
-        "primary_phone": null,
+        "institution": null,
+        "email": "",
         "address": null,
-        "first_name": "Harry",
-        "email": "",
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 34
+        "name": "Harry Potter",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 35,
     "fields": {
-        "last_name": "Potter",
-        "primary_phone": null,
+        "institution": 1,
+        "email": "",
         "address": "310 East Lake Street #None Chicago, IL None",
-        "first_name": "Harry",
-        "email": "",
         "secondary_phone": null,
-        "institution": 1
-    },
-    "pk": 35
+        "name": "Harry Potter",
+        "primary_phone": null
+    }
 },
 {
     "model": "swoptact.participant",
+    "pk": 36,
     "fields": {
-        "last_name": "Newperson",
-        "primary_phone": "+13127025434",
-        "address": null,
-        "first_name": "Test",
+        "institution": null,
         "email": "",
+        "address": null,
         "secondary_phone": null,
-        "institution": null
-    },
-    "pk": 36
+        "name": "Test Newperson",
+        "primary_phone": "+13127025434"
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 2,
     "fields": {
         "participant": 32,
-        "title": "Pastor",
-        "institution": 2
-    },
-    "pk": 2
+        "institution": 2,
+        "title": "Pastor"
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 9,
     "fields": {
         "participant": 9,
-        "title": "Test Title",
-        "institution": 2
-    },
-    "pk": 9
+        "institution": 2,
+        "title": "Test Title"
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 11,
     "fields": {
         "participant": 14,
-        "title": "Test LEADER",
-        "institution": 1
-    },
-    "pk": 11
+        "institution": 1,
+        "title": "Test LEADER"
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 12,
     "fields": {
         "participant": 24,
-        "title": "Primary Contact",
-        "institution": 1
-    },
-    "pk": 12
+        "institution": 1,
+        "title": "Primary Contact"
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 13,
     "fields": {
         "participant": 31,
-        "title": "",
-        "institution": 1
-    },
-    "pk": 13
+        "institution": 1,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 18,
     "fields": {
         "participant": 26,
-        "title": "",
-        "institution": 1
-    },
-    "pk": 18
+        "institution": 1,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 19,
     "fields": {
         "participant": 30,
-        "title": "",
-        "institution": 2
-    },
-    "pk": 19
+        "institution": 2,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 20,
     "fields": {
         "participant": 33,
-        "title": "",
-        "institution": 2
-    },
-    "pk": 20
+        "institution": 2,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 21,
     "fields": {
         "participant": 14,
-        "title": "",
-        "institution": 2
-    },
-    "pk": 21
+        "institution": 2,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.contact",
+    "pk": 22,
     "fields": {
         "participant": 28,
-        "title": "",
-        "institution": 2
-    },
-    "pk": 22
+        "institution": 2,
+        "title": ""
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 2,
     "fields": {
-        "name": "New Homeowners Support Group",
+        "tags": [],
+        "location": "SWOP",
+        "time": null,
         "date": "2015-05-11",
-        "is_prep": false,
+        "name": "New Homeowners Support Group",
         "description": "A discussion group",
         "participants": [
             32
         ],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": "SWOP"
-    },
-    "pk": 2
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 3,
     "fields": {
-        "name": "Swoptact Initiation Forum",
+        "tags": [],
+        "location": "Conference Center",
+        "time": null,
         "date": null,
-        "is_prep": false,
+        "name": "Swoptact Initiation Forum",
         "description": null,
         "participants": [],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": "Conference Center"
-    },
-    "pk": 3
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 4,
     "fields": {
-        "name": "International Women's Day",
+        "tags": [],
+        "location": "Global",
+        "time": null,
         "date": null,
-        "is_prep": false,
+        "name": "International Women's Day",
         "description": "",
         "participants": [],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": "Global"
-    },
-    "pk": 4
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 5,
     "fields": {
-        "name": "Organizer Retreat",
+        "tags": [],
+        "location": "SWOP Auxiliary Office",
+        "time": null,
         "date": null,
-        "is_prep": false,
+        "name": "Organizer Retreat",
         "description": null,
         "participants": [],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": "SWOP Auxiliary Office"
-    },
-    "pk": 5
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 6,
     "fields": {
-        "name": "Example Meeting",
+        "tags": [],
+        "location": "",
+        "time": null,
         "date": null,
-        "is_prep": false,
+        "name": "Example Meeting",
         "description": "",
         "participants": [
             9
         ],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": ""
-    },
-    "pk": 6
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 7,
     "fields": {
-        "name": "Test",
+        "tags": [],
+        "location": "",
+        "time": null,
         "date": null,
-        "is_prep": false,
+        "name": "Test",
         "description": "",
         "participants": [
             36
         ],
-        "major_action": null,
-        "tags": [],
-        "time": null,
-        "location": ""
-    },
-    "pk": 7
+        "is_prep": false,
+        "major_action": null
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 8,
     "fields": {
-        "name": "Demo Event",
+        "tags": [],
+        "location": "",
+        "time": null,
         "date": "2015-05-04",
-        "is_prep": true,
+        "name": "Demo Event",
         "description": "This is an example event with attendees.",
         "participants": [
             9,
@@ -527,19 +519,19 @@
             31,
             32
         ],
-        "major_action": 9,
-        "tags": [],
-        "time": null,
-        "location": ""
-    },
-    "pk": 8
+        "is_prep": true,
+        "major_action": 9
+    }
 },
 {
     "model": "swoptact.event",
+    "pk": 9,
     "fields": {
-        "name": "Add a new event",
+        "tags": [],
+        "location": "Home Office",
+        "time": null,
         "date": "2015-05-04",
-        "is_prep": true,
+        "name": "Board Meeting",
         "description": "This is a test of adding a new event with the sign in sheet.",
         "participants": [
             30,
@@ -547,435 +539,8 @@
             32,
             33
         ],
-        "major_action": 3,
-        "tags": [],
-        "time": null,
-        "location": "At a location"
-    },
-    "pk": 9
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add log entry",
-        "content_type": 1,
-        "codename": "add_logentry"
-    },
-    "pk": 1
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change log entry",
-        "content_type": 1,
-        "codename": "change_logentry"
-    },
-    "pk": 2
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete log entry",
-        "content_type": 1,
-        "codename": "delete_logentry"
-    },
-    "pk": 3
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add permission",
-        "content_type": 2,
-        "codename": "add_permission"
-    },
-    "pk": 4
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change permission",
-        "content_type": 2,
-        "codename": "change_permission"
-    },
-    "pk": 5
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete permission",
-        "content_type": 2,
-        "codename": "delete_permission"
-    },
-    "pk": 6
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add group",
-        "content_type": 3,
-        "codename": "add_group"
-    },
-    "pk": 7
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change group",
-        "content_type": 3,
-        "codename": "change_group"
-    },
-    "pk": 8
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete group",
-        "content_type": 3,
-        "codename": "delete_group"
-    },
-    "pk": 9
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add user",
-        "content_type": 4,
-        "codename": "add_user"
-    },
-    "pk": 10
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change user",
-        "content_type": 4,
-        "codename": "change_user"
-    },
-    "pk": 11
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete user",
-        "content_type": 4,
-        "codename": "delete_user"
-    },
-    "pk": 12
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add content type",
-        "content_type": 5,
-        "codename": "add_contenttype"
-    },
-    "pk": 13
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change content type",
-        "content_type": 5,
-        "codename": "change_contenttype"
-    },
-    "pk": 14
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete content type",
-        "content_type": 5,
-        "codename": "delete_contenttype"
-    },
-    "pk": 15
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add session",
-        "content_type": 6,
-        "codename": "add_session"
-    },
-    "pk": 16
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change session",
-        "content_type": 6,
-        "codename": "change_session"
-    },
-    "pk": 17
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete session",
-        "content_type": 6,
-        "codename": "delete_session"
-    },
-    "pk": 18
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add tag",
-        "content_type": 7,
-        "codename": "add_tag"
-    },
-    "pk": 19
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change tag",
-        "content_type": 7,
-        "codename": "change_tag"
-    },
-    "pk": 20
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete tag",
-        "content_type": 7,
-        "codename": "delete_tag"
-    },
-    "pk": 21
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add Activity Log",
-        "content_type": 1,
-        "codename": "add_activitylog"
-    },
-    "pk": 25
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change Activity Log",
-        "content_type": 1,
-        "codename": "change_activitylog"
-    },
-    "pk": 26
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete Activity Log",
-        "content_type": 1,
-        "codename": "delete_activitylog"
-    },
-    "pk": 27
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add institution",
-        "content_type": 9,
-        "codename": "add_institution"
-    },
-    "pk": 28
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change institution",
-        "content_type": 9,
-        "codename": "change_institution"
-    },
-    "pk": 29
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete institution",
-        "content_type": 9,
-        "codename": "delete_institution"
-    },
-    "pk": 30
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add participant",
-        "content_type": 10,
-        "codename": "add_participant"
-    },
-    "pk": 31
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change participant",
-        "content_type": 10,
-        "codename": "change_participant"
-    },
-    "pk": 32
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete participant",
-        "content_type": 10,
-        "codename": "delete_participant"
-    },
-    "pk": 33
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add contact",
-        "content_type": 11,
-        "codename": "add_contact"
-    },
-    "pk": 34
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change contact",
-        "content_type": 11,
-        "codename": "change_contact"
-    },
-    "pk": 35
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete contact",
-        "content_type": 11,
-        "codename": "delete_contact"
-    },
-    "pk": 36
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can add event",
-        "content_type": 12,
-        "codename": "add_event"
-    },
-    "pk": 37
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can change event",
-        "content_type": 12,
-        "codename": "change_event"
-    },
-    "pk": 38
-},
-{
-    "model": "auth.permission",
-    "fields": {
-        "name": "Can delete event",
-        "content_type": 12,
-        "codename": "delete_event"
-    },
-    "pk": 39
-},
-{
-    "model": "auth.group",
-    "fields": {
-        "name": "admin",
-        "permissions": []
-    },
-    "pk": 1
-},
-{
-    "model": "auth.group",
-    "fields": {
-        "name": "organizer",
-        "permissions": []
-    },
-    "pk": 2
-},
-{
-    "model": "auth.group",
-    "fields": {
-        "name": "leader",
-        "permissions": []
-    },
-    "pk": 3
-},
-{
-    "model": "auth.user",
-    "fields": {
-        "last_login": "2015-05-26T15:05:20.361Z",
-        "last_name": "",
-        "username": "cdonnelly",
-        "date_joined": "2015-03-02T15:29:13Z",
-        "is_staff": true,
-        "groups": [
-            1,
-            2,
-            3
-        ],
-        "is_superuser": true,
-        "password": "pbkdf2_sha256$20000$BBQwKnUCjDr6$p2zmv/ioMssHyI2ffJJfSS4YeA+3H75bFmJ5doJNAno=",
-        "user_permissions": [],
-        "first_name": "",
-        "email": "me@me.com",
-        "is_active": true
-    },
-    "pk": 1
-},
-{
-    "model": "auth.user",
-    "fields": {
-        "last_login": "2015-06-09T19:36:15.828Z",
-        "last_name": "",
-        "username": "tsyesika",
-        "date_joined": "2015-06-09T19:36:10.545Z",
-        "is_staff": true,
-        "groups": [],
-        "is_superuser": true,
-        "password": "pbkdf2_sha256$20000$mvUkhgW7fKEA$e3PezSb7UyZ5b6mTMBjZSF2a5bf3v74cBBnjlAdLscA=",
-        "user_permissions": [],
-        "first_name": "",
-        "email": "",
-        "is_active": true
-    },
-    "pk": 2
-},
-{
-    "model": "swoptact.tag",
-    "fields": {
-        "name": "ttm",
-        "group": 2,
-        "description": "testing the model"
-    },
-    "pk": 1
-},
-{
-    "model": "swoptact.tag",
-    "fields": {
-        "name": "il4kids",
-        "group": 1,
-        "description": "Illinois grant for children"
-    },
-    "pk": 2
-},
-{
-    "model": "swoptact.tag",
-    "fields": {
-        "name": "test",
-        "group": 2,
-        "description": "another test"
-    },
-    "pk": 4
-},
-{
-    "model": "swoptact.tag",
-    "fields": {
-        "name": "New",
-        "group": 3,
-        "description": "A new tag."
-    },
-    "pk": 5
+        "is_prep": true,
+        "major_action": 3
+    }
 }
 ]

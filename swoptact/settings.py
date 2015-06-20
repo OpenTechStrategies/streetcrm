@@ -1,5 +1,5 @@
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Open Tech Strategies, LLC
+# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -61,7 +61,7 @@ config = configobj.ConfigObj(CONFIG_PATH, configspec=CONFIG_SPEC)
 config.validate(validate.Validator())
 
 ##
-# Config settings, please alter these in the settings file not this file
+# Config settings.  Please alter these in the config file not this file
 ##
 
 # This must exist for django to run.
@@ -155,3 +155,7 @@ GROUP_HIERARCHY = {
     "organizer": ["leader"],
 }
 
+# Specify the order in which models are present in the admin index page list.
+ADMIN_ORDERING = (
+    ("Swoptact", ("Events", "Institutions", "Participants", "Tags", "Activity Log",)),
+)

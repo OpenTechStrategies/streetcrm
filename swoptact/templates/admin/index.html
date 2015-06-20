@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static %}
+{% load custom_ordering %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
 {% block content_title %}{% endblock %}
@@ -17,8 +18,13 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
 	<div id="content-main" class="col-sm-12">
+
+                {# Use app+model ordering from ADMIN_ORDERING in settings.py #}
+                {% if app_list %} {% app_order %} {% endif %}
+
 		{% for app in app_list %}
 			<table summary="{% blocktrans with name=app.name %}Models available in the {{ name }} application.{% endblocktrans %}" class="table table-bordered">
 			{% for model in app.models %}

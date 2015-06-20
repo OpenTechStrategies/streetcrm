@@ -1,5 +1,5 @@
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Open Tech Strategies, LLC
+# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,8 @@ from django.conf import settings
 from django.db.models import signals
 from django.contrib.auth.models import Group
 
-def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set, **kwargs):
+def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
+                               **kwargs):
     """
     Maintains the hierarchy: adds a user to "lower" groups in the hierarchy.
 
@@ -35,7 +36,7 @@ def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
 
     # Only do this for users
     if not isinstance(instance, auth.get_user_model()):
-        return 
+        return
 
     # Only do this for groups
     if not isinstance(model, Group):

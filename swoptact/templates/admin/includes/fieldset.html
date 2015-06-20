@@ -6,7 +6,7 @@
 {% load bootstrapped_goodies_tags %}
 <fieldset class="_module _aligned" id="fieldset-{% if stacked_prefix %}{{ stacked_prefix }}-{% endif %}{{ forloop.counter }}">
     {% if fieldset.name %}
-    <legend>
+    <div style="margin-left: 20px;"><legend>
         {% if 'collapse' in fieldset.classes %}
         <a data-toggle="collapse" data-target="#fieldset-{% if stacked_prefix %}{{ stacked_prefix }}-{% endif %}{{ forloop.counter }} .fields">
         {{ fieldset.name }}
@@ -15,7 +15,7 @@
         {% else %}
         {{ fieldset.name }}
         {% endif %}
-    </legend>
+    </legend></div>
     {% endif %}
     <div class="fields {% if not errors %}{{ fieldset.classes }}{% endif %}">
     {% if fieldset.description %}

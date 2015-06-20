@@ -15,7 +15,7 @@
        {% endif %}
      {% endfor %}
          <th>Phone Number</th>
-     {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Remove?" %}</th>{% endif %}
+     {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Remove as Key Contact" %}</th>{% endif %}
      </tr></thead>
 
      <tbody>
@@ -30,7 +30,6 @@
 
             </p>{% endif %}
           {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
-          {% if inline_admin_form.original %}<a href="/swoptact/participant/{{ inline_admin_form.original.participant.id }}/"> {{ inline_admin_form.original }}</a>{% endif %}
           {{ inline_admin_form.fk_field.field }}
           {% spaceless %}
           {% for fieldset in inline_admin_form %}
@@ -47,11 +46,31 @@
             {% for field in line %}
               {% if not field.field.is_hidden %}
               <td{% if field.field.name %} class="field-{{ field.field.name }}"{% endif %}>
-              {% if field.is_readonly %}
-                  <p>{{ field.contents }}</p>
+              {% if field.field.name == "participant" %}
+                {% if inline_admin_form.original %}{{ field.field.errors.as_ul }}{{ field.field }}{% endif %}
+                {% comment %}
+                Just show a link icon to get to the Participant's profile.
+
+                Note we could use &#x1F6C8; instead of &#x2139;.
+                The former is the Unicode "circled information source"
+                icon, but it was only introduced in 2014 and most browsers
+                don't know how to render it yet.  For more information see:
+                http://www.emojibase.com/emoji/1f6c8/circledinformationsource
+
+                So for now we go with the non-circled version,
+                &#x2139;, which looks kind of like a plain "i" but a
+                little broader and flatter.  A portable solution
+                would be to use an actual image, of course, and
+                maybe that's the right long-term solution anyway.
+                {% endcomment %}
+                {% if inline_admin_form.original %}&nbsp;<a href="/swoptact/participant/{{ inline_admin_form.original.participant.id }}/">&#x2139;</a>{% endif %}
               {% else %}
-                  {{ field.field.errors.as_ul }}
-                  {{ field.field }}
+                {% if field.is_readonly %}
+                    <p>{{ field.contents }}</p>
+                {% else %}
+                    {{ field.field.errors.as_ul }}
+                    {{ field.field }}
+                {% endif %}
               {% endif %}
               </td>
               {% endif %}

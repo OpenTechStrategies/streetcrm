@@ -1,5 +1,5 @@
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Open Tech Strategies, LLC
+# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,7 @@
 import phonenumbers
 
 from django import forms
+from django.forms import widgets
 
 class LocalPhoneNumberWidget(forms.TextInput):
     """ Renders phone number in the national format """
@@ -30,3 +31,15 @@ class LocalPhoneNumberWidget(forms.TextInput):
         return super(LocalPhoneNumberWidget, self).render(
             name, value, *args, **kwargs
         )
+
+class ForeignKeyRadioRenderer(widgets.RadioFieldRenderer):
+
+    def __init__(self, *args, **kwargs):
+        super(ForeignKeyRadioRenderer, self).__init__(*args, **kwargs)
+        # Remove the None value which is "---------" (it's always the first one)
+        self.choices = self.choices[1:]
+
+
+class ForeignKeyRadioWidget(forms.RadioSelect):
+    """ Radio widget that provides radio buttons """
+    renderer = ForeignKeyRadioRenderer

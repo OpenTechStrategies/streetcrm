@@ -1,5 +1,5 @@
 # SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Open Tech Strategies, LLC
+# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -14,45 +14,41 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django import template, forms
-from django.core.exceptions import ValidationError
-from django.contrib import admin, staticfiles
-from django.contrib.admin.options import InlineModelAdmin
+from django import template
+from django.contrib import admin
 from django.template import loader
-from django.conf.urls import patterns, url
-from django.shortcuts import render_to_response
-from django.forms.models import modelform_factory
-
-from django_google_maps import widgets as map_widgets
-from django_google_maps import fields as mapfields
 
 import autocomplete_light
 
-from swoptact.models import Participant, Event, Institution, Contact, Tag, ActivityLog
-from swoptact import mixins
+from swoptact import forms as st_forms
+from swoptact import mixins, models
 
 class ContactInline(admin.TabularInline):
-    model = Contact
+    model = models.Contact
     extra = 0
-    verbose_name = "Contact"
-    template = "admin/modified_tabular.html"
-    form = autocomplete_light.modelform_factory(Contact, exclude=tuple())
+    verbose_name = "Key Contact"
+    verbose_name_plural = "Key Contacts"
+    template = "admin/institution_contacts_inline_tabular.html"
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Contact,
+        exclude=tuple()
+    )
 
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
-    list_display = ("name", "US_primary_phone",  "institution", "address",)
+    list_display = ("name", "US_primary_phone", "institution", "address",)
     readonly_fields = ("event_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
-                        "address")
+            "fields": ("name", "primary_phone",
+                       "institution", "secondary_phone", "email", "address")
         }),
     )
 
     change_fieldsets = (
         (None, {
-            "fields": ("first_name", "last_name", "primary_phone", "institution", "secondary_phone", "email",
-                        "address")
+            "fields": ("name", "primary_phone",
+                       "institution", "secondary_phone", "email", "address")
         }),
         ("Personal Event History", {
             "fields": ("event_history",),
@@ -64,15 +60,17 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
             return self.change_fieldsets
         return super(ParticipantAdmin, self).get_fieldsets(request, obj)
 
-    form = autocomplete_light.modelform_factory(Participant, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Participant,
+        exclude=tuple()
+    )
     actions = None
 
     @property
     def event_history_name(self, obj):
         """ Name of event history fieldset """
-        return "Events that {first} {last} attended".format(
-            first=obj.first_name,
-            last=obj.last_name
+        return "Events that {name} attended".format(
+            name=obj.name
         )
 
     def event_history(self, obj):
@@ -101,27 +99,35 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     US_primary_phone.short_description = "Phone Number"
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("name", "location", "date", "attendee_count",)
+    list_display = ("name", "location", "date_of_action", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
-    form = autocomplete_light.modelform_factory(Event, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Event,
+        exclude=tuple()
+    )
     actions = None
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
-    form = autocomplete_light.modelform_factory(Institution, exclude=tuple())
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Institution,
+        exclude=tuple()
+    )
     inlines = (ContactInline,)
     actions = None
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
     actions = None
+    readonly_fields = ("date_created",)
+    form = st_forms.TagAdminForm
 
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
-admin.site.register(Participant, ParticipantAdmin)
-admin.site.register(Event, EventAdmin)
-admin.site.register(Institution, InstitutionAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(ActivityLog, LogAdmin)
+admin.site.register(models.Participant, ParticipantAdmin)
+admin.site.register(models.Event, EventAdmin)
+admin.site.register(models.Institution, InstitutionAdmin)
+admin.site.register(models.Tag, TagAdmin)
+admin.site.register(models.ActivityLog, LogAdmin)
