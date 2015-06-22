@@ -163,7 +163,7 @@ function turnOnAutocomplete(edit_row) {
                 },
                 success: function(data) {
                     var json_data = $.map(
-                        $.makeArray(data),
+                        $.makeArray($(data)),
                         function(elt) {
                             return {
                                 "value": $(elt).attr("data-value"),
