@@ -391,6 +391,23 @@ function recreateRows(participant){
     showParticipantStaticRow(participant.id);
 }
 
+function handleJSONErrors(response, participant_id){
+    responseText = jQuery.parseJSON(response.responseText);
+    var errors = responseText.form.errors;
+    var error_array = [];
+    if (errors.primary_phone){
+        error_array.push("Sorry, but we can't interpret this phone number.  Please use (xxx) xxx-xxxx format. ");
+    }
+    if (errors.name){
+        error_array.push("Sorry, but we can't interpret this name.  Please include at least one character.");
+    }
+    if (response.status == '400'){
+        //interpret and display errors in a meaningful way
+        fillErrorsRow(getParticipantErrorsRow(participant_id), participant_id, error_array);
+        showParticipantErrorsRow(participant_id);
+    }
+}
+
 
 function saveParticipant(participant_id, submit_flag) {
     if (participant_id != "empty" && participant_id != ""){
@@ -403,9 +420,7 @@ function saveParticipant(participant_id, submit_flag) {
                       data: data,
                       type: 'PUT',
                       error: function (response) {
-                          // TODO: This is where we're supposed to fill in the
-                          //   errors fow
-                          console.log(response)
+                          handleJSONErrors(response, participant_id);
                       },
                       success: function (response) {
                           recreateRows(response);
@@ -424,7 +439,9 @@ function saveParticipant(participant_id, submit_flag) {
             url: '/api/participants/',
             data: data,
             type: 'POST',
-            error: function (response) {console.log(response)},
+            error: function (response, jqXHR) {
+                handleJSONErrors(response, participant_id);
+            },
             success: function (response) {
                 var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
