@@ -58,8 +58,11 @@ class SerializeableMixin:
                 value['__str__'] = val_str
 
             # Phone numbers give back PhoneNumber objects, we want a string
-            if  isinstance(value, phonenumbers.PhoneNumber):
-                value = value.raw_input
+            if isinstance(value, phonenumbers.PhoneNumber):
+                if value.country_code == 1:
+                    value = value.as_national
+                else:
+                    value = value.as_international
 
             # For all other values just add them as per usual
             serialized[field.name] = value
