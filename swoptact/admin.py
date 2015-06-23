@@ -116,6 +116,7 @@ class InstitutionAdmin(admin.ModelAdmin):
     )
     inlines = (ContactInline,)
     actions = None
+    change_list_template = "admin/change_list_without_header.html"
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")
