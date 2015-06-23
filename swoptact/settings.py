@@ -92,7 +92,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'swoptact',
-    'django_google_maps',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -32,22 +32,6 @@ class Migration(migrations.Migration):
             model_name='event',
             name='address',
         ),
-        migrations.RemoveField(
-            model_name='event',
-            name='geolocation',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='map_display',
-        ),
-        migrations.RemoveField(
-            model_name='participant',
-            name='geolocation',
-        ),
-        migrations.RemoveField(
-            model_name='participant',
-            name='map_display',
-        ),
         migrations.AddField(
             model_name='address',
             name='apartment',
