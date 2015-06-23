@@ -513,25 +513,6 @@ function setupParticipantCallbacks() {
             rows_editing.push('empty');
         });
 
-    $("#test_submit").on(
-        "click",
-        function (event) {
-            if (rows_editing[0]){
-                for (j = 0; j < rows_editing.length; j++) {
-                    if (j == (rows_editing.length - 1) ) {
-                        //for last value, pass the flag that says "and submit"
-                        saveParticipant(rows_editing[j], true);
-                    }
-                    else{
-                        saveParticipant(rows_editing[j], false);
-                    }
-                }
-            }
-            else{
-                $("#event_form").submit();
-            }
-        });
-
     $(document).ready(function () {
         loadInitialAttendees();
     });
