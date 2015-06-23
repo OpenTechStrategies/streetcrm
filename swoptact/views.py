@@ -110,7 +110,7 @@ class APIMixin:
         request.POST = self.process_json(request.body)
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
-    def form_invalid(self, *args, **kwargs):
+    def form_invalid(self, form, *args, **kwargs):
         """
         Removes all created models from nested JSON
 
@@ -127,7 +127,10 @@ class APIMixin:
         for obj in self._objects_created:
             obj.delete()
 
-        return super(APIMixin, self).form_invalid(*args, **kwargs)
+        return self.render_to_response(
+            context=self.get_context_data(form=form),
+            status=400
+        )
 
     def get_context_data(self, *args, **context):
         """
@@ -138,6 +141,16 @@ class APIMixin:
         """
         if args and context:
             raise Exception("Only pass either positional or kwargs")
+
+        # If there is the "form" element in the context convert it into a dict
+        if "form" in context:
+            context["form"] = {
+                "errors": context["form"].errors,
+                "cleaned_data": context["form"].cleaned_data,
+                "initial": context["form"].initial,
+                "has_changed": context["form"].has_changed(),
+            }
+
 
         return args or context
 
