@@ -147,7 +147,6 @@ class APIMixin:
             context["form"] = {
                 "errors": context["form"].errors,
                 "cleaned_data": context["form"].cleaned_data,
-                "initial": context["form"].initial,
                 "has_changed": context["form"].has_changed(),
             }
 
