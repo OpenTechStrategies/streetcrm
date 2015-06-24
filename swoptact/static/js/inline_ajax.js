@@ -513,6 +513,17 @@ function setupParticipantCallbacks() {
             rows_editing.push('empty');
         });
 
+    $("#participant-table").on(
+        "keypress",
+        "tr.participant-edit td input",
+        function (event) {
+            // 13 is enter key
+            if (event.which == 13) {
+                event.preventDefault();
+                saveParticipant(getParticipantIdForRow($(this)), false);
+            }
+        });
+
     $("#multi_action_submit").on(
         "click",
         function (event) {
