@@ -142,6 +142,10 @@ class Contact(models.Model):
         return self.participant.name
 
 class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
+    class Meta:
+        verbose_name = "action"
+        verbose_name_plural = "actions"
+
     SUFFIXES = (
         ("0", "am",),
         ("12", "pm",)
