@@ -156,5 +156,5 @@ GROUP_HIERARCHY = {
 
 # Specify the order in which models are present in the admin index page list.
 ADMIN_ORDERING = (
-    ("Swoptact", ("Events", "Institutions", "Participants", "Tags", "Activity Log",)),
+    ("Swoptact", ("Actions", "Institutions", "Participants", "Tags", "Activity Log",)),
 )
