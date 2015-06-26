@@ -1,11 +1,13 @@
 {% load i18n admin_static admin_modify %}{% load cycle from future %}
+<input type="hidden" id="institution_object_id" value="{{ object_id }}" />
 <div class="inline-group" id="{{ inline_admin_formset.formset.prefix }}-group">
   <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
 {{ inline_admin_formset.formset.management_form }}
 <fieldset class="module">
    <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
+  <script type="text/javascript" src="{% static "js/remove_key_contacts.js" %}"></script>
    {{ inline_admin_formset.formset.non_form_errors }}
-   <table>
+   <table id="contacts-table">
      <thead><tr>
      {% for field in inline_admin_formset.fields %}
        {% if not field.widget.is_hidden %}
@@ -25,6 +27,7 @@
         {% endif %}
         <tr class="form-row {% cycle "row1" "row2" %} {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}{% if forloop.last %} empty-form{% endif %}"
              id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+            <input type="hidden" class="participant-id" value="{{ inline_admin_form.original.participant.id }}">
         <td class="original">
           {% if inline_admin_form.original or inline_admin_form.show_url %}<p>
 
@@ -82,7 +85,11 @@
           {% if inline_admin_form.original.participant.primary_phone %}
               {{ inline_admin_form.original.participant.primary_phone.as_national }}
           {% endif %}
-          <td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
+          <td class="delete">
+            {% if inline_admin_form.original %}
+            <button type="submit" name="_unlink" class="btn contact-unlink">✘ Remove</button>
+            {% endif %}
+          </td>
         {% endif %}
         </tr>
      {% endfor %}

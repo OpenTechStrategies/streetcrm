@@ -150,7 +150,6 @@ class APIMixin:
                 "has_changed": context["form"].has_changed(),
             }
 
-
         return args or context
 
     def render_to_response(self, context, **response_kwargs):
@@ -258,8 +257,32 @@ class EventLinking(APIMixin, generic.DetailView):
         """ Links a participant """
         self.object = self.get_object()
 
-        # Remove from the event
+        # Add to the event
         self.object.participants.add(self.participant)
+
+        # Just return a successful status code
+        return self.render_to_response(self.get_context_data())
+
+class ContactUnlinking(APIMixin, generic.DetailView):
+    """
+    Provides a mechanism to unlink Contacts from Institutions
+    """
+    model = models.Institution
+
+    @property
+    def contact(self):
+        """ Looks up and returns Participant """
+        participant_pk = self.kwargs.get("participant_id")
+        self.object = self.get_object()
+        contact_id = models.Contact.objects.filter(institution=self.object.id).filter(participant=participant_pk)
+        return models.Contact.objects.get(pk=contact_id[0].id)
+
+    def delete(self, request, *args, **kwargs):
+        """ Unlink a participant """
+        self.object = self.get_object()
+        # Remove the contact entry entirely
+        if self.contact:
+            self.contact.delete()
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
