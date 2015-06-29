@@ -144,12 +144,16 @@ function insertParticipant(participant) {
 
     // Special hack for the "new" participant: turn on autocomplete for this row
     if (participant.id === "") {
-        turnOnAutocomplete(edit_row);
+        turnOnAttendeeAutocomplete(edit_row);
     }
 }
 
 
-function turnOnAutocomplete(edit_row) {
+// Turn on contact/attendee autocomplete.
+// 
+// Contact autocomplete is *only* on for completing the names of existing participants
+// when adding a new row!
+function turnOnAttendeeAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
