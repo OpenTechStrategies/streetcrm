@@ -190,6 +190,8 @@ function turnOnAttendeeAutocomplete(edit_row) {
                 cancelParticipantEdit("");
                 // Insert the participant and make them immediately editable
                 linkParticipant(participant_id, true);
+                // Don't replace the input value with the ui.item.value
+                event.preventDefault();
             }
         }
     });
@@ -262,6 +264,21 @@ function fillEditRow(row, participant) {
     var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
     institution_field.append(new_indicator);
     new_indicator.hide();
+
+    // Institution autocomplete stuff
+    institution_field.find("input").autocomplete({
+        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/"),
+        select: function (event, ui) {
+            debug_event = event;
+            debug_ui = ui;
+            debug_institution_field = institution_field;
+            if (ui.item) {
+                institution_field.find("input").val(ui.item.label);
+                // Don't replace the input value with the ui.item.value
+                event.preventDefault();
+            }
+        }});
+        
 
     appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
