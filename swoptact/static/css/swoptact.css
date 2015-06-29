@@ -236,3 +236,14 @@ td {
 li.bold_name {
     font-weight: bold;
 }
+
+tr.participant-edit td input {
+    width: 80%;
+}
+
+tr.participant-edit td .new-indicator {
+    color: green;
+    width: 20%;
+    padding-left: 10px;
+    font-weight: bold;
+}

@@ -225,7 +225,7 @@ function fillStaticRow(row, participant) {
 
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
-    appendSimpleTextField = function (text, class_identifier) {
+    var appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
             "class": "vTextField " + class_identifier,
@@ -235,14 +235,23 @@ function fillEditRow(row, participant) {
         input_wrap.text(text);
         td_wrap.append(input_wrap);
         row.append(td_wrap);
+        return td_wrap;
     };
 
     appendSimpleTextField(participant.name, "name");
+
+    // institution has some more complex code...
     if (participant.institution) {
-        appendSimpleTextField(participant.institution.name, "institution");
+        var institution_field = appendSimpleTextField(
+            participant.institution.name, "institution");
     } else {
-        appendSimpleTextField("", "institution");
+        var institution_field = appendSimpleTextField("", "institution");
     }
+
+    var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
+    institution_field.append(new_indicator);
+    new_indicator.hide();
+
     appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
