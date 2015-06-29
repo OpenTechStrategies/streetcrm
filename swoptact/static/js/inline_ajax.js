@@ -149,6 +149,30 @@ function insertParticipant(participant) {
 }
 
 
+// Return a closure to help us construct autocomplete source functions
+// for things that use django_autocomplete_light with jquery ui's autocomplete
+function autoCompleteSourceHelper(url) {
+    return function (request, response) {
+        $.ajax({
+            url: url,
+            datatype: "html",
+            data: {
+                q: request.term
+            },
+            success: function(data) {
+                var json_data = $.map(
+                    $.makeArray($(data)),
+                    function(elt) {
+                        return {
+                            "value": $(elt).attr("data-value"),
+                            "label": $(elt).text()}});
+                // massage data or in the select func?
+                response(json_data);
+            }});
+    }
+}
+
+
 // Turn on contact/attendee autocomplete.
 // 
 // Contact autocomplete is *only* on for completing the names of existing participants
@@ -158,24 +182,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: "/autocomplete/ContactAutocomplete/",
-                datatype: "html",
-                data: {
-                    q: request.term
-                },
-                success: function(data) {
-                    var json_data = $.map(
-                        $.makeArray($(data)),
-                        function(elt) {
-                            return {
-                                "value": $(elt).attr("data-value"),
-                                "label": $(elt).text()}});
-                    // massage data or in the select func?
-                    response(json_data);
-                }});
-        },
+        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
         select: function(event, ui) {
             if (ui.item) {
                 var participant_id = ui.item.value
