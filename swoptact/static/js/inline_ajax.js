@@ -269,17 +269,14 @@ function fillEditRow(row, participant) {
     institution_field.find("input").autocomplete({
         source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/"),
         select: function (event, ui) {
-            debug_event = event;
-            debug_ui = ui;
-            debug_institution_field = institution_field;
             if (ui.item) {
                 institution_field.find("input").val(ui.item.label);
+                new_indicator.hide();
                 // Don't replace the input value with the ui.item.value
                 event.preventDefault();
             }
         }});
         
-
     appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
