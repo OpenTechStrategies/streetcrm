@@ -235,7 +235,7 @@ function fillEditRow(row, participant) {
         input_wrap.text(text);
         td_wrap.append(input_wrap);
         row.append(td_wrap);
-    }
+    };
 
     appendSimpleTextField(participant.name, "name");
     if (participant.institution) {
