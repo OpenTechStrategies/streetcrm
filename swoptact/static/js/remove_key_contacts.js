@@ -44,7 +44,22 @@ function unlinkContact(participant_id){
 
 }
 
-function setupContactCallbacks() {
+
+/*
+ * After the contact has been removed from the institution, immediately
+ * hide the row from the user so the success of the removal is clear.
+ *
+*/
+function hideRemovedRow(participant_id) {
+    //get the hidden element with this value
+    jq_element = $(".participant-id[value="+participant_id+"]");
+    //get the row of that element
+    var row = jq_element.parents("tr");
+    //hide the row
+    row.hide();
+}
+
+function setUpContactCallbacks() {
 
     $(document).ready(function () {
         $("#contacts-table").on(
@@ -52,10 +67,11 @@ function setupContactCallbacks() {
             function(event) {
                 event.preventDefault();
                 unlinkContact(getParticipantIdForRow($(this)));
+                hideRemovedRow(getParticipantIdForRow($(this)));
             });
 
     });
 
 }
 
-setupContactCallbacks();
+setUpContactCallbacks();
