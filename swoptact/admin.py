@@ -123,6 +123,7 @@ class TagAdmin(admin.ModelAdmin):
     actions = None
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
+    change_form_template = "admin/change_tag_form.html"
 
 class LogAdmin(admin.ModelAdmin):
     actions = None
