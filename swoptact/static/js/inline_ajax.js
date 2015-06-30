@@ -277,6 +277,47 @@ function fillEditRow(row, participant) {
             }
         }});
         
+    // Otherwise, check for whether or not this is a new item on each keydown
+    // @@: Can we reduce a request per keystroke by rolling this into
+    //   the autocomplete's signals?
+    var institution_input = institution_field.find("input");
+    institution_input.on(
+        "keypress",
+        function (event) {
+            // 13 is enter key, and we have a different handler for that
+            if (event.which != 13) {
+                // Do we have an item that matches this?
+                $.ajax({
+                    url: "/autocomplete/InstitutionAutocomplete/",
+                    datatype: "html",
+                    data: {
+                        q: institution_input.val(),
+                    },
+                    success: function(data) {
+                        var lower_input = institution_input.val().toLowerCase();
+                        var result_as_array = $.makeArray($(data));
+                        var found_match = false;
+                        // Search through all results, see if there's a match
+                        // that matches by lowercase
+                        for (var i = 0; i < result_as_array.length; i++) {
+                            var this_result = result_as_array[i];
+                            if ($(this_result).text().toLowerCase() == lower_input) {
+                                found_match = true;
+                                break;
+                            }
+                        }
+
+                        // If there's a match, hide the [NEW], but show it otherwise
+                        if (found_match || lower_input.length == 0) {
+                            new_indicator.hide();
+                        } else {
+                            new_indicator.show();
+                        }
+                    }
+                })
+            }
+        });
+
     appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
