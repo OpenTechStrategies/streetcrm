@@ -29,6 +29,8 @@ class APIMixin:
     """
     Provides a JSON based to be used by the API
     """
+    # Special processors for certain fields for the process_json method
+    field_processors = {}
 
     def __init__(self, *args, **kwargs):
         self._objects_created = []
@@ -51,6 +53,39 @@ class APIMixin:
         pairs = [p for p in ["{}={}".format(k, v) for k, v in data.items()]]
         return "&".join(pairs)
 
+    def _process_field_general(self, body, model, field_name, value):
+        # Find the field that the model is on.
+        field = model._meta.get_field(field_name)
+
+        if isinstance(field, related.RelatedField):
+            if value is None:
+                return
+
+            # Check if the object needs to be created.
+            if "id" in value or "pk" in value:
+                # Object already exists - just look it up.
+                pk = value["pk"] if "pk" in value else value["id"]
+                instance = field.rel.to.objects.get(pk=pk)
+
+                # Save the values onto the model
+                for k, v in value.items():
+                    setattr(instance, k, v)
+
+                # Save the object back
+                instance.save()
+
+                value = instance
+            else:
+                # Create the object.
+                value = field.rel.to(**value)
+                value.save()
+
+                # we need to keep track we made it
+                self._objects_created.append(value)
+
+            # The ID of the object should be stored as the value
+            body[field.name] = value.id
+
     def process_json(self, body, model=None):
         """
         Produces value for request.POST from a JSON encoded body
@@ -67,38 +102,10 @@ class APIMixin:
             model = self.model
 
         # Look for relations
-        for field, value in body.items():
-            # Find the field that the model is on.
-            field = model._meta.get_field(field)
-
-            if isinstance(field, related.RelatedField):
-                if value is None:
-                    continue
-
-                # Check if the object needs to be created.
-                if "id" in value or "pk" in value:
-                    # Object already exists - just look it up.
-                    pk = value["pk"] if "pk" in value else value["id"]
-                    instance = field.rel.to.objects.get(pk=pk)
-
-                    # Save the values onto the model
-                    for k, v in value.items():
-                        setattr(instance, k, v)
-
-                    # Save the object back
-                    instance.save()
-
-                    value = instance
-                else:
-                    # Create the object.
-                    value = field.rel.to(**value)
-                    value.save()
-
-                    # we need to keep track we made it
-                    self._objects_created.append(value)
-
-                # The ID of the object should be stored as the value
-                body[field.name] = value.id
+        for field_name, value in body.items():
+            field_processor = self.field_processors.get(
+                field_name, self._process_field_general)
+            field_processor(body, model, field_name, value)
 
         return body
 
