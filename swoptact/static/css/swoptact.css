@@ -216,26 +216,31 @@ input.vTextField {
 div.form-actions div.pull-right {
     padding-right: 30%;
 }
+
 td.field-US_primary_phone {
     font-weight: bold;
 }
-input[type=checkbox]
-{
+
+input[type=checkbox] {
     -ms-transform: scale(1.5); /* IE */
     -moz-transform: scale(1.5); /* FF */
     -webkit-transform: scale(1.5); /* Safari and Chrome */
     -o-transform: scale(1.5); /* Opera */
     padding: 20px;
 }
+
 label {
     font-size: 120%;
 }
+
 td {
     font-size: 120%;
 }
+
 li.bold_name {
     font-weight: bold;
 }
+
 .inline-deletelink, .inline-deletelink:visited, .inline-deletelink:hover, .inline-deletelink:active  {
     float: none;
     text-indent: -9999px;
@@ -249,5 +254,16 @@ li.bold_name {
     text-decoration: none;
     color: #303030;
 
+}
+
+tr.participant-edit td input {
+    width: 80%;
+}
+
+tr.participant-edit td .new-indicator {
+    color: green;
+    width: 20%;
+    padding-left: 10px;
+    font-weight: bold;
 }
 

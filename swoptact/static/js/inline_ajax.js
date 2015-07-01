@@ -144,34 +144,45 @@ function insertParticipant(participant) {
 
     // Special hack for the "new" participant: turn on autocomplete for this row
     if (participant.id === "") {
-        turnOnAutocomplete(edit_row);
+        turnOnAttendeeAutocomplete(edit_row);
     }
 }
 
 
-function turnOnAutocomplete(edit_row) {
+// Return a closure to help us construct autocomplete source functions
+// for things that use django_autocomplete_light with jquery ui's autocomplete
+function autoCompleteSourceHelper(url) {
+    return function (request, response) {
+        $.ajax({
+            url: url,
+            datatype: "html",
+            data: {
+                q: request.term
+            },
+            success: function(data) {
+                var json_data = $.map(
+                    $.makeArray($(data)),
+                    function(elt) {
+                        return {
+                            "value": $(elt).attr("data-value"),
+                            "label": $(elt).text()}});
+                // massage data or in the select func?
+                response(json_data);
+            }});
+    }
+}
+
+
+// Turn on contact/attendee autocomplete.
+// 
+// Contact autocomplete is *only* on for completing the names of existing participants
+// when adding a new row!
+function turnOnAttendeeAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: "/autocomplete/ContactAutocomplete/",
-                datatype: "html",
-                data: {
-                    q: request.term
-                },
-                success: function(data) {
-                    var json_data = $.map(
-                        $.makeArray($(data)),
-                        function(elt) {
-                            return {
-                                "value": $(elt).attr("data-value"),
-                                "label": $(elt).text()}});
-                    // massage data or in the select func?
-                    response(json_data);
-                }});
-        },
+        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
         select: function(event, ui) {
             if (ui.item) {
                 var participant_id = ui.item.value
@@ -179,6 +190,8 @@ function turnOnAutocomplete(edit_row) {
                 cancelParticipantEdit("");
                 // Insert the participant and make them immediately editable
                 linkParticipant(participant_id, true);
+                // Don't replace the input value with the ui.item.value
+                event.preventDefault();
             }
         }
     });
@@ -225,7 +238,7 @@ function fillStaticRow(row, participant) {
 
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
-    appendSimpleTextField = function (text, class_identifier) {
+    var appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
             "class": "vTextField " + class_identifier,
@@ -235,14 +248,76 @@ function fillEditRow(row, participant) {
         input_wrap.text(text);
         td_wrap.append(input_wrap);
         row.append(td_wrap);
-    }
+        return td_wrap;
+    };
 
     appendSimpleTextField(participant.name, "name");
+
+    // institution has some more complex code...
     if (participant.institution) {
-        appendSimpleTextField(participant.institution.name, "institution");
+        var institution_field = appendSimpleTextField(
+            participant.institution.name, "institution");
     } else {
-        appendSimpleTextField("", "institution");
+        var institution_field = appendSimpleTextField("", "institution");
     }
+
+    var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
+    institution_field.append(new_indicator);
+    new_indicator.hide();
+
+    // Institution autocomplete stuff
+    institution_field.find("input").autocomplete({
+        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/"),
+        select: function (event, ui) {
+            if (ui.item) {
+                institution_field.find("input").val(ui.item.label);
+                new_indicator.hide();
+                // Don't replace the input value with the ui.item.value
+                event.preventDefault();
+            }
+        }});
+        
+    // Otherwise, check for whether or not this is a new item on each keydown
+    // @@: Can we reduce a request per keystroke by rolling this into
+    //   the autocomplete's signals?
+    var institution_input = institution_field.find("input");
+    institution_input.on(
+        "keypress",
+        function (event) {
+            // 13 is enter key, and we have a different handler for that
+            if (event.which != 13) {
+                // Do we have an item that matches this?
+                $.ajax({
+                    url: "/autocomplete/InstitutionAutocomplete/",
+                    datatype: "html",
+                    data: {
+                        q: institution_input.val(),
+                    },
+                    success: function(data) {
+                        var lower_input = institution_input.val().toLowerCase();
+                        var result_as_array = $.makeArray($(data));
+                        var found_match = false;
+                        // Search through all results, see if there's a match
+                        // that matches by lowercase
+                        for (var i = 0; i < result_as_array.length; i++) {
+                            var this_result = result_as_array[i];
+                            if ($(this_result).text().toLowerCase() == lower_input) {
+                                found_match = true;
+                                break;
+                            }
+                        }
+
+                        // If there's a match, hide the [NEW], but show it otherwise
+                        if (found_match || lower_input.length == 0) {
+                            new_indicator.hide();
+                        } else {
+                            new_indicator.show();
+                        }
+                    }
+                })
+            }
+        });
+
     appendSimpleTextField(participant.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
