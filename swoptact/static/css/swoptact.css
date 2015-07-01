@@ -236,3 +236,18 @@ td {
 li.bold_name {
     font-weight: bold;
 }
+.inline-deletelink, .inline-deletelink:visited, .inline-deletelink:hover, .inline-deletelink:active  {
+    float: none;
+    text-indent: -9999px;
+    background: #E8E8E8;
+    width: 50px;
+    height: 15px;
+    outline: 0; /* Remove dotted border around link */
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 6px 12px;
+    text-decoration: none;
+    color: #303030;
+
+}
+
