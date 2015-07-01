@@ -185,7 +185,8 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
 
     model = models.Participant
     fields = ["id", "name", "primary_phone",
-              "secondary_phone", "email", "address"]
+              "secondary_phone", "email", "address",
+              "institution"]
 
     def __init__(self, *args, **kwargs):
         super(ParticipantAPI, self).__init__(*args, **kwargs)
