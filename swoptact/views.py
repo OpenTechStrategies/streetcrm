@@ -29,11 +29,16 @@ class APIMixin:
     """
     Provides a JSON based to be used by the API
     """
-    # Special processors for certain fields for the process_json method
-    field_processors = {}
 
     def __init__(self, *args, **kwargs):
         self._objects_created = []
+        # Special processors for certain fields for the process_json method
+        # @@: ... could be a class level attribute, though that make
+        #   stuff a bit messy when it comes to mapping to instance level
+        #   methods :P
+        self.field_processors = {}
+
+        return super(APIMixin, self).__init__(*args, **kwargs)
 
     @method_decorator(swoptact_login_required)
     @method_decorator(csrf_exempt)
@@ -182,6 +187,30 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     model = models.Participant
     fields = ["id", "name", "primary_phone",
               "secondary_phone", "email", "address"]
+
+    def __init__(self, *args, **kwargs):
+        super(ParticipantAPI, self).__init__(*args, **kwargs)
+        self.field_processors = {
+            "institution": self._process_institution_field}
+
+    def _process_institution_field(self, body, model, field_name, value):
+        if value == "" or value is None:
+            # Nah, nothing to do
+            return
+
+        # Try to see if we have an institution with this name
+        try:
+            result = models.Institution.objects.get(name__iexact=value)
+            body[field_name] = result.id
+            return
+
+        except models.Institution.DoesNotExist:
+            # Nope!  Let's make a new one.
+            new_institution = models.Institution(name=value)
+            new_institution.save()
+            self._objects_created.append(new_institution)
+            body[field_name] = new_institution.id
+            return
 
     def get(self, request, *args, **kwargs):
         """ Retrival of an existing participant """

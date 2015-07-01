@@ -446,6 +446,7 @@ function updateParticipant(participant){
     // array will be name, phone_number, address as long as our
     // UI columns stay the same
     participant.name = text_inputs[0].value;
+    participant.institution = text_inputs[1].value;
     participant.primary_phone = text_inputs[2].value;
     return participant;
 }
