@@ -201,7 +201,12 @@ function turnOnAttendeeAutocomplete(edit_row) {
     });
 }
 
-/* Wipe out a row and add the hidden participant id input */
+/* Wipe out a row and add the hidden participant id input
+
+Arguments:
+ - row: jquery DOM element for this inlined <tr> row
+ - participant_id: the identifier for this linked model
+*/
 function resetRow(row, participant_id) {
     row.empty();
     row.append($(
@@ -211,7 +216,12 @@ function resetRow(row, participant_id) {
          "value": participant_id}));
 }
 
-// Stubs, for now...
+/* Wipe out the static row and fill it with the appripriate elements
+
+Arguments:
+ - row: jquery DOM element for this inlined <tr> row
+ - participant: mapping representing this linked model's data
+*/
 function fillStaticRow(row, participant) {
     resetRow(row, participant.id);
 
@@ -240,6 +250,12 @@ function fillStaticRow(row, participant) {
     row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
 }
 
+/* Wipe out the edit row and fill it with the appripriate elements
+
+Arguments:
+ - row: jquery DOM element for this inlined <tr> row
+ - participant: mapping representing this linked model's data
+*/
 function fillEditRow(row, participant) {
     resetRow(row, participant.id);
     var appendSimpleTextField = function (text, class_identifier) {
@@ -327,7 +343,19 @@ function fillEditRow(row, participant) {
     row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
 }
 
+/* Wipe out the errors row and fill it with the appripriate elements
 
+You might notice that this takes a `participant_id' rather than a full
+participant object like the other "fill" methods... this is
+intentional since this is called possibly in some places where that
+full data is not available, and the other information is not used anyway.
+
+Arguments:
+ - row: jquery DOM element for this inlined <tr> row
+ - participant_id: the identifier for this linked model
+ - errors: a list of strings representing errors that should be
+   displayed.
+*/
 function fillErrorsRow(row, participant_id, errors) {
     resetRow(row, participant_id);
 
@@ -347,6 +375,9 @@ function fillErrorsRow(row, participant_id, errors) {
 }
 
 
+/* Grab the initial list of linked items from the server for rendering
+   on the page.
+*/
 function loadInitialAttendees() {
     var event_id = getEventId();
     var url = '/api/events/'+event_id+'/participants';
