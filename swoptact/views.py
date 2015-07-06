@@ -311,8 +311,8 @@ class ContactUnlinking(APIMixin, generic.DetailView):
         """ Looks up and returns Participant """
         participant_pk = self.kwargs.get("participant_id")
         self.object = self.get_object()
-        contact_id = models.Contact.objects.filter(institution=self.object.id).filter(participant=participant_pk)
-        return models.Contact.objects.get(pk=contact_id[0].id)
+        contact_set = models.Contact.objects.filter(institution=self.object.id).filter(participant=participant_pk)
+        return contact_set.first()
 
     def delete(self, request, *args, **kwargs):
         """ Unlink a participant """
