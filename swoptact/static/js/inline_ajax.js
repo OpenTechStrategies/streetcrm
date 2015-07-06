@@ -113,7 +113,8 @@ function getParticipantIdForRow(jq_element) {
 
 /* Insert a participant into the DOM.
 
-Here, the participant is a json object, as fetched from the API. */
+Here, the participant is a json object, as fetched from the API.
+*/
 function insertParticipant(participant) {
     // TODO: Insert the participant into a hashmap for later reference?
     //   (eg, if canceling an edit...)
@@ -153,8 +154,11 @@ function insertParticipant(participant) {
 }
 
 
-// Return a closure to help us construct autocomplete source functions
-// for things that use django_autocomplete_light with jquery ui's autocomplete
+/* Helper utility for constructing autocomplete functions
+
+Return a closure to help us construct autocomplete source functions
+for things that use django_autocomplete_light with jquery ui's autocomplete
+*/
 function autoCompleteSourceHelper(url) {
     return function (request, response) {
         $.ajax({
@@ -177,10 +181,11 @@ function autoCompleteSourceHelper(url) {
 }
 
 
-// Turn on contact/attendee autocomplete.
-// 
-// Contact autocomplete is *only* on for completing the names of existing participants
-// when adding a new row!
+/* Turn on contact/attendee autocomplete.
+ 
+Contact autocomplete is *only* on for completing the names of existing participants
+when adding a new row!
+*/
 function turnOnAttendeeAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
 
@@ -201,7 +206,8 @@ function turnOnAttendeeAutocomplete(edit_row) {
     });
 }
 
-/* Wipe out a row and add the hidden participant id input
+/*
+Wipe out a row and add the hidden participant id input
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
@@ -375,9 +381,7 @@ function fillErrorsRow(row, participant_id, errors) {
 }
 
 
-/* Grab the initial list of linked items from the server for rendering
-   on the page.
-*/
+/* Grab the initial list of linked items from the server & render */
 function loadInitialAttendees() {
     var event_id = getEventId();
     var url = '/api/events/'+event_id+'/participants';
@@ -389,8 +393,7 @@ function loadInitialAttendees() {
 }
 
 
-// The function that both adds the participant on the backend and links
-// on the frontend
+/* Add the participant on the backend and link on the frontend */
 function linkParticipant(participant_id, make_editable) {
     var url = '/api/events/'+getEventId()+'/participants/'+participant_id+"/";
     $.post(url, function (result) {
@@ -405,6 +408,7 @@ function linkParticipant(participant_id, make_editable) {
 }
 
 
+/* Remove participant with PARTICIPANT_ID from server and the UI. */
 function unlinkParticipant(participant_id){
     var removeRows = function () {
         getParticipantStaticRow(participant_id).remove();
@@ -427,10 +431,11 @@ function unlinkParticipant(participant_id){
 }
 
 
-// Save all rows that are currently being edited
-//
-// We have to rely on jquery telling us what's visible or not
-// since we don't have any other markers of what's in editing mode
+/* Save all rows that are currently being edited
+
+We have to rely on jquery telling us what's visible or not
+since we don't have any other markers of what's in editing mode
+*/
 function saveAllEditing() {
     // Find all currently being edited rows and the participant thereof,
     // then save
@@ -459,10 +464,11 @@ function addNewParticipant() {
 }
 
 
-/*
- takes a participant object and returns a participant object filled with new
- values from the input fields in that participant's row
- */
+// @@: Maybe we should replace this with other function usage?
+
+/* takes a participant object and returns a participant object filled with new
+values from the input fields in that participant's row
+*/
 function updateParticipant(participant){
     if (participant.id){
         var edit_input = $('#participant-edit-'+participant.id);
@@ -480,8 +486,8 @@ function updateParticipant(participant){
 }
 
 /*
-  helper function to find the correct rows and fill them using other functions,
-  after a participant is updated
+Helper function to find the correct rows and fill them using other functions,
+after a participant is updated
 */
 function recreateRows(participant){
     fillEditRow(getParticipantEditRow(participant.id),
@@ -495,6 +501,10 @@ function recreateRows(participant){
     showParticipantStaticRow(participant.id);
 }
 
+
+// @@: Shouldn't this be getting the failure descriptions from the server?
+//     That would be more consistent with how django form errors are displayed
+//     and would be much more flexible
 function handleJSONErrors(response, participant_id){
     responseText = jQuery.parseJSON(response.responseText);
     var errors = responseText.form.errors;
@@ -513,6 +523,13 @@ function handleJSONErrors(response, participant_id){
 }
 
 
+/* Save participant on server and update the UI
+
+Arguments:
+ - participant_id: the identifier for this linked model
+ - submit_flag: whether or not to submit the entire form
+   NOTE: this is broken, see issue #105
+*/
 function saveParticipant(participant_id, submit_flag) {
     if (participant_id != "empty" && participant_id != ""){
         $.get('/api/participants/'+participant_id+'/',
@@ -565,6 +582,7 @@ function saveParticipant(participant_id, submit_flag) {
     }
 }
 
+/* Set up all the main widget callbacks */
 function setupParticipantCallbacks() {
     //keep track of row(s) in the middle of being edited
     var rows_editing = [];
