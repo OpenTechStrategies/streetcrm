@@ -53,6 +53,7 @@ function showParticipantErrorsRow(participant_id) {
 }
 
 
+/* Gets the model id this page represents. */
 function getEventId() {
     return document.getElementById('event_object_id').value;
 }
