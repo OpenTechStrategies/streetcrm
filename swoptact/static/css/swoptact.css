@@ -267,3 +267,7 @@ tr.participant-edit td .new-indicator {
     font-weight: bold;
 }
 
+ul#id_group {
+    list-style-type: none;
+    padding-left: 0;
+}
