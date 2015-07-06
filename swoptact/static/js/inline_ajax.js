@@ -158,8 +158,14 @@ function insertParticipant(participant) {
 
 Return a closure to help us construct autocomplete source functions
 for things that use django_autocomplete_light with jquery ui's autocomplete
+
+Arguments:
+ - url: the URL used to construct
+ - text_is_value: a boolean, if true we'll use the element's text
+   value as input to this function rather than the data-value attribute.
+   This is useful in text autocompletes.
 */
-function autoCompleteSourceHelper(url) {
+function autoCompleteSourceHelper(url, text_is_value) {
     return function (request, response) {
         $.ajax({
             url: url,
@@ -172,7 +178,9 @@ function autoCompleteSourceHelper(url) {
                     $.makeArray($(data)),
                     function(elt) {
                         return {
-                            "value": $(elt).attr("data-value"),
+                            "value": text_is_value ?
+                                $(elt).text() :
+                                $(elt).attr("data-value"),
                             "label": $(elt).text()}});
                 // massage data or in the select func?
                 response(json_data);
@@ -191,7 +199,8 @@ function turnOnAttendeeAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
+        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/",
+                                         false),
         select: function(event, ui) {
             if (ui.item) {
                 var participant_id = ui.item.value
@@ -293,15 +302,7 @@ function fillEditRow(row, participant) {
 
     // Institution autocomplete stuff
     institution_field.find("input").autocomplete({
-        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/"),
-        select: function (event, ui) {
-            if (ui.item) {
-                institution_field.find("input").val(ui.item.label);
-                new_indicator.hide();
-                // Don't replace the input value with the ui.item.value
-                event.preventDefault();
-            }
-        }});
+        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/", true)});
         
     // Otherwise, check for whether or not this is a new item on each keydown
     // @@: Can we reduce a request per keystroke by rolling this into
