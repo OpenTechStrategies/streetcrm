@@ -110,7 +110,7 @@ class Institution(models.Model, SerializeableMixin):
     is_member = models.BooleanField(
         default=False,
         blank=True,
-        verbose_name="This institution is a member of SWOP:"
+        verbose_name="Is this institution a member of SWOP?"
     )
 
     def __str__(self):
