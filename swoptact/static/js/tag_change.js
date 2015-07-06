@@ -15,7 +15,7 @@ function textLimitCountdown() {
 
 $(document).ready(function () {
     // Create the Text limit text box
-    var textLimitElement = $("<p></p>").attr("id", "id_name_countdown_message");
+    var textLimitElement = $("<span></span>").attr("id", "id_name_countdown_message");
     $("#id_name").after(textLimitElement);
 
     // Call the text limit countdown to pre-fill the countdown for the first time
