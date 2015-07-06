@@ -96,11 +96,14 @@ function revertEditRow(participant_id) {
 }
 
 
+/* Wipe the errors row by filling it with nothing */
 function clearErrors(participant_id) {
     fillErrorsRow(getParticipantErrorsRow(participant_id), participant_id, []);
 }
 
 
+/* Take the current DOM element, find the parent row, and fetch the
+   inlined model's id from it */
 function getParticipantIdForRow(jq_element) {
     // Take a jquery element for any member of a participant row
     // and extract the participant id (returned as a string)
