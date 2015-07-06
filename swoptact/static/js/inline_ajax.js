@@ -405,13 +405,6 @@ function linkParticipant(participant_id, make_editable) {
 }
 
 
-function backToPreLinkParticipants() {
-    $("#add-new-participant-btn").show();
-    $('#available-participants-select').hide();
-    $("#cancel-link-existing-btn").hide();
-    $("#select-existing-participant-btn").hide();
-}
-
 function unlinkParticipant(participant_id){
     var removeRows = function () {
         getParticipantStaticRow(participant_id).remove();
