@@ -277,3 +277,7 @@ span#id_name_countdown_message {
     position: absolute;
     line-height: 35px;
 }
+
+p.readonly {
+    line-height: 40px;
+}

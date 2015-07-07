@@ -40,7 +40,7 @@
                             </div>
                             <div class="controls col-md-9">
                                 {% if field.is_readonly %}
-                                    <p>{{ field.contents }}</p>
+                                    <p class="readonly">{{ field.contents }}</p>
                                 {% else %}
                                     {% dab_field_rendering field.field %}
                                 {% endif %}
