@@ -58,6 +58,16 @@ function getEventId() {
     return document.getElementById('event_object_id').value;
 }
 
+// TODO: We should memoize this on the object itself probably?
+/* Grab the configuration for this whole inline ajax system
+
+Said configuration is stored in a hidden input with the id
+"inline-config" in a json-encoded "data-config" attribute
+*/
+function getInlineConfig() {
+    return $.parseJSON($("#inline-config").attr("data-config"));
+}
+
 
 /* Handle the "edit" button for a inlined row. */
 function makeInlinedModelEditable(inlined_model_id) {

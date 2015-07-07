@@ -36,6 +36,12 @@
 
   <script type="text/javascript" src="{% static "js/remove_delete_button.js" %}"></script>
 
+  {% block inline_config %}
+    <input type="hidden" id="inline-config"
+           data-config="{&quot;autocomplete_uri&quot;: &quot;/autocomplete/ContactAutocomplete/&quot;}" />
+  {% endblock %}
+
+
 {% else %}
   <p>
     <i>(To add inlined models, first save this event.)</i>
