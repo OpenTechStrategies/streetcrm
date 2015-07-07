@@ -297,8 +297,12 @@ function fillEditRow(row, participant) {
 
     // Institution autocomplete stuff
     institution_field.find("input").autocomplete({
+        select: function (event, ui) {
+            if (ui.item) {
+                new_indicator.hide();
+            }},
         source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/")});
-        
+
     // Otherwise, check for whether or not this is a new item on each keydown
     // @@: Can we reduce a request per keystroke by rolling this into
     //   the autocomplete's signals?
