@@ -7,17 +7,23 @@ function textLimitCountdown() {
     var remainingChars = textLimit - $("#id_name").val().length;
 
     if (remainingChars <= 0) {
-        $("#id_name_countdown_message").text("You have reached the character limit for the " + textElementName);
+        $("#id_remaining").text("You have reached the character limit for the " + textElementName);
+        $("#id_name_countdown_message").text("");
     } else {
-        $("#id_name_countdown_message").text(remainingChars + " characters remaining");
+        $("#id_remaining").html("&nbsp&nbsp&nbsp&nbsp characters remaining");
+        $("#id_name_countdown_message").text(remainingChars);
     }
 }
 
 $(document).ready(function () {
     // Create the Text limit text box
+    var spacingElement = $("<span></span>").attr("id", "id_name_spacing");
     var textLimitElement = $("<span></span>").attr("id", "id_name_countdown_message");
-    $("#id_name").after(textLimitElement);
-
+    var remainingElement = $("<span></span>").attr("id", "id_remaining");
+    spacingElement.html("&nbsp");
+    $("#id_name").after(spacingElement);
+    spacingElement.after(textLimitElement);
+    textLimitElement.after(remainingElement);
     // Call the text limit countdown to pre-fill the countdown for the first time
     textLimitCountdown();
 

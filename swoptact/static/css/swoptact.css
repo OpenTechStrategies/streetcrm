@@ -271,3 +271,9 @@ ul#id_group {
     list-style-type: none;
     padding-left: 0;
 }
+
+span#id_name_countdown_message {
+    width: 100px;
+    position: absolute;
+    line-height: 35px;
+}
