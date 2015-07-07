@@ -203,6 +203,9 @@ input {
 input.vTextField {
     width: 200px;
 }
+input.vTextField#id_description {
+    width: 500px;
+}
 
 /* Pull the button to add new objects up a bit */
 .object-tools {
