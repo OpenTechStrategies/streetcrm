@@ -256,11 +256,11 @@ li.bold_name {
 
 }
 
-tr.participant-edit td input {
+tr.inlined-model-edit td input {
     width: 80%;
 }
 
-tr.participant-edit td .new-indicator {
+tr.inlined-model-edit td .new-indicator {
     color: green;
     width: 20%;
     padding-left: 10px;

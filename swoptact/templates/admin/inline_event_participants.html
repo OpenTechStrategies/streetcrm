@@ -3,11 +3,11 @@
 {% if change %}
   {# javascript can extract what ID to talk to from here #}
   <input type="hidden" id="event_object_id" value="{{ object_id }}" />
-  <div class="_inline-group" id="participant-group">
+  <div class="_inline-group" id="inlined-model-group">
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
       <fieldset class="module">
         <h2>Attendees</h2>
-        <table class="table table-striped table-bordered" id="participant-table">
+        <table class="table table-striped table-bordered" id="inlined-model-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -24,7 +24,7 @@
         </table>
         <div style="padding: 10px">
           <button type="submit" class="btn" name="_select"
-                  id="add-new-participant-btn">✚ {% trans 'Add new' %}</button>
+                  id="add-new-inlined-model-btn">✚ {% trans 'Add new' %}</button>
         </div>
       </fieldset>
     </div>
@@ -38,7 +38,7 @@
 
 {% else %}
   <p>
-    <i>(To add participants, first save this event.)</i>
+    <i>(To add inlined models, first save this event.)</i>
   </p>
 
 {% endif %}

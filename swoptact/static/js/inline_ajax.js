@@ -1,13 +1,13 @@
 /*
 This page governs the sign-in sheet on the change event form.  It includes
 functions to:
-(1) find the relevant participants for a given event
+(1) find the relevant inlined models for a given event
 (2) display information about each of them
 (3) edit textboxes populated by values from that object
 (4) save changes made via those text boxes
 (5) unlink a person from an event
 (6) add an entirely new person (really the same as (4))
-(7) search available participants
+(7) search available inlined models
 (8) link an existing person to this event.
 
 */
@@ -20,36 +20,36 @@ functions to:
 
 // Hide and show stuff
 
-function getParticipantStaticRow(participant_id) {
-    return $("#participant-static-" + participant_id);
+function getInlinedModelStaticRow(inlined_model_id) {
+    return $("#inlined-model-static-" + inlined_model_id);
 }
-function hideParticipantStaticRow(participant_id) {
-    getParticipantStaticRow(participant_id).hide();
+function hideInlinedModelStaticRow(inlined_model_id) {
+    getInlinedModelStaticRow(inlined_model_id).hide();
 }
-function showParticipantStaticRow(participant_id) {
-    getParticipantStaticRow(participant_id).show();
-}
-
-
-function getParticipantEditRow(participant_id) {
-    return $("#participant-edit-" + participant_id);
-}
-function hideParticipantEditRow(participant_id) {
-    getParticipantEditRow(participant_id).hide();
-}
-function showParticipantEditRow(participant_id) {
-    getParticipantEditRow(participant_id).show();
+function showInlinedModelStaticRow(inlined_model_id) {
+    getInlinedModelStaticRow(inlined_model_id).show();
 }
 
 
-function getParticipantErrorsRow(participant_id) {
-    return $("#participant-errors-" + participant_id);
+function getInlinedModelEditRow(inlined_model_id) {
+    return $("#inlined-model-edit-" + inlined_model_id);
 }
-function hideParticipantErrorsRow(participant_id) {
-    getParticipantErrorsRow(participant_id).hide();
+function hideInlinedModelEditRow(inlined_model_id) {
+    getInlinedModelEditRow(inlined_model_id).hide();
 }
-function showParticipantErrorsRow(participant_id) {
-    getParticipantErrorsRow(participant_id).show();
+function showInlinedModelEditRow(inlined_model_id) {
+    getInlinedModelEditRow(inlined_model_id).show();
+}
+
+
+function getInlinedModelErrorsRow(inlined_model_id) {
+    return $("#inlined-model-errors-" + inlined_model_id);
+}
+function hideInlinedModelErrorsRow(inlined_model_id) {
+    getInlinedModelErrorsRow(inlined_model_id).hide();
+}
+function showInlinedModelErrorsRow(inlined_model_id) {
+    getInlinedModelErrorsRow(inlined_model_id).show();
 }
 
 
@@ -59,96 +59,96 @@ function getEventId() {
 }
 
 
-/* Handle the "edit" button for a participant row. */
-function makeParticipantEditable(participant_id) {
+/* Handle the "edit" button for a inlined row. */
+function makeInlinedModelEditable(inlined_model_id) {
     // TODO: Copy data into the edit form
 
     // Hide display-only form
-    hideParticipantStaticRow(participant_id);
+    hideInlinedModelStaticRow(inlined_model_id);
     // Show edit form
-    showParticipantEditRow(participant_id);
+    showInlinedModelEditRow(inlined_model_id);
 }
 
-/* Handle the "cancel" button for a participant edit-in-progress. */
-function cancelParticipantEdit(participant_id) {
+/* Handle the "cancel" button for a inlined edit-in-progress. */
+function cancelInlinedModelEdit(inlined_model_id) {
     // Oh, this is the add new one... well, we don't need to switch
     // back to a static view.  Just dump it.
-    if (participant_id == "") {
-        unlinkParticipant(participant_id);
+    if (inlined_model_id == "") {
+        unlinkInlinedModel(inlined_model_id);
     }
 
     // TODO: Do a *real* revert of the data here!
     //// Revert and hide edit form
-    // revertEditRow(participant_id);
-    hideParticipantEditRow(participant_id);
+    // revertEditRow(inlined_model_id);
+    hideInlinedModelEditRow(inlined_model_id);
 
     // Hide and clear errors form
-    hideParticipantErrorsRow(participant_id);
-    clearErrors(participant_id);
+    hideInlinedModelErrorsRow(inlined_model_id);
+    clearErrors(inlined_model_id);
 
     // Show display-only form
-    showParticipantStaticRow(participant_id);
+    showInlinedModelStaticRow(inlined_model_id);
 }
 
 
-function revertEditRow(participant_id) {
+function revertEditRow(inlined_model_id) {
     // TODO: base this on the filling system
 }
 
 
 /* Wipe the errors row by filling it with nothing */
-function clearErrors(participant_id) {
-    fillErrorsRow(getParticipantErrorsRow(participant_id), participant_id, []);
+function clearErrors(inlined_model_id) {
+    fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, []);
 }
 
 
 /* Take the current DOM element, find the parent row, and fetch the
    inlined model's id from it */
-function getParticipantIdForRow(jq_element) {
-    // Take a jquery element for any member of a participant row
-    // and extract the participant id (returned as a string)
-    return jq_element.parents("tr").children(".participant-id")[0].value;
+function getInlinedModelIdForRow(jq_element) {
+    // Take a jquery element for any member of a inlined row
+    // and extract the inlined id (returned as a string)
+    return jq_element.parents("tr").children(".inlined-model-id")[0].value;
 }
 
 
-/* Insert a participant into the DOM.
+/* Insert a inlined into the DOM.
 
-Here, the participant is a json object, as fetched from the API.
+Here, the inlined is a json object, as fetched from the API.
 */
-function insertParticipant(participant) {
-    // TODO: Insert the participant into a hashmap for later reference?
+function insertInlinedModel(inlined_model) {
+    // TODO: Insert the inlined_model into a hashmap for later reference?
     //   (eg, if canceling an edit...)
 
     // Construct and insert static row
     // -------------------------------
     var static_row = $(
         "<tr />",
-        {"class": "form-row participant-static",
-         "id": "participant-static-" + participant.id});
-    fillStaticRow(static_row, participant);
-    $("#participant-table tbody").append(static_row);
+        {"class": "form-row inlined-model-static",
+         "id": "inlined-model-static-" + inlined_model.id});
+    fillStaticRow(static_row, inlined_model);
+    $("#inlined-model-table tbody").append(static_row);
     // Construct and insert error row (empty for now)
     // ----------------------------------------------
     var errors_row = $(
         "<tr />",
-        {"class": "form-row participant-errors",
-         "id": "participant-errors-" + participant.id});
+        {"class": "form-row inlined-model-errors",
+         "id": "inlined-model-errors-" + inlined_model.id});
     errors_row.hide()
-    fillErrorsRow(errors_row, participant.id, []);
-    $("#participant-table tbody").append(errors_row);
+    fillErrorsRow(errors_row, inlined_model.id, []);
+    $("#inlined-model-table tbody").append(errors_row);
 
     // Construct and insert edit row
     // -----------------------------
     var edit_row = $(
         "<tr />",
-        {"class": "form-row participant-edit",
-         "id": "participant-edit-" + participant.id});
-    fillEditRow(edit_row, participant);
+        {"class": "form-row inlined-model-edit",
+         "id": "inlined-model-edit-" + inlined_model.id});
+    fillEditRow(edit_row, inlined_model);
     edit_row.hide()
-    $("#participant-table tbody").append(edit_row);
+    $("#inlined-model-table tbody").append(edit_row);
 
-    // Special hack for the "new" participant: turn on autocomplete for this row
-    if (participant.id === "") {
+    // Special hack for the "new" inlined_model: turn on autocomplete for this row
+    if (inlined_model.id === "") {
         turnOnAttendeeAutocomplete(edit_row);
     }
 }
@@ -187,8 +187,8 @@ function autoCompleteSourceHelper(url) {
 
 /* Turn on contact/attendee autocomplete.
  
-Contact autocomplete is *only* on for completing the names of existing participants
-when adding a new row!
+Contact autocomplete is *only* on for completing the names of existing
+inlined models when adding a new row!
 */
 function turnOnAttendeeAutocomplete(edit_row) {
     console.log("Turning on autocomplete");
@@ -198,11 +198,11 @@ function turnOnAttendeeAutocomplete(edit_row) {
         source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
         select: function(event, ui) {
             if (ui.item) {
-                var participant_id = ui.item.data.id;
+                var inlined_model_id = ui.item.data.id;
                 // Remove this row
-                cancelParticipantEdit("");
-                // Insert the participant and make them immediately editable
-                linkParticipant(participant_id, true);
+                cancelInlinedModelEdit("");
+                // Insert the inlined and make them immediately editable
+                linkInlinedModel(inlined_model_id, true);
                 // Don't replace the input value with the ui.item.value
                 event.preventDefault();
             }
@@ -211,29 +211,29 @@ function turnOnAttendeeAutocomplete(edit_row) {
 }
 
 /*
-Wipe out a row and add the hidden participant id input
+Wipe out a row and add the hidden inlined id input
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
- - participant_id: the identifier for this linked model
+ - inlined_model_id: the identifier for this linked model
 */
-function resetRow(row, participant_id) {
+function resetRow(row, inlined_model_id) {
     row.empty();
     row.append($(
         "<input/>",
         {"type": "hidden",
-         "class": "participant-id",
-         "value": participant_id}));
+         "class": "inlined-model-id",
+         "value": inlined_model_id}));
 }
 
 /* Wipe out the static row and fill it with the appripriate elements
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
- - participant: mapping representing this linked model's data
+ - inlined: mapping representing this linked model's data
 */
-function fillStaticRow(row, participant) {
-    resetRow(row, participant.id);
+function fillStaticRow(row, inlined_model) {
+    resetRow(row, inlined_model.id);
 
     appendSimpleText = function (text) {
         td_wrap = $("<td/>");
@@ -244,36 +244,36 @@ function fillStaticRow(row, participant) {
         row.append(td_wrap);
     }
 
-    appendSimpleText(participant.name);
-    if (participant.institution) {
-        appendSimpleText(participant.institution.name);
+    appendSimpleText(inlined_model.name);
+    if (inlined_model.institution) {
+        appendSimpleText(inlined_model.institution.name);
     } else {
         appendSimpleText("");
     }
-    if (participant.primary_phone) {
-        appendSimpleText(participant.primary_phone);
+    if (inlined_model.primary_phone) {
+        appendSimpleText(inlined_model.primary_phone);
     } else {
         appendSimpleText("");
     }
 
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn participant-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn participant-unlink" name="_unlink">✘ Undo</button></td>');
+    row.append('<td><button type="submit" class="btn inlined-model-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn inlined-model-unlink" name="_unlink">✘ Undo</button></td>');
 }
 
 /* Wipe out the edit row and fill it with the appripriate elements
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
- - participant: mapping representing this linked model's data
+ - inlined_model: mapping representing this linked model's data
 */
-function fillEditRow(row, participant) {
-    resetRow(row, participant.id);
+function fillEditRow(row, inlined_model) {
+    resetRow(row, inlined_model.id);
     var appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
         input_wrap = $("<input/>", {
             "class": "vTextField " + class_identifier,
             "type": "text",
-            "id": "edit-" + class_identifier + "-" + participant.id,
+            "id": "edit-" + class_identifier + "-" + inlined_model.id,
             "value": text});
         input_wrap.text(text);
         td_wrap.append(input_wrap);
@@ -281,12 +281,12 @@ function fillEditRow(row, participant) {
         return td_wrap;
     };
 
-    appendSimpleTextField(participant.name, "name");
+    appendSimpleTextField(inlined_model.name, "name");
 
     // institution has some more complex code...
-    if (participant.institution) {
+    if (inlined_model.institution) {
         var institution_field = appendSimpleTextField(
-            participant.institution.name, "institution");
+            inlined_model.institution.name, "institution");
     } else {
         var institution_field = appendSimpleTextField("", "institution");
     }
@@ -344,26 +344,26 @@ function fillEditRow(row, participant) {
             }
         });
 
-    appendSimpleTextField(participant.primary_phone, "primary-phone");
+    appendSimpleTextField(inlined_model.primary_phone, "primary-phone");
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn participant-save" name="_save">✓ Done</button> <button type="submit" class="btn participant-cancel" name="_cancel">✗ Cancel</button></td>');
+    row.append('<td><button type="submit" class="btn inlined-model-save" name="_save">✓ Done</button> <button type="submit" class="btn inlined-model-cancel" name="_cancel">✗ Cancel</button></td>');
 }
 
 /* Wipe out the errors row and fill it with the appripriate elements
 
-You might notice that this takes a `participant_id' rather than a full
-participant object like the other "fill" methods... this is
+You might notice that this takes a `inlined_model_id' rather than a full
+inlined object like the other "fill" methods... this is
 intentional since this is called possibly in some places where that
 full data is not available, and the other information is not used anyway.
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
- - participant_id: the identifier for this linked model
+ - inlined_model_id: the identifier for this linked model
  - errors: a list of strings representing errors that should be
    displayed.
 */
-function fillErrorsRow(row, participant_id, errors) {
-    resetRow(row, participant_id);
+function fillErrorsRow(row, inlined_model_id, errors) {
+    resetRow(row, inlined_model_id);
 
     var td = $('<td colspan="5" />');
 
@@ -387,43 +387,43 @@ function loadInitialAttendees() {
     var url = '/api/events/'+event_id+'/participants';
     $.get(url, function (people_list) {
         for (i = 0; i < people_list.length; i++){
-            insertParticipant(people_list[i]);
+            insertInlinedModel(people_list[i]);
         }
     }, "json");
 }
 
 
-/* Add the participant on the backend and link on the frontend */
-function linkParticipant(participant_id, make_editable) {
-    var url = '/api/events/'+getEventId()+'/participants/'+participant_id+"/";
+/* Add the inlined model on the backend and link on the frontend */
+function linkInlinedModel(inlined_model_id, make_editable) {
+    var url = '/api/events/'+getEventId()+'/participants/'+inlined_model_id+"/";
     $.post(url, function (result) {
-        $.get('/api/participants/'+participant_id+'/',
-              function (participant) {
-                  insertParticipant(participant);
+        $.get('/api/participants/'+inlined_model_id+'/',
+              function (inlined_model) {
+                  insertInlinedModel(inlined_model);
                   if (make_editable) {
-                      makeParticipantEditable(participant_id);
+                      makeInlinedModelEditable(inlined_model_id);
                   }
               }, 'json');
     }, "json");
 }
 
 
-/* Remove participant with PARTICIPANT_ID from server and the UI. */
-function unlinkParticipant(participant_id){
+/* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
+function unlinkInlinedModel(inlined_model_id){
     var removeRows = function () {
-        getParticipantStaticRow(participant_id).remove();
-        getParticipantEditRow(participant_id).remove();
-        getParticipantErrorsRow(participant_id).remove();
+        getInlinedModelStaticRow(inlined_model_id).remove();
+        getInlinedModelEditRow(inlined_model_id).remove();
+        getInlinedModelErrorsRow(inlined_model_id).remove();
     }
 
-    // An empty, pre-saved new participant.
-    if (participant_id == "") {
+    // An empty, pre-saved new inlined model.
+    if (inlined_model_id == "") {
         removeRows();
         return false;
     }
 
     var event_id = getEventId();
-    var target_url = '/api/events/'+event_id+'/participants/'+participant_id+'/';
+    var target_url = '/api/events/'+event_id+'/participants/'+inlined_model_id+'/';
     $.ajax({
         url: target_url,
         type: 'DELETE',
@@ -437,75 +437,75 @@ We have to rely on jquery telling us what's visible or not
 since we don't have any other markers of what's in editing mode
 */
 function saveAllEditing() {
-    // Find all currently being edited rows and the participant thereof,
+    // Find all currently being edited rows and the inlined model thereof,
     // then save
-    $("tr.participant-edit:visible input.participant-id").each(
+    $("tr.inlined-model-edit:visible input.inlined-model-id").each(
         function(index) {
-            saveParticipant(this.value, false);
+            saveInlinedModel(this.value, false);
         });
 }
 
 
-function addNewParticipant() {
+function addNewInlinedModel() {
     saveAllEditing();
 
-    if (getParticipantEditRow("").length > 0) {
-        // We already have an empty participant in progress
+    if (getInlinedModelEditRow("").length > 0) {
+        // We already have an empty inlined model in progress
         return false;
     }
 
     // NOTE: Not all our code is really set up to handle
-    // passing in a mostly empty object as a participant :\
+    // passing in a mostly empty object as an inlined object :\
     // This is a hack!
     // Seems to work tho
-    insertParticipant({"id": ""});
-    hideParticipantStaticRow("");
-    showParticipantEditRow("");
+    insertInlinedModel({"id": ""});
+    hideInlinedModelStaticRow("");
+    showInlinedModelEditRow("");
 }
 
 
 // @@: Maybe we should replace this with other function usage?
 
-/* takes a participant object and returns a participant object filled with new
-values from the input fields in that participant's row
+/* takes an inlined object and returns a inlined object filled with new
+values from the input fields in that inlined model's row
 */
-function updateParticipant(participant){
-    if (participant.id){
-        var edit_input = $('#participant-edit-'+participant.id);
+function updateInlinedModel(inlined_model){
+    if (inlined_model.id){
+        var edit_input = $('#inlined-model-edit-'+inlined_model.id);
     }
     else{
-        var edit_input = $('#participant-edit-');
+        var edit_input = $('#inlined-model-edit-');
     }
     var text_inputs = (edit_input.find(".vTextField"));
     // array will be name, phone_number, address as long as our
     // UI columns stay the same
-    participant.name = text_inputs[0].value;
-    participant.institution = text_inputs[1].value;
-    participant.primary_phone = text_inputs[2].value;
-    return participant;
+    inlined_model.name = text_inputs[0].value;
+    inlined_model.institution = text_inputs[1].value;
+    inlined_model.primary_phone = text_inputs[2].value;
+    return inlined_model;
 }
 
 /*
 Helper function to find the correct rows and fill them using other functions,
-after a participant is updated
+after a inlined is updated
 */
-function recreateRows(participant){
-    fillEditRow(getParticipantEditRow(participant.id),
-                participant);
-    fillErrorsRow(getParticipantErrorsRow(participant.id),
-                  participant.id, []);
-    fillStaticRow(getParticipantStaticRow(participant.id),
-                  participant);
-    hideParticipantEditRow(participant.id);
-    hideParticipantErrorsRow(participant.id);
-    showParticipantStaticRow(participant.id);
+function recreateRows(inlined_model){
+    fillEditRow(getInlinedModelEditRow(inlined_model.id),
+                inlined_model);
+    fillErrorsRow(getInlinedModelErrorsRow(inlined_model.id),
+                  inlined_model.id, []);
+    fillStaticRow(getInlinedModelStaticRow(inlined_model.id),
+                  inlined_model);
+    hideInlinedModelEditRow(inlined_model.id);
+    hideInlinedModelErrorsRow(inlined_model.id);
+    showInlinedModelStaticRow(inlined_model.id);
 }
 
 
 // @@: Shouldn't this be getting the failure descriptions from the server?
 //     That would be more consistent with how django form errors are displayed
 //     and would be much more flexible
-function handleJSONErrors(response, participant_id){
+function handleJSONErrors(response, inlined_model_id){
     responseText = jQuery.parseJSON(response.responseText);
     var errors = responseText.form.errors;
     var error_array = [];
@@ -517,31 +517,31 @@ function handleJSONErrors(response, participant_id){
     }
     if (response.status == '400'){
         //interpret and display errors in a meaningful way
-        fillErrorsRow(getParticipantErrorsRow(participant_id), participant_id, error_array);
-        showParticipantErrorsRow(participant_id);
+        fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, error_array);
+        showInlinedModelErrorsRow(inlined_model_id);
     }
 }
 
 
-/* Save participant on server and update the UI
+/* Save inlined model on server and update the UI
 
 Arguments:
- - participant_id: the identifier for this linked model
+ - inlined_model_id: the identifier for this linked model
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
-function saveParticipant(participant_id, submit_flag) {
-    if (participant_id != "empty" && participant_id != ""){
-        $.get('/api/participants/'+participant_id+'/',
-              function (participant) {
-                  new_participant = updateParticipant(participant);
-                  data = JSON.stringify(new_participant);
+function saveInlinedModel(inlined_model_id, submit_flag) {
+    if (inlined_model_id != "empty" && inlined_model_id != ""){
+        $.get('/api/participants/'+inlined_model_id+'/',
+              function (inlined_model) {
+                  new_inlined_model = updateInlinedModel(inlined_model);
+                  data = JSON.stringify(new_inlined_model);
                   $.ajax({
-                      url: '/api/participants/'+participant_id+'/',
+                      url: '/api/participants/'+inlined_model_id+'/',
                       data: data,
                       type: 'PUT',
                       error: function (response) {
-                          handleJSONErrors(response, participant_id);
+                          handleJSONErrors(response, inlined_model_id);
                       },
                       success: function (response) {
                           recreateRows(response);
@@ -553,23 +553,23 @@ function saveParticipant(participant_id, submit_flag) {
                   });
               }, 'json');
     } else {
-        empty_participant = {};
-        new_participant = updateParticipant(empty_participant);
-        data = JSON.stringify(new_participant);
+        empty_inlined_model = {};
+        new_inlined_model = updateInlinedModel(empty_inlined_model);
+        data = JSON.stringify(new_inlined_model);
         $.ajax({
             url: '/api/participants/',
             data: data,
             type: 'POST',
             error: function (response, jqXHR) {
-                handleJSONErrors(response, participant_id);
+                handleJSONErrors(response, inlined_model_id);
             },
             success: function (response) {
                 var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
                     $.get('/api/participants/'+response.id+'/',
-                          function (participant) {
-                              unlinkParticipant("");
-                              insertParticipant(participant);
+                          function (inlined_model) {
+                              unlinkInlinedModel("");
+                              insertInlinedModel(inlined_model);
                               if (submit_flag){
                                   $("#event_form").submit();
                               }
@@ -583,66 +583,66 @@ function saveParticipant(participant_id, submit_flag) {
 }
 
 /* Set up all the main widget callbacks */
-function setupParticipantCallbacks() {
+function setupInlinedModelCallbacks() {
     //keep track of row(s) in the middle of being edited
     var rows_editing = [];
-    $("#participant-table").on(
-        "click", "button.participant-edit",
+    $("#inlined-model-table").on(
+        "click", "button.inlined-model-edit",
         function(event) {
-            rows_editing.push(getParticipantIdForRow($(this)));
+            rows_editing.push(getInlinedModelIdForRow($(this)));
             event.preventDefault();
-            makeParticipantEditable(getParticipantIdForRow($(this)));
+            makeInlinedModelEditable(getInlinedModelIdForRow($(this)));
         });
 
-    $("#participant-table").on(
-        "click", "button.participant-unlink",
+    $("#inlined-model-table").on(
+        "click", "button.inlined-model-unlink",
         function(event) {
             event.preventDefault();
-            unlinkParticipant(getParticipantIdForRow($(this)));
+            unlinkInlinedModel(getInlinedModelIdForRow($(this)));
         });
 
-    $("#participant-table").on(
-        "click", "button.participant-cancel",
+    $("#inlined-model-table").on(
+        "click", "button.inlined-model-cancel",
         function(event) {
-            var index = rows_editing.indexOf(getParticipantIdForRow($(this)));
+            var index = rows_editing.indexOf(getInlinedModelIdForRow($(this)));
             if (index > -1){
                 rows_editing.splice(index, 1);
             }
             event.preventDefault();
-            cancelParticipantEdit(getParticipantIdForRow($(this)));
+            cancelInlinedModelEdit(getInlinedModelIdForRow($(this)));
         });
 
-    $("#participant-table").on(
-        "click", "button.participant-save",
+    $("#inlined-model-table").on(
+        "click", "button.inlined-model-save",
         function(event) {
-            var index = rows_editing.indexOf(getParticipantIdForRow($(this)));
+            var index = rows_editing.indexOf(getInlinedModelIdForRow($(this)));
             if (index > -1){
                 rows_editing.splice(index, 1);
             }
             event.preventDefault();
-            saveParticipant(getParticipantIdForRow($(this)), false);
+            saveInlinedModel(getInlinedModelIdForRow($(this)), false);
         });
 
-    $("#add-new-participant-btn").on(
+    $("#add-new-inlined-model-btn").on(
         "click",
         function(event) {
             event.preventDefault();
-            addNewParticipant();
-            // addNewParticipant saves all open rows, so we empty the existing
+            addNewInlinedModel();
+            // addNewInlinedModel saves all open rows, so we empty the existing
             // array of rows being edited.
             rows_editing = [];
             // this case still needs to be handled correctly
             rows_editing.push('empty');
         });
 
-    $("#participant-table").on(
+    $("#inlined-model-table").on(
         "keypress",
-        "tr.participant-edit td input",
+        "tr.inlined-model-edit td input",
         function (event) {
             // 13 is enter key
             if (event.which == 13) {
                 event.preventDefault();
-                saveParticipant(getParticipantIdForRow($(this)), false);
+                saveInlinedModel(getInlinedModelIdForRow($(this)), false);
             }
         });
 
@@ -653,10 +653,10 @@ function setupParticipantCallbacks() {
                 for (j = 0; j < rows_editing.length; j++) {
                     if (j == (rows_editing.length - 1) ) {
                         //for last value, pass the flag that says "and submit"
-                        saveParticipant(rows_editing[j], true);
+                        saveInlinedModel(rows_editing[j], true);
                     }
                     else{
-                        saveParticipant(rows_editing[j], false);
+                        saveInlinedModel(rows_editing[j], false);
                     }
                 }
             }
@@ -674,4 +674,4 @@ function setupParticipantCallbacks() {
 }
 
 
-setupParticipantCallbacks();
+setupInlinedModelCallbacks();
