@@ -161,11 +161,8 @@ for things that use django_autocomplete_light with jquery ui's autocomplete
 
 Arguments:
  - url: the URL used to construct
- - text_is_value: a boolean, if true we'll use the element's text
-   value as input to this function rather than the data-value attribute.
-   This is useful in text autocompletes.
 */
-function autoCompleteSourceHelper(url, text_is_value) {
+function autoCompleteSourceHelper(url) {
     return function (request, response) {
         $.ajax({
             url: url,
@@ -178,9 +175,7 @@ function autoCompleteSourceHelper(url, text_is_value) {
                     $.makeArray($(data)),
                     function(elt) {
                         return {
-                            "value": text_is_value ?
-                                $(elt).text() :
-                                $(elt).attr("data-value"),
+                            "value": $(elt).text(),
                             "data": {"id": $(elt).attr("data-value")},
                             "label": $(elt).text()}});
                 // massage data or in the select func?
@@ -200,8 +195,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/",
-                                         true),
+        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
         select: function(event, ui) {
             if (ui.item) {
                 var participant_id = ui.item.data.id;
@@ -303,7 +297,7 @@ function fillEditRow(row, participant) {
 
     // Institution autocomplete stuff
     institution_field.find("input").autocomplete({
-        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/", true)});
+        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/")});
         
     // Otherwise, check for whether or not this is a new item on each keydown
     // @@: Can we reduce a request per keystroke by rolling this into
