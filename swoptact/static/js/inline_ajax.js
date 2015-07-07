@@ -181,6 +181,7 @@ function autoCompleteSourceHelper(url, text_is_value) {
                             "value": text_is_value ?
                                 $(elt).text() :
                                 $(elt).attr("data-value"),
+                            "id": $(elt).attr("data-value"),
                             "label": $(elt).text()}});
                 // massage data or in the select func?
                 response(json_data);
@@ -200,10 +201,10 @@ function turnOnAttendeeAutocomplete(edit_row) {
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
         source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/",
-                                         false),
+                                         true),
         select: function(event, ui) {
             if (ui.item) {
-                var participant_id = ui.item.value
+                var participant_id = ui.item.id
                 // Remove this row
                 cancelParticipantEdit("");
                 // Insert the participant and make them immediately editable
