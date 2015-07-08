@@ -124,6 +124,8 @@ class Participant(models.Model, SerializeableMixin):
     email = models.EmailField(blank=True)
     address = models.TextField(null=True, blank=True)
     institution = models.ForeignKey(Institution, null=True, blank=True)
+    title = models.CharField(null=True, blank=True, max_length=255,
+                             help_text="e.g. Pastor, Director")
 
     def __str__(self):
         return self.name

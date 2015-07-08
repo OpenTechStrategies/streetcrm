@@ -44,14 +44,14 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "secondary_phone", "email", "address")
+                       "institution", "title", "secondary_phone", "email", "address")
         }),
     )
 
     change_fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "secondary_phone", "email", "address")
+                       "institution", "title", "secondary_phone", "email", "address")
         }),
         ("Personal Event History", {
             "fields": ("event_history",),
