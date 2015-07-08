@@ -115,7 +115,7 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
     inline_form_config = None
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
-        if inline_form_config is None:
+        if self.inline_form_config is None:
             raise ValueError("inline_form_config not set D:")
 
         extra_context = extra_context or {}
