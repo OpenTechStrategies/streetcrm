@@ -284,3 +284,8 @@ span#id_name_countdown_message {
 p.readonly {
     line-height: 40px;
 }
+
+form .form-row p {
+    padding-left: 0px;
+    font-size: 24px;
+}
