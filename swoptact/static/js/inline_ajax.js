@@ -1,6 +1,12 @@
 /*
 Handle inline relationships, including many to many relationships,
 in the Django admin via an ajax'y interface.
+
+Some terminology:
+ - the "page model" refers to the model primarily represented on this
+   page
+ - "inlined model" refers to any foreign model linked via this ajax'y
+   form
 */
 
 
@@ -40,8 +46,8 @@ function showInlinedModelErrorsRow(inlined_model_id) {
 
 
 /* Gets the model id this page represents. */
-function getEventId() {
-    return document.getElementById('event_object_id').value;
+function getPageModelId() {
+    return document.getElementById('page_model_object_id').value;
 }
 
 // TODO: We should memoize this on the object itself probably?
@@ -379,8 +385,8 @@ function fillErrorsRow(row, inlined_model_id, errors) {
 
 /* Grab the initial list of linked items from the server & render */
 function loadInitialAttendees() {
-    var event_id = getEventId();
-    var url = '/api/events/'+event_id+'/participants';
+    var page_model_id = getPageModelId();
+    var url = '/api/events/'+page_model_id+'/participants';
     $.get(url, function (people_list) {
         for (i = 0; i < people_list.length; i++){
             insertInlinedModel(people_list[i]);
@@ -391,7 +397,7 @@ function loadInitialAttendees() {
 
 /* Add the inlined model on the backend and link on the frontend */
 function linkInlinedModel(inlined_model_id, make_editable) {
-    var url = '/api/events/'+getEventId()+'/participants/'+inlined_model_id+"/";
+    var url = '/api/events/'+getPageModelId()+'/participants/'+inlined_model_id+"/";
     $.post(url, function (result) {
         $.get('/api/participants/'+inlined_model_id+'/',
               function (inlined_model) {
@@ -418,8 +424,8 @@ function unlinkInlinedModel(inlined_model_id){
         return false;
     }
 
-    var event_id = getEventId();
-    var target_url = '/api/events/'+event_id+'/participants/'+inlined_model_id+'/';
+    var page_model_id = getPageModelId();
+    var target_url = '/api/events/'+page_model_id+'/participants/'+inlined_model_id+'/';
     $.ajax({
         url: target_url,
         type: 'DELETE',
@@ -542,7 +548,7 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                       success: function (response) {
                           recreateRows(response);
                           if (submit_flag){
-                              $("#event_form").submit();
+                              $("div.change-content form").submit();
                           }
                       },
                       dataType: 'json'
@@ -560,14 +566,14 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                 handleJSONErrors(response, inlined_model_id);
             },
             success: function (response) {
-                var url = '/api/events/'+getEventId()+'/participants/'+response.id+"/";
+                var url = '/api/events/'+getPageModelId()+'/participants/'+response.id+"/";
                 $.post(url, function (result) {
                     $.get('/api/participants/'+response.id+'/',
                           function (inlined_model) {
                               unlinkInlinedModel("");
                               insertInlinedModel(inlined_model);
                               if (submit_flag){
-                                  $("#event_form").submit();
+                                  $("div.change-content form").submit();
                               }
                           }, 'json');
                 }, "json");
@@ -657,7 +663,7 @@ function setupInlinedModelCallbacks() {
                 }
             }
             else{
-                $("#event_form").submit();
+                $("div.change-content form").submit();
             }
         });
 
