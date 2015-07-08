@@ -138,7 +138,6 @@ class Participant(models.Model, SerializeableMixin):
 class Contact(models.Model):
     participant = models.ForeignKey(Participant, related_name="leaders")
     institution = models.ForeignKey(Institution, related_name="organization")
-    title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.participant.name

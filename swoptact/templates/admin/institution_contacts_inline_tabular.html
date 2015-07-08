@@ -16,6 +16,7 @@
          </th>
        {% endif %}
      {% endfor %}
+         <th>Title</th>
          <th>Phone Number</th>
      {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Remove as Key Contact" %}</th>{% endif %}
      </tr></thead>
@@ -81,6 +82,10 @@
           {% endfor %}
         {% endfor %}
         {% if inline_admin_formset.formset.can_delete %}
+        <td>
+          {% if inline_admin_form.original.participant.title %}
+              {{ inline_admin_form.original.participant.title }}
+          {% endif %}
         <td>
           {% if inline_admin_form.original.participant.primary_phone %}
               {{ inline_admin_form.original.participant.primary_phone.as_national }}
