@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 from django import template
 from django.contrib import admin
 from django.template import loader
@@ -98,7 +100,28 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
 
     US_primary_phone.short_description = "Phone Number"
 
-class EventAdmin(admin.ModelAdmin):
+
+class AjaxyInlineAdmin(admin.ModelAdmin):
+    """
+    Base class for those using the ajax'y inline form stuff.
+
+    If you use this, you MUST set inline_form_config!
+    """
+    # TODO: eventually make this a method so we can use the URL dispatcher?
+    inline_form_config = None
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        if inline_form_config is None:
+            raise ValueError("inline_form_config not set D:")
+
+        extra_context = extra_context or {}
+        extra_context["inline_form_config"] = json.dumps(
+            self.inline_form_config)
+        return super(AjaxyInlineAdmin, self).change_view(
+            request, object_id, form_url, extra_context=extra_context)
+
+
+class EventAdmin(AjaxyInlineAdmin):
     list_display = ("name", "location", "date_of_action", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
@@ -107,6 +130,10 @@ class EventAdmin(admin.ModelAdmin):
         exclude=tuple()
     )
     actions = None
+    inline_form_config = {
+        "autocomplete_uri": "/autocomplete/ContactAutocomplete/",
+    }
+
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ("name", )
