@@ -19,6 +19,7 @@ import json
 from django import template
 from django.contrib import admin
 from django.template import loader
+from django.contrib.admin.views import main
 
 import autocomplete_light
 
@@ -100,6 +101,9 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
 
     US_primary_phone.short_description = "Phone Number"
 
+    def __init__(self,*args,**kwargs):
+        super(ParticipantAdmin, self).__init__(*args, **kwargs)
+        main.EMPTY_CHANGELIST_VALUE = ''
 
 class AjaxyInlineAdmin(admin.ModelAdmin):
     """
@@ -122,7 +126,7 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
 
 
 class EventAdmin(AjaxyInlineAdmin):
-    list_display = ("name", "location", "date_of_action", "attendee_count",)
+    list_display = ("name", "location", "date", "attendee_count",)
     exclude = ('participants', 'time')
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
@@ -133,6 +137,10 @@ class EventAdmin(AjaxyInlineAdmin):
     inline_form_config = {
         "autocomplete_uri": "/autocomplete/ContactAutocomplete/",
     }
+
+    def __init__(self,*args,**kwargs):
+        super(EventAdmin, self).__init__(*args, **kwargs)
+        main.EMPTY_CHANGELIST_VALUE = ''
 
 
 class InstitutionAdmin(admin.ModelAdmin):
@@ -151,6 +159,10 @@ class TagAdmin(admin.ModelAdmin):
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
     change_form_template = "admin/change_tag_form.html"
+
+    def __init__(self,*args,**kwargs):
+        super(TagAdmin, self).__init__(*args, **kwargs)
+        main.EMPTY_CHANGELIST_VALUE = ''
 
 class LogAdmin(admin.ModelAdmin):
     actions = None
