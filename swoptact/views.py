@@ -25,18 +25,56 @@ from django.views.decorators.csrf import csrf_exempt
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
 
+
+def process_field_general(api_view, body, model, field_name, value):
+    """
+    General field processor converting json representation
+    to something to attach to the model
+    """
+    # Find the field that the model is on.
+    field = model._meta.get_field(field_name)
+
+    if isinstance(field, related.RelatedField):
+        if value is None:
+            return
+
+        # Check if the object needs to be created.
+        if "id" in value or "pk" in value:
+            # Object already exists - just look it up.
+            pk = value["pk"] if "pk" in value else value["id"]
+            instance = field.rel.to.objects.get(pk=pk)
+
+            # Save the values onto the model
+            for k, v in value.items():
+                setattr(instance, k, v)
+
+            # Save the object back
+            instance.save()
+
+            value = instance
+        else:
+            # Create the object.
+            value = field.rel.to(**value)
+
+            value.save()
+
+            # we need to keep track we made it
+            api_view._objects_created.append(value)
+
+        # The ID of the object should be stored as the value
+        body[field.name] = value.id
+
+
+
 class APIMixin:
     """
     Provides a JSON based to be used by the API
     """
 
+    field_processors = {}
+
     def __init__(self, *args, **kwargs):
         self._objects_created = []
-        # Special processors for certain fields for the process_json method
-        # @@: ... could be a class level attribute, though that make
-        #   stuff a bit messy when it comes to mapping to instance level
-        #   methods :P
-        self.field_processors = {}
 
         return super(APIMixin, self).__init__(*args, **kwargs)
 
@@ -58,39 +96,6 @@ class APIMixin:
         pairs = [p for p in ["{}={}".format(k, v) for k, v in data.items()]]
         return "&".join(pairs)
 
-    def _process_field_general(self, body, model, field_name, value):
-        # Find the field that the model is on.
-        field = model._meta.get_field(field_name)
-
-        if isinstance(field, related.RelatedField):
-            if value is None:
-                return
-
-            # Check if the object needs to be created.
-            if "id" in value or "pk" in value:
-                # Object already exists - just look it up.
-                pk = value["pk"] if "pk" in value else value["id"]
-                instance = field.rel.to.objects.get(pk=pk)
-
-                # Save the values onto the model
-                for k, v in value.items():
-                    setattr(instance, k, v)
-
-                # Save the object back
-                instance.save()
-
-                value = instance
-            else:
-                # Create the object.
-                value = field.rel.to(**value)
-                value.save()
-
-                # we need to keep track we made it
-                self._objects_created.append(value)
-
-            # The ID of the object should be stored as the value
-            body[field.name] = value.id
-
     def process_json(self, body, model=None):
         """
         Produces value for request.POST from a JSON encoded body
@@ -109,8 +114,8 @@ class APIMixin:
         # Look for relations
         for field_name, value in body.items():
             field_processor = self.field_processors.get(
-                field_name, self._process_field_general)
-            field_processor(body, model, field_name, value)
+                field_name, process_field_general)
+            field_processor(self, body, model, field_name, value)
 
         return body
 
@@ -175,6 +180,28 @@ class APIMixin:
             **response_kwargs
         )
 
+
+def process_institution_field(api_view, body, model, field_name, value):
+    if value == "" or value is None:
+        # Nah, nothing to do
+        return
+
+    # Try to see if we have an institution with this name
+    try:
+        result = models.Institution.objects.get(name__iexact=value)
+        body[field_name] = result.id
+        return
+
+    except models.Institution.DoesNotExist:
+        # Nope!  Let's make a new one.
+        new_institution = models.Institution(name=value)
+        new_institution.save()
+        api_view._objects_created.append(new_institution)
+        body[field_name] = new_institution.id
+        return
+
+
+
 class ParticipantAPI(APIMixin, generic.UpdateView):
     """
     Provides the view to retrive, create and update a participant
@@ -187,30 +214,8 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     fields = ["id", "name", "primary_phone",
               "secondary_phone", "email", "address",
               "institution"]
-
-    def __init__(self, *args, **kwargs):
-        super(ParticipantAPI, self).__init__(*args, **kwargs)
-        self.field_processors = {
-            "institution": self._process_institution_field}
-
-    def _process_institution_field(self, body, model, field_name, value):
-        if value == "" or value is None:
-            # Nah, nothing to do
-            return
-
-        # Try to see if we have an institution with this name
-        try:
-            result = models.Institution.objects.get(name__iexact=value)
-            body[field_name] = result.id
-            return
-
-        except models.Institution.DoesNotExist:
-            # Nope!  Let's make a new one.
-            new_institution = models.Institution(name=value)
-            new_institution.save()
-            self._objects_created.append(new_institution)
-            body[field_name] = new_institution.id
-            return
+    field_processors = {
+            "institution": process_institution_field}
 
     def get(self, request, *args, **kwargs):
         """ Retrival of an existing participant """
@@ -229,7 +234,9 @@ class CreateParticipantAPI(APIMixin, generic.CreateView):
 
     model = models.Participant
     fields = ["name", "primary_phone", "secondary_phone",
-              "email", "address"]
+              "email", "address", "institution"]
+    field_processors = {
+            "institution": process_institution_field}
 
     def form_valid(self, form, *args, **kwargs):
         self.object = form.save()
