@@ -1,22 +1,8 @@
 /*
-This page governs the sign-in sheet on the change event form.  It includes
-functions to:
-(1) find the relevant inlined models for a given event
-(2) display information about each of them
-(3) edit textboxes populated by values from that object
-(4) save changes made via those text boxes
-(5) unlink a person from an event
-(6) add an entirely new person (really the same as (4))
-(7) search available inlined models
-(8) link an existing person to this event.
-
+Handle inline relationships, including many to many relationships,
+in the Django admin via an ajax'y interface.
 */
 
-
-
-/*****************
- *   NEW STUFF   *
- *****************/
 
 // Hide and show stuff
 
@@ -205,7 +191,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: autoCompleteSourceHelper("/autocomplete/ContactAutocomplete/"),
+        source: autoCompleteSourceHelper(getInlineConfig().autocomplete_uri),
         select: function(event, ui) {
             if (ui.item) {
                 var inlined_model_id = ui.item.data.id;
