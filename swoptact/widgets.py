@@ -89,6 +89,6 @@ class TwelveHourTimeWidget(forms.MultiWidget):
         # To get 12 hours I add 11 as doing a modulo without causes 12 and 24
         # to be 0, this prevents that, then I add the 1 to correct for the 11
         hours = ((value.hour + 11) % 12) + 1
-        suffix = self.PAM_SUFFIX if value.hour <= 12 else self.PM_SUFFIX
+        suffix = self.AM_SUFFIX if value.hour <= 12 else self.PM_SUFFIX
 
         return [hours, suffix]
