@@ -18,7 +18,7 @@ import datetime
 import phonenumbers
 
 from django import forms
-from django.core import validators
+from django.core import validators, exceptions
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 from phonenumber_field import formfields
