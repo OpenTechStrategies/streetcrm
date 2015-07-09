@@ -57,7 +57,7 @@ class LocalPhoneNumberField(formfields.PhoneNumberField):
 class TwelveHourTimeField(forms.TimeField):
     widget = widgets.TwelveHourTimeWidget
     default_error_messages = {
-        "invalid": _("Enter a valid date."),
+        "invalid": _("Enter a valid time."),
         "invalid_suffix": _("Select am or pm."),
     }
 
@@ -76,12 +76,23 @@ class TwelveHourTimeField(forms.TimeField):
                 code="invalid"
             )
 
+        # If the time suffix has been supplied without a time we should check
+        # that too
+        if time in self.empty_values and suffix not in self.empty_values:
+            raise exceptions.ValidationError(
+                self.error_messages["invalid"],
+                code="invalid"
+            )
+
         # Convert time and suffix to values
         time, suffix = int(time), int(suffix)
+        twentyfour_hour = time + suffix
 
-        # Now we need to add time (1 to 12) to the suffix (am: 1, pm: 12)
-        # then get the modulo of 24 as 12pm is not 24 but 0.
-        twentyfour_hour = (time + suffix) % 24
+        # 12am and 12pm are kind of swapped (though 12pm is 24)
+        if twentyfour_hour == 12:
+            twentyfour_hour = 0
+        elif twentyfour_hour == 24:
+            twentyfour_hour = 12
 
         # Feed this into datetime.time and return
         return datetime.time(hour=twentyfour_hour)
