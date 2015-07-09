@@ -127,7 +127,7 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
 
 class EventAdmin(AjaxyInlineAdmin):
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants', 'time')
+    exclude = ('participants',)
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Event,

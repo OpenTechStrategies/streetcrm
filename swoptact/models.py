@@ -147,26 +147,6 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
         verbose_name = "action"
         verbose_name_plural = "actions"
 
-    SUFFIXES = (
-        ("0", "am",),
-        ("12", "pm",)
-        )
-
-    TIMES = (
-        ("1", "1"),
-        ("2", "2"),
-        ("3", "3"),
-        ("4", "4"),
-        ("5", "5"),
-        ("6", "6"),
-        ("7", "7"),
-        ("8", "8"),
-        ("9", "9"),
-        ("10", "10"),
-        ("11", "11"),
-        ("12", "12"),
-    )
-
     name = models.CharField(max_length=255,
                             verbose_name="Action Name",
                             help_text="The name includes an issue area and a topic.")
@@ -174,10 +154,10 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
                                    verbose_name="Action Description",
                                    help_text="Max length = 255 characters.<br> e.g." +
                                    "\"Met with housing stakeholders.\" ")
-    date = models.DateField(null=True, blank=True, 
+    date = models.DateField(null=True, blank=True,
                             verbose_name="Date of Action")
-    time = models.TimeField(null=True, blank=True,
-                            verbose_name="Time of Action")
+    time = modelfields.TwelveHourTimeField(null=True, blank=True,
+                                           verbose_name="Time of Action")
     location = models.CharField(max_length=255, blank=True,
                                 verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)

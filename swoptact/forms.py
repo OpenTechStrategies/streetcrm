@@ -13,10 +13,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import collections
+
 import django.forms
 from autocomplete_light import forms
 
-from swoptact import models, widgets
+from swoptact import models, widgets, formfields
 
 class TagAdminForm(django.forms.ModelForm):
     class Meta:

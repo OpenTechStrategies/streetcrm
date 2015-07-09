@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from swoptact import formfields
+from django.db import models
 from phonenumber_field import modelfields
+
+from swoptact import formfields
 
 class PhoneNumberField(modelfields.PhoneNumberField):
 
@@ -25,3 +27,17 @@ class PhoneNumberField(modelfields.PhoneNumberField):
         }
         defaults.update(kwargs)
         return super(PhoneNumberField, self).formfield(**defaults)
+
+class TwelveHourTimeField(models.TimeField):
+    """ Twelve hour variant of django's TimeField """
+
+    def formfield(self, **kwargs):
+        # This can't go the standard route of letting kwargs override what we
+        # set as the form_class key is overwritten in the autocomplete factory
+        kwargs["form_class"] = formfields.TwelveHourTimeField
+
+        # We also need to remove the widget as by default on admin ModelForms
+        # it tries to use the special AdminTimeWidget.
+        if "widget" in kwargs:
+            del kwargs["widget"]
+        return super(TwelveHourTimeField, self).formfield(**kwargs)
