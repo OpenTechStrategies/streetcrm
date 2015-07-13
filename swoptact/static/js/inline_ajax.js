@@ -97,9 +97,10 @@ function getInlineConfig() {
 //   config, as supplied by the server
 
 function getAutoCompleteUrl() {
-    return getInlineConfig()["autocomplete_uri"];
+    return getInlineConfig()["autocomplete_url"];
 }
 
+// @@: should these also be named get* rather than fill*?
 function fillCurrentInlinesUrl(page_model_id) {
     var formatter = gummyStringFormatter(
         getInlineConfig()["current_inlines_for_page_url"]);
@@ -262,7 +263,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
-        source: autoCompleteSourceHelper(getInlineConfig().autocomplete_uri),
+        source: autoCompleteSourceHelper(getAutoCompleteUrl()),
         select: function(event, ui) {
             if (ui.item) {
                 var inlined_model_id = ui.item.data.id;
@@ -451,7 +452,7 @@ function fillErrorsRow(row, inlined_model_id, errors) {
 /* Grab the initial list of linked items from the server & render */
 function loadInitialAttendees() {
     var page_model_id = getPageModelId();
-    var url = '/api/events/'+page_model_id+'/participants';
+    var url = fillCurrentInlinesUrl(page_model_id);
     $.get(url, function (people_list) {
         for (i = 0; i < people_list.length; i++){
             insertInlinedModel(people_list[i]);
@@ -462,9 +463,9 @@ function loadInitialAttendees() {
 
 /* Add the inlined model on the backend and link on the frontend */
 function linkInlinedModel(inlined_model_id, make_editable) {
-    var url = '/api/events/'+getPageModelId()+'/participants/'+inlined_model_id+"/";
+    var url = fillLinkInlinedModelUrl(getPageModelId(), inlined_model_id);
     $.post(url, function (result) {
-        $.get('/api/participants/'+inlined_model_id+'/',
+        $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model) {
                   insertInlinedModel(inlined_model);
                   if (make_editable) {
@@ -490,7 +491,7 @@ function unlinkInlinedModel(inlined_model_id){
     }
 
     var page_model_id = getPageModelId();
-    var target_url = '/api/events/'+page_model_id+'/participants/'+inlined_model_id+'/';
+    var target_url = fillLinkInlinedModelUrl(page_model_id, inlined_model_id);
     $.ajax({
         url: target_url,
         type: 'DELETE',
@@ -599,12 +600,12 @@ Arguments:
 */
 function saveInlinedModel(inlined_model_id, submit_flag) {
     if (inlined_model_id != "empty" && inlined_model_id != ""){
-        $.get('/api/participants/'+inlined_model_id+'/',
+        $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model) {
                   new_inlined_model = updateInlinedModel(inlined_model);
                   data = JSON.stringify(new_inlined_model);
                   $.ajax({
-                      url: '/api/participants/'+inlined_model_id+'/',
+                      url: fillExistingInlinedModelUrl(inlined_model_id),
                       data: data,
                       type: 'PUT',
                       error: function (response) {
@@ -624,16 +625,16 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
         new_inlined_model = updateInlinedModel(empty_inlined_model);
         data = JSON.stringify(new_inlined_model);
         $.ajax({
-            url: '/api/participants/',
+            url: getNewInlinedModelUrl(),
             data: data,
             type: 'POST',
             error: function (response, jqXHR) {
                 handleJSONErrors(response, inlined_model_id);
             },
             success: function (response) {
-                var url = '/api/events/'+getPageModelId()+'/participants/'+response.id+"/";
+                var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
                 $.post(url, function (result) {
-                    $.get('/api/participants/'+response.id+'/',
+                    $.get(fillExistingInlinedModelUrl(response.id),
                           function (inlined_model) {
                               unlinkInlinedModel("");
                               insertInlinedModel(inlined_model);
