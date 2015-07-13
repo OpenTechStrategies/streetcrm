@@ -9,6 +9,38 @@ Some terminology:
    form
 */
 
+/* Gum-and-duct-tape string formatter
+
+Arguments:
+ - string_pattern: A "url pattern" which is a list of strings.
+     Some of these will be "special", intended to be matched/replaced.
+     By the end of this, all of these will be joined together,
+     including the ones that are substitued.
+
+Returns:
+  A function which can be called with a single argument, an
+  object/hashmap full of the components to be replaced.
+
+Sounds confusing?  It's not too hard to use.  Take a look:
+  var url_formatter = gummyStringFormatter(
+                          ["/api/froobs/", "<froob_id>", "/lookit"]);
+  // This should produce "/api/froobs/35/lookit"
+  var my_url = url_formatter({"<froob_id>": 35});
+*/
+function gummyStringFormatter(string_pattern) {
+    return function(replace_map) {
+        var new_str = "";
+        for (var i = 0; i < string_pattern.length; i++) {
+            var component = string_pattern[i];
+            if (component in replace_map) {
+                new_str = new_str + replace_map[component];
+            } else {
+                new_str = new_str + component;
+            }
+        }
+        return new_str;
+    };
+}
 
 // Hide and show stuff
 
