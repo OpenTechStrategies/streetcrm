@@ -92,6 +92,39 @@ function getInlineConfig() {
     return $.parseJSON($("#inline-config").attr("data-config"));
 }
 
+// <inline_config_uri_helpers>
+//   Various helpers for URI construction based on the inline form's
+//   config, as supplied by the server
+
+function getAutoCompleteUrl() {
+    return getInlineConfig()["autocomplete_uri"];
+}
+
+function fillCurrentInlinesUrl(page_model_id) {
+    var formatter = gummyStringFormatter(
+        getInlineConfig()["current_inlines_for_page_url"]);
+    return formatter({"<page_model_id>": page_model_id});
+}
+
+function fillLinkInlinedModelUrl(page_model_id, inlined_model_id) {
+    var formatter = gummyStringFormatter(
+        getInlineConfig()["link_inlined_model_url"]);
+    return formatter({"<page_model_id>": page_model_id,
+                      "<inlined_model_id>": inlined_model_id});
+}
+
+function fillExistingInlinedModelUrl(inlined_model_id) {
+    var formatter = gummyStringFormatter(
+        getInlineConfig()["existing_inlined_model_url"]);
+    return formatter({"<inlined_model_id>": inlined_model_id});
+}
+
+function getNewInlinedModelUrl() {
+    return getInlineConfig()["new_inlined_model_url"];
+}
+
+// </inline_config_uri_helpers>
+
 
 /* Handle the "edit" button for a inlined row. */
 function makeInlinedModelEditable(inlined_model_id) {
