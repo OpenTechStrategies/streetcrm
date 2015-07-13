@@ -7,9 +7,9 @@ function warnUnsaved() {
         return;
     }   
 
-    // Check if there is any unsaved fields and if so warm before leaving
+    // Check if there are any unsaved fields and if so warn before leaving
     if (initialFormData != $("#fieldset-1").serialize()) {
-        return "There's unsaved data, are you sure you want to leave.";
+        return "You have entered data without saving it. Are you sure you want to leave this page?";
     }
 
     return;     
@@ -20,7 +20,7 @@ $(document).ready(function () {
     // First populate the initial form data
     initialFormData = $("#fieldset-1").serialize(); 
 
-    // Setup callbacks.
+    // Set up callbacks.
     $("form").submit(function () {
         formSubmitted = true;
     });
