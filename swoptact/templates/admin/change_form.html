@@ -9,7 +9,7 @@
 {% load i18n admin_urls admin_static admin_modify bootstrapped_goodies_tags %}
 
 {% block extrahead %}{{ block.super }}
-<script type="text/javascript" src="{% static "js/warm_unsaved.js" %}"></script>
+<script type="text/javascript" src="{% static "js/warn_unsaved.js" %}"></script>
 {% url 'admin:jsi18n' as jsi18nurl %}
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {{ media }}
