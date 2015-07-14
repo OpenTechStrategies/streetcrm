@@ -135,7 +135,7 @@ class EventAdmin(AjaxyInlineAdmin):
     )
     actions = None
     inline_form_config = {
-        "autocomplete_uri": "/autocomplete/ContactAutocomplete/",
+        "autocomplete_url": "/autocomplete/ContactAutocomplete/",
         "current_inlines_for_page_url": [
             "/api/events/", "<page_model_id>", "/participants"],
         "link_inlined_model_url": [
