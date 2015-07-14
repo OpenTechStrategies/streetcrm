@@ -317,8 +317,7 @@
     "pk": 2,
     "fields": {
         "participant": 32,
-        "institution": 2,
-        "title": "Pastor"
+        "institution": 2
     }
 },
 {
@@ -326,8 +325,7 @@
     "pk": 9,
     "fields": {
         "participant": 9,
-        "institution": 2,
-        "title": "Test Title"
+        "institution": 2
     }
 },
 {
@@ -335,8 +333,7 @@
     "pk": 11,
     "fields": {
         "participant": 14,
-        "institution": 1,
-        "title": "Test LEADER"
+        "institution": 1
     }
 },
 {
@@ -344,8 +341,7 @@
     "pk": 12,
     "fields": {
         "participant": 24,
-        "institution": 1,
-        "title": "Primary Contact"
+        "institution": 1
     }
 },
 {
@@ -353,8 +349,7 @@
     "pk": 13,
     "fields": {
         "participant": 31,
-        "institution": 1,
-        "title": ""
+        "institution": 1
     }
 },
 {
@@ -362,8 +357,7 @@
     "pk": 18,
     "fields": {
         "participant": 26,
-        "institution": 1,
-        "title": ""
+        "institution": 1
     }
 },
 {
@@ -371,8 +365,7 @@
     "pk": 19,
     "fields": {
         "participant": 30,
-        "institution": 2,
-        "title": ""
+        "institution": 2
     }
 },
 {
@@ -380,8 +373,7 @@
     "pk": 20,
     "fields": {
         "participant": 33,
-        "institution": 2,
-        "title": ""
+        "institution": 2
     }
 },
 {
@@ -389,8 +381,7 @@
     "pk": 21,
     "fields": {
         "participant": 14,
-        "institution": 2,
-        "title": ""
+        "institution": 2
     }
 },
 {
@@ -398,8 +389,7 @@
     "pk": 22,
     "fields": {
         "participant": 28,
-        "institution": 2,
-        "title": ""
+        "institution": 2
     }
 },
 {
