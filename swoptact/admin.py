@@ -150,7 +150,7 @@ class EventAdmin(AjaxyInlineAdmin):
              "input_type": "text"},
             {"descriptive_name": "Institution",
              "form_name": "institution",
-             "input_type": "fkey_name_autocomplete",
+             "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
             {"descriptive_name": "Attendee's Phone Number",
              "form_name": "primary_phone",

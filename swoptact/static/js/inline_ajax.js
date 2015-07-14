@@ -42,6 +42,52 @@ function gummyStringFormatter(string_pattern) {
     };
 }
 
+
+function setupTextInputStatic(field_def, cur_value) {
+    if (!cur_value) {
+        cur_value = "";
+    }
+    var p_elt = $("<p/>",
+        {"style": "font-size: 18"});
+    p_elt.text(cur_value);
+    return p_elt
+}
+
+function setupTextInputEditable(field_def, cur_value) {
+    input_elt = $("<input/>", {
+        "class": "vTextField " + field_dev["form_name"],
+        "type": "text",
+        "value": cur_value});
+    input_elt.text(cur_value);
+    return input_elt;
+}
+
+function setupFkeyAutoCompleteNameStatic(field_def, cur_value) {
+    if (cur_value) {
+        return setupTextInputStatic(field_def, cur_value.name);
+    } else {
+        return setupTextInputStatic(field_def, "");
+    }
+}
+
+
+function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
+    // TODO
+    return null;
+}
+
+var fieldTypes = {
+    "text": {
+        setupStatic: setupTextInputStatic,
+        setupEdit: setupTextInputEditable
+    },
+    "fkey_autocomplete_name": {
+        setupStatic: setupFkeyAutoCompleteNameStatic,  // no different than the text input
+        setupEdit: setupFkeyAutoCompleteNameEditable,
+    }
+};
+
+
 // Hide and show stuff
 
 function getInlinedModelStaticRow(inlined_model_id) {
@@ -307,28 +353,19 @@ Arguments:
  - inlined: mapping representing this linked model's data
 */
 function fillStaticRow(row, inlined_model) {
+    var fields_config = getFieldsConfig();
     resetRow(row, inlined_model.id);
 
-    appendSimpleText = function (text) {
-        td_wrap = $("<td/>");
-        p_wrap = $("<p/>",
-                   {"style": "font-size: 18"});
-        p_wrap.text(text);
-        td_wrap.append(p_wrap);
-        row.append(td_wrap);
-    }
-
-    appendSimpleText(inlined_model.name);
-    if (inlined_model.institution) {
-        appendSimpleText(inlined_model.institution.name);
-    } else {
-        appendSimpleText("");
-    }
-    if (inlined_model.primary_phone) {
-        appendSimpleText(inlined_model.primary_phone);
-    } else {
-        appendSimpleText("");
-    }
+    fields_config.map(
+        function(field) {
+            var new_elt = fieldTypes[field.input_type].setupStatic(
+                field,
+                // The current representation for this field on the model
+                inlined_model[field.form_name])
+            td_wrap = $("<td/>");
+            td_wrap.append(new_elt);
+            row.append(td_wrap);
+        });
 
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn inlined-model-edit" name="_edit">✎ Edit</button> <button type="submit" class="btn inlined-model-unlink" name="_unlink">✘ Undo</button></td>');
