@@ -143,7 +143,20 @@ class EventAdmin(AjaxyInlineAdmin):
             "/participants/", "<inlined_model_id>", "/"],
         "existing_inlined_model_url": [
             "/api/participants/", "<inlined_model_id>", "/"],
-        "new_inlined_model_url": "/api/participants/"}
+        "new_inlined_model_url": "/api/participants/",
+        "fields": [
+            {"descriptive_name": "Name",
+             "form_name": "name",
+             "input_type": "text"},
+            {"descriptive_name": "Institution",
+             "form_name": "institution",
+             "input_type": "fkey_name_autocomplete",
+             "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
+            {"descriptive_name": "Attendee's Phone Number",
+             "form_name": "primary_phone",
+             "input_type": "text"},
+         ],
+    }
 
     def __init__(self,*args,**kwargs):
         super(EventAdmin, self).__init__(*args, **kwargs)

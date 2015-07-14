@@ -92,6 +92,12 @@ function getInlineConfig() {
     return $.parseJSON($("#inline-config").attr("data-config"));
 }
 
+// Shortcut for getting the configuration
+function getFieldsConfig() {
+    return getInlineConfig()["fields"];
+}
+
+
 // <inline_config_uri_helpers>
 //   Various helpers for URI construction based on the inline form's
 //   config, as supplied by the server
@@ -335,6 +341,8 @@ Arguments:
  - inlined_model: mapping representing this linked model's data
 */
 function fillEditRow(row, inlined_model) {
+    var fields_config = getFieldsConfig();
+
     resetRow(row, inlined_model.id);
     var appendSimpleTextField = function (text, class_identifier) {
         td_wrap = $("<td/>");
@@ -650,6 +658,16 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
     }
 }
 
+function insertFormHeaders() {
+    getFieldsConfig().map(
+        function(field) {
+            var new_elt = $("<th/>");
+            new_elt.text(field["descriptive_name"]);
+            $("#inlined-model-table thead tr").append(new_elt);
+        });
+    $("#inlined-model-table thead tr").append($("<th>Actions</th>"));
+}
+
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
     //keep track of row(s) in the middle of being edited
@@ -734,12 +752,9 @@ function setupInlinedModelCallbacks() {
         });
 
     $(document).ready(function () {
+        insertFormHeaders();
         loadInitialAttendees();
     });
-
-
-
 }
-
 
 setupInlinedModelCallbacks();
