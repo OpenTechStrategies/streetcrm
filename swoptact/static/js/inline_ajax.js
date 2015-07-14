@@ -55,7 +55,7 @@ function setupTextInputStatic(field_def, cur_value) {
 
 function setupTextInputEditable(field_def, cur_value) {
     input_elt = $("<input/>", {
-        "class": "vTextField " + field_dev["form_name"],
+        "class": "vTextField " + field_def["form_name"],
         "type": "text",
         "value": cur_value});
     input_elt.text(cur_value);
@@ -71,9 +71,97 @@ function setupFkeyAutoCompleteNameStatic(field_def, cur_value) {
 }
 
 
+
+/*
+           ..   ..
+            \.-./
+      \     (o o)    \ 
+      /\    /"""\    /\
+           ''   ''
+  BEWARE OF FALLING LAMBDAS!
+
+... just kidding, everything's okay.  It's just a little bit more
+intense of a function than I'd like.  Besides, every codebase needs
+a reference to "lambda" to show the authors are with it, right?
+
+Basically we're going to set up a field here for the autocomplete field.
+But that thing needs to indicate clearly to the user when something
+is new or not to the user, so we set up a [NEW] widget, hide it by default,
+but as soon as a user types something, we check to see if that's new.
+
+But we simultaneously also hook in the autocomplete stuff.  (Pull out
+the URL for that out of the field definition!)  It turns out we've
+already got an "on typing" handler there, so why not tack on the [NEW]
+stuff when we run that?
+
+So that's why this looks a bit tricky.  But it's not so bad.
+*/
+
 function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
-    // TODO
-    return null;
+    div_wrapper = $("<div/>");
+    // named_fkey has some more complex code...
+    if (cur_value) {
+        var named_fkey_input = setupTextInputEditable(
+            field_def, cur_value.name);
+    } else {
+        var named_fkey_input = setupTextInputEditable(
+            field_def, "");
+    }
+    div_wrapper.append(named_fkey_input);
+
+    var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
+    div_wrapper.append(new_indicator);
+    new_indicator.hide();
+
+    // Named_fkey autocomplete stuff
+    named_fkey_input.autocomplete({
+        select: function (event, ui) {
+            if (ui.item) {
+                new_indicator.hide();
+            }},
+        source: autoCompleteSourceHelper(field_def.autocomplete_uri)});
+
+    // Otherwise, check for whether or not this is a new item on each keydown
+    // @@: Can we reduce a request per keystroke by rolling this into
+    //   the autocomplete's signals?
+    named_fkey_input.on(
+        "keypress",
+        function (event) {
+            // 13 is enter key, and we have a different handler for that
+            if (event.which != 13) {
+                // Do we have an item that matches this?
+                $.ajax({
+                    url: field_def.autocomplete_uri,
+                    datatype: "html",
+                    data: {
+                        q: named_fkey_input.val(),
+                    },
+                    success: function(data) {
+                        var lower_input = named_fkey_input.val().toLowerCase();
+                        var result_as_array = $.makeArray($(data));
+                        var found_match = false;
+                        // Search through all results, see if there's a match
+                        // that matches by lowercase
+                        for (var i = 0; i < result_as_array.length; i++) {
+                            var this_result = result_as_array[i];
+                            if ($(this_result).text().toLowerCase() == lower_input) {
+                                found_match = true;
+                                break;
+                            }
+                        }
+
+                        // If there's a match, hide the [NEW], but show it otherwise
+                        if (found_match || lower_input.length == 0) {
+                            new_indicator.hide();
+                        } else {
+                            new_indicator.show();
+                        }
+                    }
+                })
+            }
+        });
+
+    return div_wrapper;
 }
 
 var fieldTypes = {
@@ -379,85 +467,19 @@ Arguments:
 */
 function fillEditRow(row, inlined_model) {
     var fields_config = getFieldsConfig();
-
     resetRow(row, inlined_model.id);
-    var appendSimpleTextField = function (text, class_identifier) {
-        td_wrap = $("<td/>");
-        input_wrap = $("<input/>", {
-            "class": "vTextField " + class_identifier,
-            "type": "text",
-            "id": "edit-" + class_identifier + "-" + inlined_model.id,
-            "value": text});
-        input_wrap.text(text);
-        td_wrap.append(input_wrap);
-        row.append(td_wrap);
-        return td_wrap;
-    };
 
-    appendSimpleTextField(inlined_model.name, "name");
-
-    // institution has some more complex code...
-    if (inlined_model.institution) {
-        var institution_field = appendSimpleTextField(
-            inlined_model.institution.name, "institution");
-    } else {
-        var institution_field = appendSimpleTextField("", "institution");
-    }
-
-    var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
-    institution_field.append(new_indicator);
-    new_indicator.hide();
-
-    // Institution autocomplete stuff
-    institution_field.find("input").autocomplete({
-        select: function (event, ui) {
-            if (ui.item) {
-                new_indicator.hide();
-            }},
-        source: autoCompleteSourceHelper("/autocomplete/InstitutionAutocomplete/")});
-
-    // Otherwise, check for whether or not this is a new item on each keydown
-    // @@: Can we reduce a request per keystroke by rolling this into
-    //   the autocomplete's signals?
-    var institution_input = institution_field.find("input");
-    institution_input.on(
-        "keypress",
-        function (event) {
-            // 13 is enter key, and we have a different handler for that
-            if (event.which != 13) {
-                // Do we have an item that matches this?
-                $.ajax({
-                    url: "/autocomplete/InstitutionAutocomplete/",
-                    datatype: "html",
-                    data: {
-                        q: institution_input.val(),
-                    },
-                    success: function(data) {
-                        var lower_input = institution_input.val().toLowerCase();
-                        var result_as_array = $.makeArray($(data));
-                        var found_match = false;
-                        // Search through all results, see if there's a match
-                        // that matches by lowercase
-                        for (var i = 0; i < result_as_array.length; i++) {
-                            var this_result = result_as_array[i];
-                            if ($(this_result).text().toLowerCase() == lower_input) {
-                                found_match = true;
-                                break;
-                            }
-                        }
-
-                        // If there's a match, hide the [NEW], but show it otherwise
-                        if (found_match || lower_input.length == 0) {
-                            new_indicator.hide();
-                        } else {
-                            new_indicator.show();
-                        }
-                    }
-                })
-            }
+    fields_config.map(
+        function(field) {
+            var new_elt = fieldTypes[field.input_type].setupEdit(
+                field,
+                // The current representation for this field on the model
+                inlined_model[field.form_name])
+            td_wrap = $("<td/>");
+            td_wrap.append(new_elt);
+            row.append(td_wrap);
         });
 
-    appendSimpleTextField(inlined_model.primary_phone, "primary-phone");
     // Now append the buttons...
     row.append('<td><button type="submit" class="btn inlined-model-save" name="_save">✓ Done</button> <button type="submit" class="btn inlined-model-cancel" name="_cancel">✗ Cancel</button></td>');
 }
