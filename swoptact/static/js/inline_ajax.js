@@ -451,6 +451,7 @@ function fillStaticRow(row, inlined_model) {
                 // The current representation for this field on the model
                 inlined_model[field.form_name])
             td_wrap = $("<td/>");
+            td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.append(new_elt);
             row.append(td_wrap);
         });
@@ -476,6 +477,7 @@ function fillEditRow(row, inlined_model) {
                 // The current representation for this field on the model
                 inlined_model[field.form_name])
             td_wrap = $("<td/>");
+            td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.append(new_elt);
             row.append(td_wrap);
         });
