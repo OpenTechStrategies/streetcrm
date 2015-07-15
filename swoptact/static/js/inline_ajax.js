@@ -451,6 +451,19 @@ function turnOnAttendeeAutocomplete(edit_row) {
 }
 
 /*
+  Create a link to the change form of an inlined model with the given ID
+*/
+function createProfileLink(inlined_model_id, existing_element) {
+    var link_to_profile = $("<a/>");
+    link_to_profile.html(" &#x2139;");
+    link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id));
+    existing_element.append(link_to_profile);
+}
+
+
+
+
+/*
 Wipe out a row and add the hidden inlined id input
 
 Arguments:
@@ -478,21 +491,16 @@ function fillStaticRow(row, inlined_model) {
 
     fields_config.map(
         function(field) {
+            var new_elt = fieldTypes[field.input_type].setupStatic(
+                field,
+                // The current representation for this field on the model
+                inlined_model[field.form_name])
             if (field['form_name'] == 'name'){
-                var new_elt = fieldTypes[field.input_type].setupStatic(
-                    field,
-                    // The current representation for this field on the model
-                    inlined_model[field.form_name] + " ");
-                var link_to_profile = $("<a/>");
-                link_to_profile.html("&#x2139;");
-                link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model.id));
-                new_elt.append(link_to_profile);
+                createProfileLink(inlined_model.id, new_elt);
             }
-            else{
-                var new_elt = fieldTypes[field.input_type].setupStatic(
-                    field,
-                    // The current representation for this field on the model
-                    inlined_model[field.form_name]);
+            else if (field['form_name'] == 'institution' && inlined_model.institution){
+                // this doesn't work yet because I don't know how to set the URL correctly
+                // createProfileLink(inlined_model.institution.id, new_elt);
             }
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
@@ -524,6 +532,9 @@ function fillEditRow(row, inlined_model) {
             td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.attr("data-input-type", field['input_type']);
             td_wrap.append(new_elt);
+            if (field['form_name'] == 'name'){
+                createProfileLink(inlined_model.id, td_wrap);
+            }
             row.append(td_wrap);
         });
 
