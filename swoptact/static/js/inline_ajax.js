@@ -682,14 +682,13 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
     if (inlined_model_id != "empty" && inlined_model_id != ""){
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model_dbstate) {
-                  // @@: As far as I can tell, nobody has verified that this is
-                  //   necessary, but nobody has tested that it isn't either ;p
-                  //   We may be able to save a round trip to the server per
-                  //   query by avoiding this step if django/swoptact's API
-                  //   stuff leaves fields unspecified as-is.
+                  // @@: Unfortunately, we're fetching the existing representation from
+                  //   the server and then modifying that with the form before update.
+                  //   The reason is that whatever fields aren't supplied are dropped...
+                  //   and we don't want that!
                   //   
-                  //   ... On top of this, this is potentially DANGEROUS depending
-                  //   on how the page model is defined!  The API is non-symmetrical,
+                  //   ... this is potentially DANGEROUS depending on how the
+                  //   page model is defined!  The API is non-symmetrical,
                   //   meaning that data representation of existing models is not
                   //   guaranteed (and often is not) the same as the representation
                   //   used to add new / save adjustments to models.
@@ -701,9 +700,6 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                   //   ... So if it's possible to only save adjustments to the fields
                   //   we're representing, we should do that. :P
                   //
-                  // Effectively we're taking the current state of the model as,
-                  // set in the db, and updating it with the state from the form.
-                  // 
                   // ... we're not doing a clean copy of this data, because it isn't
                   // necessary and it's not trivial to do in javascript, but keep
                   // in mind that this does mutate inlined_model_dbstate too.
