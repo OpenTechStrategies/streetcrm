@@ -206,6 +206,9 @@ input.vTextField {
 input.vTextField#id_description {
     width: 500px;
 }
+input.vTextField#id_title {
+    width: 500px;
+}
 
 /* Pull the button to add new objects up a bit */
 .object-tools {
@@ -294,4 +297,9 @@ form .form-row p {
     float: left;
     margin-left: 25px;
     margin-top: 25px;
+}
+
+.vLargeTextField {
+    width: 300px;
+    height: 100px;
 }

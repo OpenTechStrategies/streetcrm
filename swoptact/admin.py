@@ -40,7 +40,7 @@ class ContactInline(admin.TabularInline):
 class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_display = ("name", "US_primary_phone", "institution", "address",)
-    readonly_fields = ("event_history", "event_history_name", )
+    readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
@@ -53,8 +53,8 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
             "fields": ("name", "primary_phone",
                        "institution", "title", "secondary_phone", "email", "address")
         }),
-        ("Personal Event History", {
-            "fields": ("event_history",),
+        ("Personal Action History", {
+            "fields": ("action_history",),
         }),
     )
 
@@ -72,22 +72,22 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     @property
     def event_history_name(self, obj):
         """ Name of event history fieldset """
-        return "Events that {name} attended".format(
+        return "Actions that {name} attended".format(
             name=obj.name
         )
 
-    def event_history(self, obj):
+    def action_history(self, obj):
         """ HTML history of the events attended by the participant """
         template_name = "admin/includes/event_history.html"
-        event_history_template = loader.get_template(template_name)
+        action_history_template = loader.get_template(template_name)
         context = template.Context({
             "events": obj.events,
         })
-        return event_history_template.render(context)
+        return action_history_template.render(context)
 
     # To prevent django from distorting how the event_history method looks tell
     # it to allow HTML using the allow_tags method attribute.
-    event_history.allow_tags = True
+    action_history.allow_tags = True
 
     def US_primary_phone(self, obj):
         if obj.primary_phone is None:
