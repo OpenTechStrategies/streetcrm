@@ -223,6 +223,10 @@ div.form-actions div.pull-right {
     padding-right: 30%;
 }
 
+li.pull-left {
+    padding-right: 70%;
+}
+
 td.field-US_primary_phone {
     font-weight: bold;
 }
