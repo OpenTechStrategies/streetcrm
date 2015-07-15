@@ -62,6 +62,10 @@ function setupTextInputEditable(field_def, cur_value) {
     return input_elt;
 }
 
+function getDataFromTextInput(column) {
+    return column.find("input").val();
+}
+
 function setupFkeyAutoCompleteNameStatic(field_def, cur_value) {
     if (cur_value) {
         return setupTextInputStatic(field_def, cur_value.name);
@@ -167,13 +171,31 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
 var fieldTypes = {
     "text": {
         setupStatic: setupTextInputStatic,
-        setupEdit: setupTextInputEditable
+        setupEdit: setupTextInputEditable,
+        getDataFromColumn: getDataFromTextInput
     },
     "fkey_autocomplete_name": {
-        setupStatic: setupFkeyAutoCompleteNameStatic,  // no different than the text input
+        setupStatic: setupFkeyAutoCompleteNameStatic,
         setupEdit: setupFkeyAutoCompleteNameEditable,
+        getDataFromColumn: getDataFromTextInput
     }
 };
+
+
+
+function getDataForEditRow(row) {
+    var data = {};
+    $.makeArray(row.children("td[data-form-name]")).map(
+        function(column) {
+            var jq_column = $(column);
+            var form_name = jq_column.attr("data-form-name");
+            var input_type = jq_column.attr("data-input-type");
+            var handler = fieldTypes[input_type].getDataFromColumn;
+            data[form_name] = handler(jq_column);
+        }
+    );
+    return data;
+}
 
 
 // Hide and show stuff
@@ -478,6 +500,7 @@ function fillEditRow(row, inlined_model) {
                 inlined_model[field.form_name])
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
+            td_wrap.attr("data-input-type", field['input_type']);
             td_wrap.append(new_elt);
             row.append(td_wrap);
         });
@@ -601,27 +624,6 @@ function addNewInlinedModel() {
 }
 
 
-// @@: Maybe we should replace this with other function usage?
-
-/* takes an inlined object and returns a inlined object filled with new
-values from the input fields in that inlined model's row
-*/
-function updateInlinedModel(inlined_model){
-    if (inlined_model.id){
-        var edit_input = $('#inlined-model-edit-'+inlined_model.id);
-    }
-    else{
-        var edit_input = $('#inlined-model-edit-');
-    }
-    var text_inputs = (edit_input.find(".vTextField"));
-    // array will be name, phone_number, address as long as our
-    // UI columns stay the same
-    inlined_model.name = text_inputs[0].value;
-    inlined_model.institution = text_inputs[1].value;
-    inlined_model.primary_phone = text_inputs[2].value;
-    return inlined_model;
-}
-
 /*
 Helper function to find the correct rows and fill them using other functions,
 after a inlined is updated
@@ -659,7 +661,6 @@ function handleJSONErrors(response, inlined_model_id){
     }
 }
 
-
 /* Save inlined model on server and update the UI
 
 Arguments:
@@ -668,14 +669,53 @@ Arguments:
    NOTE: this is broken, see issue #105
 */
 function saveInlinedModel(inlined_model_id, submit_flag) {
+    // Get the row, extract the current mapping of fields to their data
+    var row = getInlinedModelEditRow(inlined_model_id);
+    var form_data = getDataForEditRow(row);
+
+    // Handle if this is a new row, or an existing one
+    //
+    // @@: we shouldn't really have both "empty" and ""
+    //   supported here.  We should simplify the code to just ""
+    //   because otherwise we're going to end up with a lot of
+    //   missed conditions and extra checks.
     if (inlined_model_id != "empty" && inlined_model_id != ""){
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
-              function (inlined_model) {
-                  new_inlined_model = updateInlinedModel(inlined_model);
-                  data = JSON.stringify(new_inlined_model);
+              function (inlined_model_dbstate) {
+                  // @@: As far as I can tell, nobody has verified that this is
+                  //   necessary, but nobody has tested that it isn't either ;p
+                  //   We may be able to save a round trip to the server per
+                  //   query by avoiding this step if django/swoptact's API
+                  //   stuff leaves fields unspecified as-is.
+                  //   
+                  //   ... On top of this, this is potentially DANGEROUS depending
+                  //   on how the page model is defined!  The API is non-symmetrical,
+                  //   meaning that data representation of existing models is not
+                  //   guaranteed (and often is not) the same as the representation
+                  //   used to add new / save adjustments to models.
+                  //   For example, a foreign key will return a hashmap of data
+                  //   whereas a referenced-by-name-on-save will just take a string
+                  //   back.  This means THIS WILL BREAK for this kind of data
+                  //   if not represented in this field.
+                  //
+                  //   ... So if it's possible to only save adjustments to the fields
+                  //   we're representing, we should do that. :P
+                  //
+                  // Effectively we're taking the current state of the model as,
+                  // set in the db, and updating it with the state from the form.
+                  // 
+                  // ... we're not doing a clean copy of this data, because it isn't
+                  // necessary and it's not trivial to do in javascript, but keep
+                  // in mind that this does mutate inlined_model_dbstate too.
+                  //
+                  var data_to_submit = inlined_model_dbstate;
+                  for (key in form_data) {
+                      data_to_submit[key] = form_data[key];
+                  }
+                  
                   $.ajax({
                       url: fillExistingInlinedModelUrl(inlined_model_id),
-                      data: data,
+                      data: JSON.stringify(data_to_submit),
                       type: 'PUT',
                       error: function (response) {
                           handleJSONErrors(response, inlined_model_id);
@@ -690,12 +730,9 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                   });
               }, 'json');
     } else {
-        empty_inlined_model = {};
-        new_inlined_model = updateInlinedModel(empty_inlined_model);
-        data = JSON.stringify(new_inlined_model);
         $.ajax({
             url: getNewInlinedModelUrl(),
-            data: data,
+            data: JSON.stringify(form_data),
             type: 'POST',
             error: function (response, jqXHR) {
                 handleJSONErrors(response, inlined_model_id);
