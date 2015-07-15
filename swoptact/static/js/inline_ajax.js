@@ -282,6 +282,12 @@ function fillExistingInlinedModelUrl(inlined_model_id) {
     return formatter({"<inlined_model_id>": inlined_model_id});
 }
 
+function getExistingInlinedModelProfileUrl(inlined_model_id) {
+    var formatter = gummyStringFormatter(
+        getInlineConfig()["existing_inlined_model_profile_url"]);
+    return formatter({"<inlined_model_id>": inlined_model_id});
+}
+
 function getNewInlinedModelUrl() {
     return getInlineConfig()["new_inlined_model_url"];
 }
@@ -472,10 +478,22 @@ function fillStaticRow(row, inlined_model) {
 
     fields_config.map(
         function(field) {
-            var new_elt = fieldTypes[field.input_type].setupStatic(
-                field,
-                // The current representation for this field on the model
-                inlined_model[field.form_name])
+            if (field['form_name'] == 'name'){
+                var new_elt = fieldTypes[field.input_type].setupStatic(
+                    field,
+                    // The current representation for this field on the model
+                    inlined_model[field.form_name] + " ");
+                var link_to_profile = $("<a/>");
+                link_to_profile.html("&#x2139;");
+                link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model.id));
+                new_elt.append(link_to_profile);
+            }
+            else{
+                var new_elt = fieldTypes[field.input_type].setupStatic(
+                    field,
+                    // The current representation for this field on the model
+                    inlined_model[field.form_name]);
+            }
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.append(new_elt);
