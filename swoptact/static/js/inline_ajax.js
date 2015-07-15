@@ -286,6 +286,10 @@ function getNewInlinedModelUrl() {
     return getInlineConfig()["new_inlined_model_url"];
 }
 
+function getNewInlinedModelNamePlural() {
+    return getInlineConfig()["inlined_model_name_plural"];
+}
+
 // </inline_config_uri_helpers>
 
 
@@ -752,6 +756,10 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
     }
 }
 
+function insertFieldsetHeader() {
+    $("#js-fieldset-header").text(getNewInlinedModelNamePlural());
+}
+
 function insertFormHeaders() {
     getFieldsConfig().map(
         function(field) {
@@ -847,6 +855,7 @@ function setupInlinedModelCallbacks() {
 
     $(document).ready(function () {
         insertFormHeaders();
+        insertFieldsetHeader();
         loadInitialAttendees();
     });
 }

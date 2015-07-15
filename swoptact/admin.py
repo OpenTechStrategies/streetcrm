@@ -144,6 +144,7 @@ class EventAdmin(AjaxyInlineAdmin):
         "existing_inlined_model_url": [
             "/api/participants/", "<inlined_model_id>", "/"],
         "new_inlined_model_url": "/api/participants/",
+        "inlined_model_name_plural": "Attendees",
         "fields": [
             {"descriptive_name": "Name",
              "form_name": "name",
@@ -182,6 +183,7 @@ class InstitutionAdmin(AjaxyInlineAdmin):
         "existing_inlined_model_url": [
             "/api/participants/contact/", "<inlined_model_id>", "/"],
         "new_inlined_model_url": "/api/contacts/",
+        "inlined_model_name_plural": "Contacts",
         "fields": [
             {"descriptive_name": "Name",
              "form_name": "name",
