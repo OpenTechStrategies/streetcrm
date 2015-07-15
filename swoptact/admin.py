@@ -175,13 +175,13 @@ class InstitutionAdmin(AjaxyInlineAdmin):
     inline_form_config = {
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
         "current_inlines_for_page_url": [
-            "/api/institutions/", "<page_model_id>", "/participants"],
+            "/api/institutions/", "<page_model_id>", "/contacts"],
         "link_inlined_model_url": [
             "/api/institutions/", "<page_model_id>",
-            "/participants/", "<inlined_model_id>", "/"],
+            "/contacts/", "<inlined_model_id>", "/"],
         "existing_inlined_model_url": [
             "/api/participants/contact/", "<inlined_model_id>", "/"],
-        "new_inlined_model_url": "/api/participants/",
+        "new_inlined_model_url": "/api/contacts/",
         "fields": [
             {"descriptive_name": "Name",
              "form_name": "name",

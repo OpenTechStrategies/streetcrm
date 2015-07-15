@@ -41,8 +41,8 @@ urlpatterns = patterns("",
             url(r"participants/(?P<participant_id>\w+)/$", views.EventLinking.as_view(), name="api-event-linking"),
         ))),
         url(r"^institutions/(?P<pk>\w+)/", include(patterns("",
-            url(r"^participants/$", views.InstitutionContactsAPI.as_view(), name="api-institution-contacts"),
-            url(r"participants/(?P<participant_id>\w+)/$", views.ContactLinking.as_view(), name="api-contact-linking"),
+            url(r"^contacts/$", views.InstitutionContactsAPI.as_view(), name="api-institution-contacts"),
+            url(r"contacts/(?P<participant_id>\w+)/$", views.ContactLinking.as_view(), name="api-contact-linking"),
         ))),
 
         # This section covers endpoints for the current authenticated user

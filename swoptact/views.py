@@ -367,8 +367,11 @@ class ContactLinking(APIMixin, generic.DetailView):
         """ Links a participant """
         self.object = self.get_object()
 
-        # Add to the event
-        self.object.participants.add(self.participant)
+        contact = models.Contact(
+            participant=models.Participant.objects.get(
+                id=self.kwargs.get("participant_id")),
+            institution=self.object)
+        contact.save()
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
