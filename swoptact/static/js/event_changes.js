@@ -1,23 +1,27 @@
 /*
 This page creates a jquery calendar for 
 */
-function testFcn() {
+function toggleMajorActionRow(){
+    if ($('#id_is_prep').prop('checked')){
+        $( ".row" ).eq(-1).show();
+    }
+    else{
+        $( ".row" ).eq(-1).hide();
+    }
+}
+
+function loadMajorAction() {
     $('#id_is_prep').on(
         "click",
  	function(){
-            $( ".row" ).eq(-1).toggle();
+            toggleMajorActionRow();
         });
 
     $(document).ready(function () {
-        if ($('#id_is_prep').prop('checked')){
-            $( ".row" ).eq(-1).show();
-        }
-        else{
-            $( ".row" ).eq(-1).hide();
-        }
+        toggleMajorActionRow();
     });
 
 
 }
 
-testFcn();
+loadMajorAction();
