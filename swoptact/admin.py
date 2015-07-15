@@ -189,7 +189,7 @@ class InstitutionAdmin(AjaxyInlineAdmin):
             {"descriptive_name": "Title",
              "form_name": "title",
              "input_type": "text"},
-            {"descriptive_name": "Attendee's Phone Number",
+            {"descriptive_name": "Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
          ],
