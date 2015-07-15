@@ -62,7 +62,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
         if obj:
             return self.change_fieldsets
         return super(ParticipantAdmin, self).get_fieldsets(request, obj)
-
+    change_form_template = "admin/change_participant_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Participant,
         exclude=tuple()
