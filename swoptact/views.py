@@ -227,6 +227,20 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
         self.object = form.save()
         return self.produce_response()
 
+class ContactParticipantAPI(ParticipantAPI):
+    """
+    Surprise!  This is also the ParticipantAPI but for different fields.
+    We don't want to have to do this but since the contact page doesn't
+    represent all fields, and because of various other complexities
+    (see comment in saveInlinedModel in inline_ajax.js) we need to strip
+    out all fields we aren't using here.
+    """
+
+    model = models.Participant
+    fields = ["id", "name", "primary_phone", "title"]
+    field_processors = {}
+
+
 class CreateParticipantAPI(APIMixin, generic.CreateView):
     """
     Creates a participant from a JSON API

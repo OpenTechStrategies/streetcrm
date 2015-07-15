@@ -180,7 +180,7 @@ class InstitutionAdmin(AjaxyInlineAdmin):
             "/api/institutions/", "<page_model_id>",
             "/participants/", "<inlined_model_id>", "/"],
         "existing_inlined_model_url": [
-            "/api/participants/", "<inlined_model_id>", "/"],
+            "/api/participants/contact/", "<inlined_model_id>", "/"],
         "new_inlined_model_url": "/api/participants/",
         "fields": [
             {"descriptive_name": "Name",
@@ -189,10 +189,6 @@ class InstitutionAdmin(AjaxyInlineAdmin):
             {"descriptive_name": "Title",
              "form_name": "title",
              "input_type": "text"},
-            {"descriptive_name": "Institution",
-             "form_name": "institution",
-             "input_type": "fkey_autocomplete_name",
-             "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
             {"descriptive_name": "Attendee's Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
