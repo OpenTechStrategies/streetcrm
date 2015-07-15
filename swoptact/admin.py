@@ -163,15 +163,42 @@ class EventAdmin(AjaxyInlineAdmin):
         main.EMPTY_CHANGELIST_VALUE = ''
 
 
-class InstitutionAdmin(admin.ModelAdmin):
+class InstitutionAdmin(AjaxyInlineAdmin):
     list_display = ("name", )
+    change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
         exclude=tuple()
     )
-    inlines = (ContactInline,)
     actions = None
     change_list_template = "admin/change_list_without_header.html"
+    inline_form_config = {
+        "autocomplete_url": "/autocomplete/ContactAutocomplete/",
+        "current_inlines_for_page_url": [
+            "/api/institutions/", "<page_model_id>", "/participants"],
+        "link_inlined_model_url": [
+            "/api/institutions/", "<page_model_id>",
+            "/participants/", "<inlined_model_id>", "/"],
+        "existing_inlined_model_url": [
+            "/api/participants/", "<inlined_model_id>", "/"],
+        "new_inlined_model_url": "/api/participants/",
+        "fields": [
+            {"descriptive_name": "Name",
+             "form_name": "name",
+             "input_type": "text"},
+            {"descriptive_name": "Title",
+             "form_name": "title",
+             "input_type": "text"},
+            {"descriptive_name": "Institution",
+             "form_name": "institution",
+             "input_type": "fkey_autocomplete_name",
+             "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
+            {"descriptive_name": "Attendee's Phone Number",
+             "form_name": "primary_phone",
+             "input_type": "text"},
+         ],
+    }
+
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "group")

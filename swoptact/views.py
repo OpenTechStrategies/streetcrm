@@ -213,7 +213,7 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     model = models.Participant
     fields = ["id", "name", "primary_phone",
               "secondary_phone", "email", "address",
-              "institution"]
+              "institution", "title"]
     field_processors = {
             "institution": process_institution_field}
 
@@ -257,6 +257,24 @@ class EventParticipantsAPI(APIMixin, generic.DetailView):
         participants = [p.serialize() for p in self.object.participants.all()]
 
         return self.render_to_response(context=participants)
+
+
+class InstitutionContactsAPI(APIMixin, generic.DetailView):
+    """
+    Provides a list of all contacts linked to a institution
+    """
+
+    model = models.Institution
+
+    def get(self, request, *args, **kwargs):
+        """ Retrival of an existing institution """
+        self.object = self.get_object()
+
+        # Iterate over contacts and serialize
+        contacts = [p.serialize() for p in self.object.contact.all()]
+
+        return self.render_to_response(context=contacts)
+
 
 class EventAvailableAPI(APIMixin, generic.DetailView):
     """
@@ -307,7 +325,7 @@ class EventLinking(APIMixin, generic.DetailView):
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
-class ContactUnlinking(APIMixin, generic.DetailView):
+class ContactLinking(APIMixin, generic.DetailView):
     """
     Provides a mechanism to unlink Contacts from Institutions
     """
@@ -327,6 +345,16 @@ class ContactUnlinking(APIMixin, generic.DetailView):
         # Remove the contact entry entirely
         if self.contact:
             self.contact.delete()
+
+        # Just return a successful status code
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        """ Links a participant """
+        self.object = self.get_object()
+
+        # Add to the event
+        self.object.participants.add(self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
