@@ -55,7 +55,7 @@
     <ul class="object-tools nav navbar-nav">
         {% block object-tools-items %}
         {% if has_add_permission %}
-        <li class="pull-left">
+        <li>
         {% url cl.opts|admin_urlname:'add' as add_url %}
         <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary">
             {% blocktrans with cl.opts.verbose_name as name %}Create new {{ name }}{% endblocktrans %}
