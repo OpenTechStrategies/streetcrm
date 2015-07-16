@@ -282,7 +282,8 @@ function fillExistingInlinedModelUrl(inlined_model_id) {
     return formatter({"<inlined_model_id>": inlined_model_id});
 }
 
-function getExistingInlinedModelProfileUrl(inlined_model_id, url_string=null) {
+function getExistingInlinedModelProfileUrl(inlined_model_id, url_string) {
+    if (url_string == undefined) { url_string=null; }
     var url_for_profile = "";
     if (url_string != null){
         url_for_profile = url_string + inlined_model_id;
@@ -460,7 +461,8 @@ function turnOnAttendeeAutocomplete(edit_row) {
 /*
   Create a link to the change form of an inlined model with the given ID
 */
-function createProfileLink(inlined_model_id, existing_element, url_for_profile=null) {
+function createProfileLink(inlined_model_id, existing_element, url_for_profile) {
+    if (url_for_profile == undefined) { url_for_profile = null; }
     var link_to_profile = $("<a/>");
     link_to_profile.html(" &#x2139;");
     link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
