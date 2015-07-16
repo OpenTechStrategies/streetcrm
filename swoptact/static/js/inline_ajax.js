@@ -282,10 +282,17 @@ function fillExistingInlinedModelUrl(inlined_model_id) {
     return formatter({"<inlined_model_id>": inlined_model_id});
 }
 
-function getExistingInlinedModelProfileUrl(inlined_model_id) {
-    var formatter = gummyStringFormatter(
-        getInlineConfig()["existing_inlined_model_profile_url"]);
-    return formatter({"<inlined_model_id>": inlined_model_id});
+function getExistingInlinedModelProfileUrl(inlined_model_id, url_string=null) {
+    var url_for_profile = "";
+    if (url_string != null){
+        url_for_profile = url_string + inlined_model_id;
+    }
+    else{
+        var formatter = gummyStringFormatter(
+            getInlineConfig()["existing_inlined_model_profile_url"]);
+        url_for_profile = formatter({"<inlined_model_id>": inlined_model_id});
+    }
+    return url_for_profile;
 }
 
 function getNewInlinedModelUrl() {
@@ -453,10 +460,10 @@ function turnOnAttendeeAutocomplete(edit_row) {
 /*
   Create a link to the change form of an inlined model with the given ID
 */
-function createProfileLink(inlined_model_id, existing_element) {
+function createProfileLink(inlined_model_id, existing_element, url_for_profile=null) {
     var link_to_profile = $("<a/>");
     link_to_profile.html(" &#x2139;");
-    link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id));
+    link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
     existing_element.append(link_to_profile);
 }
 
@@ -500,7 +507,7 @@ function fillStaticRow(row, inlined_model) {
             }
             else if (field['form_name'] == 'institution' && inlined_model.institution){
                 // this doesn't work yet because I don't know how to set the URL correctly
-                // createProfileLink(inlined_model.institution.id, new_elt);
+                createProfileLink(inlined_model.institution.id, new_elt, "/swoptact/institution/");
             }
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
