@@ -70,14 +70,13 @@ class TwelveHourTimeWidget(forms.MultiWidget):
     )
 
     TIME_SUFFIXES = (
-        ("", "--"),
         (AM_SUFFIX, "am"),
         (PM_SUFFIX, "pm"),
     )
 
     def __init__(self, attrs=None):
         time = forms.Select(choices=self.TIME_CHOICES)
-        suffix = forms.Select(choices=self.TIME_SUFFIXES)
+        suffix = forms.RadioSelect(choices=self.TIME_SUFFIXES)
 
         super(TwelveHourTimeWidget, self).__init__((time, suffix), attrs)
 

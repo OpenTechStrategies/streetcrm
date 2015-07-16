@@ -282,6 +282,16 @@ ul#id_group {
     padding-left: 0;
 }
 
+ul#id_time_1 {
+    list-style-type: none;
+    padding-left: 10px;
+    float: left;
+}
+
+select#id_time_0 {
+    float: left;
+}
+
 span#id_name_countdown_message {
     width: 100px;
     position: absolute;
