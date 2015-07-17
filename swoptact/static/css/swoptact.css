@@ -345,40 +345,40 @@ form .form-row p {
 change-list screens. These rules were adapted from ones found at
 http://codepen.io/tjvantoll/pen/JEKIu */
 
-#result_list {
+.table-striped.table-bordered {
   table-layout: fixed;
   border-collapse: collapse;
   max-width: 1000px;
 }
-#result_list thead {
+.table-striped.table-bordered thead {
   display: table;
   position: relative;
   width: 100%;
 }
-#result_list tbody {
+.table-striped.table-bordered tbody {
   display: block;
   overflow: auto;
   width: 100%;
   height: 300px;
 }
-#result_list td:nth-child(1),
-#result_list th:nth-child(1) {
-  width: 20%;
+.table-striped.table-bordered td:nth-of-type(1),
+.table-striped.table-bordered th:nth-of-type(1) {
+  width: 25%;
   min-width: 120px;
 }
-#result_list td:nth-child(2),
-#result_list th:nth-child(2) {
-  width: 20%;
+.table-striped.table-bordered td:nth-of-type(2),
+.table-striped.table-bordered th:nth-of-type(2) {
+  width: 25%;
   min-width: 120px;
 }
-#result_list td:nth-child(3),
-#result_list th:nth-child(3) {
-  width: 30%;
+.table-striped.table-bordered td:nth-of-type(3),
+.table-striped.table-bordered th:nth-of-type(3) {
+  width: 25%;
   min-width: 150px;
 }
-#result_list td:nth-child(4),
-#result_list th:nth-child(4) {
-  width: 30%;
+.table-striped.table-bordered td:nth-of-type(4),
+.table-striped.table-bordered th:nth-of-type(4) {
+  width: 25%;
 }
 
 /* end rules for "sticky" table headers */
