@@ -170,11 +170,15 @@ class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
                             verbose_name="Date of Action")
     time = modelfields.TwelveHourTimeField(null=True, blank=True,
                                            verbose_name="Time of Action")
+    organizer = models.ForeignKey(Participant, related_name="Organizer",
+                                  blank=True, null=True)
     location = models.CharField(max_length=255, blank=True,
                                 verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)
     tags = models.ManyToManyField(Tag, blank=True,
                                   verbose_name="Action Tag(s)")
+    issue_area = models.CharField(max_length=255, blank=True, null=True,
+                                  verbose_name="Action Issue Area")
     is_prep = models.BooleanField(
         default=False,
         blank=True,
