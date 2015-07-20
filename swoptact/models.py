@@ -19,7 +19,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
 from django.utils import timezone
 
-from swoptact import mixins, modelfields
+from swoptact import mixins, modelfields, managers
 import phonenumbers
 
 class SerializeableMixin:
@@ -69,7 +69,7 @@ class SerializeableMixin:
 
         return serialized
 
-class InspectMixin(object):
+class InspectMixin:
     """ Provides useful methods to inspect the model easily """
 
     @classmethod
@@ -77,7 +77,36 @@ class InspectMixin(object):
         """ Gets a field by it's name """
         return cls._meta.get_field_by_name(name)[0]
 
-class Tag(models.Model, SerializeableMixin, InspectMixin):
+class ArchiveAbstract(models.Model):
+    """
+    Provides archivability for models
+
+    This does so by setting an "archived" field to the date and time
+    that the model was archived at. If the field is null then the model
+    is not archived.
+    """
+
+    # Date and Time model was archived at.
+    archived = models.DateTimeField(null=True, blank=True)
+
+    # Set the ArchiveManager as the manager for these models
+    objects = managers.ArchiveManager()
+
+    class Meta:
+        abstract = True
+
+    def delete(self):
+        """ Archives the model """
+        self.archived = timezone.now()
+        self.save()
+
+    def unarchive(self):
+        """ Takes a model out of an archived state """
+        self.archived = None
+        self.save()
+
+
+class Tag(ArchiveAbstract, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
     name = models.CharField(max_length=15, unique=True, verbose_name="Tag")
     description = models.CharField(max_length=255, null=True,
@@ -100,7 +129,7 @@ class ActivityLog(LogEntry):
         verbose_name = "Activity Log"
         verbose_name_plural = "Activity Log"
 
-class Institution(models.Model, SerializeableMixin):
+class Institution(ArchiveAbstract, SerializeableMixin):
     name = models.CharField(max_length=255, unique=True,
                             verbose_name="Institution")
     address = models.TextField(null=True, blank=True,
@@ -121,7 +150,7 @@ class Institution(models.Model, SerializeableMixin):
     def __str__(self):
         return "{name}".format(name=self.name)
 
-class Participant(models.Model, SerializeableMixin):
+class Participant(ArchiveAbstract, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
     name = models.CharField(max_length=255, verbose_name="Participant Name")
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True,
@@ -154,7 +183,7 @@ class Contact(models.Model):
     def __str__(self):
         return self.participant.name
 
-class Event(models.Model, mixins.AdminURLMixin, SerializeableMixin):
+class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     class Meta:
         verbose_name = "action"
         verbose_name_plural = "actions"

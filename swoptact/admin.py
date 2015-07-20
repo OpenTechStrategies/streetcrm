@@ -24,7 +24,7 @@ from django.contrib.admin.views import main
 import autocomplete_light
 
 from swoptact import forms as st_forms
-from swoptact import mixins, models
+from swoptact import mixins, models, admin_filters
 
 class ContactInline(admin.TabularInline):
     model = models.Contact
@@ -37,8 +37,9 @@ class ContactInline(admin.TabularInline):
         exclude=tuple()
     )
 
-class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
+class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
+    list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", "US_primary_phone", "institution", "address",)
     readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
@@ -65,7 +66,7 @@ class ParticipantAdmin(mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     change_form_template = "admin/change_participant_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Participant,
-        exclude=tuple()
+        exclude=("archived",)
     )
     actions = None
 
@@ -125,13 +126,13 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
             request, object_id, form_url, extra_context=extra_context)
 
 
-class EventAdmin(AjaxyInlineAdmin):
+class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
+    list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", "location", "date", "attendee_count",)
-    exclude = ('participants',)
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Event,
-        exclude=tuple()
+        exclude=("participants", "archived")
     )
     actions = None
     inline_form_config = {
@@ -166,12 +167,13 @@ class EventAdmin(AjaxyInlineAdmin):
         main.EMPTY_CHANGELIST_VALUE = ''
 
 
-class InstitutionAdmin(AjaxyInlineAdmin):
+class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
+    list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
-        exclude=tuple()
+        exclude=("archived",)
     )
     actions = None
     change_list_template = "admin/change_list_without_header.html"
@@ -202,12 +204,14 @@ class InstitutionAdmin(AjaxyInlineAdmin):
     }
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(mixins.AdminArchiveMixin, admin.ModelAdmin):
+    list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", "description", "group")
     actions = None
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
     change_form_template = "admin/change_tag_form.html"
+    excludes = ("archived",)
 
     def __init__(self,*args,**kwargs):
         super(TagAdmin, self).__init__(*args, **kwargs)

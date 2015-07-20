@@ -14,12 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from django import http
+from django.db import transaction
+from django.contrib import messages
 from django.core import urlresolvers
 from django.conf.urls import patterns, url
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.forms.models import modelform_factory
+from django.utils.translation import ugettext as _
+from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 
 from autocomplete_light import widgets as dacl_widgets
+
 
 class SignInSheetAdminMixin:
     """
@@ -101,3 +108,72 @@ class AdminURLMixin:
     def admin_history_url(self):
         """ Admin page to see the history of the object """
         return self.__admin_url("history")
+
+class AdminArchiveMixin:
+    """
+    Admin mixin for archivable ModelAdmins
+
+    This prevents the delete confirmation page as everything is archived and the
+    ability to rollback to the unarchived version is possible.
+    """
+
+    @property
+    def url_info(self):
+        return self.model._meta.app_label, self.model._meta.model_name
+
+    def get_urls(self, *args, **kwargs):
+        urls = super(AdminArchiveMixin, self).get_urls(*args, **kwargs)
+        urls.insert(
+            0,
+            url(r"^(.+)/unarchive/$", self.unarchive_view, name="%s_%s_unarchive" % self.url_info)
+        )
+        return urls
+
+    def unarchive_view(self, request, object_id, *args, **kwargs):
+        # Lookup the object
+        obj = self.model.objects.get(pk=object_id)
+        obj.unarchive()
+
+        # Redirect back to change form.
+        change_form = reverse("admin:%s_%s_change" % self.url_info, args=(object_id,))
+        return http.HttpResponseRedirect(change_form)
+
+    def queryset(self, request):
+        return self.model.objects.unarchive()
+
+    @transaction.atomic
+    def delete_view(self, request, *args, **kwargs):
+        # If this is submitted with as a "POST" request then django
+        # assumes the confirmation has occured.
+        request.POST = {"post": True}
+        return super(AdminArchiveMixin, self).delete_view(request, *args, **kwargs)
+
+    def response_delete(self, request, obj_display, obj_id):
+        opts = self.model._meta
+
+        self.message_user(
+            request,
+            _("The {name} \"{obj}\" was archived successfully.").format(
+                name=opts.verbose_name,
+                obj=obj_display
+            ),
+            messages.SUCCESS
+        )
+
+        if self.has_change_permission(request, None):
+            url_name = "admin:%s_%s_changelist" % self.url_info
+            post_url = urlresolvers.reverse(
+                url_name,
+                current_app=self.admin_site.name
+            )
+            preserved_filters = self.get_preserved_filters(request)
+            post_url = add_preserved_filters(
+                {'preserved_filters': preserved_filters, 'opts': opts},
+                post_url
+            )
+        else:
+            post_url = urlresolvers.reverse(
+                "admin:index",
+                current_app=self.admin_site.name
+            )
+        return http.HttpResponseRedirect(post_url)
