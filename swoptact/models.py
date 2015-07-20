@@ -79,9 +79,11 @@ class InspectMixin(object):
 
 class Tag(models.Model, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=10, unique=True)
-    description = models.CharField(max_length=255, null=True, blank=True)
-    date_created = models.DateField(null=True, blank=True, default=timezone.now)
+    name = models.CharField(max_length=10, unique=True, verbose_name="Tag")
+    description = models.CharField(max_length=255, null=True,
+                                   blank=True, verbose_name="Tag Description")
+    date_created = models.DateField(null=True, blank=True,
+                                    default=timezone.now, verbose_name="Date Tag Created")
     # Group which can use this tag
     group = models.ForeignKey(auth_models.Group,
                               verbose_name = "Group Assignment")
@@ -99,9 +101,12 @@ class ActivityLog(LogEntry):
         verbose_name_plural = "Activity Log"
 
 class Institution(models.Model, SerializeableMixin):
-    name = models.CharField(max_length=255, unique=True)
-    address = models.TextField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
+    name = models.CharField(max_length=255, unique=True,
+                            verbose_name="Institution")
+    address = models.TextField(null=True, blank=True,
+                               verbose_name="Institution Address")
+    tags = models.ManyToManyField(Tag, blank=True,
+                                  verbose_name="Institution Tags")
     contact = models.ManyToManyField(
         "Participant",
         through='Contact',
@@ -118,14 +123,21 @@ class Institution(models.Model, SerializeableMixin):
 
 class Participant(models.Model, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
-    name = models.CharField(max_length=255)
-    primary_phone = modelfields.PhoneNumberField(null=True, blank=True)
-    secondary_phone = modelfields.PhoneNumberField(null=True, blank=True)
-    email = models.EmailField(blank=True)
-    address = models.TextField(null=True, blank=True)
-    institution = models.ForeignKey(Institution, null=True, blank=True)
+    name = models.CharField(max_length=255, verbose_name="Participant Name")
+    primary_phone = modelfields.PhoneNumberField(null=True, blank=True,
+                                                 verbose_name="Participant Phone")
+    secondary_phone = modelfields.PhoneNumberField(null=True,
+                                                   blank=True,
+                                                   verbose_name="""Secondary
+                                                   Participant Phone""")
+    email = models.EmailField(blank=True, verbose_name="Participant Email")
+    address = models.TextField(null=True, blank=True,
+                               verbose_name="Participant Address")
+    institution = models.ForeignKey(Institution, null=True, blank=True,
+                                    verbose_name="Participant's Institution")
     title = models.CharField(null=True, blank=True, max_length=255,
-                             help_text="e.g. Pastor, Director")
+                             help_text="e.g. Pastor, Director",
+                             verbose_name="Participant's Title")
 
     def __str__(self):
         return self.name
