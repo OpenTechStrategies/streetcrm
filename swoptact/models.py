@@ -79,7 +79,7 @@ class InspectMixin(object):
 
 class Tag(models.Model, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=10, unique=True, verbose_name="Tag")
+    name = models.CharField(max_length=15, unique=True, verbose_name="Tag")
     description = models.CharField(max_length=255, null=True,
                                    blank=True, verbose_name="Tag Description")
     date_created = models.DateField(null=True, blank=True,
