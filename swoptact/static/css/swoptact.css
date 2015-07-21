@@ -382,3 +382,7 @@ http://codepen.io/tjvantoll/pen/JEKIu */
 }
 
 /* end rules for "sticky" table headers */
+
+a.large-info {
+    font-size: 150%;
+}

@@ -464,8 +464,11 @@ function turnOnAttendeeAutocomplete(edit_row) {
 function createProfileLink(inlined_model_id, existing_element, url_for_profile) {
     if (url_for_profile == undefined) { url_for_profile = null; }
     var link_to_profile = $("<a/>");
-    link_to_profile.html(" &#x2139;");
+    link_to_profile.html("&#x2139;");
     link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
+    link_to_profile.attr("target", "_blank");
+    link_to_profile.attr("class", "large-info");
+    existing_element.append(" ");
     existing_element.append(link_to_profile);
 }
 
