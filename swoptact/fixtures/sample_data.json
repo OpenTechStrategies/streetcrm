@@ -12,7 +12,7 @@
     "pk": 2,
     "fields": {
         "permissions": [],
-        "name": "organizer"
+        "name": "staff"
     }
 },
 {
@@ -66,7 +66,7 @@
         "description": "testing the model",
         "date_created": "2015-06-11",
         "group": [
-            "organizer"
+            "staff"
         ],
         "name": "ttm"
     }
@@ -90,7 +90,7 @@
         "description": "another test",
         "date_created": "2015-06-11",
         "group": [
-            "organizer"
+            "staff"
         ],
         "name": "test"
     }

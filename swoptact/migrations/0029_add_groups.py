@@ -17,15 +17,15 @@
 from django.db import migrations
 
 def add_initial_groups(apps, schema_editor):
-    """ This will add the 'admin', 'organizers' and 'leaders' groups """
+    """ This will add the 'admin', 'staff' and 'leader' groups """
     Group = apps.get_model("auth", "Group")
 
     # Make the groups
     admin_group = Group(name="admin")
     admin_group.save()
 
-    organizer_group = Group(name="organizer")
-    organizer_group.save()
+    staff_group = Group(name="staff")
+    staff_group.save()
 
     leader_group = Group(name="leader")
     leader_group.save()

@@ -150,8 +150,8 @@ STATICFILES_DIRS = (
 # the group name and the value should be a list which contains the values of
 # the next level of groups. If no lower groups exist it can be omitted.
 GROUP_HIERARCHY = {
-    "admin": ["organizer"],
-    "organizer": ["leader"],
+    "admin": ["staff"],
+    "staff": ["leader"],
 }
 
 # Specify the order in which models are present in the admin index page list.
