@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 lib/
-lib64/
+lib64*
 parts/
 sdist/
 var/
