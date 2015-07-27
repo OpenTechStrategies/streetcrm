@@ -1,14 +1,14 @@
-Swoptact: a FOSS contact management system
+SWOPtact: a FOSS contact management system
 ==========================================
 
-Swoptact is an [free & open source software](LICENSE.md) contact
+SWOPtact is an [free & open source software](LICENSE.md) contact
 management system for you and your organization.
 
 # Overview
 
 ## Abstract
 
-Swoptact is a list of contacts with a history of their event
+SWOPtact is a list of contacts with a history of their event
 attendance (making it also a list of events over time).  Use it to
 keep track of people your organization comes into contact with over
 time, and see how their engagement with your mission grows.
@@ -16,20 +16,20 @@ time, and see how their engagement with your mission grows.
 
 ## User stories
 
-These are stories about how various users make use of Swoptact.
+These are stories about how various users make use of SWOPtact.
 
 Three kinds of users:
-Sarah does data entry and is the most frequest user of Swoptact.
-Colleen is an organizer and uses Swoptact to find information about
+Sarah does data entry and is the most frequest user of SWOPtact.
+Colleen is an organizer and uses SWOPtact to find information about
 her contacts and occasionally update their information.
-Michelle is a supervisor and runs reports from Swoptact.
+Michelle is a supervisor and runs reports from SWOPtact.
 
-### Why Sarah chose Swoptact
+### Why Sarah chose SWOPtact
 
-This is a high level overview of why Sarah thinks Swoptact will be
+This is a high level overview of why Sarah thinks SWOPtact will be
 useful to her.
 
-Swoptact has a simple interface that makes it fast and easy for Sarah
+SWOPtact has a simple interface that makes it fast and easy for Sarah
 to enter her data.  It lets her keep track of the best way to contact
 her constituents (used loosely) and to view their involvement over
 time (meaning their event attendance over time).  She can search for
@@ -45,20 +45,20 @@ information she kept after the event.
 #### Before the conference
 
 1. Sarah makes the conference, including its name and date, in
-   Swoptact.
+   SWOPtact.
 2. ?
 
 #### Immediately after the conference
 
 1. Sarah takes the paper sign-in sheet and enters the attendees into
-   Swoptact. TBD: maybe some of them already have records and others
+   SWOPtact. TBD: maybe some of them already have records and others
    don't?
    It is easy for Sarah to add conference attendance of a person who
-   already has a Swoptact record and a person who does not.
+   already has a SWOPtact record and a person who does not.
 2. Sarah realizes that one of the people she is entering has a new
    phone number, so she changes it to the new (correct) number.
 3. Sarah sees that a person she added already had a record in
-   Swoptact, so she merges the new record with the pre-existing one.
+   SWOPtact, so she merges the new record with the pre-existing one.
 4. Sarah sees that that person doesn't exist in real life after all,
    so she deletes the record.
 5. Sarah realizes that one person didn't come to the conference, so
@@ -67,7 +67,7 @@ information she kept after the event.
 #### Later usage
 1. Sarah looks at a list of conference participants.
 2. Sarah finds the emails of all conference participants so she can
-   send them a follow-up. TBD: does she send the email from Swoptact?
+   send them a follow-up. TBD: does she send the email from SWOPtact?
 3. Sarah realizes the conference name has a typo, so she changes it.
 4. Sarah reports on one person's attendance at events and conferences
    over time.
