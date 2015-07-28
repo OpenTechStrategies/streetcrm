@@ -19,14 +19,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
-from swoptact import views
+from swoptact import views, admin
 
 urlpatterns = patterns("",
     # Autocomplete app URLs
     url(r"^autocomplete/", include("autocomplete_light.urls")),
 
     # Admin site URLS
-    url(r"^", include(admin.site.urls)),
+    url(r"^", admin.site.urls),
 
     # API URLs
     url(r"^api/", include(patterns("",

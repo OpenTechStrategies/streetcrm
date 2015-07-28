@@ -17,7 +17,8 @@
 import json
 
 from django import template
-from django.contrib import admin
+from django.core import exceptions
+from django.contrib import admin, auth
 from django.template import loader
 from django.contrib.admin.views import main
 
@@ -25,6 +26,21 @@ import autocomplete_light
 
 from swoptact import forms as st_forms
 from swoptact import mixins, models, admin_filters
+
+class SWOPTACTAdminSite(admin.AdminSite):
+
+    def password_change(self, request, *args, **kwargs):
+        """
+        Verify that they are in the "can_change_password" group
+        """
+        if not request.user.has_perm("auth.can_change_password"):
+            raise exceptions.PermissionDenied
+
+        return super(SWOPTACTAdminSite, self).password_change(
+            request,
+            *args,
+            **kwargs
+        )
 
 class ContactInline(admin.TabularInline):
     model = models.Contact
@@ -220,8 +236,16 @@ class TagAdmin(mixins.AdminArchiveMixin, admin.ModelAdmin):
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
-admin.site.register(models.Participant, ParticipantAdmin)
-admin.site.register(models.Event, EventAdmin)
-admin.site.register(models.Institution, InstitutionAdmin)
-admin.site.register(models.Tag, TagAdmin)
-admin.site.register(models.ActivityLog, LogAdmin)
+# Create the admin site
+site = SWOPTACTAdminSite()
+
+# Register auth AdminModels
+site.register(auth.admin.Group, auth.admin.GroupAdmin)
+site.register(auth.admin.User, auth.admin.UserAdmin)
+
+# Register SWOPTACT AdminModels
+site.register(models.Participant, ParticipantAdmin)
+site.register(models.Event, EventAdmin)
+site.register(models.Institution, InstitutionAdmin)
+site.register(models.Tag, TagAdmin)
+site.register(models.ActivityLog, LogAdmin)

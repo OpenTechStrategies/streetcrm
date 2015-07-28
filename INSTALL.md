@@ -56,7 +56,7 @@ under your home directory because you're doing a development
 deployment rather than a production deployment, then you might put the
 config file in a different location.  If so, just set the
 `SWOPTACT_CONFIG` environment variable accordingly, e.g.,
-`SWOPTACT_CONFIG=~/.config/swoptact/config.ini; export SWOPTACT_CONFIG`.  
+`SWOPTACT_CONFIG=~/.config/swoptact/config.ini; export SWOPTACT_CONFIG`.
 If later on you get errors about swoptact being unable to find its
 config file, failure to set that environment variable is probably why.)
 
@@ -90,18 +90,18 @@ needs -- at a minimum you probably want something like this:
         # say `django.db.backends.sqlite3` here instead:
         engine = django.db.backends.postgresql_psycopg2
         # This is for PostgreSQL; for SQLite3, say `swoptact_db`:
-        name = swoptact 
+        name = swoptact
         # This is for PostgreSQL; for SQLite3, just comment this out:
-        host = localhost 
+        host = localhost
         # This is for PostgreSQL; for SQLite3, just comment this out:
-        user = swoptact 
+        user = swoptact
         # This is for PostgreSQL; for SQLite3, just comment this out:
         password = DB_PASSWORD_HERE
 
 Now create the tables in the database and setup the initial superuser:
 
         $ export SWOPTACT_CONFIG=/var/www/.config/swoptact/config.ini
-        $ python manage.py makemigrations
+        $ python manage.py migrate auth
         $ python manage.py migrate
 
 If you encounter a "ProgrammingError" or similar error during

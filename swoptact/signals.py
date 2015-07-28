@@ -39,7 +39,7 @@ def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
         return
 
     # Only do this for groups
-    if not isinstance(model, Group):
+    if not issubclass(model, Group):
         return
 
     # Lookup all the groups
