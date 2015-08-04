@@ -21,6 +21,7 @@ from django.core import exceptions
 from django.contrib import admin, auth
 from django.template import loader
 from django.contrib.admin.views import main
+from django.utils.translation import ugettext_lazy as _
 
 import autocomplete_light
 
@@ -28,6 +29,18 @@ from swoptact import forms as st_forms
 from swoptact import mixins, models, admin_filters
 
 class SWOPTACTAdminSite(admin.AdminSite):
+
+    login_form = st_forms.AdminLoginForm
+
+    def has_permission(self, request):
+        """
+        Checks if the user has access to at least one admin page
+
+        This previously checked `requst.user.is_staff` too be as all users
+        should have access to the "admin" site we removed that check as it's
+        redundent.
+        """
+        return request.user.is_active
 
     def password_change(self, request, *args, **kwargs):
         """
@@ -236,12 +249,24 @@ class TagAdmin(mixins.AdminArchiveMixin, admin.ModelAdmin):
 class LogAdmin(admin.ModelAdmin):
     actions = None
 
+class UserAdmin(auth.admin.UserAdmin):
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (_("Permissions"), {"fields": ("is_active", "is_superuser", "groups",
+                                       "user_permissions")}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
+
+    list_display = ("username", "email", "first_name", "last_name")
+    list_filter = ("is_superuser", "is_active", "groups")
+
 # Create the admin site
 site = SWOPTACTAdminSite()
 
 # Register auth AdminModels
 site.register(auth.admin.Group, auth.admin.GroupAdmin)
-site.register(auth.admin.User, auth.admin.UserAdmin)
+site.register(auth.admin.User, UserAdmin)
 
 # Register SWOPTACT AdminModels
 site.register(models.Participant, ParticipantAdmin)

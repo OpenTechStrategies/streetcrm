@@ -16,9 +16,35 @@
 import collections
 
 import django.forms
+from django.contrib.admin.forms import AdminAuthenticationForm
+from django.utils.translation import ugettext_lazy as _
+
 from autocomplete_light import forms
 
 from swoptact import models, widgets, formfields
+
+class AdminLoginForm(AdminAuthenticationForm):
+    """
+    Provides a login form for the admin UI
+
+    This removes the requirement for the user to be have the `is_staff`
+    attribute set to True. We use the admin UI for all users so this
+    check and flag is redundent in this app
+    """
+
+    error_messages = {
+        "invalid_login": _("Please enter the correct %(username) and password "
+                           "for your account. Note that both fields are "
+                           "case-sensitive")
+    }
+
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise django.forms.ValidationError(
+                self.error_messages["invalid_login"],
+                code="invalid_login",
+                params={"username": self.username_field.verbose_name}
+            )
 
 class TagAdminForm(django.forms.ModelForm):
     class Meta:
