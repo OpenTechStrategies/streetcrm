@@ -233,7 +233,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("contenttypes", "__first__"),
         ("auth", "__first__"),
-        ("swoptact", "0048_merge"),
+        ("swoptact", "0048_auto_20150720_1822"),
     ]
 
     operations = [
