@@ -725,7 +725,7 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
     //   because otherwise we're going to end up with a lot of
     //   missed conditions and extra checks.
     if (inlined_model_id != "empty" && inlined_model_id != ""){
-        $.get(fillExistingInlinedModelUrl(inlined_model_id),
+        return $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model_dbstate) {
                   // @@: Unfortunately, we're fetching the existing representation from
                   //   the server and then modifying that with the form before update.
@@ -771,7 +771,7 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                   });
               }, 'json');
     } else {
-        $.ajax({
+        return $.ajax({
             url: getNewInlinedModelUrl(),
             data: JSON.stringify(form_data),
             type: 'POST',
