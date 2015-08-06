@@ -219,12 +219,7 @@ input.vTextField#id_title {
     width: 500px;
 }
 
-/* Pull the button to add new objects up a bit */
-.object-tools {
-    margin-top: -50px;
-}
-
-.object-tools a:hover {
+.navbar-nav a:hover {
     background-color: #337ab7 !important;
 }
 
