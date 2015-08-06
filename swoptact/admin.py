@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 import json
 
 from django import template
@@ -143,14 +144,25 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
     """
     # TODO: eventually make this a method so we can use the URL dispatcher?
     inline_form_config = None
+    def _can_user_edit_ajaxily(self, user):
+        # Cheap version, but we can make this more fine grained depending on
+        # appropriate groups
+        return user.is_superuser or user.is_staff
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if self.inline_form_config is None:
             raise ValueError("inline_form_config not set D:")
 
         extra_context = extra_context or {}
+        # We copy this so we can modify special dynamic stuff...
+        inline_form_config = copy.copy(self.inline_form_config)
+
+        # Can the user access the inline add/edit permissions?
+        inline_form_config["user_can_edit"] = self._can_user_edit_ajaxily(
+            request.user)
+
         extra_context["inline_form_config"] = json.dumps(
-            self.inline_form_config)
+            inline_form_config)
         return super(AjaxyInlineAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context)
 
@@ -195,6 +207,16 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
         super(EventAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = ''
 
+    def _can_user_edit_ajaxily(self, user):
+        if user.is_superuser:
+            return True
+
+        return user.is_staff and user.has_perms(
+            ["swoptact.change_event", "swoptact.change_participant",
+             "swoptact.change_contact", "swoptact.change_institution",
+             "swoptact.add_event", "swoptact.add_participant",
+             "swoptact.add_contact", "swoptact.add_institution"])
+
 
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     list_filter = (admin_filters.ArchiveFilter,)
@@ -231,6 +253,16 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "input_type": "text"},
          ],
     }
+
+    def _can_user_edit_ajaxily(self, user):
+        if user.is_superuser:
+            return True
+
+        return user.is_staff and user.has_perms(
+            ["swoptact.change_participant",
+             "swoptact.change_contact", "swoptact.change_institution,"
+             "swoptact.add_participant",
+             "swoptact.add_contact", "swoptact.add_institution"])
 
 
 class TagAdmin(mixins.AdminArchiveMixin, admin.ModelAdmin):
