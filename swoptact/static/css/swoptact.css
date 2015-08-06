@@ -292,6 +292,11 @@ ul#id_time_1 {
     float: left;
 }
 
+ul#id_time_1 li {
+  float: left;
+  margin-right: 1em;
+}
+
 select#id_time_0 {
     float: left;
 }
