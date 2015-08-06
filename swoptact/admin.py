@@ -260,6 +260,7 @@ class UserAdmin(auth.admin.UserAdmin):
 
     list_display = ("username", "email", "first_name", "last_name")
     list_filter = ("is_superuser", "is_active", "groups")
+    actions = None
 
 # Create the admin site
 site = SWOPTACTAdminSite()
