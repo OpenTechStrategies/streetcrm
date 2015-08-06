@@ -24,8 +24,10 @@
           </table>
         </div>
         <div style="padding: 10px">
-          <button type="submit" class="btn" name="_select"
-                  id="add-new-inlined-model-btn">✚ {% trans 'Add new' %}</button>
+          {% if inline_form_config.user_can_edit %}
+            <button type="submit" class="btn" name="_select"
+                    id="add-new-inlined-model-btn">✚ {% trans 'Add new' %}</button>
+          {% endif %}
         </div>
       </fieldset>
     </div>

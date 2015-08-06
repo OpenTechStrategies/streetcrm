@@ -521,7 +521,11 @@ function fillStaticRow(row, inlined_model) {
         });
 
     // Now append the buttons...
-    row.append('<td><button type="submit" class="btn inlined-model-edit" name="_edit">✎ Edit</button></td>');
+    if (getInlineConfig()["user_can_edit"]) {
+        row.append('<td><button type="submit" class="btn inlined-model-edit" name="_edit">✎ Edit</button></td>');
+    } else {
+        row.append('<td></td>');
+    }
 }
 
 /* Wipe out the edit row and fill it with the appripriate elements
