@@ -644,9 +644,9 @@ since we don't have any other markers of what's in editing mode
 function saveAllEditing() {
     // Find all currently being edited rows and the inlined model thereof,
     // then save
-    $("tr.inlined-model-edit:visible input.inlined-model-id").each(
-        function(index) {
-            saveInlinedModel(this.value, false);
+    return $.makeArray($("tr.inlined-model-edit:visible input.inlined-model-id")).map(
+        function(model_id_elt) {
+            return saveInlinedModel(model_id_elt.value);
         });
 }
 
@@ -713,7 +713,7 @@ Arguments:
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
-function saveInlinedModel(inlined_model_id, submit_flag) {
+function saveInlinedModel(inlined_model_id) {
     // Get the row, extract the current mapping of fields to their data
     var row = getInlinedModelEditRow(inlined_model_id);
     var form_data = getDataForEditRow(row);
@@ -763,9 +763,6 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                       },
                       success: function (response) {
                           recreateRows(response);
-                          if (submit_flag){
-                              $("div.change-content form").submit();
-                          }
                       },
                       dataType: 'json'
                   });
@@ -785,9 +782,6 @@ function saveInlinedModel(inlined_model_id, submit_flag) {
                           function (inlined_model) {
                               unlinkInlinedModel("");
                               insertInlinedModel(inlined_model);
-                              if (submit_flag){
-                                  $("div.change-content form").submit();
-                              }
                           }, 'json');
                 }, "json");
                 
@@ -813,12 +807,9 @@ function insertFormHeaders() {
 
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
-    //keep track of row(s) in the middle of being edited
-    var rows_editing = [];
     $("#inlined-model-table").on(
         "click", "button.inlined-model-edit",
         function(event) {
-            rows_editing.push(getInlinedModelIdForRow($(this)));
             event.preventDefault();
             makeInlinedModelEditable(getInlinedModelIdForRow($(this)));
         });
@@ -833,10 +824,6 @@ function setupInlinedModelCallbacks() {
     $("#inlined-model-table").on(
         "click", "button.inlined-model-cancel",
         function(event) {
-            var index = rows_editing.indexOf(getInlinedModelIdForRow($(this)));
-            if (index > -1){
-                rows_editing.splice(index, 1);
-            }
             event.preventDefault();
             cancelInlinedModelEdit(getInlinedModelIdForRow($(this)));
         });
@@ -844,12 +831,8 @@ function setupInlinedModelCallbacks() {
     $("#inlined-model-table").on(
         "click", "button.inlined-model-save",
         function(event) {
-            var index = rows_editing.indexOf(getInlinedModelIdForRow($(this)));
-            if (index > -1){
-                rows_editing.splice(index, 1);
-            }
             event.preventDefault();
-            saveInlinedModel(getInlinedModelIdForRow($(this)), false);
+            saveInlinedModel(getInlinedModelIdForRow($(this)));
         });
 
     $("#add-new-inlined-model-btn").on(
@@ -857,11 +840,6 @@ function setupInlinedModelCallbacks() {
         function(event) {
             event.preventDefault();
             addNewInlinedModel();
-            // addNewInlinedModel saves all open rows, so we empty the existing
-            // array of rows being edited.
-            rows_editing = [];
-            // this case still needs to be handled correctly
-            rows_editing.push('empty');
         });
 
     $("#inlined-model-table").on(
@@ -871,27 +849,23 @@ function setupInlinedModelCallbacks() {
             // 13 is enter key
             if (event.which == 13) {
                 event.preventDefault();
-                saveInlinedModel(getInlinedModelIdForRow($(this)), false);
+                saveInlinedModel(getInlinedModelIdForRow($(this)));
             }
         });
 
     $("#multi_action_submit").on(
         "click",
         function (event) {
-            if (rows_editing[0]){
-                for (j = 0; j < rows_editing.length; j++) {
-                    if (j == (rows_editing.length - 1) ) {
-                        //for last value, pass the flag that says "and submit"
-                        saveInlinedModel(rows_editing[j], true);
-                    }
-                    else{
-                        saveInlinedModel(rows_editing[j], false);
-                    }
-                }
-            }
-            else{
-                $("div.change-content form").submit();
-            }
+            // We're making use of deferreds to save the page after
+            var save_deferreds = saveAllEditing();
+            
+            // Like (apply when args) or when(*args)
+            $.when.apply(this, save_deferreds)
+                .then(function () {
+                    // Save the page now that all row-saving deferreds
+                    // have completed
+                    $("div.change-content form").submit();
+                });
         });
 
     $(document).ready(function () {
