@@ -15,7 +15,15 @@ function textLimitCountdown() {
     }
 }
 
+function reorderGroups(){
+    // get the "leader" option (relies on a magic number)
+    var leader_li = $("#id_group_1").parents("li");
+    // move it below the staff option
+    $("#id_group_2").parents("li").append(leader_li);    
+}
+
 $(document).ready(function () {
+    reorderGroups();
     // Create the Text limit text box
     var spacingElement = $("<span></span>").attr("id", "id_name_spacing");
     var textLimitElement = $("<span></span>").attr("id", "id_name_countdown_message");
