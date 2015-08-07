@@ -186,7 +186,7 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     @property
     def events(self):
         """ List of all events participant is in """
-        return Event.objects.filter(participants__in=[self]).all()
+        return Event.objects.filter(participants__in=[self]).all().order_by('-date')
 
 class Contact(models.Model):
     participant = models.ForeignKey(Participant, related_name="leaders")
