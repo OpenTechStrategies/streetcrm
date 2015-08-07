@@ -594,6 +594,9 @@ function loadInitialAttendees() {
         for (i = 0; i < people_list.length; i++){
             insertInlinedModel(people_list[i]);
         }
+        $("#inlined-model-table").stickyTableHeaders({
+            scrollableArea: $(".scrollable-area")[0]
+          });
     }, "json");
 }
 

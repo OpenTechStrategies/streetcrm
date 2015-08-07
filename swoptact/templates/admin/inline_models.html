@@ -7,20 +7,22 @@
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
       <fieldset class="module">
         <h2 id="js-fieldset-header"></h2>
-        <table class="table table-striped table-bordered" id="inlined-model-table">
-          <thead>
-            <tr>
+        <div class="scrollable-area">
+          <table class="table table-striped table-bordered" id="inlined-model-table">
+            <thead>
+              <tr>
+                {% comment %}
+                  This portion auto-filled by javascript
+                {% endcomment %}
+              </tr>
+            </thead>
+            <tbody>
               {% comment %}
                 This portion auto-filled by javascript
               {% endcomment %}
-            </tr>
-          </thead>
-          <tbody>
-            {% comment %}
-              This portion auto-filled by javascript
-            {% endcomment %}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
         <div style="padding: 10px">
           <button type="submit" class="btn" name="_select"
                   id="add-new-inlined-model-btn">✚ {% trans 'Add new' %}</button>
@@ -31,8 +33,8 @@
 <div class="form-actions pull-right">
       <input type="button" id="multi_action_submit" value="Done" class="btn btn-primary default">
 </div>
+  <script type="text/javascript" src="{% static "js/jquery.stickytableheaders.js" %}"></script>
   <script type="text/javascript" src="{% static "js/inline_ajax.js" %}"></script>
-
   <script type="text/javascript" src="{% static "js/remove_delete_button.js" %}"></script>
 
   {% block inline_config %}
