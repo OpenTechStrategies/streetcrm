@@ -132,8 +132,14 @@ class ActivityLog(LogEntry):
 class Institution(ArchiveAbstract, SerializeableMixin):
     name = models.CharField(max_length=255, unique=True,
                             verbose_name="Institution")
-    address = models.TextField(null=True, blank=True,
-                               verbose_name="Institution Address")
+    inst_street_address = models.CharField(null=True, blank=True, max_length=1000,
+                               verbose_name="Institution Street Address")
+    inst_city_address = models.CharField(null=True, blank=True, max_length=255,
+                               verbose_name="Institution City")
+    inst_state_address = models.CharField(null=True, blank=True, max_length=255,
+                               verbose_name="Institution State")
+    inst_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
+                               verbose_name="Institution Zipcode")
     tags = models.ManyToManyField(Tag, blank=True,
                                   verbose_name="Institution Tags")
     contact = models.ManyToManyField(
@@ -160,8 +166,14 @@ class Participant(ArchiveAbstract, SerializeableMixin):
                                                    verbose_name="""Secondary
                                                    Participant Phone""")
     email = models.EmailField(blank=True, verbose_name="Participant Email")
-    address = models.TextField(null=True, blank=True,
-                               verbose_name="Participant Address")
+    participant_street_address = models.CharField(null=True, blank=True, max_length=1000,
+                               verbose_name="Participant Street Address")
+    participant_city_address = models.CharField(null=True, blank=True, max_length=255,
+                               verbose_name="Participant City")
+    participant_state_address = models.CharField(null=True, blank=True, max_length=255,
+                               verbose_name="Participant State")
+    participant_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
+                               verbose_name="Participant Zipcode")
     institution = models.ForeignKey(Institution, null=True, blank=True,
                                     verbose_name="Participant's Institution")
     title = models.CharField(null=True, blank=True, max_length=255,

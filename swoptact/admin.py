@@ -71,19 +71,19 @@ class ContactInline(admin.TabularInline):
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "US_primary_phone", "institution", "address",)
+    list_display = ("name", "US_primary_phone", "institution", "participant_street_address",)
     readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "address")
+                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
         }),
     )
 
     change_fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "address")
+                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
         }),
         ("Personal Action History", {
             "fields": ("action_history",),

@@ -218,7 +218,12 @@ input.vTextField#id_description {
 input.vTextField#id_title {
     width: 500px;
 }
-
+input.vTextField#id_inst_street_address {
+    width: 500px;
+}
+input.vTextField#id_participant_street_address {
+    width: 500px;
+}
 .navbar-nav a:hover {
     background-color: #337ab7 !important;
 }
