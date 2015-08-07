@@ -47,19 +47,21 @@ function setupTextInputStatic(field_def, cur_value) {
     if (!cur_value) {
         cur_value = "";
     }
-    var p_elt = $("<p/>",
-        {"style": "font-size: 18"});
-    p_elt.text(cur_value);
-    return p_elt
+    var div = $("<div/>",
+      {"style": "font-size: 18"});  // This should be removed and replaced with a stylesheet declaration
+    div.text(cur_value);
+    return div;
 }
 
 function setupTextInputEditable(field_def, cur_value) {
-    input_elt = $("<input/>", {
+    var div = $("<div>");
+    var input = $("<input/>", {
         "class": "vTextField " + field_def["form_name"],
         "type": "text",
         "value": cur_value});
-    input_elt.text(cur_value);
-    return input_elt;
+    input.text(cur_value);
+    div.append(input);
+    return div;
 }
 
 function getDataFromTextInput(column) {
@@ -375,6 +377,8 @@ function insertInlinedModel(inlined_model) {
          "id": "inlined-model-static-" + inlined_model.id});
     fillStaticRow(static_row, inlined_model);
     $("#inlined-model-table tbody").append(static_row);
+
+    /*
     // Construct and insert error row (empty for now)
     // ----------------------------------------------
     var errors_row = $(
@@ -394,11 +398,12 @@ function insertInlinedModel(inlined_model) {
     fillEditRow(edit_row, inlined_model);
     edit_row.hide()
     $("#inlined-model-table tbody").append(edit_row);
-
+    */
     // Special hack for the "new" inlined_model: turn on autocomplete for this row
     if (inlined_model.id === "") {
         turnOnAttendeeAutocomplete(edit_row);
     }
+
 }
 
 
@@ -503,21 +508,40 @@ function fillStaticRow(row, inlined_model) {
 
     fields_config.map(
         function(field) {
-            var new_elt = fieldTypes[field.input_type].setupStatic(
+            var static_elt = fieldTypes[field.input_type].setupStatic(
                 field,
                 // The current representation for this field on the model
-                inlined_model[field.form_name])
+                inlined_model[field.form_name]);
+            static_elt.addClass("static");
             if (field['form_name'] == 'name'){
-                createProfileLink(inlined_model.id, new_elt);
+                createProfileLink(inlined_model.id, static_elt);
             }
             else if (field['form_name'] == 'institution' && inlined_model.institution){
                 // this doesn't work yet because I don't know how to set the URL correctly
-                createProfileLink(inlined_model.institution.id, new_elt, "/swoptact/institution/");
+                createProfileLink(inlined_model.institution.id, static_elt, "/swoptact/institution/");
             }
+
+            var edit_elt = fieldTypes[field.input_type].setupEdit(
+                field,
+                // The current representation for this field on the model
+                inlined_model[field.form_name])
+            edit_elt.addClass("editable");
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
-            td_wrap.append(new_elt);
+            td_wrap.attr("data-input-type", field['input_type']);
+
+            td_wrap.append(static_elt);
+            td_wrap.append(edit_elt);
+            /* I don't think we want a profile link in the editable
+             * version of this cell. Delete these lines if that turns
+             * out to be true - NTT */
+            /*
+            if (field['form_name'] == 'name'){
+                createProfileLink(inlined_model.id, td_wrap);
+            }
+            */
             row.append(td_wrap);
+
         });
 
     // Now append the buttons...
@@ -677,14 +701,18 @@ Helper function to find the correct rows and fill them using other functions,
 after a inlined is updated
 */
 function recreateRows(inlined_model){
+  /*
     fillEditRow(getInlinedModelEditRow(inlined_model.id),
                 inlined_model);
     fillErrorsRow(getInlinedModelErrorsRow(inlined_model.id),
                   inlined_model.id, []);
+  */
     fillStaticRow(getInlinedModelStaticRow(inlined_model.id),
                   inlined_model);
+    /*
     hideInlinedModelEditRow(inlined_model.id);
     hideInlinedModelErrorsRow(inlined_model.id);
+    */
     showInlinedModelStaticRow(inlined_model.id);
 }
 
@@ -855,6 +883,21 @@ function setupInlinedModelCallbacks() {
                 saveInlinedModel(getInlinedModelIdForRow($(this)));
             }
         });
+
+    // Add handler to make static divs in table turn magically into editable divs
+    $("#inlined-model-table").on("click", "td", function(e) {
+        $("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
+        $("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
+        $(e.target).closest("td").children(".static").css("display", "none");
+        $(e.target).closest("td").children(".editable").css("display", "block");
+    });
+    // This is supposed to return everything to a static state if you
+    // click out of the table entirely, but it doesn't work right now.
+    $("#inlined-model-table").on("blur", function(e) {
+        $("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
+        $("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
+    });
+
 
     $("#multi_action_submit").on(
         "click",
