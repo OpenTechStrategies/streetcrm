@@ -27,9 +27,9 @@ class AdminLoginForm(AdminAuthenticationForm):
     """
     Provides a login form for the admin UI
 
-    This removes the requirement for the user to be have the `is_staff`
+    This removes the requirement for the user to have the `is_staff`
     attribute set to True. We use the admin UI for all users so this
-    check and flag is redundent in this app
+    check and flag is redundant in this app.
     """
 
     error_messages = {

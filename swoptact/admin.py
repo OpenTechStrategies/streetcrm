@@ -35,11 +35,12 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
     def has_permission(self, request):
         """
-        Checks if the user has access to at least one admin page
+        Checks if the user has access to at least one admin page.
 
-        This previously checked `requst.user.is_staff` too be as all users
-        should have access to the "admin" site we removed that check as it's
-        redundent.
+        This previously checked `request.user.is_staff.` All users should
+        have access to the "admin" site so we removed that check.  It's
+        redundant.
+
         """
         return request.user.is_active
 
