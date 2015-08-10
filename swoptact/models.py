@@ -142,11 +142,11 @@ class Institution(ArchiveAbstract, SerializeableMixin):
                                verbose_name="Institution Zipcode")
     tags = models.ManyToManyField(Tag, blank=True,
                                   verbose_name="Institution Tags")
-    contact = models.ManyToManyField(
+    contacts = models.ManyToManyField(
         "Participant",
-        through='Contact',
         related_name="main_contact"
     )
+
     is_member = models.BooleanField(
         default=False,
         blank=True,
@@ -187,13 +187,6 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     def events(self):
         """ List of all events participant is in """
         return Event.objects.filter(participants__in=[self]).all().order_by('-date')
-
-class Contact(models.Model):
-    participant = models.ForeignKey(Participant, related_name="leaders")
-    institution = models.ForeignKey(Institution, related_name="organization")
-
-    def __str__(self):
-        return self.participant.name
 
 class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     class Meta:
