@@ -54,14 +54,14 @@ function setupTextInputStatic(field_def, cur_value) {
 }
 
 function setupTextInputEditable(field_def, cur_value) {
-    var div = $("<div>");
+    var div_wrapper = $("<div>");
     var input = $("<input/>", {
         "class": "vTextField " + field_def["form_name"],
         "type": "text",
         "value": cur_value});
     input.text(cur_value);
-    div.append(input);
-    return div;
+    div_wrapper.append(input);
+    return div_wrapper;
 }
 
 function getDataFromTextInput(column) {
@@ -104,21 +104,20 @@ So that's why this looks a bit tricky.  But it's not so bad.
 */
 
 function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
-    div_wrapper = $("<div/>");
     // named_fkey has some more complex code...
     if (cur_value) {
-        var named_fkey_input = setupTextInputEditable(
+        var named_fkey_div = setupTextInputEditable(
             field_def, cur_value.name);
     } else {
-        var named_fkey_input = setupTextInputEditable(
+        var named_fkey_div = setupTextInputEditable(
             field_def, "");
     }
-    div_wrapper.append(named_fkey_input);
 
     var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
-    div_wrapper.append(new_indicator);
+    named_fkey_div.append(new_indicator);
     new_indicator.hide();
 
+    var named_fkey_input = $(named_fkey_div.children("input")[0]);
     // Named_fkey autocomplete stuff
     named_fkey_input.autocomplete({
         select: function (event, ui) {
@@ -167,7 +166,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             }
         });
 
-    return div_wrapper;
+    return named_fkey_div;
 }
 
 var fieldTypes = {
@@ -400,9 +399,9 @@ function insertInlinedModel(inlined_model) {
     $("#inlined-model-table tbody").append(edit_row);
     */
     // Special hack for the "new" inlined_model: turn on autocomplete for this row
-    if (inlined_model.id === "") {
-        turnOnAttendeeAutocomplete(edit_row);
-    }
+    //if (inlined_model.id === "") {
+        turnOnAttendeeAutocomplete(static_row);
+        //}
 
 }
 
@@ -444,7 +443,7 @@ Contact autocomplete is *only* on for completing the names of existing
 inlined models when adding a new row!
 */
 function turnOnAttendeeAutocomplete(edit_row) {
-    console.log("Turning on autocomplete");
+    // console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
@@ -526,6 +525,7 @@ function fillStaticRow(row, inlined_model) {
                 // The current representation for this field on the model
                 inlined_model[field.form_name])
             edit_elt.addClass("editable");
+
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.attr("data-input-type", field['input_type']);
@@ -533,8 +533,8 @@ function fillStaticRow(row, inlined_model) {
             td_wrap.append(static_elt);
             td_wrap.append(edit_elt);
             /* I don't think we want a profile link in the editable
-             * version of this cell. Delete these lines if that turns
-             * out to be true - NTT */
+             * version of this cell. Delete these lines and uncomment
+             * below if that turns out not to be true - NTT */
             /*
             if (field['form_name'] == 'name'){
                 createProfileLink(inlined_model.id, td_wrap);
@@ -886,16 +886,20 @@ function setupInlinedModelCallbacks() {
 
     // Add handler to make static divs in table turn magically into editable divs
     $("#inlined-model-table").on("click", "td", function(e) {
-        $("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
-        $("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
-        $(e.target).closest("td").children(".static").css("display", "none");
-        $(e.target).closest("td").children(".editable").css("display", "block");
+        $(this).children(".static").css("display", "none");
+        $(this).children(".editable").css("display", "block");
+        //$("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
+        //$("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
+        //$(e.target).closest("td").children(".static").css("display", "none");
+        //$(e.target).closest("td").children(".editable").css("display", "block");
     });
     // This is supposed to return everything to a static state if you
     // click out of the table entirely, but it doesn't work right now.
-    $("#inlined-model-table").on("blur", function(e) {
-        $("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
-        $("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
+    $("#inlined-model-table").on("blur", "td", function(e) {
+        $(this).children(".static").css("display", "block");
+        $(this).children(".editable").css("display", "none");
+        //$("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
+        //$("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
     });
 
 

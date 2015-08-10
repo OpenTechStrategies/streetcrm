@@ -289,11 +289,11 @@ li.bold_name {
    overflow: auto;
 }
 
-tr.inlined-model-edit td input {
+table#inlined-model-table input {
     width: 80%;
 }
 
-tr.inlined-model-edit td .new-indicator {
+table#inlined-model-table .new-indicator {
     color: green;
     width: 20%;
     padding-left: 10px;
