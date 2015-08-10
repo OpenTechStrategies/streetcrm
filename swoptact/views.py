@@ -16,11 +16,13 @@
 import json
 
 from django import http
+from django.conf import settings
 from django.views import generic
 from django.db.models.fields import related
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext_lazy as _
 
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
@@ -285,7 +287,7 @@ class InstitutionContactsAPI(APIMixin, generic.DetailView):
         self.object = self.get_object()
 
         # Iterate over contacts and serialize
-        contacts = [p.serialize() for p in self.object.contact.all()]
+        contacts = [p.serialize() for p in self.object.contacts.all()]
 
         return self.render_to_response(context=contacts)
 
@@ -345,33 +347,48 @@ class ContactLinking(APIMixin, generic.DetailView):
     """
     model = models.Institution
 
+    # The amount of contacts that can be linked at any given time
+    limit = settings.CONTACT_LIMIT
+    error_messages = {
+        "limit_reached": _("Contact limit has been reached, You can only have "
+                           "{limit} contacts at any given time")
+    }
+
     @property
-    def contact(self):
+    def participant(self):
         """ Looks up and returns Participant """
         participant_pk = self.kwargs.get("participant_id")
-        self.object = self.get_object()
-        contact_set = models.Contact.objects.filter(institution=self.object.id).filter(participant=participant_pk)
-        return contact_set.first()
+        return models.Participant.objects.get(pk=participant_pk)
 
     def delete(self, request, *args, **kwargs):
         """ Unlink a participant """
+        # Find institution (self.object)
         self.object = self.get_object()
-        # Remove the contact entry entirely
-        if self.contact:
-            self.contact.delete()
+
+        # Remove the participant as a contact
+        self.object.contacts.remove(self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
     def post(self, request, *args, **kwargs):
         """ Links a participant """
+        # Find institution (self.object)
         self.object = self.get_object()
+        # Check we've not reached the limit of contacts
+        if len(self.object.contacts.all()) >= self.limit:
+            context = self.get_context_data(
+                error=self.error_messages["limit_reached"].format(
+                    limit=self.limit
+                )
+            )
+            return self.render_to_response(
+                context,
+                status=400
+            )
 
-        contact = models.Contact(
-            participant=models.Participant.objects.get(
-                id=self.kwargs.get("participant_id")),
-            institution=self.object)
-        contact.save()
+        # Add the participant as a contact
+        self.object.contacts.add(self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())

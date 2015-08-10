@@ -18,6 +18,7 @@ import copy
 import json
 
 from django import template
+from django.conf import settings
 from django.core import exceptions
 from django.contrib import admin, auth
 from django.template import loader
@@ -58,13 +59,13 @@ class SWOPTACTAdminSite(admin.AdminSite):
         )
 
 class ContactInline(admin.TabularInline):
-    model = models.Contact
+    model = models.Institution.contacts.through
     extra = 0
     verbose_name = "Key Contact"
     verbose_name_plural = "Key Contacts"
     template = "admin/institution_contacts_inline_tabular.html"
     form = st_forms.autocomplete_modelform_factory(
-        model=models.Contact,
+        model=models.Institution.contacts.through,
         exclude=tuple()
     )
 
@@ -234,6 +235,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
         "current_inlines_for_page_url": [
             "/api/institutions/", "<page_model_id>", "/contacts"],
+        "link_limit": settings.CONTACT_LIMIT,
         "link_inlined_model_url": [
             "/api/institutions/", "<page_model_id>",
             "/contacts/", "<inlined_model_id>", "/"],

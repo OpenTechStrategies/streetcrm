@@ -597,6 +597,107 @@ function fillErrorsRow(row, inlined_model_id, errors) {
     row.append(td);
 }
 
+/*
+  This works to show and hide a paticular message
+
+  NB: You can only use showMessage for a single message
+      calling it successively will cause the previous
+      message to replaced with the new one.
+
+  When calling this you should have the first parameter
+  as the message text and the second parameter as the type
+  of message it is:
+
+  MESSAGE_SUCCESS (a green box)
+  MESSAGE_INFO (a blue box)
+  MESSAGE_WARNING (a yellow box)
+  MESSAGE_ERROR (a red box)
+*/
+
+MESSAGE_SUCCESS = "alert-success";
+MESSAGE_INFO = "alert-info";
+MESSAGE_WARNING = "alert-warning";
+MESSAGE_ERROR = "alert-danger";
+
+/* Shows the message box */
+function showMessage(error, message) {
+    var errorBox = $("#inlined-error-box");
+    // Firstly call the Message clean function this will ensure the
+    // box is cleanly setup so we can display the message.
+    cleanMessage();
+
+    // Add the error class
+    errorBox.addClass(error)
+
+    // Add show the text
+    errorBox.text(message);
+
+    // ensure it's visable
+    errorBox.css("visibility", "visible");
+}
+
+/* Hides the message box */
+function hideMessage() {
+    var errorBox = $("#inlined-error-box");
+
+    // Clean it just in case.
+    cleanMessage();
+
+    // Hide the box
+    errorBox.css("visibility", "hidden");
+}
+
+/* Cleans any extra things that has been added from the message box */
+function cleanMessage() {
+    var errorBox = $("#inlined-error-box");
+
+    // firstly remove any extra classes on it.
+    errorBox.removeClass();
+
+    // Add back the base "alert" class
+    errorBox.addClass("alert");
+
+    // Remove any text inside
+    errorBox.empty();
+}
+
+/* This shows limit reached message and disables the buttons to add more */
+function limitReached(error, message) {
+    // Populate default message if one isn't given
+    if (!message) {
+	var peopleLimit = getInlineConfig()["link_limit"];
+	message = "Limit reached,  You can only have " + peopleLimit + " linked at any given time";
+    }
+
+    // Show the error message
+    showMessage(error, message);
+
+    // Hide the "+ Add new" button
+    var addNewButton = $("#add-new-inlined-model-btn");
+    addNewButton.css("visibility", "hidden");
+}
+
+/* Checks if the limit has been reached - if so calls limitReached */
+function checkLimitReached() {
+    var peopleLimit = getInlineConfig()["link_limit"];
+
+    // Check if there is a limit
+    if (!peopleLimit) {
+	return false;
+    }
+
+    // How many linked models do we have?
+    var linkedModels = $("tr[id^='inlined-model-static-'");
+
+    // If it's less than the limit return false
+    if (linkedModels.length < peopleLimit) {
+	return false;
+
+    }
+
+    limitReached(MESSAGE_WARNING);
+    return true;
+}
 
 /* Grab the initial list of linked items from the server & render */
 function loadInitialAttendees() {
@@ -608,7 +709,14 @@ function loadInitialAttendees() {
         }
         $("#inlined-model-table").stickyTableHeaders({
             scrollableArea: $(".scrollable-area")[0]
-          });
+        });
+
+	// Check if we're over the limit and if so show a meesage
+	// and stop the user adding more
+	var peopleLimit = getInlineConfig()["link_limit"];
+	if (peopleLimit && people_list.length >= peopleLimit) {
+	    limitReached(MESSAGE_WARNING);
+	}
     }, "json");
 }
 
@@ -624,9 +732,14 @@ function linkInlinedModel(inlined_model_id, make_editable) {
                       makeInlinedModelEditable(inlined_model_id);
                   }
               }, 'json');
-    }, "json");
+    }, "json").fail(function (result) {
+	error = JSON.parse(result.responseText)["error"];
+	// Check for errors and if so display them.
+	if (error) {
+	    limitReached(MESSAGE_ERROR, error);
+	}
+    });
 }
-
 
 /* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
 function unlinkInlinedModel(inlined_model_id){
@@ -778,6 +891,7 @@ function saveInlinedModel(inlined_model_id) {
                       },
                       success: function (response) {
                           recreateRows(response);
+			  checkLimitReached();
                       },
                       dataType: 'json'
                   });
@@ -797,9 +911,10 @@ function saveInlinedModel(inlined_model_id) {
                           function (inlined_model) {
                               unlinkInlinedModel("");
                               insertInlinedModel(inlined_model);
+			      checkLimitReached();
                           }, 'json');
                 }, "json");
-                
+
             },
             dataType: 'json'
         });

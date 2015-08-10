@@ -158,3 +158,7 @@ GROUP_HIERARCHY = {
 ADMIN_ORDERING = (
     ("Swoptact", ("Actions", "Institutions", "Participants", "Tags", "Activity Log",)),
 )
+
+# This setting controls how many participants/contacts can be linked at any
+# given time to an institution.
+CONTACT_LIMIT = config["contact"]["limit"]
