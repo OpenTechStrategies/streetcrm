@@ -398,21 +398,17 @@ function insertInlinedModel(inlined_model) {
     errors_row.hide()
     fillErrorsRow(errors_row, inlined_model.id, []);
     $("#inlined-model-table tbody").append(errors_row);
-
-    // Construct and insert edit row
-    // -----------------------------
-    var edit_row = $(
-        "<tr />",
-        {"class": "form-row inlined-model-edit",
-         "id": "inlined-model-edit-" + inlined_model.id});
-    fillEditRow(edit_row, inlined_model);
-    edit_row.hide()
-    $("#inlined-model-table tbody").append(edit_row);
     */
-    // Special hack for the "new" inlined_model: turn on autocomplete for this row
-    //if (inlined_model.id === "") {
+    // Special hacks for the "new" inlined_model...
+    if (inlined_model.id === "") {
+        // Turn on autocomplete,
         turnOnAttendeeAutocomplete(static_row);
-        //}
+        // show the input field for the first field in the new model (and hide the static version),
+        $(static_row.find(".static")[0]).css("display", "none");
+        $(static_row.find(".editable")[0]).css("display", "block");
+        // and put the focus there.
+        $(static_row.find(".editable")[0]).find("input").focus();
+    }
 
 }
 
@@ -553,37 +549,12 @@ function fillStaticRow(row, inlined_model) {
             */
             row.append(td_wrap);
 
-        });
-
+        }
+    );
+    // Now append the buttons...
+    row.append('<td><div class="deleteButton">&#10006;</div></td>');
 }
 
-/* Wipe out the edit row and fill it with the appripriate elements
-
-Arguments:
- - row: jquery DOM element for this inlined <tr> row
- - inlined_model: mapping representing this linked model's data
-*/
-function fillEditRow(row, inlined_model) {
-    var fields_config = getFieldsConfig();
-    resetRow(row, inlined_model.id);
-
-    fields_config.map(
-        function(field) {
-            var new_elt = fieldTypes[field.input_type].setupEdit(
-                field,
-                // The current representation for this field on the model
-                inlined_model[field.form_name])
-            td_wrap = $("<td/>");
-            td_wrap.attr("data-form-name", field['form_name']);
-            td_wrap.attr("data-input-type", field['input_type']);
-            td_wrap.append(new_elt);
-            if (field['form_name'] == 'name'){
-                createProfileLink(inlined_model.id, td_wrap);
-            }
-            row.append(td_wrap);
-        });
-
-}
 
 /* Wipe out the errors row and fill it with the appripriate elements
 
@@ -648,41 +619,15 @@ function linkInlinedModel(inlined_model_id, make_editable) {
 
 
 /* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
-function unlinkInlinedModel(inlined_model_id){
-    var removeRows = function () {
-        getInlinedModelStaticRow(inlined_model_id).remove();
-        getInlinedModelEditRow(inlined_model_id).remove();
-        getInlinedModelErrorsRow(inlined_model_id).remove();
-    }
-
-    // An empty, pre-saved new inlined model.
-    if (inlined_model_id == "") {
-        removeRows();
-        return false;
-    }
-
+function unlinkInlinedModel(row){
+    var inlined_model_id = row.data("id");
     var page_model_id = getPageModelId();
     var target_url = fillLinkInlinedModelUrl(page_model_id, inlined_model_id);
     $.ajax({
         url: target_url,
         type: 'DELETE',
-        success: removeRows});
-}
-
-
-function addNewInlinedModel() {
-    if (getInlinedModelEditRow("").length > 0) {
-        // We already have an empty inlined model in progress
-        return false;
-    }
-
-    // NOTE: Not all our code is really set up to handle
-    // passing in a mostly empty object as an inlined object :\
-    // This is a hack!
-    // Seems to work tho
-    insertInlinedModel({"id": ""});
-    hideInlinedModelStaticRow("");
-    showInlinedModelEditRow("");
+        success: function() {row.fadeOut(800, function() { $(this).remove(); })}
+    });
 }
 
 
@@ -692,15 +637,12 @@ after a inlined is updated
 */
 function recreateRows(inlined_model){
   /*
-    fillEditRow(getInlinedModelEditRow(inlined_model.id),
-                inlined_model);
     fillErrorsRow(getInlinedModelErrorsRow(inlined_model.id),
                   inlined_model.id, []);
   */
     fillStaticRow(getInlinedModelStaticRow(inlined_model.id),
                   inlined_model);
     /*
-    hideInlinedModelEditRow(inlined_model.id);
     hideInlinedModelErrorsRow(inlined_model.id);
     */
     showInlinedModelStaticRow(inlined_model.id);
@@ -800,10 +742,11 @@ function saveInlinedModel(row) {
                 $.post(url, function (result) {
                     $.get(fillExistingInlinedModelUrl(response.id),
                           function (inlined_model) {
-                              unlinkInlinedModel("");
+                              // remove the "new" row from the UI and add one by the same method others were added.
+                              row.remove();
                               insertInlinedModel(inlined_model);
                           }, 'json');
-                }, "json");
+                  }, "json");
                 
             },
             dataType: 'json'
@@ -822,6 +765,7 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
+    $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">Delete Row</th>"));
 }
 
 /* Set up all the main widget callbacks */
@@ -831,13 +775,6 @@ function setupInlinedModelCallbacks() {
         function(event) {
             event.preventDefault();
             makeInlinedModelEditable(getInlinedModelIdForRow($(this)));
-        });
-
-    $("#inlined-model-table").on(
-        "click", "button.inlined-model-unlink",
-        function(event) {
-            event.preventDefault();
-            unlinkInlinedModel(getInlinedModelIdForRow($(this)));
         });
 
     $("#inlined-model-table").on(
@@ -851,7 +788,7 @@ function setupInlinedModelCallbacks() {
         "click",
         function(event) {
             event.preventDefault();
-            addNewInlinedModel();
+            insertInlinedModel({"id": ""});
         });
 
     $("#inlined-model-table").on(
@@ -878,6 +815,13 @@ function setupInlinedModelCallbacks() {
         saveInlinedModel($(this).closest("tr"));  // this is the new way to call this function!
         $(this).children(".static").css("display", "block");
         $(this).children(".editable").css("display", "none");
+    });
+
+    // Handler on "delete row" buttons
+    $("#inlined-model-table").on(
+        "click", ".deleteButton",
+        function(event) {
+        unlinkInlinedModel($(this).closest("tr"));
     });
 
 
