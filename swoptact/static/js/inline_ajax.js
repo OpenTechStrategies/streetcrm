@@ -27,6 +27,16 @@ Sounds confusing?  It's not too hard to use.  Take a look:
   // This should produce "/api/froobs/35/lookit"
   var my_url = url_formatter({"<froob_id>": 35});
 */
+
+/* Prevent the enter key from submitting the form. Enter is now reserved
+ * for submitting changes to individual entity values via the
+ * click-to-edit UI. Why were we using actual <form> tags anyway? */
+$("form").keypress(function(e){
+  if (e.which == 13) {
+    return false;
+  }
+});
+
 function gummyStringFormatter(string_pattern) {
     return function(replace_map) {
         var new_str = "";
@@ -130,7 +140,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
     // @@: Can we reduce a request per keystroke by rolling this into
     //   the autocomplete's signals?
     named_fkey_input.on(
-        "keypress",
+        "keyup",
         function (event) {
             // 13 is enter key, and we have a different handler for that
             if (event.which != 13) {
@@ -211,7 +221,7 @@ function showInlinedModelStaticRow(inlined_model_id) {
     getInlinedModelStaticRow(inlined_model_id).show();
 }
 
-
+/* get rid of this I hope, now that there is no separate edit row
 function getInlinedModelEditRow(inlined_model_id) {
     return $("#inlined-model-edit-" + inlined_model_id);
 }
@@ -221,7 +231,7 @@ function hideInlinedModelEditRow(inlined_model_id) {
 function showInlinedModelEditRow(inlined_model_id) {
     getInlinedModelEditRow(inlined_model_id).show();
 }
-
+*/
 
 function getInlinedModelErrorsRow(inlined_model_id) {
     return $("#inlined-model-errors-" + inlined_model_id);
@@ -370,10 +380,11 @@ function insertInlinedModel(inlined_model) {
 
     // Construct and insert static row
     // -------------------------------
-    var static_row = $(
-        "<tr />",
-        {"class": "form-row inlined-model-static",
-         "id": "inlined-model-static-" + inlined_model.id});
+    var static_row = $("<tr />");
+    static_row.addClass("form-row");
+    static_row.addClass("inlined-model-static"); // this might not be necessary anymore - NTT
+    static_row.data("id", inlined_model.id);
+
     fillStaticRow(static_row, inlined_model);
     $("#inlined-model-table tbody").append(static_row);
 
@@ -544,8 +555,6 @@ function fillStaticRow(row, inlined_model) {
 
         });
 
-    // Now append the buttons...
-    row.append('<td><button type="submit" class="btn inlined-model-edit" name="_edit">✎ Edit</button></td>');
 }
 
 /* Wipe out the edit row and fill it with the appripriate elements
@@ -574,8 +583,6 @@ function fillEditRow(row, inlined_model) {
             row.append(td_wrap);
         });
 
-    // Now append the buttons...
-    row.append('<td><button type="submit" class="btn inlined-model-save" name="_save">✓ Done</button> <button type="submit" class="btn inlined-model-cancel" name="_cancel">✗ Cancel</button></td>');
 }
 
 /* Wipe out the errors row and fill it with the appripriate elements
@@ -663,24 +670,7 @@ function unlinkInlinedModel(inlined_model_id){
 }
 
 
-/* Save all rows that are currently being edited
-
-We have to rely on jquery telling us what's visible or not
-since we don't have any other markers of what's in editing mode
-*/
-function saveAllEditing() {
-    // Find all currently being edited rows and the inlined model thereof,
-    // then save
-    return $.makeArray($("tr.inlined-model-edit:visible input.inlined-model-id")).map(
-        function(model_id_elt) {
-            return saveInlinedModel(model_id_elt.value);
-        });
-}
-
-
 function addNewInlinedModel() {
-    saveAllEditing();
-
     if (getInlinedModelEditRow("").length > 0) {
         // We already have an empty inlined model in progress
         return false;
@@ -744,9 +734,8 @@ Arguments:
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
-function saveInlinedModel(inlined_model_id) {
-    // Get the row, extract the current mapping of fields to their data
-    var row = getInlinedModelEditRow(inlined_model_id);
+function saveInlinedModel(row) {
+    var inlined_model_id = row.data("id");
     var form_data = getDataForEditRow(row);
 
     // Handle if this is a new row, or an existing one
@@ -833,7 +822,6 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
-    $("#inlined-model-table thead tr").append($("<th>Actions</th>"));
 }
 
 /* Set up all the main widget callbacks */
@@ -859,13 +847,6 @@ function setupInlinedModelCallbacks() {
             cancelInlinedModelEdit(getInlinedModelIdForRow($(this)));
         });
 
-    $("#inlined-model-table").on(
-        "click", "button.inlined-model-save",
-        function(event) {
-            event.preventDefault();
-            saveInlinedModel(getInlinedModelIdForRow($(this)));
-        });
-
     $("#add-new-inlined-model-btn").on(
         "click",
         function(event) {
@@ -874,13 +855,13 @@ function setupInlinedModelCallbacks() {
         });
 
     $("#inlined-model-table").on(
-        "keypress",
-        "tr.inlined-model-edit td input",
+        "keyup",
+        "td input",
         function (event) {
             // 13 is enter key
             if (event.which == 13) {
-                event.preventDefault();
-                saveInlinedModel(getInlinedModelIdForRow($(this)));
+                // This will trigger the focusout handler (below) and submit the change
+                $(this).focusout();
             }
         });
 
@@ -888,35 +869,17 @@ function setupInlinedModelCallbacks() {
     $("#inlined-model-table").on("click", "td", function(e) {
         $(this).children(".static").css("display", "none");
         $(this).children(".editable").css("display", "block");
-        //$("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
-        //$("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
-        //$(e.target).closest("td").children(".static").css("display", "none");
-        //$(e.target).closest("td").children(".editable").css("display", "block");
+        $(this).find("input").focus();
     });
-    // This is supposed to return everything to a static state if you
-    // click out of the table entirely, but it doesn't work right now.
-    $("#inlined-model-table").on("blur", "td", function(e) {
+    $("#inlined-model-table").on("focusout", "td", function(e) {
+        // Update the UI with the new data.
+        $(this).children(".static").text($(this).find("input").val());
+        // Also save to the DB (arguably more important).
+        saveInlinedModel($(this).closest("tr"));  // this is the new way to call this function!
         $(this).children(".static").css("display", "block");
         $(this).children(".editable").css("display", "none");
-        //$("#inlined-model-table .editable").each(function() { $(this).css("display", "none"); });
-        //$("#inlined-model-table .static").each(function() { $(this).css("display", "block"); });
     });
 
-
-    $("#multi_action_submit").on(
-        "click",
-        function (event) {
-            // We're making use of deferreds to save the page after
-            var save_deferreds = saveAllEditing();
-            
-            // Like (apply when args) or when(*args)
-            $.when.apply(this, save_deferreds)
-                .then(function () {
-                    // Save the page now that all row-saving deferreds
-                    // have completed
-                    $("div.change-content form").submit();
-                });
-        });
 
     $(document).ready(function () {
         insertFormHeaders();
