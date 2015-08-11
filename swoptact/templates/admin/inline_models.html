@@ -24,7 +24,7 @@
           </table>
         </div>
         <div style="padding: 10px">
-          {% if inline_form_config.user_can_edit %}
+          {% if user_can_edit_inline %}
             <button type="submit" class="btn" name="_select"
                     id="add-new-inlined-model-btn">✚ {% trans 'Add new' %}</button>
           {% endif %}
