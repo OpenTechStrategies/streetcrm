@@ -57,10 +57,9 @@ function setupTextInputStatic(field_def, cur_value) {
     if (!cur_value) {
         cur_value = "";
     }
-    var div = $("<div/>",
-      {"style": "font-size: 18"});  // This should be removed and replaced with a stylesheet declaration
-    div.text(cur_value);
-    return div;
+    var div_wrapper = $("<div/>");
+    div_wrapper.append("<span>" + cur_value + "</span>");
+    return div_wrapper;
 }
 
 function setupTextInputEditable(field_def, cur_value) {
@@ -221,18 +220,6 @@ function showInlinedModelStaticRow(inlined_model_id) {
     getInlinedModelStaticRow(inlined_model_id).show();
 }
 
-/* get rid of this I hope, now that there is no separate edit row
-function getInlinedModelEditRow(inlined_model_id) {
-    return $("#inlined-model-edit-" + inlined_model_id);
-}
-function hideInlinedModelEditRow(inlined_model_id) {
-    getInlinedModelEditRow(inlined_model_id).hide();
-}
-function showInlinedModelEditRow(inlined_model_id) {
-    getInlinedModelEditRow(inlined_model_id).show();
-}
-*/
-
 function getInlinedModelErrorsRow(inlined_model_id) {
     return $("#inlined-model-errors-" + inlined_model_id);
 }
@@ -360,16 +347,6 @@ function clearErrors(inlined_model_id) {
     fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, []);
 }
 
-
-/* Take the current DOM element, find the parent row, and fetch the
-   inlined model's id from it */
-function getInlinedModelIdForRow(jq_element) {
-    // Take a jquery element for any member of a inlined row
-    // and extract the inlined id (returned as a string)
-    return jq_element.parents("tr").children(".inlined-model-id")[0].value;
-}
-
-
 /* Insert a inlined into the DOM.
 
 Here, the inlined is a json object, as fetched from the API.
@@ -404,8 +381,8 @@ function insertInlinedModel(inlined_model) {
         // Turn on autocomplete,
         turnOnAttendeeAutocomplete(static_row);
         // show the input field for the first field in the new model (and hide the static version),
-        $(static_row.find(".static")[0]).css("display", "none");
-        $(static_row.find(".editable")[0]).css("display", "block");
+        $(static_row.find(".static")[0]).hide();
+        $(static_row.find(".editable")[0]).show();
         // and put the focus there.
         $(static_row.find(".editable")[0]).find("input").focus();
     }
@@ -479,28 +456,9 @@ function createProfileLink(inlined_model_id, existing_element, url_for_profile) 
     link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
     link_to_profile.attr("target", "_blank");
     link_to_profile.attr("class", "large-info");
-    existing_element.append(" ");
     existing_element.append(link_to_profile);
 }
 
-
-
-
-/*
-Wipe out a row and add the hidden inlined id input
-
-Arguments:
- - row: jquery DOM element for this inlined <tr> row
- - inlined_model_id: the identifier for this linked model
-*/
-function resetRow(row, inlined_model_id) {
-    row.empty();
-    row.append($(
-        "<input/>",
-        {"type": "hidden",
-         "class": "inlined-model-id",
-         "value": inlined_model_id}));
-}
 
 /* Wipe out the static row and fill it with the appripriate elements
 
@@ -510,7 +468,6 @@ Arguments:
 */
 function fillStaticRow(row, inlined_model) {
     var fields_config = getFieldsConfig();
-    resetRow(row, inlined_model.id);
 
     fields_config.map(
         function(field) {
@@ -539,14 +496,7 @@ function fillStaticRow(row, inlined_model) {
 
             td_wrap.append(static_elt);
             td_wrap.append(edit_elt);
-            /* I don't think we want a profile link in the editable
-             * version of this cell. Delete these lines and uncomment
-             * below if that turns out not to be true - NTT */
-            /*
-            if (field['form_name'] == 'name'){
-                createProfileLink(inlined_model.id, td_wrap);
-            }
-            */
+
             row.append(td_wrap);
 
         }
@@ -570,7 +520,6 @@ Arguments:
    displayed.
 */
 function fillErrorsRow(row, inlined_model_id, errors) {
-    resetRow(row, inlined_model_id);
 
     var td = $('<td colspan="5" />');
 
@@ -765,25 +714,12 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
-    $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">Delete Row</th>"));
+    // A blank 
+    $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">&nbsp;</th>"));
 }
 
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
-    $("#inlined-model-table").on(
-        "click", "button.inlined-model-edit",
-        function(event) {
-            event.preventDefault();
-            makeInlinedModelEditable(getInlinedModelIdForRow($(this)));
-        });
-
-    $("#inlined-model-table").on(
-        "click", "button.inlined-model-cancel",
-        function(event) {
-            event.preventDefault();
-            cancelInlinedModelEdit(getInlinedModelIdForRow($(this)));
-        });
-
     $("#add-new-inlined-model-btn").on(
         "click",
         function(event) {
@@ -793,28 +729,28 @@ function setupInlinedModelCallbacks() {
 
     $("#inlined-model-table").on(
         "keyup",
-        "td input",
+        "td .editable input",
         function (event) {
             // 13 is enter key
             if (event.which == 13) {
                 // This will trigger the focusout handler (below) and submit the change
-                $(this).focusout();
+                $(this).blur();
             }
         });
 
     // Add handler to make static divs in table turn magically into editable divs
     $("#inlined-model-table").on("click", "td", function(e) {
-        $(this).children(".static").css("display", "none");
-        $(this).children(".editable").css("display", "block");
-        $(this).find("input").focus();
+        $(this).children(".static").hide();
+        $(this).children(".editable").show();
+        $(this).children(".editable").children("input").focus();
     });
-    $("#inlined-model-table").on("focusout", "td", function(e) {
+    $("#inlined-model-table").on("blur", "td", function(e) {
         // Update the UI with the new data.
-        $(this).children(".static").text($(this).find("input").val());
+        $(this).children(".static").children("span").text($(this).find("input").val());
         // Also save to the DB (arguably more important).
         saveInlinedModel($(this).closest("tr"));  // this is the new way to call this function!
-        $(this).children(".static").css("display", "block");
-        $(this).children(".editable").css("display", "none");
+        $(this).children(".static").show();
+        $(this).children(".editable").hide();
     });
 
     // Handler on "delete row" buttons

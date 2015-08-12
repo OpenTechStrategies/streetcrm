@@ -290,7 +290,7 @@ li.bold_name {
 }
 
 table#inlined-model-table th.deleteButtonTH {
-   width: 20px;
+   width: 25px;
 }
 
 table#inlined-model-table .deleteButton {
@@ -379,4 +379,5 @@ form .form-row p {
 
 a.large-info {
     font-size: 150%;
+    margin: 0px 10px;
 }
