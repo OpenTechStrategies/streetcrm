@@ -508,8 +508,10 @@ function fillStaticRow(row, inlined_model) {
 
         }
     );
-    // Now append the buttons...
-    row.append('<td><div class="deleteButton">&#10006;</div></td>');
+    // Now append the buttons if the user has enough privileges
+    if (getInlineConfig()["user_can_edit"]) {
+        row.append('<td><div class="deleteButton">&#10006;</div></td>');
+    }
 }
 
 
@@ -721,8 +723,9 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
-    // A blank 
-    $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">&nbsp;</th>"));
+    if (getInlineConfig()["user_can_edit"]) {
+        $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">&nbsp;</th>"));
+    }
 }
 
 /* Set up all the main widget callbacks */
@@ -745,36 +748,34 @@ function setupInlinedModelCallbacks() {
             }
         });
 
-    // USE THIS PIECE OF CODE:     if (getInlineConfig()["user_can_edit"]) {
-
-    // Add handler to make static divs in table turn magically into editable divs
-    $("#inlined-model-table").on("click", "td", function(e) {
-        $(this).children(".static").hide();
-        $(this).children(".editable").show();
-        $(this).children(".editable").children("input").focus();
-    });
-    $("#inlined-model-table").on("blur", "td", function(e) {
-        // Update the UI with the new data.
-        $(this).children(".static").children("span").text($(this).find("input").val());
-        // Also save to the DB (arguably more important).
-        saveInlinedModel($(this).closest("tr"));
-        $(this).children(".static").show();
-        $(this).children(".editable").hide();
-    });
-
-    // Handler on "delete row" buttons
-    $("#inlined-model-table").on(
-        "click", ".deleteButton",
-        function(event) {
-        unlinkInlinedModel($(this).closest("tr"));
-    });
-
-
-    $(document).ready(function () {
-        insertFormHeaders();
-        insertFieldsetHeader();
-        loadInitialAttendees();
-    });
+    if (getInlineConfig()["user_can_edit"]) {
+        // Add handler to make static divs in table turn magically into editable divs
+        $("#inlined-model-table").on("click", "td", function(e) {
+            $(this).children(".static").hide();
+            $(this).children(".editable").show();
+            $(this).children(".editable").children("input").focus();
+        });
+        $("#inlined-model-table").on("blur", "td", function(e) {
+            // Update the UI with the new data.
+            $(this).children(".static").children("span").text($(this).find("input").val());
+            // Also save to the DB (arguably more important).
+            saveInlinedModel($(this).closest("tr"));
+            $(this).children(".static").show();
+            $(this).children(".editable").hide();
+        });
+    
+        // Handler on "delete row" buttons
+        $("#inlined-model-table").on(
+            "click", ".deleteButton",
+            function(event) {
+            unlinkInlinedModel($(this).closest("tr"));
+        });
+    }
 }
 
-setupInlinedModelCallbacks();
+$(document).ready(function () {
+    setupInlinedModelCallbacks();
+    insertFormHeaders();
+    insertFieldsetHeader();
+    loadInitialAttendees();
+});
