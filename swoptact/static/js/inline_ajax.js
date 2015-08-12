@@ -134,10 +134,10 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             url: field_def.autocomplete_uri,
             datatype: "html",
             data: {
-                q: named_fkey_div.val(),
+                q: named_fkey_input.val(),
             },
             success: function(data) {
-                var lower_input = named_fkey_div.val().toLowerCase();
+                var lower_input = named_fkey_input.val().toLowerCase();
                 var result_as_array = $.makeArray($(data));
                 var found_match = false;
                 // Search through all results, see if there's a match
@@ -744,6 +744,8 @@ function setupInlinedModelCallbacks() {
                 $(this).blur();
             }
         });
+
+    // USE THIS PIECE OF CODE:     if (getInlineConfig()["user_can_edit"]) {
 
     // Add handler to make static divs in table turn magically into editable divs
     $("#inlined-model-table").on("click", "td", function(e) {

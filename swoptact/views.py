@@ -212,7 +212,7 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
 
     model = models.Participant
     fields = ["id", "name", "primary_phone",
-              "secondary_phone", "email", "address",
+              "secondary_phone", "email", "participant_street_address",
               "institution", "title"]
     field_processors = {
             "institution": process_institution_field}
@@ -248,7 +248,7 @@ class CreateParticipantAPI(APIMixin, generic.CreateView):
 
     model = models.Participant
     fields = ["name", "primary_phone", "secondary_phone",
-              "email", "address", "institution"]
+              "email", "participant_street_address", "institution"]
     field_processors = {
             "institution": process_institution_field}
 
