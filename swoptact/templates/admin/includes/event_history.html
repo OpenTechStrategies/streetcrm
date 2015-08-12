@@ -1,6 +1,6 @@
 {% load i18n %}
 <table class="table table-bordered">
-  {% for event in events %}
+  {% for event in events|slice:":5" %}
   <tr>
     <th><a href="{{ event.admin_change_url }}">{{ event.name }}</th>
     <th>{{ event.date }}</th>

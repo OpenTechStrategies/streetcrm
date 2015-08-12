@@ -51,4 +51,4 @@ echo "Creating Django superuser:"
 python manage.py createsuperuser --email "jrandom@example.com"
 echo ""
 
-python manage.py runserver
+python manage.py runserver --nothreading

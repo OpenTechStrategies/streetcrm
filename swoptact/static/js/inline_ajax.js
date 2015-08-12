@@ -30,7 +30,7 @@ Sounds confusing?  It's not too hard to use.  Take a look:
 
 /* Prevent the enter key from submitting the form. Enter is now reserved
  * for submitting changes to individual entity values via the
- * click-to-edit UI. Why were we using actual <form> tags anyway? */
+ * click-to-edit UI. */
 $("form").keypress(function(e){
   if (e.which == 13) {
     return false;
@@ -126,54 +126,61 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
     named_fkey_div.append(new_indicator);
     new_indicator.hide();
 
-    var named_fkey_input = $(named_fkey_div.children("input")[0]);
-    // Named_fkey autocomplete stuff
-    named_fkey_input.autocomplete({
-        select: function (event, ui) {
-            if (ui.item) {
-                new_indicator.hide();
-            }},
-        source: autoCompleteSourceHelper(field_def.autocomplete_uri)});
-
     // Otherwise, check for whether or not this is a new item on each keydown
     // @@: Can we reduce a request per keystroke by rolling this into
     //   the autocomplete's signals?
-    named_fkey_input.on(
+    function maybeUpdateNew () {
+        $.ajax({
+            url: field_def.autocomplete_uri,
+            datatype: "html",
+            data: {
+                q: named_fkey_div.val(),
+            },
+            success: function(data) {
+                var lower_input = named_fkey_div.val().toLowerCase();
+                var result_as_array = $.makeArray($(data));
+                var found_match = false;
+                // Search through all results, see if there's a match
+                // that matches by lowercase
+                for (var i = 0; i < result_as_array.length; i++) {
+                    var this_result = result_as_array[i];
+                    if ($(this_result).text().toLowerCase() == lower_input) {
+                        found_match = true;
+                        break;
+                    }
+                }
+
+                // If there's a match, hide the [NEW], but show it otherwise
+                if (found_match || lower_input.length == 0) {
+                    new_indicator.hide();
+                } else {
+                    new_indicator.show();
+                }
+            }
+        });
+    }
+
+    // Possibly update the [NEW] thing on keystroke
+    named_fkey_div.on(
         "keyup",
         function (event) {
             // 13 is enter key, and we have a different handler for that
             if (event.which != 13) {
-                // Do we have an item that matches this?
-                $.ajax({
-                    url: field_def.autocomplete_uri,
-                    datatype: "html",
-                    data: {
-                        q: named_fkey_input.val(),
-                    },
-                    success: function(data) {
-                        var lower_input = named_fkey_input.val().toLowerCase();
-                        var result_as_array = $.makeArray($(data));
-                        var found_match = false;
-                        // Search through all results, see if there's a match
-                        // that matches by lowercase
-                        for (var i = 0; i < result_as_array.length; i++) {
-                            var this_result = result_as_array[i];
-                            if ($(this_result).text().toLowerCase() == lower_input) {
-                                found_match = true;
-                                break;
-                            }
-                        }
+                maybeUpdateNew();
+            }});
 
-                        // If there's a match, hide the [NEW], but show it otherwise
-                        if (found_match || lower_input.length == 0) {
-                            new_indicator.hide();
-                        } else {
-                            new_indicator.show();
-                        }
-                    }
-                })
-            }
-        });
+    // Named_fkey autocomplete stuff
+    named_fkey_div.autocomplete({
+        select: function (event, ui) {
+            if (ui.item) {
+                new_indicator.hide();
+            }},
+        source: autoCompleteSourceHelper(field_def.autocomplete_uri),
+        // If we can focus on it, it's definitely not [NEW]
+        focus: function (event, ui) {new_indicator.hide();},
+        // But be sure after a close, we may have "reverted" the value
+        close: function (event, ui) {maybeUpdateNew();},
+    });
 
     return named_fkey_div;
 }
@@ -748,7 +755,7 @@ function setupInlinedModelCallbacks() {
         // Update the UI with the new data.
         $(this).children(".static").children("span").text($(this).find("input").val());
         // Also save to the DB (arguably more important).
-        saveInlinedModel($(this).closest("tr"));  // this is the new way to call this function!
+        saveInlinedModel($(this).closest("tr"));
         $(this).children(".static").show();
         $(this).children(".editable").hide();
     });
