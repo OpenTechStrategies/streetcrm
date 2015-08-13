@@ -553,9 +553,7 @@ function loadInitialAttendees() {
         for (i = 0; i < people_list.length; i++){
             insertInlinedModel(people_list[i]);
         }
-        $("#inlined-model-table").stickyTableHeaders({
-            scrollableArea: $(".scrollable-area")[0]
-          });
+        setStickyHeaders();
     }, "json");
 }
 
@@ -727,8 +725,17 @@ function insertFormHeaders() {
     }
 }
 
+function setStickyHeaders(e) {
+    $("#inlined-model-table").stickyTableHeaders({
+        scrollableArea: $(".scrollable-area")[0]
+    });
+}
+
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
+    // Adjust sticky headers on window resize
+    $(window).on("resize", setStickyHeaders);
+
     $("#add-new-inlined-model-btn").on(
         "click",
         function(event) {
