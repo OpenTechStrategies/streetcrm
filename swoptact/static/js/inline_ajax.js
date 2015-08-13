@@ -258,6 +258,18 @@ function getFieldsConfig() {
     return getInlineConfig()["fields"];
 }
 
+// Check if the current user can edit the ajax tables.
+// This function could/should probably be made much more general eventually.
+function userCanEdit() {
+    var model = $("#model_name").val();
+    if (model == "event" && getInlineConfig()["user_permissions"].indexOf("swoptact.change_participant") > -1) {
+        return true;
+    }
+    else if (model == "institution" && getInlineConfig()["user_permissions"].indexOf("swoptact.add_contact") > -1) {
+        return true;
+    }
+    return false;
+}
 
 // <inline_config_uri_helpers>
 //   Various helpers for URI construction based on the inline form's
@@ -508,8 +520,11 @@ function fillStaticRow(row, inlined_model) {
         }
     );
     // Now append the buttons if the user has enough privileges
-    if (getInlineConfig()["user_can_edit"]) {
-        row.append('<td><span class="deleteButton">&#10006;</span></td>');
+    // if (getInlineConfig()["user_can_edit"]) {
+    //    row.append('<td><span class="deleteButton">&#10006;</span></td>');
+    // }
+    if (userCanEdit()) {
+       row.append('<td><span class="deleteButton">&#10006;</span></td>');
     }
 }
 
@@ -720,7 +735,7 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
-    if (getInlineConfig()["user_can_edit"]) {
+    if (userCanEdit()) {
         $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">&nbsp;</th>"));
     }
 }
@@ -754,7 +769,7 @@ function setupInlinedModelCallbacks() {
             }
         });
 
-    if (getInlineConfig()["user_can_edit"]) {
+    if (userCanEdit()) {
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
             $(this).children(".static").hide();

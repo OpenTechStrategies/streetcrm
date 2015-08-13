@@ -52,6 +52,10 @@
 
         <div id="content-main">
             <div>
+            {% comment %}
+                Give the client access to which model we're using.
+            {% endcomment %}
+            <input id="model_name" type="hidden" value="{{ opts.model_name }}" />
             {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
 
             {% block field_sets %}

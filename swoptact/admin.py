@@ -162,6 +162,9 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
         inline_form_config["user_can_edit"] = self._can_user_edit_ajaxily(
             request.user)
 
+        # Add the full list of user permissions to the inline config.
+        inline_form_config["user_permissions"] = list(request.user.get_group_permissions());
+
         extra_context["user_can_edit_inline"] = inline_form_config["user_can_edit"]
         extra_context["inline_form_config"] = json.dumps(
             inline_form_config)
