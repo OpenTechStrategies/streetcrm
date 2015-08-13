@@ -459,10 +459,9 @@ function turnOnAttendeeAutocomplete(edit_row) {
 function createProfileLink(inlined_model_id, existing_element, url_for_profile) {
     if (url_for_profile == undefined) { url_for_profile = null; }
     var link_to_profile = $("<a/>");
-    link_to_profile.html("&#x2139;");
+    link_to_profile.html("<span class=\"large-info\">&#x2139;</span>");
     link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
     link_to_profile.attr("target", "_blank");
-    link_to_profile.attr("class", "large-info");
     existing_element.append(link_to_profile);
 }
 
@@ -510,7 +509,7 @@ function fillStaticRow(row, inlined_model) {
     );
     // Now append the buttons if the user has enough privileges
     if (getInlineConfig()["user_can_edit"]) {
-        row.append('<td><div class="deleteButton">&#10006;</div></td>');
+        row.append('<td><span class="deleteButton">&#10006;</span></td>');
     }
 }
 
