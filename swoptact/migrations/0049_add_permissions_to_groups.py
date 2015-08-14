@@ -103,10 +103,6 @@ def add_admin_permissions(apps, schema_editor):
         model="tag"
     )
 
-    contact_ct = ContentType.objects.get(
-        app_label="swoptact",
-        model="contact"
-    )
 
     user_ct = ContentType.objects.get(
         app_label="auth",
@@ -149,23 +145,6 @@ def add_admin_permissions(apps, schema_editor):
         content_type=tag_ct
     ))
 
-    # Admin can add a contact
-    admin.permissions.add(Permission.objects.get(
-        codename="add_contact",
-        content_type=contact_ct
-    ))
-
-    # Admin can change a contact
-    admin.permissions.add(Permission.objects.get(
-        codename="change_contact",
-        content_type=contact_ct
-    ))
-
-    # Admins can archive a contact
-    admin.permissions.add(Permission.objects.get(
-        codename="delete_contact",
-        content_type=contact_ct
-    ))
 
     # Admin can change their password
     admin.permissions.add(Permission.objects.get(
