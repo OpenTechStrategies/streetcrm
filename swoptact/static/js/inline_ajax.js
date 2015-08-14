@@ -348,27 +348,6 @@ function makeInlinedModelEditable(inlined_model_id) {
     showInlinedModelEditRow(inlined_model_id);
 }
 
-/* Handle the "cancel" button for a inlined edit-in-progress. */
-function cancelInlinedModelEdit(inlined_model_id) {
-    // Oh, this is the add new one... well, we don't need to switch
-    // back to a static view.  Just dump it.
-    if (inlined_model_id == "") {
-        unlinkInlinedModel(inlined_model_id);
-    }
-
-    // TODO: Do a *real* revert of the data here!
-    //// Revert and hide edit form
-    // revertEditRow(inlined_model_id);
-    hideInlinedModelEditRow(inlined_model_id);
-
-    // Hide and clear errors form
-    hideInlinedModelErrorsRow(inlined_model_id);
-    clearErrors(inlined_model_id);
-
-    // Show display-only form
-    showInlinedModelStaticRow(inlined_model_id);
-}
-
 
 function revertEditRow(inlined_model_id) {
     // TODO: base this on the filling system
@@ -460,7 +439,6 @@ Contact autocomplete is *only* on for completing the names of existing
 inlined models when adding a new row!
 */
 function turnOnAttendeeAutocomplete(edit_row) {
-    // console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
@@ -468,10 +446,8 @@ function turnOnAttendeeAutocomplete(edit_row) {
         select: function(event, ui) {
             if (ui.item) {
                 var inlined_model_id = ui.item.data.id;
-                // Remove this row
-                cancelInlinedModelEdit("");
                 // Insert the inlined and make them immediately editable
-                linkInlinedModel(inlined_model_id, true);
+                linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
                 event.preventDefault();
             }
@@ -588,15 +564,12 @@ function loadInitialAttendees() {
 
 
 /* Add the inlined model on the backend and link on the frontend */
-function linkInlinedModel(inlined_model_id, make_editable) {
+function linkInlinedModel(inlined_model_id) {
     var url = fillLinkInlinedModelUrl(getPageModelId(), inlined_model_id);
     $.post(url, function (result) {
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model) {
                   insertInlinedModel(inlined_model);
-                  if (make_editable) {
-                      makeInlinedModelEditable(inlined_model_id);
-                  }
               }, 'json');
     }, "json");
 }
