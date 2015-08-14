@@ -204,11 +204,7 @@ input[type="checkbox"] {
 .datetimeshortcuts a:not(#calendarlink0) {
     display:none;
 }
-/* make the text inside the inputs (esp. on the sign-in sheet) larger and more
-readable, without making the inputs themselves enormous */
-input {
-    font-size: large;
-}
+
 input.vTextField {
     width: 200px;
 }
@@ -280,11 +276,57 @@ li.bold_name {
    overflow: auto;
 }
 
-tr.inlined-model-edit td input {
+table#inlined-model-table th.deleteButtonTH {
+   width: 25px;
+}
+
+/* A click event in a static div makes the corresponding editable div
+appear (and makes the static div disappear) */
+
+/* editabe divs in the change form start with display none, then become
+visible when the user clicks in the corresponding uneditable sibling div */
+table#inlined-model-table td {
+    padding: 6px;
+}
+
+table#inlined-model-table .editable {
+    display: none;
+}
+
+table#inlined-model-table .large-info {
+   font-size: 16px;
+   border: 2px solid #48328F;
+   border-radius: 50%;
+   height: 24px;
+   width: 24px;
+   line-height: 19px; 
+   margin: 0px 10px;
+   text-align: center;
+   text-decoration: none;
+   cursor: pointer;
+   display: inline-block;
+}
+
+table#inlined-model-table span.deleteButton {
+   font-size: 10px;
+   background-color: red;
+   color: white;
+   border: 2px solid gray;
+   border-radius: 50%;
+   height: 20px;
+   width: 20px;
+   margin: 2px auto 0px auto;
+   text-align: center;
+   cursor: pointer;
+   display: inline-block;
+}
+
+
+table#inlined-model-table input {
     width: 80%;
 }
 
-tr.inlined-model-edit td .new-indicator {
+table#inlined-model-table .new-indicator {
     color: green;
     width: 20%;
     padding-left: 10px;
@@ -348,8 +390,4 @@ form .form-row p {
 {
     color: black;
     content: "✎";
-}
-
-a.large-info {
-    font-size: 150%;
 }
