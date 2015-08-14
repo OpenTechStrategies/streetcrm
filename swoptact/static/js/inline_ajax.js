@@ -276,7 +276,7 @@ function getUserRank(userGroup) {
 /* Check if the current user can edit the ajax tables based on user rank
  * and model. */
 function userCanEdit() {
-    var userRank = getInlineConfig()["user_group"];
+    var userRank = getUserRank(getInlineConfig()["user_group"]);
     var model = $("#model_name").val();
     switch (model) {
       case "event": return true;
@@ -789,6 +789,8 @@ function setupInlinedModelCallbacks() {
             $(this).children(".static").hide();
             $(this).children(".editable").show();
             $(this).children(".editable").children("input").focus();
+            // Reset sticky headers in case table cell widths have changed.
+            setStickyHeaders();
         });
         $("#inlined-model-table").on("blur", "td", function(e) {
             // Update the UI with the new data.
@@ -797,6 +799,8 @@ function setupInlinedModelCallbacks() {
             saveInlinedModel($(this).closest("tr"));
             $(this).children(".static").show();
             $(this).children(".editable").hide();
+            // Reset sticky headers in case table cell widths have changed.
+            setStickyHeaders();
         });
     
         // Handler on "delete row" buttons
