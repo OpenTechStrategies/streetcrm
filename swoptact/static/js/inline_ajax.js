@@ -258,17 +258,31 @@ function getFieldsConfig() {
     return getInlineConfig()["fields"];
 }
 
-// Check if the current user can edit the ajax tables.
-// This function could/should probably be made much more general eventually.
+/* Isn't it rare and beautiful to use a switch statement with
+ * intentional fall-through? Yes, yes it is.
+ * This function associates a numerical value with each rank
+ * so that ranks may be more easily compared to each other. */
+function getUserRank(userGroup) {
+    var rank = 0;
+    switch (userGroup) {
+      case "developer": rank++;
+      case "admin": rank++;
+      case "staff": rank++;
+      case "leader": rank++;
+    }
+    return rank;
+}
+
+/* Check if the current user can edit the ajax tables based on user rank
+ * and model. */
 function userCanEdit() {
+    var userRank = getInlineConfig()["user_group"];
     var model = $("#model_name").val();
-    if (model == "event" && getInlineConfig()["user_permissions"].indexOf("swoptact.change_participant") > -1) {
-        return true;
+    switch (model) {
+      case "event": return true;
+      case "institution": return userRank > 2 ? true : false;
+      default: return userRank > 3 ? true : false;
     }
-    else if (model == "institution" && getInlineConfig()["user_permissions"].indexOf("swoptact.add_contact") > -1) {
-        return true;
-    }
-    return false;
 }
 
 // <inline_config_uri_helpers>
