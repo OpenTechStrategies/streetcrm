@@ -122,6 +122,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             field_def, "");
     }
 
+    var named_fkey_input = $(named_fkey_div.find("input")[0]);
     var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
     named_fkey_div.append(new_indicator);
     new_indicator.hide();
@@ -170,7 +171,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             }});
 
     // Named_fkey autocomplete stuff
-    named_fkey_div.autocomplete({
+    named_fkey_input.autocomplete({
         select: function (event, ui) {
             if (ui.item) {
                 new_indicator.hide();
