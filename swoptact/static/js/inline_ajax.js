@@ -450,6 +450,9 @@ function turnOnAttendeeAutocomplete(edit_row) {
                 // Insert the inlined and make them immediately editable
                 linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
+                $(this).closest("td").off("blur");
+                var removedTr = $(this).closest("tr").remove();
+                // Prevent form submission.
                 event.preventDefault();
             }
         }
