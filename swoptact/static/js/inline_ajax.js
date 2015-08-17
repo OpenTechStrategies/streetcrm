@@ -450,8 +450,9 @@ function turnOnAttendeeAutocomplete(edit_row) {
                 // Insert the inlined and make them immediately editable
                 linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
-                $(this).closest("td").off("blur");
-                var removedTr = $(this).closest("tr").remove();
+                var tr =  $(this).closest("tr");
+                tr.hide();
+                tr.remove();
                 // Prevent form submission.
                 event.preventDefault();
             }
@@ -770,14 +771,29 @@ function setupInlinedModelCallbacks() {
             setStickyHeaders();
         });
         $("#inlined-model-table").on("blur", "td", function(e) {
-            // Update the UI with the new data.
-            $(this).children(".static").children("span").text($(this).find("input").val());
-            // Also save to the DB (arguably more important).
-            saveInlinedModel($(this).closest("tr"));
-            $(this).children(".static").show();
-            $(this).children(".editable").hide();
-            // Reset sticky headers in case table cell widths have changed.
-            setStickyHeaders();
+            // Check whether the row containing this td is visible, and
+            // only continue saving if is is. The row will not be
+            // visible if this blur occurred when the user chose an
+            // option from the autocomplete list of options.
+            //
+            // This check is needed for Chrom(e/ium) browsers.  In
+            // Chrome, calling "remove" on the <tr> element (which
+            // happens in the autocomplete "select" function) triggers
+            // "blur".  In other browsers it doesn't, and we won't even
+            // reach this point in the code, but for Chrome we hide the
+            // row as a way of saying that autocomplete has taken over
+            // and we don't need to save a new entity to the DB.
+            var tr = $(this).closest("tr");
+            if (tr.is(":visible")) {
+              // Update the UI with the new data.
+              $(this).children(".static").children("span").text($(this).find("input").val());
+              // Also save to the DB (arguably more important).
+              saveInlinedModel(tr);
+              $(this).children(".static").show();
+              $(this).children(".editable").hide();
+              // Reset sticky headers in case table cell widths have changed.
+              setStickyHeaders();
+            }
         });
     
         // Handler on "delete row" buttons
