@@ -333,6 +333,10 @@ table#inlined-model-table .new-indicator {
     font-weight: bold;
 }
 
+#addNewButtonDiv {
+    padding: 10px;
+}
+
 ul#id_group {
     list-style-type: none;
     padding-left: 0;
