@@ -25,7 +25,7 @@ urlpatterns = patterns("",
     # Autocomplete app URLs
     url(r"^autocomplete/", include("autocomplete_light.urls")),
 
-    # Admin site URLS
+    # Admin site URLs
     url(r"^", admin.site.urls),
 
     # API URLs
