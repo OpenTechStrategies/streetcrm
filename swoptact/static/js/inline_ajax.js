@@ -860,7 +860,7 @@ function setupInlinedModelCallbacks() {
 
     if (userCanEdit()) {
         // Put the "add new" button into the form
-        var addNewButton = $("<button type=\"submit\" class=\"btn\" name=\"_select\" id=\"add-new-inlined-model-btn\"></button>");
+        var addNewButton = $("<button type=\"submit\" class=\"btn-primary btn default\" name=\"_select\" id=\"add-new-inlined-model-btn\"></button>");
         // Get the button text from a Django function that translates according to user's locale.
         var addNewButtonText = "✚ " + gettext("Add New");
         addNewButton.text(addNewButtonText);
