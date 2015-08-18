@@ -365,6 +365,24 @@ function clearErrors(inlined_model_id) {
 Here, the inlined is a json object, as fetched from the API.
 */
 function insertInlinedModel(inlined_model) {
+    // Our <table> has multiple <tbody>s, each of which groups an error
+    // row together with its static row. Multiple <tbody> elements are
+    // unusual but still totally legit.
+    var tbody = $("<tbody />");
+
+    // Construct and insert error row (empty for now)
+    // ----------------------------------------------
+    var errors_row = $(
+        "<tr />",
+        {"class": "form-row inlined-model-errors",
+         "id": "inlined-model-errors-" + inlined_model.id});
+    // Currently giving a colspan of '5' bc it will be wider than any
+    // model we have. We should be calculating this however.
+    errors_row.append("<td colspan='5' />");
+    errors_row.hide()
+    fillErrorsRow(errors_row, inlined_model.id, []);
+    tbody.append(errors_row);
+
     // TODO: Insert the inlined_model into a hashmap for later reference?
     //   (eg, if canceling an edit...)
 
@@ -376,19 +394,12 @@ function insertInlinedModel(inlined_model) {
     static_row.data("id", inlined_model.id);
 
     fillStaticRow(static_row, inlined_model);
-    $("#inlined-model-table tbody").append(static_row);
+    tbody.append(static_row);
 
-    /*
-    // Construct and insert error row (empty for now)
-    // ----------------------------------------------
-    var errors_row = $(
-        "<tr />",
-        {"class": "form-row inlined-model-errors",
-         "id": "inlined-model-errors-" + inlined_model.id});
-    errors_row.hide()
-    fillErrorsRow(errors_row, inlined_model.id, []);
-    $("#inlined-model-table tbody").append(errors_row);
-    */
+    // It's important that we append to the table before (possibly)
+    // focusing on an input element below.
+    $("#inlined-model-table").append(tbody);
+
     // Special hacks for the "new" inlined_model...
     if (inlined_model.id === "") {
         // Turn on autocomplete,
@@ -399,7 +410,6 @@ function insertInlinedModel(inlined_model) {
         // and put the focus there.
         $(static_row.find(".editable")[0]).find("input").focus();
     }
-
 }
 
 
@@ -539,7 +549,11 @@ Arguments:
 */
 function fillErrorsRow(row, inlined_model_id, errors) {
 
-    var td = $('<td colspan="5" />');
+    // Get the <td> element in the errors row
+    var td = row.find("td:first-child");
+
+    // Empty it to clear out any previous errors first
+    td.empty();
 
     if (errors.length > 0) {
         td.append($("<p><i>Errors were found in the entry below...</i></p>"));
@@ -696,12 +710,13 @@ function linkInlinedModel(inlined_model_id) {
 /* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
 function unlinkInlinedModel(row){
     var inlined_model_id = row.data("id");
+    var tbody = row.closest("tbody");  // will contain both 'row' and its error row
     var page_model_id = getPageModelId();
     var target_url = fillLinkInlinedModelUrl(page_model_id, inlined_model_id);
     $.ajax({
         url: target_url,
         type: 'DELETE',
-        success: function() {row.fadeOut(800, function() { $(this).remove(); })}
+          success: function() {tbody.fadeOut(800, function() { tbody.remove(); })}
     });
 }
 
@@ -711,15 +726,15 @@ Helper function to find the correct rows and fill them using other functions,
 after a inlined is updated
 */
 function recreateRows(inlined_model){
-  /*
+
     fillErrorsRow(getInlinedModelErrorsRow(inlined_model.id),
                   inlined_model.id, []);
-  */
+
     fillStaticRow(getInlinedModelStaticRow(inlined_model.id),
                   inlined_model);
-    /*
+
     hideInlinedModelErrorsRow(inlined_model.id);
-    */
+
     showInlinedModelStaticRow(inlined_model.id);
 }
 
