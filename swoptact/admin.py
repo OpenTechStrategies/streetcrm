@@ -179,7 +179,7 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
 
 
 class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
-    list_filter = (admin_filters.ArchiveFilter,)
+    list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(

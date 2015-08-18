@@ -122,6 +122,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             field_def, "");
     }
 
+    var named_fkey_input = $(named_fkey_div.find("input")[0]);
     var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
     named_fkey_div.append(new_indicator);
     new_indicator.hide();
@@ -170,7 +171,7 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
             }});
 
     // Named_fkey autocomplete stuff
-    named_fkey_div.autocomplete({
+    named_fkey_input.autocomplete({
         select: function (event, ui) {
             if (ui.item) {
                 new_indicator.hide();
@@ -348,27 +349,6 @@ function makeInlinedModelEditable(inlined_model_id) {
     showInlinedModelEditRow(inlined_model_id);
 }
 
-/* Handle the "cancel" button for a inlined edit-in-progress. */
-function cancelInlinedModelEdit(inlined_model_id) {
-    // Oh, this is the add new one... well, we don't need to switch
-    // back to a static view.  Just dump it.
-    if (inlined_model_id == "") {
-        unlinkInlinedModel(inlined_model_id);
-    }
-
-    // TODO: Do a *real* revert of the data here!
-    //// Revert and hide edit form
-    // revertEditRow(inlined_model_id);
-    hideInlinedModelEditRow(inlined_model_id);
-
-    // Hide and clear errors form
-    hideInlinedModelErrorsRow(inlined_model_id);
-    clearErrors(inlined_model_id);
-
-    // Show display-only form
-    showInlinedModelStaticRow(inlined_model_id);
-}
-
 
 function revertEditRow(inlined_model_id) {
     // TODO: base this on the filling system
@@ -460,7 +440,6 @@ Contact autocomplete is *only* on for completing the names of existing
 inlined models when adding a new row!
 */
 function turnOnAttendeeAutocomplete(edit_row) {
-    // console.log("Turning on autocomplete");
 
     // Hook in the autocomplete function
     edit_row.find("input.name").autocomplete({
@@ -468,11 +447,13 @@ function turnOnAttendeeAutocomplete(edit_row) {
         select: function(event, ui) {
             if (ui.item) {
                 var inlined_model_id = ui.item.data.id;
-                // Remove this row
-                cancelInlinedModelEdit("");
                 // Insert the inlined and make them immediately editable
-                linkInlinedModel(inlined_model_id, true);
+                linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
+                var tr =  $(this).closest("tr");
+                tr.hide();
+                tr.remove();
+                // Prevent form submission.
                 event.preventDefault();
             }
         }
@@ -696,15 +677,12 @@ function loadInitialAttendees() {
 
 
 /* Add the inlined model on the backend and link on the frontend */
-function linkInlinedModel(inlined_model_id, make_editable) {
+function linkInlinedModel(inlined_model_id) {
     var url = fillLinkInlinedModelUrl(getPageModelId(), inlined_model_id);
     $.post(url, function (result) {
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
               function (inlined_model) {
                   insertInlinedModel(inlined_model);
-                  if (make_editable) {
-                      makeInlinedModelEditable(inlined_model_id);
-                  }
               }, 'json');
     }, "json").fail(function (result) {
 	error = JSON.parse(result.responseText)["error"];
@@ -908,14 +886,29 @@ function setupInlinedModelCallbacks() {
             setStickyHeaders();
         });
         $("#inlined-model-table").on("blur", "td", function(e) {
-            // Update the UI with the new data.
-            $(this).children(".static").children("span").text($(this).find("input").val());
-            // Also save to the DB (arguably more important).
-            saveInlinedModel($(this).closest("tr"));
-            $(this).children(".static").show();
-            $(this).children(".editable").hide();
-            // Reset sticky headers in case table cell widths have changed.
-            setStickyHeaders();
+            // Check whether the row containing this td is visible, and
+            // only continue saving if is is. The row will not be
+            // visible if this blur occurred when the user chose an
+            // option from the autocomplete list of options.
+            //
+            // This check is needed for Chrom(e/ium) browsers.  In
+            // Chrome, calling "remove" on the <tr> element (which
+            // happens in the autocomplete "select" function) triggers
+            // "blur".  In other browsers it doesn't, and we won't even
+            // reach this point in the code, but for Chrome we hide the
+            // row as a way of saying that autocomplete has taken over
+            // and we don't need to save a new entity to the DB.
+            var tr = $(this).closest("tr");
+            if (tr.is(":visible")) {
+              // Update the UI with the new data.
+              $(this).children(".static").children("span").text($(this).find("input").val());
+              // Also save to the DB (arguably more important).
+              saveInlinedModel(tr);
+              $(this).children(".static").show();
+              $(this).children(".editable").hide();
+              // Reset sticky headers in case table cell widths have changed.
+              setStickyHeaders();
+            }
         });
     
         // Handler on "delete row" buttons
