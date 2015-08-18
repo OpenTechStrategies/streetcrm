@@ -235,7 +235,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
-        exclude=("archived",)
+        exclude=("archived", "contacts",)
     )
     actions = None
     change_list_template = "admin/change_list_without_header.html"

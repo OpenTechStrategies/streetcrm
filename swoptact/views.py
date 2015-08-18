@@ -350,8 +350,8 @@ class ContactLinking(APIMixin, generic.DetailView):
     # The amount of contacts that can be linked at any given time
     limit = settings.CONTACT_LIMIT
     error_messages = {
-        "limit_reached": _("Contact limit has been reached, You can only have "
-                           "{limit} contacts at any given time")
+        "limit_reached": _("You have reached the limit of "
+                           "{limit} contacts.")
     }
 
     @property

@@ -623,7 +623,7 @@ function limitReached(error, message) {
     // Populate default message if one isn't given
     if (!message) {
 	var peopleLimit = getInlineConfig()["link_limit"];
-	message = "Limit reached,  You can only have " + peopleLimit + " linked at any given time";
+	message = "You have reached the limit of " + peopleLimit + " contacts.";
     }
 
     // Show the error message
