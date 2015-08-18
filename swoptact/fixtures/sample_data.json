@@ -25,21 +25,6 @@
                 "user"
             ],
             [
-                "add_contact",
-                "swoptact",
-                "contact"
-            ],
-            [
-                "change_contact",
-                "swoptact",
-                "contact"
-            ],
-            [
-                "delete_contact",
-                "swoptact",
-                "contact"
-            ],
-            [
                 "delete_event",
                 "swoptact",
                 "event"
@@ -508,86 +493,6 @@
         "participant_street_address": null,
         "primary_phone": "+13127025434",
         "secondary_phone": null
-    }
-},
-{
-    "pk": 2,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 32
-    }
-},
-{
-    "pk": 9,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 9
-    }
-},
-{
-    "pk": 11,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 1,
-        "participant": 14
-    }
-},
-{
-    "pk": 12,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 1,
-        "participant": 24
-    }
-},
-{
-    "pk": 13,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 1,
-        "participant": 31
-    }
-},
-{
-    "pk": 18,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 1,
-        "participant": 26
-    }
-},
-{
-    "pk": 19,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 30
-    }
-},
-{
-    "pk": 20,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 33
-    }
-},
-{
-    "pk": 21,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 14
-    }
-},
-{
-    "pk": 22,
-    "model": "swoptact.contact",
-    "fields": {
-        "institution": 2,
-        "participant": 28
     }
 },
 {
