@@ -33,7 +33,7 @@ class AdminLoginForm(AdminAuthenticationForm):
     """
 
     error_messages = {
-        "invalid_login": _("Please enter the correct %(username) and password "
+        "invalid_login": _("Please enter the correct %(username)s and password "
                            "for your account. Note that both fields are "
                            "case-sensitive")
     }
