@@ -743,25 +743,33 @@ function setupInlinedModelCallbacks() {
     // Adjust sticky headers on window resize
     $(window).on("resize", setStickyHeaders);
 
-    $("#add-new-inlined-model-btn").on(
-        "click",
-        function(event) {
-            event.preventDefault();
-            insertInlinedModel({"id": ""});
-        });
-
-    $("#inlined-model-table").on(
-        "keyup",
-        "td .editable input",
-        function (event) {
-            // 13 is enter key
-            if (event.which == 13) {
-                // This will trigger the focusout handler (below) and submit the change
-                $(this).blur();
-            }
-        });
-
     if (userCanEdit()) {
+        // Put the "add new" button into the form
+        var addNewButton = $("<button type=\"submit\" class=\"btn\" name=\"_select\" id=\"add-new-inlined-model-btn\"></button>");
+        // Get the button text from a Django function that translates according to user's locale.
+        var addNewButtonText = "✚ " + gettext("Add New");
+        addNewButton.text(addNewButtonText);
+
+        addNewButton.on(
+            "click",
+            function(event) {
+                event.preventDefault();
+                insertInlinedModel({"id": ""});
+            });
+
+        $("#addNewButtonDiv").append(addNewButton);
+
+        $("#inlined-model-table").on(
+            "keyup",
+            "td .editable input",
+            function (event) {
+                // 13 is enter key
+                if (event.which == 13) {
+                    // This will trigger the focusout handler (below) and submit the change
+                    $(this).blur();
+                }
+            });
+
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
             $(this).children(".static").hide();
