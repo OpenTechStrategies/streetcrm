@@ -15,4 +15,16 @@
 - Removing an inlined object removes the link between the page object
   and the inlined object, but does not remove the inlined object from
   the DB
-- 
+
+
+## Permissions
+
+- admin users can add and edit Contacts
+- leader and staff users can neither add nor edit Contacts
+- all users can add and edit Institutions, Participants, and Actions
+- all users can add and edit Attendees of Actions
+- admin users can create new Users
+- admin users can create and edit Tags
+- leader and staff users can neither create nor edit Tags
+
+
