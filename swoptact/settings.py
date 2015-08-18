@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'swoptact',
+    'watson',
 )
 
 MIDDLEWARE_CLASSES = (

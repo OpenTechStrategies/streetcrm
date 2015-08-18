@@ -16,14 +16,18 @@
 
 import copy
 import json
+import functools
 
 from django import template
 from django.core import exceptions
 from django.contrib import admin, auth
 from django.template import loader
+from django.conf.urls import url
 from django.contrib.admin.views import main
+from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
 
+import watson
 import autocomplete_light
 
 from swoptact import forms as st_forms
@@ -32,6 +36,8 @@ from swoptact import mixins, models, admin_filters
 class SWOPTACTAdminSite(admin.AdminSite):
 
     login_form = st_forms.AdminLoginForm
+    search_engine = watson.admin.admin_search_engine
+    search_template = "admin/search.html"
 
     def has_permission(self, request):
         """
@@ -57,6 +63,52 @@ class SWOPTACTAdminSite(admin.AdminSite):
             **kwargs
         )
 
+    def get_urls(self, *args, **kwargs):
+        urls = super(SWOPTACTAdminSite, self).get_urls(*args, **kwargs)
+
+        def wrap(view, cacheable=False):
+            def wrapper(*args, **kwargs):
+                return self.admin_view(view, cacheable)(*args, **kwargs)
+            wrapper.admin_site = self
+            return functools.update_wrapper(wrapper, view)
+
+        # Add a URL for the search results
+        urls.append(
+            url(r"^search/$", wrap(self.search_view), name="search")
+        )
+
+        return urls
+
+    def search_view(self, request):
+        """
+        View for searching for objects
+        """
+        search_query = request.GET.get("q")
+        context = {"search_query": search_query}
+
+        # If there is no term provided just display the template
+        if search_query is None:
+            return TemplateResponse(
+                request,
+                self.search_template,
+                context
+            )
+
+        # Peform the search
+        context["search_results"] = self.search_engine.search(
+            search_query
+        )
+        context["search_results_amount"] = len(context["search_results"])
+
+        # Display the results
+        return TemplateResponse(
+            request,
+            self.search_template,
+            context
+        )
+
+
+
 class ContactInline(admin.TabularInline):
     model = models.Contact
     extra = 0
@@ -68,22 +120,35 @@ class ContactInline(admin.TabularInline):
         exclude=tuple()
     )
 
-class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
+class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, watson.SearchAdmin):
     """ Admin UI for participant including listing event history """
+    search_fields = ("name", "primary_phone", "title", "email",
+                     "participant_street_address",
+                     "participant_city_address",
+                     "participant_state_address",
+                     "participant_zipcode_address")
     list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", "US_primary_phone", "institution", "participant_street_address",)
-    readonly_fields = ("action_history", "event_history_name", )
+    readonly_fields = ("action_history", "event_history_name")
     fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
+                       "institution", "title", "secondary_phone", "email",
+                       "participant_street_address",
+                       "participant_city_address",
+                       "participant_state_address",
+                       "participant_zipcode_address")
         }),
     )
 
     change_fieldsets = (
         (None, {
             "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
+                       "institution", "title", "secondary_phone", "email",
+                       "participant_street_address",
+                       "participant_city_address",
+                       "participant_state_address",
+                       "participant_zipcode_address")
         }),
         ("Personal Action History", {
             "fields": ("action_history",),
@@ -137,7 +202,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, a
         super(ParticipantAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = ''
 
-class AjaxyInlineAdmin(admin.ModelAdmin):
+class AjaxyInlineAdmin(watson.SearchAdmin):
     """
     Base class for those using the ajax'y inline form stuff.
 
@@ -178,6 +243,7 @@ class AjaxyInlineAdmin(admin.ModelAdmin):
 
 
 class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
+    search_fields = ("name", "location")
     list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
@@ -213,7 +279,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
          ],
     }
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         super(EventAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = ''
 
@@ -229,6 +295,8 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 
 
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
+    search_filter = ("name", "inst_street_address", "inst_city_address", "inst_state_address"
+                     "inst_zipcode_address")
     list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
@@ -275,7 +343,8 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "swoptact.add_contact", "swoptact.add_institution"])
 
 
-class TagAdmin(mixins.AdminArchiveMixin, admin.ModelAdmin):
+class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
+    search_fields = ("name",)
     list_filter = (admin_filters.ArchiveFilter,)
     list_display = ("name", "description", "group")
     actions = None
