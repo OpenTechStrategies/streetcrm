@@ -84,6 +84,28 @@ class SWOPTACTAdminSite(admin.AdminSite):
         return urls
 
     def missing_data_view(self, request):
+        """
+        Missing data report
+        """
+        # This is an admittedly long and kind of complex looking function.
+        # Maybe this documentation will help, o future hacker!
+        #
+        # However, there's reason for it.  Some details about this function:
+        #  - We have some one-off datastructures via namedtuples to keep
+        #    things organized.  The nice thing about this is that things
+        #    become reasonably declarative towards the end of the function
+        #    so adjusting the fields is pretty easy.
+        #
+        #  - So as to not have unnecessarily duplicate queries (which
+        #    will then be hard to reconcile as to which object is the
+        #    canonical representation of the same row) we query all at
+        #    once for all possible missing fields (hence the
+        #    _construct_query stuff).  So we then later walk over the
+        #    objects we got back to find out what all of the missing
+        #    fields (as per our nice CheckField specifications) were.
+        #
+        # Hope that helps!
+
         context = {}
 
         # Simple structure for organizing fields we check
@@ -98,17 +120,29 @@ class SWOPTACTAdminSite(admin.AdminSite):
             ["model", "human_readable", "missing_fields"])
 
         def _construct_query(fields):
-            "Construct a query based on list of CheckFields"
+            """Construct a query based on list of CheckFields
+
+            We're just trying to find out which fields are missing data,
+            and depending on the CheckField specification, "missing data"
+            may be either or both of NULL or an empty string.
+
+            Piping together Q objects is a way of OR'ing them, so
+            this way we've built up a nice list of possibilities on
+            how a model's 
+            """
             # We're wrapping this in a mutable list because of hacks
             # in setting values in closures in python :\
+            # So this kind of acts as a mutable "box".
             # But all we care about is query[0]
             query = [None]
 
             def _join_query(q):
-                # damn, how to do this in stupid python
                 if query[0] is None:
+                    # Assigning it here would have confused python
+                    # had we just done "query = q", hence the box...
                     query[0] = q
                 else:
+                    # ... here too of course.
                     query[0] = query[0] | q
 
             for field in fields:
