@@ -39,6 +39,7 @@
 					<li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
 					{% endif %}
 				</ul>
+				{% if user.is_active %}
 				<form action="{% url 'admin:search' %}" style="margin-top: 7px;">
 				  <span class="navbar-right" style="margin-right: 20px; margin-left: -10px;">
 				    <button class="btn btn-default navbar-right" type="submit">{% trans 'Search' %}</button>
@@ -47,7 +48,7 @@
 				    <input name="q" value="{{request.GET.q}}" class="form-control">
 				  </span>
 				</form>
-
+				{% endif %}
 			</div>
 		</nav>
 		<!-- END Header -->
