@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% for table_results in results %}
+<h2>Missing data for {{ table_results.table_name }}</h2>
+
+<div class="results">
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Entry</th>
+      <th>Missing fields</th>
+    </tr>
+    {% for model_result in table_results.results %}
+      <tr>
+        <td>{{ model_result.human_readable }}</td>
+        <td>{% for missing_field in model_result.missing_fields %}{{ missing_field.human_readable }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endfor %}
+
+{% endblock %}
