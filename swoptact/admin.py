@@ -85,7 +85,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
     def missing_data_view(self, request):
         context = {}
-        
+
         # Simple structure for organizing fields we check
         CheckField = namedtuple(
             "CheckField", ["field_name", "null", "empty_string"])
@@ -121,7 +121,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
         def gather_results(this_model, fields):
             results = []
-            
+
             query = _construct_query(fields)
             objects = this_model.objects.filter(query)
 
@@ -152,7 +152,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("organizer", null=True, empty_string=False),
              CheckField("location", null=True, empty_string=True),
              CheckField("issue_area", null=True, empty_string=True)])
-             
+
         participant_results = gather_results(
             models.Participant,
             [CheckField("name", null=False, empty_string=True),
@@ -170,7 +170,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         null=True, empty_string=False),
              CheckField("title",
                         null=True, empty_string=True)])
-            
+
         results = [
             TableResults("Events", event_results),
             TableResults("Participants", participant_results)]
