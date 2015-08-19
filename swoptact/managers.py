@@ -47,7 +47,8 @@ class ArchiveManager(models.Manager):
     def unarchived(self):
         return self.filter(archived=False)
 
-    def filter(self, archived=False, *args, **kwargs):
+    def filter(self, *args, **kwargs):
+        archived = kwargs.pop("archived", False)
         qs = super(ArchiveManager, self).filter(*args, **kwargs)
 
         # If archive is False, exclude archived results.
