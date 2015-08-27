@@ -14,7 +14,8 @@
     </tr>
     {% for model_result in table_results.results %}
       <tr>
-        <td>{{ model_result.human_readable }}</td>
+        <td>
+          <a href="{{ model_result.admin_uri }}">{{ model_result.human_readable }}</a></td>
         <td>{% for missing_field in model_result.missing_fields %}{{ missing_field.human_readable }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
       </tr>
     {% endfor %}

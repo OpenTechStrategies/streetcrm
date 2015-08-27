@@ -28,6 +28,7 @@ from django.contrib.admin.views import main
 from django.db.models import Q
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 import watson
 import autocomplete_light
@@ -78,7 +79,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # Add a URL for the search results
         urls.extend([
             url(r"^search/$", wrap(self.search_view), name="search"),
-            url(r"^missing_data/$", wrap(self.missing_data_view)),
+            url(r"^missing_data/$", wrap(self.missing_data_view),
+                name="missing_data"),
         ])
 
         return urls
@@ -117,7 +119,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             "MissingField", ["field_name", "human_readable"])
         ModelWithMissingFields = namedtuple(
             "ModelWithMissingFields",
-            ["model", "human_readable", "missing_fields"])
+            ["model", "human_readable", "missing_fields", "admin_uri"])
 
         def _construct_query(fields):
             """Construct a query based on list of CheckFields
@@ -153,7 +155,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
             return query[0]
 
-        def gather_results(this_model, fields):
+        def gather_results(this_model, fields, change_uri_reverser):
             results = []
 
             query = _construct_query(fields)
@@ -172,10 +174,23 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
                 # If there are missing fields, append to the results
                 if missing_fields:
-                    results.append(ModelWithMissingFields(obj, str(obj),
-                                                          missing_fields))
+                    # Could make this more extensible if obj.id was ever
+                    admin_uri = change_uri_reverser(obj)
+                    results.append(
+                        ModelWithMissingFields(obj, str(obj),
+                                               missing_fields, admin_uri))
 
             return results
+
+        def _gen_change_uri_func(reverse_name):
+            """
+            Handy function for generating uri reversers
+            for objects in some table
+            """
+            # Make a one argument closure which takes the object and return it
+            def reverser(obj):
+                return reverse(reverse_name, args=(obj.id,))
+            return reverser
 
         event_results = gather_results(
             models.Event,
@@ -185,7 +200,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("time", null=True, empty_string=False),
              CheckField("organizer", null=True, empty_string=False),
              CheckField("location", null=True, empty_string=True),
-             CheckField("issue_area", null=True, empty_string=True)])
+             CheckField("issue_area", null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_event_change"))
 
         participant_results = gather_results(
             models.Participant,
@@ -203,7 +219,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("institution",
                         null=True, empty_string=False),
              CheckField("title",
-                        null=True, empty_string=True)])
+                        null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_participant_change"))
 
         results = [
             TableResults("Events", event_results),
