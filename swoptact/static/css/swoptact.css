@@ -191,11 +191,6 @@ a:focus,
     color: #000;
 }
 
-/* Hide some stuff from Django about a new user's password */
-#id_password {
-    display: none;
-}
-
 /* Hide the "save an add another" and "save and continue editing" buttons */
 input[name="_addanother"],input[name="_continue"],input[name="_saveasnew"]{
     display: none;
