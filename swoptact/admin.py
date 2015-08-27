@@ -222,9 +222,24 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         null=True, empty_string=True)],
             _gen_change_uri_func("admin:swoptact_participant_change"))
 
+        institution_results = gather_results(
+            models.Institution,
+            [CheckField("name", null=True, empty_string=True),
+             CheckField("inst_street_address",
+                        null=True, empty_string=True),
+             CheckField("inst_city_address",
+                        null=True, empty_string=True),
+             CheckField("inst_state_address",
+                        null=True, empty_string=True),
+             CheckField("inst_zipcode_address",
+                        null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_institution_change"))
+
+
         results = [
             TableResults("Events", event_results),
-            TableResults("Participants", participant_results)]
+            TableResults("Participants", participant_results),
+            TableResults("Institutions", institution_results)]
 
         context = dict(
             # Django docs say these are common variables
