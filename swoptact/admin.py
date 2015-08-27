@@ -235,7 +235,6 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         null=True, empty_string=True)],
             _gen_change_uri_func("admin:swoptact_institution_change"))
 
-
         results = [
             TableResults("Events", event_results),
             TableResults("Participants", participant_results),
