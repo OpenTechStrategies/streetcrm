@@ -35,20 +35,32 @@
                                 </div>
                             </div>
                         {% else %}
-                            <div class="control-label col-md-3">
-                                {{ field.label_tag }}
-                            </div>
-                            <div class="controls col-md-9">
-                                {% if field.is_readonly %}
-                                    <p class="readonly">{{ field.contents }}</p>
-                                {% else %}
-                                    {% dab_field_rendering field.field %}
-                                {% endif %}
-                                {% if not field.is_readonly and field.errors %}<span class="text-danger">{{ field.errors|striptags }}</span>{% endif %}
-                                {% if field.field.help_text %}
-                                    <span class="help-block">{{ field.field.help_text|safe }}</span>
-                                {% endif %}
-                            </div>
+                            {% if title == 'Change user' and field.field.label == 'User permissions' %}
+                                {% comment %}
+                                    If we are on the "change user" screen and in the "user permissions" block, print nothing. Otherwise...
+                                {% endcomment %}
+                            {% else %}
+                                <div class="control-label col-md-3">
+                                    {{ field.label_tag }}
+                                </div>
+                                <div class="controls col-md-9">
+                                    {% if field.is_readonly %}
+                                        <p class="readonly">{{ field.contents }}</p>
+                                    {% else %}
+                                        {% if title == 'Change user' and field.field.label == 'Password' %}
+                                            {% comment %}
+                                                Don't print gobbeldy-gook (algorithm, iterations, salt, hash) about the user's password.
+                                            {% endcomment %}
+                                        {% else %}
+                                                {% dab_field_rendering field.field %}
+                                        {% endif %}
+                                        {% if not field.is_readonly and field.errors %}<span class="text-danger">{{ field.errors|striptags }}</span>{% endif %}
+                                        {% if field.field.help_text %}
+                                            <span class="help-block">{{ field.field.help_text|safe }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endfor %}
