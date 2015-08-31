@@ -45,6 +45,10 @@ class ContactAutocomplete(BaseAutocomplete):
     search_fields = ["name"]
     model = models.Participant
 
+    def choices_for_request(self):
+        self.choices = models.Participant.objects.filter(archived__isnull=True)
+        return super(ContactAutocomplete, self).choices_for_request()
+    
     @classmethod
     def create(cls, data):
         model = cls.model(name=data)
