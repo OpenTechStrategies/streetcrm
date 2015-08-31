@@ -21,6 +21,7 @@ from django.utils import timezone
 
 from swoptact import mixins, modelfields, managers
 import phonenumbers
+import datetime
 
 class SerializeableMixin:
     """
@@ -64,6 +65,10 @@ class SerializeableMixin:
                 else:
                     value = value.as_international
 
+            # datetime objects are not serializable, cast to string
+            if isinstance(value, datetime.datetime):
+                value = str(value)
+                
             # For all other values just add them as per usual
             serialized[field.name] = value
 

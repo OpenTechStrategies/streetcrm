@@ -270,14 +270,7 @@ class EventParticipantsAPI(APIMixin, generic.DetailView):
         self.object = self.get_object()
 
         # Iterate over participants and serialize
-        participants = []
-        for p in self.object.participants.all():
-            # if the participant has been archived
-            if (p.archived != "None"):
-                #cast datetime to string, so that it serializes
-                #correctly
-                p.archived = str(p.archived)
-            participants.append(p.serialize())
+        participants = [p.serialize() for p in self.object.participants.all()]
             
         return self.render_to_response(context=participants)
 
