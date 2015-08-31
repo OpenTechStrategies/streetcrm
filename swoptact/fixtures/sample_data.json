@@ -1,8 +1,7 @@
 [
 {
-    "pk": 1,
-    "model": "auth.group",
     "fields": {
+        "name": "admin",
         "permissions": [
             [
                 "add_user",
@@ -54,22 +53,22 @@
                 "swoptact",
                 "tag"
             ]
-        ],
-        "name": "admin"
-    }
+        ]
+    },
+    "pk": 1,
+    "model": "auth.group"
 },
 {
+    "fields": {
+        "name": "staff",
+        "permissions": []
+    },
     "pk": 2,
-    "model": "auth.group",
-    "fields": {
-        "permissions": [],
-        "name": "staff"
-    }
+    "model": "auth.group"
 },
 {
-    "pk": 3,
-    "model": "auth.group",
     "fields": {
+        "name": "leader",
         "permissions": [
             [
                 "add_event",
@@ -101,524 +100,523 @@
                 "swoptact",
                 "participant"
             ]
-        ],
-        "name": "leader"
-    }
+        ]
+    },
+    "pk": 3,
+    "model": "auth.group"
 },
 {
-    "pk": 1,
-    "model": "auth.user",
     "fields": {
-        "first_name": "",
-        "email": "jrandom@example.com",
-        "user_permissions": [],
-        "is_superuser": true,
-        "is_staff": true,
-        "last_name": "",
         "last_login": "2015-06-11T17:22:59.642Z",
-        "date_joined": "2015-06-11T17:18:50.138Z",
+        "is_staff": true,
         "groups": [],
-        "password": "pbkdf2_sha256$20000$DyH3WV0nR2ZT$IeeQcjjdfPK1flWPtAjptTQrxXuT1yrBkFilkPSFLRA=",
-        "is_active": true,
-        "username": "admin"
-    }
-},
-{
-    "pk": 2,
-    "model": "auth.user",
-    "fields": {
-        "first_name": "",
-        "email": "jrandom@example.com",
         "user_permissions": [],
         "is_superuser": true,
-        "is_staff": true,
-        "last_name": "",
-        "last_login": null,
-        "date_joined": "2015-06-11T17:21:05.818Z",
-        "groups": [],
-        "password": "pbkdf2_sha256$20000$wQL1CkVcuy9T$aJXYCzd81SPiLjxhs6/zjR9pEilJTCEtnBpCOVhkDUI=",
+        "password": "pbkdf2_sha256$20000$DyH3WV0nR2ZT$IeeQcjjdfPK1flWPtAjptTQrxXuT1yrBkFilkPSFLRA=",
+        "date_joined": "2015-06-11T17:18:50.138Z",
+        "first_name": "",
+        "username": "admin",
+        "email": "jrandom@example.com",
         "is_active": true,
-        "username": "otheradmin"
-    }
+        "last_name": ""
+    },
+    "pk": 1,
+    "model": "auth.user"
 },
 {
-    "pk": 1,
-    "model": "swoptact.tag",
     "fields": {
-        "archived": null,
+        "last_login": null,
+        "is_staff": true,
+        "groups": [],
+        "user_permissions": [],
+        "is_superuser": true,
+        "password": "pbkdf2_sha256$20000$wQL1CkVcuy9T$aJXYCzd81SPiLjxhs6/zjR9pEilJTCEtnBpCOVhkDUI=",
+        "date_joined": "2015-06-11T17:21:05.818Z",
+        "first_name": "",
+        "username": "otheradmin",
+        "email": "jrandom@example.com",
+        "is_active": true,
+        "last_name": ""
+    },
+    "pk": 2,
+    "model": "auth.user"
+},
+{
+    "fields": {
+        "phone_number": "+17735551234",
+        "date_created": "2015-08-31",
+        "cell": true,
+        "owner": 9
+    },
+    "pk": 1,
+    "model": "swoptact.phonenumber"
+},
+{
+    "fields": {
+        "name": "ttm",
         "date_created": "2015-06-11",
         "description": "testing the model",
+        "archived": null,
         "group": [
             "staff"
-        ],
-        "name": "ttm"
-    }
+        ]
+    },
+    "pk": 1,
+    "model": "swoptact.tag"
 },
 {
-    "pk": 2,
-    "model": "swoptact.tag",
     "fields": {
-        "archived": null,
+        "name": "il4kids",
         "date_created": "2015-06-11",
         "description": "Illinois grant for children",
+        "archived": null,
         "group": [
             "admin"
-        ],
-        "name": "il4kids"
-    }
+        ]
+    },
+    "pk": 2,
+    "model": "swoptact.tag"
 },
 {
-    "pk": 4,
-    "model": "swoptact.tag",
     "fields": {
-        "archived": null,
+        "name": "test",
         "date_created": "2015-06-11",
         "description": "another test",
+        "archived": null,
         "group": [
             "staff"
-        ],
-        "name": "test"
-    }
+        ]
+    },
+    "pk": 4,
+    "model": "swoptact.tag"
 },
 {
-    "pk": 5,
-    "model": "swoptact.tag",
     "fields": {
-        "archived": null,
+        "name": "New",
         "date_created": "2015-06-11",
         "description": "A new tag.",
+        "archived": null,
         "group": [
             "leader"
-        ],
-        "name": "New"
-    }
+        ]
+    },
+    "pk": 5,
+    "model": "swoptact.tag"
 },
 {
-    "pk": 1,
-    "model": "swoptact.institution",
     "fields": {
-        "inst_zipcode_address": null,
         "inst_street_address": null,
         "inst_state_address": null,
-        "name": "Test Institution",
-        "is_member": false,
-        "archived": null,
         "tags": [
             1,
             4
         ],
-        "inst_city_address": null
-    }
+        "inst_zipcode_address": null,
+        "archived": null,
+        "contacts": [],
+        "inst_city_address": null,
+        "name": "Test Institution",
+        "is_member": false
+    },
+    "pk": 1,
+    "model": "swoptact.institution"
 },
 {
-    "pk": 2,
-    "model": "swoptact.institution",
     "fields": {
-        "inst_zipcode_address": null,
         "inst_street_address": null,
         "inst_state_address": null,
-        "name": "Extra Venerable Institution",
-        "is_member": true,
-        "archived": null,
         "tags": [
             2
         ],
-        "inst_city_address": null
-    }
+        "inst_zipcode_address": null,
+        "archived": null,
+        "contacts": [],
+        "inst_city_address": null,
+        "name": "Extra Venerable Institution",
+        "is_member": true
+    },
+    "pk": 2,
+    "model": "swoptact.institution"
 },
 {
-    "pk": 3,
-    "model": "swoptact.institution",
     "fields": {
-        "inst_zipcode_address": null,
         "inst_street_address": null,
         "inst_state_address": null,
-        "name": "saint",
-        "is_member": false,
-        "archived": null,
         "tags": [],
-        "inst_city_address": null
-    }
+        "inst_zipcode_address": null,
+        "archived": null,
+        "contacts": [],
+        "inst_city_address": null,
+        "name": "saint",
+        "is_member": false
+    },
+    "pk": 3,
+    "model": "swoptact.institution"
 },
 {
-    "pk": 9,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "lbeethoven@test.com",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Lauren Russo",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "lbeethoven@test.com",
+        "institution": null
+    },
+    "pk": 9,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 14,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Theodore Rose",
-        "archived": null,
-        "title": null,
-        "institution": 1,
-        "participant_street_address": null,
-        "primary_phone": "+17737021233",
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": 1
+    },
+    "pk": 14,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 24,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Daria Lagos",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 24,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 25,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Adding NewPerson",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 25,
+    "model": "swoptact.participant"
 },
 {
+    "fields": {
+        "participant_state_address": "",
+        "participant_city_address": "",
+        "title": "",
+        "participant_street_address": "",
+        "archived": null,
+        "participant_zipcode_address": "",
+        "display_phone": null,
+        "name": "Felicity Brown",
+        "email": "",
+        "institution": null
+    },
     "pk": 26,
-    "model": "swoptact.participant",
-    "fields": {
-        "email": "",
-        "participant_state_address": null,
-        "participant_city_address": null,
-        "participant_zipcode_address": null,
-        "name": "Felicia Brown",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+    "model": "swoptact.participant"
 },
 {
-    "pk": 27,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Simple Addition",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 27,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 28,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Chris Topher",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 28,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 29,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Puddle Glum",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 29,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 30,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Eustace Solares",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 30,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 31,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Jill Martinez",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 31,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 32,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Dante Stallworth",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": "+13127726767",
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 32,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 33,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Jesenya Guadalupe",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 33,
+    "model": "swoptact.participant"
 },
 {
+    "fields": {
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": "2015-08-31T16:53:51.186Z",
+        "participant_zipcode_address": null,
+        "display_phone": null,
+        "name": "Harry Potter",
+        "email": "",
+        "institution": null
+    },
     "pk": 34,
-    "model": "swoptact.participant",
-    "fields": {
-        "email": "",
-        "participant_state_address": null,
-        "participant_city_address": null,
-        "participant_zipcode_address": null,
-        "name": "Harry Potter",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+    "model": "swoptact.participant"
 },
 {
+    "fields": {
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
+        "participant_zipcode_address": null,
+        "display_phone": null,
+        "name": "Harry Potter",
+        "email": "",
+        "institution": 1
+    },
     "pk": 35,
-    "model": "swoptact.participant",
-    "fields": {
-        "email": "",
-        "participant_state_address": null,
-        "participant_city_address": null,
-        "participant_zipcode_address": null,
-        "name": "Harry Potter",
-        "archived": null,
-        "title": null,
-        "institution": 1,
-        "participant_street_address": null,
-        "primary_phone": null,
-        "secondary_phone": null
-    }
+    "model": "swoptact.participant"
 },
 {
-    "pk": 36,
-    "model": "swoptact.participant",
     "fields": {
-        "email": "",
         "participant_state_address": null,
         "participant_city_address": null,
+        "title": null,
+        "participant_street_address": null,
+        "archived": null,
         "participant_zipcode_address": null,
+        "display_phone": null,
         "name": "Test Newperson",
-        "archived": null,
-        "title": null,
-        "institution": null,
-        "participant_street_address": null,
-        "primary_phone": "+13127025434",
-        "secondary_phone": null
-    }
+        "email": "",
+        "institution": null
+    },
+    "pk": 36,
+    "model": "swoptact.participant"
 },
 {
-    "pk": 2,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": null,
+        "issue_area": "",
         "participants": [
             9,
             32
         ],
-        "tags": [],
-        "name": "New Homeowners Support Group",
-        "archived": null,
-        "organizer": null,
-        "location": "SWOP",
         "is_prep": false,
-        "issue_area": "",
-        "major_action": null,
+        "organizer": null,
+        "time": null,
+        "tags": [],
         "description": "A discussion group",
-        "date": "2015-05-11",
-        "time": null
-    }
+        "archived": null,
+        "location": "SWOP",
+        "name": "New Homeowners Support Group",
+        "date": "2015-05-11"
+    },
+    "pk": 2,
+    "model": "swoptact.event"
 },
 {
-    "pk": 3,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": null,
+        "issue_area": "",
         "participants": [
             9
         ],
-        "tags": [],
-        "name": "Swoptact Initiation Forum",
-        "archived": null,
+        "is_prep": false,
         "organizer": null,
+        "time": null,
+        "tags": [],
+        "description": "",
+        "archived": null,
         "location": "Conference Center",
-        "is_prep": false,
-        "issue_area": "",
-        "major_action": null,
-        "description": "",
-        "date": null,
-        "time": null
-    }
+        "name": "Swoptact Initiation Forum",
+        "date": null
+    },
+    "pk": 3,
+    "model": "swoptact.event"
 },
 {
-    "pk": 4,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": null,
+        "issue_area": null,
         "participants": [],
-        "tags": [],
-        "name": "International Women's Day",
-        "archived": null,
+        "is_prep": false,
         "organizer": null,
+        "time": null,
+        "tags": [],
+        "description": "",
+        "archived": null,
         "location": "Global",
-        "is_prep": false,
-        "issue_area": null,
-        "major_action": null,
-        "description": "",
-        "date": null,
-        "time": null
-    }
+        "name": "International Women's Day",
+        "date": null
+    },
+    "pk": 4,
+    "model": "swoptact.event"
 },
 {
-    "pk": 5,
-    "model": "swoptact.event",
     "fields": {
-        "participants": [
-            9
-        ],
-        "tags": [],
-        "name": "Organizer Retreat",
-        "archived": null,
-        "organizer": null,
-        "location": "SWOP Auxiliary Office",
-        "is_prep": false,
+        "major_action": null,
         "issue_area": "",
-        "major_action": null,
-        "description": "",
-        "date": null,
-        "time": null
-    }
-},
-{
-    "pk": 6,
-    "model": "swoptact.event",
-    "fields": {
         "participants": [
             9
         ],
-        "tags": [],
-        "name": "Example Meeting",
-        "archived": null,
-        "organizer": null,
-        "location": "",
         "is_prep": false,
-        "issue_area": null,
-        "major_action": null,
+        "organizer": null,
+        "time": null,
+        "tags": [],
         "description": "",
-        "date": null,
-        "time": null
-    }
+        "archived": null,
+        "location": "SWOP Auxiliary Office",
+        "name": "Organizer Retreat",
+        "date": null
+    },
+    "pk": 5,
+    "model": "swoptact.event"
 },
 {
-    "pk": 7,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": null,
+        "issue_area": null,
+        "participants": [
+            9
+        ],
+        "is_prep": false,
+        "organizer": null,
+        "time": null,
+        "tags": [],
+        "description": "",
+        "archived": null,
+        "location": "",
+        "name": "Example Meeting",
+        "date": null
+    },
+    "pk": 6,
+    "model": "swoptact.event"
+},
+{
+    "fields": {
+        "major_action": null,
+        "issue_area": "",
         "participants": [
             9,
             36
         ],
-        "tags": [],
-        "name": "Test",
-        "archived": null,
-        "organizer": null,
-        "location": "",
         "is_prep": false,
-        "issue_area": "",
-        "major_action": null,
+        "organizer": null,
+        "time": null,
+        "tags": [],
         "description": "",
-        "date": null,
-        "time": null
-    }
+        "archived": null,
+        "location": "",
+        "name": "Test",
+        "date": null
+    },
+    "pk": 7,
+    "model": "swoptact.event"
 },
 {
-    "pk": 8,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": 9,
+        "issue_area": null,
         "participants": [
             9,
             14,
@@ -630,23 +628,23 @@
             31,
             32
         ],
-        "tags": [],
-        "name": "Demo Event",
-        "archived": null,
-        "organizer": null,
-        "location": "",
         "is_prep": true,
-        "issue_area": null,
-        "major_action": 9,
+        "organizer": null,
+        "time": null,
+        "tags": [],
         "description": "This is an example event with attendees.",
-        "date": "2015-05-04",
-        "time": null
-    }
+        "archived": null,
+        "location": "",
+        "name": "Demo Event",
+        "date": "2015-05-04"
+    },
+    "pk": 8,
+    "model": "swoptact.event"
 },
 {
-    "pk": 9,
-    "model": "swoptact.event",
     "fields": {
+        "major_action": 3,
+        "issue_area": "",
         "participants": [
             9,
             30,
@@ -654,17 +652,17 @@
             32,
             33
         ],
-        "tags": [],
-        "name": "Board Meeting",
-        "archived": null,
-        "organizer": null,
-        "location": "Home Office",
         "is_prep": true,
-        "issue_area": "",
-        "major_action": 3,
+        "organizer": null,
+        "time": null,
+        "tags": [],
         "description": "This is a test of adding a new event with the sign in sheet.",
-        "date": "2015-05-04",
-        "time": null
-    }
+        "archived": null,
+        "location": "Home Office",
+        "name": "Board Meeting",
+        "date": "2015-05-04"
+    },
+    "pk": 9,
+    "model": "swoptact.event"
 }
 ]

@@ -68,6 +68,16 @@ class SerializeableMixin:
             serialized[field.name] = value
 
         return serialized
+    
+class PhoneNumber(models.Model):
+    phone_number = modelfields.PhoneNumberField(null=True, blank=True,
+                                                verbose_name="Participant Phone")
+    cell = models.BooleanField(default=False, blank=True,
+                               verbose_name="This is a cell phone")
+    owner = models.ForeignKey('Participant', related_name="Caller",
+                                    blank=True, null=True)
+    date_created = models.DateField(null=True, blank=True,
+                                    default=timezone.now, verbose_name="Date Linked")
 
 class InspectMixin:
     """ Provides useful methods to inspect the model easily """
@@ -159,12 +169,8 @@ class Institution(ArchiveAbstract, SerializeableMixin):
 class Participant(ArchiveAbstract, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
     name = models.CharField(max_length=255, verbose_name="Participant Name")
-    primary_phone = modelfields.PhoneNumberField(null=True, blank=True,
-                                                 verbose_name="Participant Phone")
-    secondary_phone = modelfields.PhoneNumberField(null=True,
-                                                   blank=True,
-                                                   verbose_name="""Secondary
-                                                   Participant Phone""")
+    display_phone = models.ForeignKey('PhoneNumber', null=True, blank=True,
+                                           verbose_name="Participant Phone")
     email = models.EmailField(blank=True, verbose_name="Participant Email")
     participant_street_address = models.CharField(null=True, blank=True, max_length=1000,
                                verbose_name="Participant Street Address")
@@ -226,3 +232,5 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
 
     def attendee_count(self):
         return self.participants.count()
+
+

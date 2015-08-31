@@ -72,19 +72,21 @@ class ContactInline(admin.TabularInline):
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "US_primary_phone", "institution", "participant_street_address",)
+    list_display = ("name", "display_phone", "institution", "participant_street_address",)
     readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
         (None, {
-            "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
+            "fields": ("name", "institution", "title",  "email",
+                       "participant_street_address", "participant_city_address",
+                       "participant_state_address", "participant_zipcode_address")
         }),
     )
 
     change_fieldsets = (
         (None, {
-            "fields": ("name", "primary_phone",
-                       "institution", "title", "secondary_phone", "email", "participant_street_address", "participant_city_address", "participant_state_address", "participant_zipcode_address")
+            "fields": ("name", "institution", "title", "email",
+                       "participant_street_address", "participant_city_address",
+                       "participant_state_address", "participant_zipcode_address")
         }),
         ("Personal Action History", {
             "fields": ("action_history",),
@@ -122,17 +124,17 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, a
     # it to allow HTML using the allow_tags method attribute.
     action_history.allow_tags = True
 
-    def US_primary_phone(self, obj):
-        if obj.primary_phone is None:
+    def US_display_phone(self, obj):
+        if obj.display_phone is None:
             return None
 
         # Is it a US number
-        if obj.primary_phone.country_code == 1:
-            return obj.primary_phone.as_national
+        if obj.display_phone.country_code == 1:
+            return obj.display_phone.as_national
         else:
-            return obj.primary_phone.as_international
+            return obj.display_phone.as_international
 
-    US_primary_phone.short_description = "Phone Number"
+    US_display_phone.short_description = "Phone Number"
 
     def __init__(self,*args,**kwargs):
         super(ParticipantAdmin, self).__init__(*args, **kwargs)
@@ -209,7 +211,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
             {"descriptive_name": "Attendee's Phone Number",
-             "form_name": "primary_phone",
+             "form_name": "display_phone",
              "input_type": "text"},
          ],
     }
@@ -261,7 +263,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "title",
              "input_type": "text"},
             {"descriptive_name": "Phone Number",
-             "form_name": "primary_phone",
+             "form_name": "display_phone",
              "input_type": "text"},
          ],
     }
@@ -306,6 +308,10 @@ class UserAdmin(auth.admin.UserAdmin):
     list_filter = ("is_superuser", "is_active", "groups")
     actions = None
 
+class PhoneNumberAdmin(admin.ModelAdmin):
+    actions = None
+    readonly_fields = ("date_created",)
+    
 # Create the admin site
 site = SWOPTACTAdminSite()
 
@@ -319,3 +325,4 @@ site.register(models.Event, EventAdmin)
 site.register(models.Institution, InstitutionAdmin)
 site.register(models.Tag, TagAdmin)
 site.register(models.ActivityLog, LogAdmin)
+site.register(models.PhoneNumber, PhoneNumberAdmin)
