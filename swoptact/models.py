@@ -248,6 +248,13 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     def __str__(self):
         return self.name
 
+    @property
+    def minor_events(self):
+        """ Returns the minor events for a major event """
+        if self.is_prep:
+            return []
+
+        return type(self).objects.filter(major_action=self)
 
     def attendee_count(self):
         return self.participants.count()

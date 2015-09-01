@@ -102,3 +102,91 @@ def autocomplete_modelform_factory(model, form=None, *args, **kwargs):
         kwargs["form"] = AutoCompleteModelForm
 
     return forms.modelform_factory(model, *args, **kwargs)
+
+class AdvancedSearchForm(django.forms.Form):
+    """
+    Form that is used to provide advanced search
+
+    This specifically does NOT use the AutoCompleteModelForm that most forms do
+    in SWOPtact because we specifically don't want the search creating new models
+    if what the user wants isn't found.
+    """
+
+    MODELS = (
+        ("participant", "Participants"),
+        ("institution", "Institutions"),
+        ("event", "Actions"),
+    )
+
+    # Autocomplete fields
+    participant = forms.ModelChoiceField(
+        "ASContactAutocomplete",
+        required=False
+    )
+    event = forms.ModelChoiceField(
+        "ASEventAutocomplete",
+        required=False
+    )
+    tags = forms.ModelMultipleChoiceField(
+        "ASTagAutocomplete",
+        required=False
+    )
+
+    # None autocomplete fields
+    search_model = django.forms.ChoiceField(choices=MODELS)
+    exclude_major_events = django.forms.BooleanField(
+        required=False
+    )
+    exclude_minor_events = django.forms.BooleanField(
+        required=False
+    )
+
+    def get_processed_data(self):
+        """
+        Provides a dictionary of submitted data collated together.
+
+        This takes in the search data that can used when finding objects
+        with autocomplete library and substitutes that as the value if no
+        object has been found with autocomplete.
+
+        In the future this might want to be moved to a mixin or a superclass
+        so that it can be used with other forms.
+        """
+        # Form.cleaned_data only exists once Form.is_valid has been run
+        self.is_valid()
+
+        # Initially clean up the original data. The autocomplete library
+        # leaves a lot of empty strings in the data so lets remove those.
+        raw_data = {}
+
+        # NB: The cast of self.data to a dictionary is required as it does not
+        #     return the correct values for some reason if left as a QueryDict
+        for field, value in dict(self.data).items():
+            if isinstance(value, (list, tuple)):
+                value = [element for element in value if element != ""]
+                value = value[0] if len(value) == 1 else value
+            raw_data[field] = value if value else None
+
+        # Build up the useful data, we'll use Form.cleaned_data as a base.
+        useful_data = self.cleaned_data
+
+        for field, value in useful_data.items():
+            # If it has a value, we don't need to do anything, so skip it.
+            if value is not None:
+                continue
+
+            # Add the prefix, used for formsets (shouldn't apply here though)
+            field = self.add_prefix(field)
+
+            # Construct the field name for autocomplete fields
+            autocomplete_field = "{field}-autocomplete".format(field=field)
+
+            # If it doesn't exist, skip it again, nothing we can do.
+            if raw_data.get(autocomplete_field, None) is None:
+                continue
+
+            # At this point there is a field and it has data, we just need to
+            # copy that data to the new useful_data dictionary.
+            useful_data[field] = raw_data[autocomplete_field]
+
+        return useful_data

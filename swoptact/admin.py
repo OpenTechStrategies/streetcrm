@@ -39,6 +39,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
     login_form = st_forms.AdminLoginForm
     search_engine = watson.admin.admin_search_engine
     search_template = "admin/search.html"
+    advanced_search_template = "admin/advanced_search.html"
 
     def has_permission(self, request):
         """
@@ -75,7 +76,11 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
         # Add a URL for the search results
         urls.append(
-            url(r"^search/$", wrap(self.search_view), name="search")
+            url(r"^search/$", wrap(self.search_view), name="search"),
+        )
+        # Add a URL for the advanced search results query
+        urls.append(
+            url(r"^search/advanced/$", wrap(self.advanced_search_view), name="advanced-search"),
         )
 
         return urls
@@ -106,6 +111,133 @@ class SWOPTACTAdminSite(admin.AdminSite):
             request,
             self.search_template,
             context
+        )
+
+    def advanced_search_view(self, request):
+        """
+        This provides advanced searching options
+        """
+        context = {
+            "form": st_forms.AdvancedSearchForm(),
+        }
+
+        if request.method == "GET":
+            return TemplateResponse(
+                request,
+                self.advanced_search_template,
+                context
+            )
+
+        # Construct the form and check if it's valid
+        # NB: running Form.is_valid cuases it to populate Form.cleaned_data
+        form = st_forms.AdvancedSearchForm(request.POST)
+        if not form.is_valid():
+            context["form"] = form
+            return TemplateResponse(
+                request,
+                self.advanced_search_template,
+                context
+            )
+
+        # Peform the searches
+        if form.cleaned_data["search_model"] == "participant":
+            return self.advanced_participant_search(request, form)
+        elif form.cleaned_data["search_model"] == "institution":
+            return self.advanced_institution_search(request, form)
+        elif form.cleaned_data["search_model"] == "event":
+            return self.advanced_event_search(request, form)
+
+    def advanced_participant_search(self, request, form):
+        """ Handle advanced searches for participants """
+        data = form.get_processed_data()
+
+        exclude_major = data["exclude_major_events"]
+        exclude_minor = data["exclude_minor_events"]
+
+        # Initially we should build up a list of Events that we could be
+        # be potentially searching through, these can come from Events with
+        # a specific tag, events which were specified as part of the form
+        major_events = []
+        minor_events = []
+
+        # Look up all of the events that could fit the search, since this is
+        # the only time we'll have a queryset and it's far faster to do this
+        # in the database we should handle the situation of tags here too.
+        event_query = models.Event.objects
+        if data["tags"]:
+            event_query = event_query.filter(tags__in=data["tags"])
+
+        if isinstance(data["event"], str):
+            major_events += event_query.filter(
+                name__contains=data["event"],
+                is_prep=False
+            )
+            minor_events += event_query.filter(
+                name__contains=data["event"],
+                is_prep=True
+            )
+
+        # If there is an event found by the autocompletion
+        elif isinstance(data["event"], models.Event):
+            # If there are tags double check it has the tags required
+            shared_tags = [
+                t for t in data["tags"] if t in data["event"].tags.all()
+            ]
+            if not data["tags"] or (data["tags"] and shared_tags):
+                # Add it to the correct list
+                if data["event"].is_prep:
+                    minor_events.append(data["event"])
+                else:
+                    major_events.append(data["event"])
+
+        else:
+            major_events += event_query.filter(is_prep=False)
+            minor_events += event_query.filter(is_prep=True)
+
+        # If we are to include minor events we should look up all the minor
+        # events for the major events that we have found so far.
+        if not exclude_minor:
+            for major_event in major_events:
+                minor_events += major_event.minor_events
+
+        # Lets now make a general Events
+        events = []
+        if not exclude_major:
+            events += major_events
+        if not exclude_minor:
+            events += minor_events
+
+        results = []
+
+        # If a participant was specified then we need to filter the results
+        # to only show those which either match in the case of an object found
+        # with the autocompletion or if it contains the search string.
+        if isinstance(data.get("participant"), str):
+            results = [
+                (e, e.participants.filter(name__contains=data["participant"]))
+                for e in events
+            ]
+        elif isinstance(data.get("participant"), models.Participant):
+            results = [
+                (e, e.participants.filter(name__in=[data["participant"]]))
+                for e in events
+            ]
+        else:
+            results = [(event, event.participants.all()) for event in events]
+
+        # Remove the events which have no participants to list
+        results = [(e, p) for (e, p) in results if p]
+
+        # Convert the results into a dictionary for displaying in the template.
+        results = dict(results)
+
+        # Return the response.
+        return TemplateResponse(
+            request,
+            self.search_template,
+            {
+                "search_results": results,
+            }
         )
 
 
