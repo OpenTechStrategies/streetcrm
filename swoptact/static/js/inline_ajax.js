@@ -215,6 +215,17 @@ function getDataForEditRow(row) {
     return data;
 }
 
+function rowIsEmpty(row) {
+  var data = getDataForEditRow(row);
+  // This is very simplistic for now. It seems very possible that we
+  // might need more sophisticated ways of determining whether a row is
+  // "empty" or not.
+  for (prop in data) {
+    if (data[prop] != "") return false;
+  }
+  return true;
+}
+
 
 // Hide and show stuff
 
@@ -461,6 +472,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
                 linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
                 var tr =  $(this).closest("tr");
+                // Hide the "new" row because removing it (below) causes a blur event in Chrome browsers (see the "blur" handler
                 tr.hide();
                 tr.remove();
                 // Prevent form submission.
@@ -895,7 +907,7 @@ function setupInlinedModelCallbacks() {
             function (event) {
                 // 13 is enter key
                 if (event.which == 13) {
-                    // This will trigger the focusout handler (below) and submit the change
+                    // This will trigger the blur handler (below) and submit the change
                     $(this).blur();
                 }
             });
@@ -909,6 +921,14 @@ function setupInlinedModelCallbacks() {
             setStickyHeaders();
         });
         $("#inlined-model-table").on("blur", "td", function(e) {
+            var tr = $(this).closest("tr");
+            if (tr.data("id") == "" && rowIsEmpty(tr)) {
+              // We've clicked out of a new and still empty row, so
+              // leave without saving anything.
+              var tbody = tr.closest("tbody");  // will contain both 'row' and its error row
+              tbody.remove();
+              return false;
+            }
             // Check whether the row containing this td is visible, and
             // only continue saving if is is. The row will not be
             // visible if this blur occurred when the user chose an
@@ -921,7 +941,6 @@ function setupInlinedModelCallbacks() {
             // reach this point in the code, but for Chrome we hide the
             // row as a way of saying that autocomplete has taken over
             // and we don't need to save a new entity to the DB.
-            var tr = $(this).closest("tr");
             if (tr.is(":visible")) {
               // Update the UI with the new data.
               $(this).children(".static").children("span").text($(this).find("input").val());
