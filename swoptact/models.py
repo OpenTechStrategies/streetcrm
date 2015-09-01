@@ -201,6 +201,12 @@ class Participant(ArchiveAbstract, SerializeableMixin):
         """ List of all events participant is in """
         return Event.objects.filter(participants__in=[self]).all().order_by('-date')
 
+    def latest_number(self):
+        p = PhoneNumber.objects.filter(owner__in=[self]).all().order_by('-date_created')[:1]
+        if p:
+            return p[0]
+        return None
+
 class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     class Meta:
         verbose_name = "action"

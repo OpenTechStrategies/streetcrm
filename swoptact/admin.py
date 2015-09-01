@@ -78,7 +78,7 @@ class PhoneNumberInline(admin.TabularInline):
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "institution", "participant_street_address",)
+    list_display = ("name", "institution", "US_display_phone", "participant_street_address",)
     readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
         (None, {
@@ -133,15 +133,13 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, a
     action_history.allow_tags = True
 
     def US_display_phone(self, obj):
-        if obj.display_phone is None:
+        display_phone = obj.latest_number()
+        if display_phone is None:
             return None
-
+        
         # Is it a US number
-        if obj.display_phone.country_code == 1:
-            return obj.display_phone.as_national
-        else:
-            return obj.display_phone.as_international
-
+        return display_phone
+    
     US_display_phone.short_description = "Phone Number"
 
     def __init__(self,*args,**kwargs):
@@ -218,6 +216,9 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "institution",
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
+            {"descriptive_name": "Attendee's Phone Number",
+             "form_name": "latest_number()",
+             "input_type": "text"},
          ],
     }
 
@@ -266,6 +267,9 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "input_type": "text"},
             {"descriptive_name": "Title",
              "form_name": "title",
+             "input_type": "text"},
+            {"descriptive_name": "Phone Number",
+             "form_name": "latest_number()",
              "input_type": "text"},
          ],
     }
