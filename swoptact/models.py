@@ -78,6 +78,15 @@ class PhoneNumber(models.Model):
                                     blank=True, null=True)
     date_created = models.DateField(null=True, blank=True,
                                     default=timezone.now, verbose_name="Date Linked")
+    def __str__(self):
+        if self.phone_number is None:
+            return None
+
+        # Is it a US number
+        if self.phone_number.country_code == 1:
+            return self.phone_number.as_national
+        else:
+            return self.phone_number.as_international
 
 class InspectMixin:
     """ Provides useful methods to inspect the model easily """
@@ -169,8 +178,6 @@ class Institution(ArchiveAbstract, SerializeableMixin):
 class Participant(ArchiveAbstract, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
     name = models.CharField(max_length=255, verbose_name="Participant Name")
-    display_phone = models.ForeignKey('PhoneNumber', null=True, blank=True,
-                                           verbose_name="Participant Phone")
     email = models.EmailField(blank=True, verbose_name="Participant Email")
     participant_street_address = models.CharField(null=True, blank=True, max_length=1000,
                                verbose_name="Participant Street Address")

@@ -69,10 +69,15 @@ class ContactInline(admin.TabularInline):
         exclude=tuple()
     )
 
+class PhoneNumberInline(admin.TabularInline):
+    model = models.PhoneNumber
+    readonly_fields = ("date_created",)
+    extra = 1
+    
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "display_phone", "institution", "participant_street_address",)
+    list_display = ("name", "institution", "participant_street_address",)
     readonly_fields = ("action_history", "event_history_name", )
     fieldsets = (
         (None, {
@@ -93,6 +98,8 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, a
         }),
     )
 
+    inlines = [PhoneNumberInline,]
+    
     def get_fieldsets(self, request, obj=None):
         if obj:
             return self.change_fieldsets
@@ -210,9 +217,6 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "institution",
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
-            {"descriptive_name": "Attendee's Phone Number",
-             "form_name": "display_phone",
-             "input_type": "text"},
          ],
     }
 
@@ -262,9 +266,6 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
             {"descriptive_name": "Title",
              "form_name": "title",
              "input_type": "text"},
-            {"descriptive_name": "Phone Number",
-             "form_name": "display_phone",
-             "input_type": "text"},
          ],
     }
 
@@ -308,9 +309,6 @@ class UserAdmin(auth.admin.UserAdmin):
     list_filter = ("is_superuser", "is_active", "groups")
     actions = None
 
-class PhoneNumberAdmin(admin.ModelAdmin):
-    actions = None
-    readonly_fields = ("date_created",)
     
 # Create the admin site
 site = SWOPTACTAdminSite()
@@ -325,4 +323,3 @@ site.register(models.Event, EventAdmin)
 site.register(models.Institution, InstitutionAdmin)
 site.register(models.Tag, TagAdmin)
 site.register(models.ActivityLog, LogAdmin)
-site.register(models.PhoneNumber, PhoneNumberAdmin)

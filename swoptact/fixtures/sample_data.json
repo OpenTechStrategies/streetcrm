@@ -261,7 +261,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Lauren Russo",
         "email": "lbeethoven@test.com",
         "institution": null
@@ -277,7 +276,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Theodore Rose",
         "email": "",
         "institution": 1
@@ -293,7 +291,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Daria Lagos",
         "email": "",
         "institution": null
@@ -309,7 +306,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Adding NewPerson",
         "email": "",
         "institution": null
@@ -325,7 +321,6 @@
         "participant_street_address": "",
         "archived": null,
         "participant_zipcode_address": "",
-        "display_phone": null,
         "name": "Felicity Brown",
         "email": "",
         "institution": null
@@ -341,7 +336,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Simple Addition",
         "email": "",
         "institution": null
@@ -357,7 +351,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Chris Topher",
         "email": "",
         "institution": null
@@ -373,7 +366,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Puddle Glum",
         "email": "",
         "institution": null
@@ -389,7 +381,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Eustace Solares",
         "email": "",
         "institution": null
@@ -405,7 +396,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Jill Martinez",
         "email": "",
         "institution": null
@@ -421,7 +411,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Dante Stallworth",
         "email": "",
         "institution": null
@@ -437,7 +426,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Jesenya Guadalupe",
         "email": "",
         "institution": null
@@ -453,7 +441,6 @@
         "participant_street_address": null,
         "archived": "2015-08-31T16:53:51.186Z",
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Harry Potter",
         "email": "",
         "institution": null
@@ -469,7 +456,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Harry Potter",
         "email": "",
         "institution": 1
@@ -485,7 +471,6 @@
         "participant_street_address": null,
         "archived": null,
         "participant_zipcode_address": null,
-        "display_phone": null,
         "name": "Test Newperson",
         "email": "",
         "institution": null
