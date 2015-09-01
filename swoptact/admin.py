@@ -72,7 +72,8 @@ class ContactInline(admin.TabularInline):
 class PhoneNumberInline(admin.TabularInline):
     model = models.PhoneNumber
     readonly_fields = ("date_created",)
-    extra = 1
+    extra = 0
+    template = "admin/tabular.html"
     
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, admin.ModelAdmin):
     """ Admin UI for participant including listing event history """

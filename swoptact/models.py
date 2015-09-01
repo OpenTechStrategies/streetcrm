@@ -71,9 +71,9 @@ class SerializeableMixin:
     
 class PhoneNumber(models.Model):
     phone_number = modelfields.PhoneNumberField(null=True, blank=True,
-                                                verbose_name="Participant Phone")
+                                                verbose_name="Phone Number")
     cell = models.BooleanField(default=False, blank=True,
-                               verbose_name="This is a cell phone")
+                               verbose_name="Is this a cell phone?")
     owner = models.ForeignKey('Participant', related_name="Caller",
                                     blank=True, null=True)
     date_created = models.DateField(null=True, blank=True,
