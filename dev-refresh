@@ -45,6 +45,7 @@ rm -rf ${SQLITE3_DB_NAME}
 python manage.py migrate auth # This is required as of migration 0049_add_permissions_to_group
 python manage.py migrate
 python manage.py loaddata sample_data.json
+python manage.py buildwatson
 
 echo ""
 echo "Creating Django superuser:"

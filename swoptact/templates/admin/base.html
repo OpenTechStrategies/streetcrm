@@ -39,13 +39,16 @@
 					<li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
 					{% endif %}
 				</ul>
-				<div class="navbar-text navbar-right">
-					{% if user.is_active %}
-					{% block welcome-msg %}
-					{% trans 'Welcome,' %} {% firstof user.get_short_name user.get_username %}
-					{% endblock %}
-					{% endif %}
-				</div>
+				{% if user.is_active %}
+				<form action="{% url 'admin:search' %}" style="margin-top: 7px;">
+				  <span class="navbar-right" style="margin-right: 20px; margin-left: -10px;">
+				    <button class="btn btn-default navbar-right" type="submit">{% trans 'Search' %}</button>
+				  </span>
+				  <span class="navbar-right">
+				    <input name="q" value="{{request.GET.q}}" class="form-control">
+				  </span>
+				</form>
+				{% endif %}
 			</div>
 		</nav>
 		<!-- END Header -->

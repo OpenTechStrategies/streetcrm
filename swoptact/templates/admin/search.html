@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+    <li class="bold_name">Search: {{ search_query }}</li>
+</ul>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+{% if not search_query %}
+<div class="alert alert-danger">
+  {% trans "You need to specify a search term" %}
+</div>
+{% endif %}
+
+<h2>{% trans "Search Results:" %}</h2>
+<h6>{% blocktrans %} There are {{ search_results_amount }} results found. {% endblocktrans %}</h6>
+<ul>
+  {% for result in search_results %}
+  <li><a href="{{ result.object.admin_change_url }}">{{ result.object }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

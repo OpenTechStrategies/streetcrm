@@ -3,3 +3,4 @@ configobj
 django-admin-bootstrapped
 django-phonenumber-field
 django-autocomplete-light
+django-watson

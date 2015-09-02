@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.core import urlresolvers
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
 from django.utils import timezone
@@ -82,7 +83,26 @@ class InspectMixin:
         """ Gets a field by it's name """
         return cls._meta.get_field_by_name(name)[0]
 
-class ArchiveAbstract(models.Model):
+class SWOPTactModel(models.Model):
+    """
+    Provides anything required on all models/objects
+    """
+
+    class Meta:
+        abstract = True
+
+    @property
+    def admin_change_url(self):
+        # Construct URL name to lookup
+        url_name = "admin:{app}_{model}_change".format(
+            app=self._meta.app_label,
+            model=self._meta.model_name
+        )
+
+        # Lookup and return URL for current object
+        return urlresolvers.reverse(url_name, args=(self.pk,))
+
+class ArchiveAbstract(SWOPTactModel):
     """
     Provides archivability for models
 
@@ -192,6 +212,7 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     def events(self):
         """ List of all events participant is in """
         return Event.objects.filter(participants__in=[self]).all().order_by('-date')
+
 
 class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     class Meta:
