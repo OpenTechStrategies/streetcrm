@@ -58,7 +58,7 @@ function setupTextInputStatic(field_def, cur_value) {
         cur_value = "";
     }
     var div_wrapper = $("<div/>");
-    div_wrapper.append("<span>" + cur_value + "</span>");
+    div_wrapper.append("<span class=\"static-span\">" + cur_value + "</span>");
     return div_wrapper;
 }
 
@@ -70,6 +70,7 @@ function setupTextInputEditable(field_def, cur_value) {
         "value": cur_value});
     input.text(cur_value);
     div_wrapper.append(input);
+    div_wrapper.append("<span class=\"validation-error\"/>");
     return div_wrapper;
 }
 
@@ -322,7 +323,8 @@ function fillLinkInlinedModelUrl(page_model_id, inlined_model_id) {
 function fillExistingInlinedModelUrl(inlined_model_id) {
     var formatter = gummyStringFormatter(
         getInlineConfig()["existing_inlined_model_url"]);
-    return formatter({"<inlined_model_id>": inlined_model_id});
+    var formatter = formatter({"<inlined_model_id>": inlined_model_id});
+    return formatter;
 }
 
 function getExistingInlinedModelProfileUrl(inlined_model_id, url_string) {
@@ -559,8 +561,7 @@ Arguments:
  - errors: a list of strings representing errors that should be
    displayed.
 */
-function fillErrorsRow(row, inlined_model_id, errors) {
-
+  function fillErrorsRow(row, inlined_model_id, errors) {
     // Get the <td> element in the errors row
     var td = row.find("td:first-child");
 
@@ -754,21 +755,33 @@ function recreateRows(inlined_model){
 // @@: Shouldn't this be getting the failure descriptions from the server?
 //     That would be more consistent with how django form errors are displayed
 //     and would be much more flexible
+//
+// The displayed error messages are now coming from the server. To
+// modify these, see formfields.py - NTT
 function handleJSONErrors(response, inlined_model_id){
-    responseText = jQuery.parseJSON(response.responseText);
-    var errors = responseText.form.errors;
-    var error_array = [];
-    if (errors.primary_phone){
-        error_array.push("Sorry, but we can't interpret this phone number.  Please use (xxx) xxx-xxxx format. ");
+    console.log("TWO");
+    var errors = jQuery.parseJSON(response.responseText).form.errors;
+    // Find the row with the requisite id
+    var row = $($("tr").filter(function() { return $(this).data("id")==inlined_model_id; })[0]);
+    // "errors" is an object whose properties match our column names (e.g., errors[phone_number]).
+    for (field in errors) {
+        // And the values associated with those properties are arrays of
+        // error messages, so join them into one string.
+        var allErrors = errors[field].join("; ");
+        // Put the message(s) into the appropriate row and column.
+        row.find("td[data-form-name='"+ field + "']").find("span.validation-error").text(allErrors);
+        // The lines below are a hacky way to keep the editing field visible when an error comes through.
+        row.find("td[data-form-name='"+ field + "']").find(".static").hide();
+        row.find("td[data-form-name='"+ field + "']").find(".editable").show();
+
     }
-    if (errors.name){
-        error_array.push("Sorry, but we can't interpret this name.  Please include at least one character.");
-    }
+    /* Commenting this out until I have time to find out how and when this would happen - NTT
     if (response.status == '400'){
         //interpret and display errors in a meaningful way
         fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, error_array);
         showInlinedModelErrorsRow(inlined_model_id);
     }
+    */
 }
 
 /* Save inlined model on server and update the UI
@@ -823,6 +836,7 @@ function saveInlinedModel(row) {
                       data: JSON.stringify(data_to_submit),
                       type: 'PUT',
                       error: function (response) {
+                          // console.log(response);
                           handleJSONErrors(response, inlined_model_id);
                       },
                       success: function (response) {
@@ -941,9 +955,10 @@ function setupInlinedModelCallbacks() {
             // reach this point in the code, but for Chrome we hide the
             // row as a way of saying that autocomplete has taken over
             // and we don't need to save a new entity to the DB.
-            if (tr.is(":visible")) {
+            if (tr.is(":visible") && $(tr.find("span.validation-error")[0]).text().length == 0) {
+              console.log("ONE");
               // Update the UI with the new data.
-              $(this).children(".static").children("span").text($(this).find("input").val());
+              $(this).children(".static").children("span.static-span").text($(this).find("input").val());
               // Also save to the DB (arguably more important).
               saveInlinedModel(tr);
               $(this).children(".static").show();
@@ -951,6 +966,7 @@ function setupInlinedModelCallbacks() {
               // Reset sticky headers in case table cell widths have changed.
               setStickyHeaders();
             }
+            else { console.log("boy howdy"); }
         });
     
         // Handler on "delete row" buttons
