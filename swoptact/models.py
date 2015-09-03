@@ -24,6 +24,8 @@ from swoptact import mixins, modelfields, managers
 import phonenumbers
 import datetime
 
+NEW_TAGS_NOT_CREATED_HELPTEXT = "Note that new tags added here are not created."
+
 class SerializeableMixin:
     """
     Provides a .seralize method which serializes all properties on a model
@@ -165,8 +167,10 @@ class Institution(ArchiveAbstract, SerializeableMixin):
                                verbose_name="Institution State")
     inst_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
                                verbose_name="Institution Zipcode")
-    tags = models.ManyToManyField(Tag, blank=True,
-                                  verbose_name="Institution Tags")
+    tags = models.ManyToManyField(
+        Tag, blank=True,
+        verbose_name="Institution Tags",
+        help_text=NEW_TAGS_NOT_CREATED_HELPTEXT)
     contacts = models.ManyToManyField(
         "Participant",
         related_name="main_contact"
@@ -235,8 +239,10 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     location = models.CharField(max_length=255, blank=True,
                                 verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True,
-                                  verbose_name="Action Tag(s)")
+    tags = models.ManyToManyField(
+        Tag, blank=True,
+        verbose_name="Action Tag(s)",
+        help_text=NEW_TAGS_NOT_CREATED_HELPTEXT)
     issue_area = models.CharField(max_length=255, blank=True, null=True,
                                   verbose_name="Action Issue Area")
     is_prep = models.BooleanField(
