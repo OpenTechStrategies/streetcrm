@@ -308,13 +308,14 @@ table#inlined-model-table .large-info {
 }
 
 table#inlined-model-table span.deleteButton {
-   font-size: 10px;
+   font-size: 11px;
    background-color: red;
    color: white;
    border: 2px solid gray;
    border-radius: 50%;
-   height: 20px;
-   width: 20px;
+   height: 21px;
+   width: 21px;
+   line-height: 17px;
    margin: 2px auto 0px auto;
    text-align: center;
    cursor: pointer;
