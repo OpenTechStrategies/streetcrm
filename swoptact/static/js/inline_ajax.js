@@ -758,23 +758,20 @@ function recreateRows(inlined_model){
 //
 // The displayed error messages are now coming from the server. To
 // modify these, see formfields.py - NTT
-function handleJSONErrors(response, inlined_model_id){
-    console.log("TWO");
-    var errors = jQuery.parseJSON(response.responseText).form.errors;
-    // Find the row with the requisite id
-    var row = $($("tr").filter(function() { return $(this).data("id")==inlined_model_id; })[0]);
-    // "errors" is an object whose properties match our column names (e.g., errors[phone_number]).
-    for (field in errors) {
-        // And the values associated with those properties are arrays of
-        // error messages, so join them into one string.
-        var allErrors = errors[field].join("; ");
-        // Put the message(s) into the appropriate row and column.
-        row.find("td[data-form-name='"+ field + "']").find("span.validation-error").text(allErrors);
-        // The lines below are a hacky way to keep the editing field visible when an error comes through.
-        row.find("td[data-form-name='"+ field + "']").find(".static").hide();
-        row.find("td[data-form-name='"+ field + "']").find(".editable").show();
-
-    }
+function handleJSONErrors(errors, row){
+    row.children("td").each(function() {
+        var ths = $(this)
+        var formName = ths.data("form-name");
+        if (errors.hasOwnProperty(formName)) {
+            var allErrors = errors[formName].join("; ");
+            ths.find("span.validation-error").text(allErrors);
+        }
+        else {
+            // console.log("again");
+            ths.find(".static").show();
+            ths.find(".editable").hide();
+        }
+    });
     /* Commenting this out until I have time to find out how and when this would happen - NTT
     if (response.status == '400'){
         //interpret and display errors in a meaningful way
@@ -782,6 +779,9 @@ function handleJSONErrors(response, inlined_model_id){
         showInlinedModelErrorsRow(inlined_model_id);
     }
     */
+    // Reset sticky headers in case table cell widths have changed.
+    setStickyHeaders();
+    console.log("finished in handleJSON");
 }
 
 /* Save inlined model on server and update the UI
@@ -836,23 +836,25 @@ function saveInlinedModel(row) {
                       data: JSON.stringify(data_to_submit),
                       type: 'PUT',
                       error: function (response) {
-                          // console.log(response);
-                          handleJSONErrors(response, inlined_model_id);
+                          var errors = jQuery.parseJSON(response.responseText).form.errors;
+                          handleJSONErrors(errors, row);
                       },
                       success: function (response) {
                           recreateRows(response);
-			  checkLimitReached();
+                          checkLimitReached();
                       },
                       dataType: 'json'
                   });
               }, 'json');
     } else {
+        console.log("DOES ANYONE EVER SEE THIS?"); console.log(response);
         return $.ajax({
             url: getNewInlinedModelUrl(),
             data: JSON.stringify(form_data),
             type: 'POST',
-            error: function (response, jqXHR) {
-                handleJSONErrors(response, inlined_model_id);
+            error: function (response) {
+                var errors = jQuery.parseJSON(response.responseText).form.errors;
+                handleJSONErrors(errors, row);
             },
             success: function (response) {
                 var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
@@ -862,10 +864,9 @@ function saveInlinedModel(row) {
                               // remove the "new" row from the UI and add one by the same method others were added.
                               row.remove();
                               insertInlinedModel(inlined_model);
-			      checkLimitReached();
+                              checkLimitReached();
                           }, 'json');
-                  }, "json");
-                
+                }, "json");
             },
             dataType: 'json'
         });
@@ -928,13 +929,17 @@ function setupInlinedModelCallbacks() {
 
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
+            console.log("in click handler");
             $(this).children(".static").hide();
             $(this).children(".editable").show();
             $(this).children(".editable").children("input").focus();
             // Reset sticky headers in case table cell widths have changed.
             setStickyHeaders();
         });
+        
         $("#inlined-model-table").on("blur", "td", function(e) {
+            console.log("in blur handler");
+            console.log(this);
             var tr = $(this).closest("tr");
             if (tr.data("id") == "" && rowIsEmpty(tr)) {
               // We've clicked out of a new and still empty row, so
@@ -955,18 +960,12 @@ function setupInlinedModelCallbacks() {
             // reach this point in the code, but for Chrome we hide the
             // row as a way of saying that autocomplete has taken over
             // and we don't need to save a new entity to the DB.
-            if (tr.is(":visible") && $(tr.find("span.validation-error")[0]).text().length == 0) {
-              console.log("ONE");
+            if (tr.is(":visible")) {
               // Update the UI with the new data.
               $(this).children(".static").children("span.static-span").text($(this).find("input").val());
               // Also save to the DB (arguably more important).
               saveInlinedModel(tr);
-              $(this).children(".static").show();
-              $(this).children(".editable").hide();
-              // Reset sticky headers in case table cell widths have changed.
-              setStickyHeaders();
             }
-            else { console.log("boy howdy"); }
         });
     
         // Handler on "delete row" buttons
