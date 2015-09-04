@@ -287,6 +287,20 @@ appear (and makes the static div disappear) */
 visible when the user clicks in the corresponding uneditable sibling div */
 table#inlined-model-table td {
     padding: 6px;
+    vertical-align: middle;
+}
+
+table#inlined-model-table .validation-error {
+    font-weight: bold;
+    color: #F00;
+}
+
+table#inlined-model-table td.disabled {
+    background-color: #F66;
+}
+
+table#inlined-model-table td.corrigendum {
+     border: 2px solid #F22;
 }
 
 table#inlined-model-table .editable {

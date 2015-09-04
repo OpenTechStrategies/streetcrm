@@ -50,9 +50,11 @@ class LocalPhoneNumberField(formfields.PhoneNumberField):
                 national_number=value.national_number
             )
 
-        return super(LocalPhoneNumberField, self).to_python(
+        try: return super(LocalPhoneNumberField, self).to_python(
             value, *args, **kwargs
         )
+        except:
+            raise exceptions.ValidationError("Please enter a phone number in the format (xxx) xxx-xxxx", code="invalid");
 
 class TwelveHourTimeField(forms.TimeField):
     widget = widgets.TwelveHourTimeWidget
