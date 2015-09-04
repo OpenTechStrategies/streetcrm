@@ -69,8 +69,8 @@ function setupTextInputEditable(field_def, cur_value) {
         "type": "text",
         "value": cur_value});
     input.text(cur_value);
+    div_wrapper.append("<div class=\"validation-error\"/>");
     div_wrapper.append(input);
-    div_wrapper.append("<span class=\"validation-error\"/>");
     return div_wrapper;
 }
 
@@ -764,12 +764,10 @@ function handleJSONErrors(errors, row){
         var formName = ths.data("form-name");
         if (errors.hasOwnProperty(formName)) {
             var allErrors = errors[formName].join("; ");
-            ths.find("span.validation-error").text(allErrors);
-        }
-        else {
-            // console.log("again");
-            ths.find(".static").show();
-            ths.find(".editable").hide();
+            ths.find(".validation-error").text(allErrors);
+            // Disable all sibling <td>s (except the delete row button)
+            ths.addClass("corrigendum");
+            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");
         }
     });
     /* Commenting this out until I have time to find out how and when this would happen - NTT
@@ -779,9 +777,6 @@ function handleJSONErrors(errors, row){
         showInlinedModelErrorsRow(inlined_model_id);
     }
     */
-    // Reset sticky headers in case table cell widths have changed.
-    setStickyHeaders();
-    console.log("finished in handleJSON");
 }
 
 /* Save inlined model on server and update the UI
@@ -791,7 +786,7 @@ Arguments:
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
-function saveInlinedModel(row) {
+function saveInlinedModel(row, cell) {
     var inlined_model_id = row.data("id");
     var form_data = getDataForEditRow(row);
 
@@ -842,12 +837,19 @@ function saveInlinedModel(row) {
                       success: function (response) {
                           recreateRows(response);
                           checkLimitReached();
+                          row.find("td").removeClass("disabled").removeClass("corrigendum");
+                          cell.find(".validation-error").empty();
+                          cell.find(".static").show();
+                          cell.find(".editable").hide();
+                      },
+                      complete: function() {
+                          // Reset sticky headers in case table cell widths have changed.
+                          setStickyHeaders();
                       },
                       dataType: 'json'
                   });
               }, 'json');
     } else {
-        console.log("DOES ANYONE EVER SEE THIS?"); console.log(response);
         return $.ajax({
             url: getNewInlinedModelUrl(),
             data: JSON.stringify(form_data),
@@ -865,8 +867,18 @@ function saveInlinedModel(row) {
                               row.remove();
                               insertInlinedModel(inlined_model);
                               checkLimitReached();
+                              // Not sure if the below are necessary since I don't think a row can qualify as
+                              // "new" with a pre-existing error in one of the cells, but leaving in for now.
+                              row.find("td").removeClass("disabled").removeClass("corrigendum");
+                              cell.find(".validation-error").empty();
+                              cell.find(".static").show();
+                              cell.find(".editable").hide();
                           }, 'json');
                 }, "json");
+            },
+            complete: function() {
+                // Reset sticky headers in case table cell widths have changed.
+                setStickyHeaders();
             },
             dataType: 'json'
         });
@@ -929,18 +941,21 @@ function setupInlinedModelCallbacks() {
 
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
-            console.log("in click handler");
-            $(this).children(".static").hide();
-            $(this).children(".editable").show();
-            $(this).children(".editable").children("input").focus();
-            // Reset sticky headers in case table cell widths have changed.
-            setStickyHeaders();
+            if ($(this).hasClass("disabled")) {
+                alert("This cell cannot be edited until errors in this row are corrected.");
+            }
+            else {                  
+                $(this).children(".static").hide();
+                $(this).children(".editable").show();
+                $(this).children(".editable").children("input").focus();
+                // Reset sticky headers in case table cell widths have changed.
+                setStickyHeaders();
+            }
         });
         
         $("#inlined-model-table").on("blur", "td", function(e) {
-            console.log("in blur handler");
-            console.log(this);
             var tr = $(this).closest("tr");
+            var cell = $(this).closest("td");
             if (tr.data("id") == "" && rowIsEmpty(tr)) {
               // We've clicked out of a new and still empty row, so
               // leave without saving anything.
@@ -964,7 +979,7 @@ function setupInlinedModelCallbacks() {
               // Update the UI with the new data.
               $(this).children(".static").children("span.static-span").text($(this).find("input").val());
               // Also save to the DB (arguably more important).
-              saveInlinedModel(tr);
+              saveInlinedModel(tr, cell);
             }
         });
     

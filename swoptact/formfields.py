@@ -54,7 +54,7 @@ class LocalPhoneNumberField(formfields.PhoneNumberField):
             value, *args, **kwargs
         )
         except:
-            raise exceptions.ValidationError("look at me!", code="invalid");
+            raise exceptions.ValidationError("Please enter a phone number in the format (xxx) xxx-xxxx", code="invalid");
 
 class TwelveHourTimeField(forms.TimeField):
     widget = widgets.TwelveHourTimeWidget
