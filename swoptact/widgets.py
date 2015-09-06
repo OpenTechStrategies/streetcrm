@@ -18,6 +18,8 @@ import phonenumbers
 
 from django import forms
 from django.forms import widgets
+from django.forms.utils import flatatt
+from django.utils.html import format_html
 
 class LocalPhoneNumberWidget(forms.TextInput):
     """ Renders phone number in the national format """
@@ -89,3 +91,26 @@ class TwelveHourTimeWidget(forms.MultiWidget):
         suffix = self.AM_SUFFIX if value.hour < 12 else self.PM_SUFFIX
 
         return [hours, suffix]
+
+
+class PersistentTextFKAutocomplete(forms.TextInput):
+    """
+    This field is for when you want to provide autocomplete, but don't
+    want that widget to go away after the user selects something.
+    """
+    def __init__(self, *args, **kwargs):
+        api_uri = kwargs.pop("api_uri", None)
+        super(PersistentTextFKAutocomplete, self).__init__(
+            *args, **kwargs)
+        if not api_uri:
+            raise ValueError("api_uri is a required field")
+
+        self.api_uri = api_uri
+
+    def render(self, name, value, attrs=None):
+        attrs.update(
+            {"class": "persistent-autocomplete",
+             "data-api-uri": self.api_uri})
+        return super(PersistentTextFKAutocomplete, self).render(
+            name, value, attrs)
+    
