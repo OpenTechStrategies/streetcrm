@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n css %}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -40,12 +40,13 @@
 					{% endif %}
 				</ul>
 				{% if user.is_active %}
-				<form action="{% url 'admin:search' %}" style="margin-top: 7px;">
+				<form action="{% url 'admin:search' %}" method="POST" style="margin-top: 7px;">
+				  {% csrf_token %}
 				  <span class="navbar-right" style="margin-right: 20px; margin-left: -10px;">
 				    <button class="btn btn-default navbar-right" type="submit">{% trans 'Search' %}</button>
 				  </span>
 				  <span class="navbar-right">
-				    <input name="q" value="{{request.GET.q}}" class="form-control">
+				    {{ form.query|addclass:"form-control" }}
 				  </span>
 				</form>
 				{% endif %}

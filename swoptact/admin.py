@@ -75,81 +75,66 @@ class SWOPTACTAdminSite(admin.AdminSite):
             return functools.update_wrapper(wrapper, view)
 
         # Add a URL for the search results
+
         urls.append(
-            url(r"^search/$", wrap(self.search_view), name="search"),
-        )
-        # Add a URL for the advanced search results query
-        urls.append(
-            url(r"^search/advanced/$", wrap(self.advanced_search_view), name="advanced-search"),
+            url(r"^search/$", wrap(self.search_dispatcher), name="search"),
         )
 
         return urls
 
-    def search_view(self, request):
-        """
-        View for searching for objects
-        """
-        search_query = request.GET.get("q")
-        context = {"search_query": search_query}
+    def search_dispatcher(self, request):
+        """ Takes in searches and sends them to the advanced or basic view """
+        advanced = request.GET.get("advanced", False)
 
-        # If there is no term provided just display the template
-        if search_query is None:
+        # Build the form from the POST data
+        if request.method == "POST":
+            form = st_forms.SearchForm(request.POST)
+        else:
+            form = st_forms.SearchForm()
+
+        # If it's a GET request or the form is invalid, return now.
+        if request.method == "GET" or not form.is_valid():
             return TemplateResponse(
                 request,
                 self.search_template,
-                context
+                {
+                    "advanced": advanced,
+                    "form": form,
+                }
             )
 
+        # If it's advanced send it that view, else send it to the basic view
+        if advanced:
+            return self.advanced_search_view(request, form)
+        else:
+            return self.basic_search_view(request, form)
+
+    def basic_search_view(self, request, form):
+        """
+        View for the basic search for objects
+        """
         # Peform the search
-        context["search_results"] = self.search_engine.search(
-            search_query
-        )
-        context["search_results_amount"] = len(context["search_results"])
+        results = self.search_engine.search(form.cleaned_data["query"])
+
+        # Process the results into their objects
+        results = [result.object for result in results]
 
         # Display the results
         return TemplateResponse(
             request,
             self.search_template,
-            context
+            {
+                "search_results": {None: results},
+                "form": form,
+            }
         )
 
-    def advanced_search_view(self, request):
+    def advanced_search_view(self, request, form):
         """
         This provides advanced searching options
         """
-        context = {
-            "form": st_forms.AdvancedSearchForm(),
-        }
-
-        if request.method == "GET":
-            return TemplateResponse(
-                request,
-                self.advanced_search_template,
-                context
-            )
-
-        # Construct the form and check if it's valid
-        # NB: running Form.is_valid cuases it to populate Form.cleaned_data
-        form = st_forms.AdvancedSearchForm(request.POST)
-        if not form.is_valid():
-            context["form"] = form
-            return TemplateResponse(
-                request,
-                self.advanced_search_template,
-                context
-            )
-
-        # Peform the searches
-        if form.cleaned_data["search_model"] == "participant":
-            return self.advanced_participant_search(request, form)
-        elif form.cleaned_data["search_model"] == "institution":
-            return self.advanced_institution_search(request, form)
-        elif form.cleaned_data["search_model"] == "event":
-            return self.advanced_event_search(request, form)
-
-    def advanced_participant_search(self, request, form):
-        """ Handle advanced searches for participants """
         data = form.get_processed_data()
+        categorize = data["search_model"]
 
         exclude_major = data["exclude_major_events"]
         exclude_minor = data["exclude_minor_events"]
@@ -207,40 +192,84 @@ class SWOPTACTAdminSite(admin.AdminSite):
         if not exclude_minor:
             events += minor_events
 
-        results = []
+        event_participants = []
 
         # If a participant was specified then we need to filter the results
         # to only show those which either match in the case of an object found
         # with the autocompletion or if it contains the search string.
         if isinstance(data.get("participant"), str):
-            results = [
+            event_participants = dict((
                 (e, e.participants.filter(name__contains=data["participant"]))
                 for e in events
-            ]
+            ))
         elif isinstance(data.get("participant"), models.Participant):
-            results = [
+            event_participants = dict((
                 (e, e.participants.filter(name__in=[data["participant"]]))
                 for e in events
-            ]
+            ))
         else:
-            results = [(event, event.participants.all()) for event in events]
+            event_participants = dict((
+                (event, event.participants.all()) for event in events
+            ))
 
         # Remove the events which have no participants to list
-        results = [(e, p) for (e, p) in results if p]
+        event_participants = dict((
+            (e, p) for (e, p) in event_participants.items() if p
+        ))
 
-        # Convert the results into a dictionary for displaying in the template.
-        results = dict(results)
+        # If there has been a query on the institution we need to filter on that
+        # unfortunately I can't think of any other way to do this so it'll be in
+        # python, which will make it a little slower than the rest.
+        institutions = []
+        if isinstance(data.get("institution"), str):
+            # Lets perform a search for the institution(s) which match
+            institutions += models.Institution.objects.filter(
+                name__contains=data["institution"]
+            )
+        elif isinstance(data.get("institution"), models.Institution):
+            # This is when the autocomplete has found one
+            institutions.append(data["institution"])
+        elif categorize == form.INSTITUTION:
+            # Because we're going to catagorise based on institution we need to
+            # build the institution list with all the institutions
+            institutions += models.Institution.objects.all()
+
+        # Lets build the end results
+        if categorize == form.PARTICIPANT or categorize == form.EVENT:
+            # Both participants and events, we actually want to group by event
+            results = dict([(e, list()) for e, p in event_participants.items()])
+        elif categorize == form.INSTITUTION:
+            results = dict([(i, list()) for i in institutions])
+
+        if categorize == form.INSTITUTION or data["institution"]:
+            # We then should iterate through the institution and filter participants
+            # out which are not part contacts of the institution.
+            for institution in institutions:
+                contacts = institution.contacts.all()
+
+                # Look at the intersection between event_participants and contacts
+                for event, participants in event_participants.items():
+                    intersection = [p for p in participants if p in contacts]
+
+                    # Add it to the results depending what we're displaying by
+                    if categorize == form.PARTICIPANT or categorize == form.EVENT:
+                        # catagorise by event
+                        results[event] = interssection
+                    elif categorize == form.INSTITUTION:
+                        results[institution] = intersection
+        else:
+            results = event_participants
 
         # Return the response.
         return TemplateResponse(
             request,
             self.search_template,
             {
+                "form": form,
+                "advanced": True,
                 "search_results": results,
             }
         )
-
-
 
 class ContactInline(admin.TabularInline):
     model = models.Institution.contacts.through

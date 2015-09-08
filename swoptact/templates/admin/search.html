@@ -1,10 +1,12 @@
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n static %}
+
+{% block title %}{% trans "Search" %}{% endblock %}
 
 {% if not is_popup %} {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-    <li class="bold_name">Search: {{ search_query }}</li>
+    <li class="bold_name">{% trans "Search" %}</li>
 </ul>
 {% endblock %} {% endif %}
 
@@ -15,19 +17,80 @@
 </div>
 {% endif %}
 
-<h2>{% trans "Search Results:" %}</h2>
-<h6>{% blocktrans %} There are {{ search_results_amount }} results
-found. {% endblocktrans %}</h6>
-<ul>
-  {% for section, objects in search_results.items %}
-  {% if section %}
-  <h3><a href="{{ section.admin_change_url }}">{{ section }}</a></h3>
-  {% endif %}
-  <ul>
-  {% for object in objects %}
-  <li><a href="{{ object.admin_change_url }}">{{ object }}</a></li>
-  {% endfor %}
-  </ul>
-  {% endfor %}
-</ul>
+<h2>{% trans "Search" %}</h2>
+<div>
+  <form method="POST" action="{% url 'admin:search' %}?advanced={% if advanced %}1{% endif %}">
+    {% csrf_token %}
+    {% block search %}
+    {% if advanced %}
+    <div id="id_search_form">
+      <!-- What does the user want to search for, this will dictate the search query -->
+      <h4 style="display: inline;">{% trans "Search for " %}</h4>
+      {{ form.search_model }}
+
+      <span class="help-block">
+	{% trans "All fields are optional, only fill in those which are applicable to your search." %}
+      </span>
+
+      <!-- Use div to pad down a little -->
+      <div style="padding-bottom: 1em;"></div>
+
+      {{ form.participant }}
+      {% trans "participated in" %}
+      {{ form.event }}
+      {% trans "that are part of" %}
+      {{ form.institution }}
+      <br/>
+      {{ form.exclude_major_events }}
+      {% trans "Exclude major actions" %}
+      <br/>
+      {{ form.exclude_minor_events }}
+      {% trans "Exclude minor actions" %}
+      <br/>
+      {% trans "with tags:" %}
+      {{ form.tags }}
+    </div>
+    <!-- Use div to pad down a little -->
+    <div style="padding-bottom: 1em;"></div>
+    {% else %}
+    {{ form.query }}
+    {% endif %}
+    <button>{% trans "Search" %}</button>
+    {% endblock %}
+
+    <br />
+
+    <!-- Give the user option of switching to either basic or advanced search -->
+    {% if advanced %}
+    <a href="{% url 'admin:search' %}" style="font-style: italic">change to basic search</a>
+    {% else %}
+    <a href="{% url 'admin:search' %}?advanced=1" style="font-style: italic">change to advanced search</a>
+    {% endif %}
+
+
+    <!-- Display some padding between search query and results -->
+    <div style="padding-bottom: 1em;"></div>
+
+    {% block search_results %}
+    <ul>
+      {% for section, objects in search_results.items %}
+      {% if section %}
+      <h3><a href="{{ section.admin_change_url }}">{{ section }}</a></h3>
+      {% else %}
+      <h3>{% trans "Results" %}</h3>
+      {% endif %}
+      {% if objects %}
+      <ul>
+	{% for object in objects %}
+	<li><a href="{{ object.admin_change_url }}">{{ object }}</a></li>
+	{% endfor %}
+      </ul>
+      {% else %}
+      <p>{% trans "No search results found." %}</p>
+      {% endif %}
+      {% endfor %}
+    </ul>
+    {% endblock %}
+  </form>
+</div>
 {% endblock %}

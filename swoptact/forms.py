@@ -16,6 +16,7 @@
 import collections
 
 import django.forms
+from django.core.exceptions import ValidationError
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
@@ -103,7 +104,7 @@ def autocomplete_modelform_factory(model, form=None, *args, **kwargs):
 
     return forms.modelform_factory(model, *args, **kwargs)
 
-class AdvancedSearchForm(django.forms.Form):
+class SearchForm(django.forms.Form):
     """
     Form that is used to provide advanced search
 
@@ -112,10 +113,19 @@ class AdvancedSearchForm(django.forms.Form):
     if what the user wants isn't found.
     """
 
+    PARTICIPANT = "participant"
+    INSTITUTION = "institution"
+    EVENT = "event"
+
     MODELS = (
-        ("participant", "Participants"),
-        ("institution", "Institutions"),
-        ("event", "Actions"),
+        (PARTICIPANT, "Participants"),
+        (INSTITUTION, "Institutions"),
+        (EVENT, "Actions"),
+    )
+
+    # Regular basic search fields (must not be required as not used in advanced)
+    query = django.forms.CharField(
+        required=False
     )
 
     # Autocomplete fields
@@ -127,19 +137,35 @@ class AdvancedSearchForm(django.forms.Form):
         "ASEventAutocomplete",
         required=False
     )
+
+    institution = forms.ModelChoiceField(
+        "ASInstitutionAutocomplete",
+        required=False
+    )
+
     tags = forms.ModelMultipleChoiceField(
         "ASTagAutocomplete",
         required=False
     )
 
     # None autocomplete fields
-    search_model = django.forms.ChoiceField(choices=MODELS)
-    exclude_major_events = django.forms.BooleanField(
-        required=False
-    )
-    exclude_minor_events = django.forms.BooleanField(
-        required=False
-    )
+    search_model = django.forms.ChoiceField(choices=MODELS, required=False)
+    exclude_major_events = django.forms.BooleanField(required=False)
+    exclude_minor_events = django.forms.BooleanField(required=False)
+
+    def clean(self, *args, **kwargs):
+        # Call superclass clean method
+        rtn = super(SearchForm, self).clean(*args, **kwargs)
+
+        # Compile a list of fiedls and values to see which fields actually
+        # have data in them.
+        filled_fields = [(f, v) for f, v in self.cleaned_data.items() if v]
+
+        # If none of the fields have data, the form is invalid
+        if not filled_fields:
+            raise ValidationError(_("You need provide query data"))
+
+        return rtn
 
     def get_processed_data(self):
         """
