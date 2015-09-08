@@ -27,6 +27,13 @@ from django.utils.translation import ugettext_lazy as _
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
 
+# Needed for reporting validation errors. Otherwise execution will
+# stumble when trying to serialize one of our models (e.g., Institution)
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, models.SerializeableMixin):
+            return obj.serialize()
+        return json.JSONEncoder.default(self, obj)
 
 def process_field_general(api_view, body, model, field_name, value):
     """
@@ -174,7 +181,7 @@ class APIMixin:
     def render_to_response(self, context, **response_kwargs):
         """ Provides a JSON response based on the context provided """
         if isinstance(context, (dict, list, tuple)):
-            context = json.dumps(context)
+            context = json.dumps(context, cls=MyEncoder)
 
         return http.HttpResponse(
             context,
