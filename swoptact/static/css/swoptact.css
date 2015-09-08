@@ -124,6 +124,10 @@ a:focus,
     margin-bottom: 15px;
 }
 
+.change-content fieldset .control-label {
+    display: inline;
+}
+
 .change-content legend {
     border-bottom: 0px;
 }
