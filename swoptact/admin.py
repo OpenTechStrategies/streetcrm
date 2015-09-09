@@ -17,6 +17,7 @@
 import copy
 import json
 import functools
+from collections import namedtuple
 
 from django import template
 from django.conf import settings
@@ -25,14 +26,17 @@ from django.contrib import admin, auth
 from django.template import loader
 from django.conf.urls import url
 from django.contrib.admin.views import main
+from django.db.models import Q
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 import watson
 import autocomplete_light
 
 from swoptact import forms as st_forms
 from swoptact import mixins, models, admin_filters
+
 
 class SWOPTACTAdminSite(admin.AdminSite):
 
@@ -74,11 +78,180 @@ class SWOPTACTAdminSite(admin.AdminSite):
             return functools.update_wrapper(wrapper, view)
 
         # Add a URL for the search results
-        urls.append(
-            url(r"^search/$", wrap(self.search_view), name="search")
-        )
+        urls.extend([
+            url(r"^search/$", wrap(self.search_view), name="search"),
+            url(r"^missing_data/$", wrap(self.missing_data_view),
+                name="missing_data"),
+        ])
 
         return urls
+
+    def missing_data_view(self, request):
+        """
+        Missing data report
+        """
+        # This is an admittedly long and kind of complex looking function.
+        # Maybe this documentation will help, o future hacker!
+        #
+        # However, there's reason for it.  Some details about this function:
+        #  - We have some one-off datastructures via namedtuples to keep
+        #    things organized.  The nice thing about this is that things
+        #    become reasonably declarative towards the end of the function
+        #    so adjusting the fields is pretty easy.
+        #
+        #  - So as to not have unnecessarily duplicate queries (which
+        #    will then be hard to reconcile as to which object is the
+        #    canonical representation of the same row) we query all at
+        #    once for all possible missing fields (hence the
+        #    _construct_query stuff).  So we then later walk over the
+        #    objects we got back to find out what all of the missing
+        #    fields (as per our nice CheckField specifications) were.
+        #
+        # Hope that helps!
+
+        context = {}
+
+        # Simple structure for organizing fields we check
+        CheckField = namedtuple(
+            "CheckField", ["field_name", "null", "empty_string"])
+        TableResults = namedtuple(
+            "TableResults", ["table_name", "results"])
+        MissingField = namedtuple(
+            "MissingField", ["field_name", "human_readable"])
+        ModelWithMissingFields = namedtuple(
+            "ModelWithMissingFields",
+            ["model", "human_readable", "missing_fields", "admin_uri"])
+
+        def _construct_query(fields):
+            """Construct a query based on list of CheckFields
+
+            We're just trying to find out which fields are missing data,
+            and depending on the CheckField specification, "missing data"
+            may be either or both of NULL or an empty string.
+
+            Piping together Q objects is a way of OR'ing them, so
+            this way we've built up a nice list of possibilities on
+            how a model's 
+            """
+            # We're wrapping this in a mutable list because of hacks
+            # in setting values in closures in python :\
+            # So this kind of acts as a mutable "box".
+            # But all we care about is query[0]
+            query = [None]
+
+            def _join_query(q):
+                if query[0] is None:
+                    # Assigning it here would have confused python
+                    # had we just done "query = q", hence the box...
+                    query[0] = q
+                else:
+                    # ... here too of course.
+                    query[0] = query[0] | q
+
+            for field in fields:
+                if field.null:
+                    _join_query(Q(**{"%s__isnull" % field.field_name: True}))
+                if field.empty_string:
+                    _join_query(Q(**{field.field_name: ""}))
+
+            return query[0]
+
+        def gather_results(this_model, fields, change_uri_reverser):
+            results = []
+
+            query = _construct_query(fields)
+            objects = this_model.objects.filter(query)
+
+            for obj in objects:
+                missing_fields = []
+                for field in fields:
+                    if ((field.null and getattr(obj, field.field_name) is None)
+                        or (field.empty_string and
+                            getattr(obj, field.field_name) == "")):
+                        human_readable = obj._meta.get_field(
+                            field.field_name).verbose_name.title()
+                        missing_fields.append(
+                            MissingField(field.field_name, human_readable))
+
+                # If there are missing fields, append to the results
+                if missing_fields:
+                    # Could make this more extensible if obj.id was ever
+                    admin_uri = change_uri_reverser(obj)
+                    results.append(
+                        ModelWithMissingFields(obj, str(obj),
+                                               missing_fields, admin_uri))
+
+            return results
+
+        def _gen_change_uri_func(reverse_name):
+            """
+            Handy function for generating uri reversers
+            for objects in some table
+            """
+            # Make a one argument closure which takes the object and return it
+            def reverser(obj):
+                return reverse(reverse_name, args=(obj.id,))
+            return reverser
+
+        event_results = gather_results(
+            models.Event,
+            [CheckField("name", null=False, empty_string=True),
+             CheckField("description", null=True, empty_string=True),
+             CheckField("date", null=True, empty_string=False),
+             CheckField("time", null=True, empty_string=False),
+             CheckField("organizer", null=True, empty_string=False),
+             CheckField("location", null=True, empty_string=True),
+             CheckField("issue_area", null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_event_change"))
+
+        participant_results = gather_results(
+            models.Participant,
+            [CheckField("name", null=False, empty_string=True),
+             CheckField("primary_phone", null=True, empty_string=False),
+             CheckField("email", null=True, empty_string=True),
+             CheckField("participant_street_address",
+                        null=True, empty_string=True),
+             CheckField("participant_city_address",
+                        null=True, empty_string=True),
+             CheckField("participant_state_address",
+                        null=True, empty_string=True),
+             CheckField("participant_zipcode_address",
+                        null=True, empty_string=True),
+             CheckField("institution",
+                        null=True, empty_string=False),
+             CheckField("title",
+                        null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_participant_change"))
+
+        institution_results = gather_results(
+            models.Institution,
+            [CheckField("name", null=True, empty_string=True),
+             CheckField("inst_street_address",
+                        null=True, empty_string=True),
+             CheckField("inst_city_address",
+                        null=True, empty_string=True),
+             CheckField("inst_state_address",
+                        null=True, empty_string=True),
+             CheckField("inst_zipcode_address",
+                        null=True, empty_string=True)],
+            _gen_change_uri_func("admin:swoptact_institution_change"))
+
+        results = [
+            TableResults("Events", event_results),
+            TableResults("Participants", participant_results),
+            TableResults("Institutions", institution_results)]
+
+        context = dict(
+            # Django docs say these are common variables
+            # for rendering the admin template. :)
+            self.each_context(request),
+            # Other args
+            results=results)
+
+        return TemplateResponse(
+            request,
+            "admin/missing_data_report.html",
+            context)
 
     def search_view(self, request):
         """
