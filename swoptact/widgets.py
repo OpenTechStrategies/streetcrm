@@ -96,7 +96,7 @@ class TwelveHourTimeWidget(forms.MultiWidget):
 
 
 PERSISTENT_AUTOCOMPLETE_TEMPLATE = """\
-<div class="persistent-fk-autocomplete-simple">
+<div class="persistent-autocomplete">
   <input type="hidden" class="real-value" {} />
   <input type="text" class="user-widget" {} />
 </div>"""
