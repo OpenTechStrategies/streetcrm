@@ -111,10 +111,13 @@ class PersistentTextAutocomplete(forms.Widget):
     django fields, the `gather_options thunk' and
     `get_display_text' procedure.
 
-    `gather_options' should return a series of two-item tuples (or
-    whatever series) representing display text and value, like:
+    `gather_options' should return a dictionary of display: value, like:
 
-      [("Wisconsin", 1), ("Illinois", 2)]
+      {"Wisconsin": 1, "Illinois": 2}
+
+    (Why the display mapped to value and not the reverse?  Because the
+    user is writing to a textbox, and each term can only map to one
+    thing)
 
     `get_display_text' should take one argument, the current value,
     and return text for the value field.
@@ -143,7 +146,7 @@ class SimpleFKAutocomplete(PersistentTextAutocomplete):
     """
     def __init__(self, completion_model, *args, **kwargs):
         def gather_options():
-            return [[str(i), i.id] for i in completion_model.objects.all()]
+            return {str(i): i.id for i in completion_model.objects.all()}
 
         def get_display_text(value):
             if value:
