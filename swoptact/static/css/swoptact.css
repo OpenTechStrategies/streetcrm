@@ -18,7 +18,18 @@
 
 body {
     font-family: Verdana,Arial,sans-serif;
-    background-color: #F8F2EB;
+    /* background-color: #F8F2EB; */
+    background: url('/static/images/dawn-818102_1920.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.container-fluid {
+    width: 55%;
+    min-width: 450px;
+    margin: auto;
 }
 
 .flex {
@@ -35,9 +46,35 @@ h1, h1 a, legend {
     color: #82532E;
 }
 
+.navbar-header {
+    width: 100%;
+    min-width: 450px;
+}
+
+#user-menu-link {
+    margin: 10px 0px;
+    position: relative;
+    cursor: pointer;
+    float: right;
+}
+
+#user-menu-link img {
+    float: right;
+}
+
+#user-menu {
+    position: absolute;
+    right: 0px;
+    z-index: 3;
+}
+
+.clearblock {
+    clear: both;
+}
+
 /* Purple hrefs that are underlined until you hover over them */
 a {
-    color: #48328F;
+    color: #5F1F7F;
     text-decoration: underline;
 }
 
@@ -45,7 +82,7 @@ a:hover,
 a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #48328F;
+    color: #5F1F7F;
     text-decoration: none;
 }
 
@@ -64,6 +101,7 @@ a:focus,
     height: 70px;
     border: 0;
     padding-top: 10px;
+    margin-bottom: 0px;
     border-radius: 0;
     background-color: #FFFFFF;
 }
@@ -71,12 +109,7 @@ a:focus,
 .navbar-default .navbar-brand,
 .navbar-default .navbar-text,
 .navbar-default .navbar-nav > li > a {
-    color: #48328F;
-}
-
-/* Pad the "Welcome, <username>" text 15px away from right */
-.navbar-default .navbar-right {
-    padding-right: 15px;
+    color: #5F1F7F;
 }
 
 /* Shrink tables to fit content (but don't shrink too much either) */
@@ -85,7 +118,33 @@ a:focus,
   width: auto;
 }
 
+#actual-navbar {
+    padding: 5px 0px 3px 0px;
+    background-color: #4E0E6E;
+    color: white;
+}
+
+.breadcrumb {
+    width: 60%;
+    margin: 0px;
+    padding: 0px;
+    line-height: 250%;
+    display: inline-block;
+    background-color: inherit;
+}
+
+.breadcrumb a {
+    color: white;
+}
+
+#search-form {
+    width: 35%;
+    display: inline-block;
+    float: right;
+}
+
 /* Give tables and breadcrumbs a white background and border */
+/* Experimenting with losing this rule - NTT
 .breadcrumbs,
 .change-content table,
 .table-bordered > thead > tr > th,
@@ -96,32 +155,49 @@ a:focus,
 .table-bordered > tfoot > tr > td {
     background-color: #FFFFFF;
 }
+*/
 
 .change-content h1 {
     color: #82532E;
-    font-size: 18pt;
-    padding-top: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 5px;
+    font-size: 200%;
+    font-weight: bold;
+    padding: 15px;
+    margin-top: 10px;
     margin-bottom: 0px;
-    background-color: #FFFFFF;
 
-    border: 10px;
+    border: 3px;
     border-bottom: 0px;
     border-style: solid;
-    border-color: #EDDDCF;
+    border-color: #48328F;
 }
 
-.content-main {
+.change-content .hr {
+    padding: 0px 15px;
+    background-color: #F2F2F2;
+    border-style: solid;
+    border-color: #48328F;
+    border-width: 0px 3px;
+}
+
+.change-content .hr hr {
+    margin: 0px;
+    height: 2px;
+    background-color: #4E0E6E;
+}
+
+#content {
+    background-color: #F2F2F2;
+}
+
+#content-main {
     background-bottom: 0px;
 }
 
 .change-content fieldset {
-    padding-top: 5px;
-    background-color: #FFFFFF;
-    border: 10px solid #EDDDCF;
-    margin-bottom: 15px;
+    padding: 15px;
+    border-style: solid;
+    border-color: #48328F;
+    border-width: 0px 3px;
 }
 
 .change-content fieldset .control-label {
@@ -138,6 +214,7 @@ a:focus,
     background-color: #F5F5F5;
 }
 
+/* Experiementing with losing this rule too - NTT
 .breadcrumbs,
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
@@ -147,10 +224,11 @@ a:focus,
 .table-bordered > tfoot > tr > td {
     border: 1px solid #DDDDDD;
 }
+*/
 
 .change-title h1 {
-    background-color: #999999;
-    margin-top: 0;
+    background-color: #999;
+    margin-top: 0px;
 }
 
 /* Override design of filter list selector - Issue #7 */
@@ -209,27 +287,42 @@ input[type="checkbox"] {
     display:none;
 }
 
-input.vTextField {
-    width: 200px;
+.form-horizontal .control-label {
+    padding-top: 0px;
 }
-input.vTextField#id_description {
-    width: 500px;
+.form-horizontal input[type='text'] {
+    width: 50%;
+    margin-top: .3em;
 }
-input.vTextField#id_title {
-    width: 500px;
+.form-horizontal input#id_description {
+    width: 100%;
 }
-input.vTextField#id_inst_street_address {
-    width: 500px;
+.form-horizontal input#id_title {
+    width: 100%;
 }
-input.vTextField#id_participant_street_address {
-    width: 500px;
+.form-horizontal input#id_inst_street_address {
+    width: 100%;
 }
-.navbar-nav a:hover {
-    background-color: #337ab7 !important;
+.form-horizontal input#id_participant_street_address {
+    width: 100%;
 }
 
-div.form-actions div.pull-right {
-    padding-right: 30%;
+.form-actions {
+    position: relative;
+    height: 60px;
+    border-style: solid;
+    border-color: #48328F;
+    border-width: 0px 3px 3px 3px;
+}
+
+.form-actions .pull-left, .form-actions .pull-right {
+    margin: 15px;
+}
+
+
+
+.navbar-nav a:hover {
+    background-color: #337ab7 !important;
 }
 
 li.pull-left {
@@ -313,7 +406,7 @@ table#inlined-model-table .editable {
 
 table#inlined-model-table .large-info {
    font-size: 16px;
-   border: 2px solid #48328F;
+   border: 2px solid #5F1F7F;
    border-radius: 50%;
    height: 24px;
    width: 24px;

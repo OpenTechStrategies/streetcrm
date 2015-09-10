@@ -9,5 +9,18 @@
 {% load staticfiles %}
 <a href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50" style="float: left; padding-right: 30px"></a>
 <a href="{% url 'admin:app_list' app_label='swoptact' %}" class="navbar-brand">{% trans "Contacts" %}</a>
+<div id="user-menu-link">
+  <!-- three-lines icon from https://www.iconfinder.com/icons/134216/hamburger_lines_menu_icon -->
+  <img src="{% static "images/three_lines_purple.png" %}">
+  <div class="clearblock"></div>
+  <ul id="user-menu">
+    {% if user.is_active %}
+    {% if user.has_usable_password and perms.auth.can_change_password %}
+    <li><a href="{% url 'admin:password_change' %}">{% trans 'Change&nbsp;password' %}</a></li>
+    {% endif %}
+    <li><a href="{% url 'admin:logout' %}">{% trans 'Log&nbsp;out' %}</a></li>
+    {% endif %}
+  </ul>
+</div>
 {% endblock %}
 {% block nav-global %}{% endblock %}

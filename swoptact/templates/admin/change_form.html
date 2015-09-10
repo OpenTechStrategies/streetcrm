@@ -46,12 +46,12 @@
     {% if title %}
     <h1 class="change-title">{{ title }}</h1>
     {% endif %}
+    <div class="hr"><hr></div>
     <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 
         {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
 
         <div id="content-main">
-            <div>
             {% comment %}
                 Give the client access to which model we're using.
             {% endcomment %}
@@ -61,6 +61,7 @@
             {% block field_sets %}
             {% for fieldset in adminform %}
               {% include "admin/includes/fieldset.html" with group_column_width=adminform|form_fieldset_column_width %}
+              <div class="hr"><hr></div>
             {% endfor %}
             {% endblock %}
 
@@ -74,25 +75,22 @@
 
             {% block after_related_objects %}{% endblock %}
 
-            {% if adminform and add %}
-            <script type="text/javascript">
-                (function($) {
-                    $(document).ready(function() {
-                        $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus();
-                    });
-                })(django.jQuery);
-            </script>
-            {% endif %}
-
             {# JavaScript for prepopulated fields #}
             {% prepopulated_fields_js %}
 
+            <div class="form-actions" id="form-actions">
+                {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
             </div>
-        </div>
-    <div class="form-actions" id="form-actions">
-        {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
-    </div>
+       </div>
+       {% if adminform and add %}
+           <script type="text/javascript">
+               (function($) {
+                   $(document).ready(function() {
+                       $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus();
+                   });
+               })(django.jQuery);
+           </script>
+       {% endif %}
     </form>
-
 </div>
 {% endblock %}
