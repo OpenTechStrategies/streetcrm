@@ -96,7 +96,7 @@ class TwelveHourTimeWidget(forms.MultiWidget):
 
 
 PERSISTENT_AUTOCOMPLETE_TEMPLATE = """\
-<div class="persistent-autocomplete">
+<div class="persistent-autocomplete" {}>
   <input type="hidden" class="real-value" {} />
   <input type="text" class="user-widget" {} />
 </div>"""
@@ -131,9 +131,9 @@ class PersistentTextAutocomplete(forms.Widget):
 
         return format_html(
             PERSISTENT_AUTOCOMPLETE_TEMPLATE,
+            flatatt({"data-options": json.dumps(options)}),
             flatatt({"name": name, "value": value}),
-            flatatt({"value": display_text,
-                     "options": json.dumps(options)}))
+            flatatt({"value": display_text}))
 
 
 class SimpleFKAutocomplete(PersistentTextAutocomplete):
