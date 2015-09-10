@@ -254,7 +254,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                     # Add it to the results depending what we're displaying by
                     if categorize == form.PARTICIPANT or categorize == form.EVENT:
                         # catagorise by event
-                        results[event] = interssection
+                        results[event] = intersection
                     elif categorize == form.INSTITUTION:
                         results[institution] = intersection
         else:
