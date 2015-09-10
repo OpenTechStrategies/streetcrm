@@ -109,15 +109,15 @@ class AutoCompleteModelForm(forms.ModelForm):
 class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
     no_autocreate = set(["tags"])
 
-class EventForm(django.forms.ModelForm):
-
+class ParticipantForm(django.forms.ModelForm):
     class Meta:
-        model = models.Event
-        fields = '__all__'
-        exclude = ("participants", "archived")
+        model = models.Participant
+        fields = "__all__"
+        exclude = ("archived",)
         widgets = {
-            "tags": widgets.PersistentTextFKAutocomplete(api_uri="/blah/")
-            }
+            "institution": widgets.SimpleFKAutocomplete(
+                completion_model=models.Institution),
+        }
 
 
 def autocomplete_modelform_factory(model, *args, **kwargs):

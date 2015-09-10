@@ -334,10 +334,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
             return self.change_fieldsets
         return super(ParticipantAdmin, self).get_fieldsets(request, obj)
     change_form_template = "admin/change_participant_form.html"
-    form = st_forms.autocomplete_modelform_factory(
-        model=models.Participant,
-        exclude=("archived",)
-    )
+    form = st_forms.ParticipantForm
     actions = None
 
     @property
@@ -421,7 +418,11 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
-    form = st_forms.EventForm
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Event,
+        exclude=("participants", "archived"),
+        form=st_forms.TagSkippingAutoCompleteModelForm,
+    )
     actions = None
     inline_form_config = {
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
