@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 import phonenumbers
 
 from django import forms
@@ -93,24 +95,61 @@ class TwelveHourTimeWidget(forms.MultiWidget):
         return [hours, suffix]
 
 
-class PersistentTextFKAutocomplete(forms.TextInput):
+PERSISTENT_AUTOCOMPLETE_TEMPLATE = """\
+<div class="persistent-fk-autocomplete-simple">
+  <input type="hidden" class="real-value" {} />
+  <input type="text" class="user-widget" {} />
+</div>"""
+
+
+class PersistentTextAutocomplete(forms.Widget):
     """
     This field is for when you want to provide autocomplete, but don't
     want that widget to go away after the user selects something.
-    """
-    def __init__(self, *args, **kwargs):
-        api_uri = kwargs.pop("api_uri", None)
-        super(PersistentTextFKAutocomplete, self).__init__(
-            *args, **kwargs)
-        if not api_uri:
-            raise ValueError("api_uri is a required field")
 
-        self.api_uri = api_uri
+    This takes one two extra, mandatory arguments in addition to normal
+    django fields, the `gather_options thunk' and
+    `get_display_text' procedure.
+
+    `gather_options' should return a series of two-item tuples (or
+    whatever series) representing display text and value, like:
+
+      [("Wisconsin", 1), ("Illinois", 2)]
+
+    `get_display_text' should take one argument, the current value,
+    and return text for the value field.
+    """
+    def __init__(self, gather_options, get_display_text, *args, **kwargs):
+        self.gather_options = gather_options
+        self.get_display_text = get_display_text
+        super(PersistentTextAutocomplete, self).__init__(
+            *args, **kwargs)
 
     def render(self, name, value, attrs=None):
-        attrs.update(
-            {"class": "persistent-autocomplete",
-             "data-api-uri": self.api_uri})
-        return super(PersistentTextFKAutocomplete, self).render(
-            name, value, attrs)
-    
+        options = self.gather_options()
+        display_text = self.get_display_text(value)
+
+        return format_html(
+            PERSISTENT_AUTOCOMPLETE_TEMPLATE,
+            flatatt({"name": name, "value": value}),
+            flatatt({"value": display_text,
+                     "options": json.dumps(options)}))
+
+
+class SimpleFKAutocomplete(PersistentTextAutocomplete):
+    """
+    Like PersistentTextAutocomplete, but builds a simple completer
+    for you out of the completion_model
+    """
+    def __init__(self, completion_model, *args, **kwargs):
+        def gather_options():
+            return [[str(i), i.id] for i in completion_model.objects.all()]
+
+        def get_display_text(value):
+            if value:
+                return str(completion_model.objects.get(pk=value))
+            else:
+                return ""
+
+        super(SimpleFKAutocomplete, self).__init__(
+            gather_options, get_display_text, *args, **kwargs)
