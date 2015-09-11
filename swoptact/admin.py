@@ -473,7 +473,6 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
         exclude=("archived", "contacts",),
     )
     actions = None
-    change_list_template = "admin/change_list_without_header.html"
     inline_form_config = {
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
         "current_inlines_for_page_url": [

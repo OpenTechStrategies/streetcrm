@@ -5,7 +5,7 @@
     https://github.com/django-admin-bootstrapped/django-admin-bootstrapped/tree/2.3.3
 {% endcomment %}
 
-{% load i18n admin_urls admin_static admin_list bootstrapped_goodies_tags %}
+{% load i18n admin_urls admin_static admin_list st_admin_list bootstrapped_goodies_tags %}
 
 {% block extrastyle %}
   {{ block.super }}
@@ -113,7 +113,11 @@
         <br />
 
         {% block result_list %}
+        {% if opts.model_name == "institution" %}
+            {% smart_result_list cl %}
+        {% else %}
             {% result_list cl %}
+        {% endif %}
         {% endblock %}
     </div>
     {% url cl.opts|admin_urlname:'add' as add_url %}
