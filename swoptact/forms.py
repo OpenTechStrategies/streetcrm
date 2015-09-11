@@ -66,18 +66,12 @@ class AutoCompleteModelForm(forms.ModelForm):
     this will not provide this functionality.
     """
 
-    no_autocreate = set()
-
     def full_clean(self, *args, **kwargs):
         """ Look through fields to see which need models creating """
         if self.data:
             for name, field in self.fields.items():
                 # If it's not an autocompletion field we're not interested.
                 if not hasattr(field, "autocomplete"):
-                    continue
-
-                # We also skip anything in no_autocreate
-                if name in self.no_autocreate:
                     continue
 
                 # Turns out sometimes it has a prefix (for formsets I think)
@@ -103,12 +97,15 @@ class AutoCompleteModelForm(forms.ModelForm):
         super(AutoCompleteModelForm, self).full_clean(*args, **kwargs)
 
 
-# Doing this via subclassing is so dumb, but I was having trouble
-# with doing it in .__init__() in AutoCompleteForm producting super weird errors
-# :\
-class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
-    no_autocreate = set(["tags"])
-
+class ParticipantForm(django.forms.ModelForm):
+    class Meta:
+        model = models.Participant
+        fields = "__all__"
+        exclude = ("archived",)
+        widgets = {
+            "institution": widgets.SimpleFKAutocomplete(
+                completion_model=models.Institution),
+        }
 
 def autocomplete_modelform_factory(model, *args, **kwargs):
     """ Wrap autocomplete's modelform factory to inject our own form """
@@ -116,3 +113,18 @@ def autocomplete_modelform_factory(model, *args, **kwargs):
         kwargs["form"] = AutoCompleteModelForm
 
     return forms.modelform_factory(model, *args, **kwargs)
+
+        
+class EventForm(django.forms.ModelForm):
+    class Meta:
+        model = models.Event
+        fields = "__all__"
+        exclude = ("participants", "archived",)
+        widgets = {
+            "organizer": widgets.SimpleFKAutocomplete(
+                completion_model=models.Participant),
+            "major_action": widgets.SimpleFKAutocomplete(
+                completion_model=models.Event),
+        }
+
+
