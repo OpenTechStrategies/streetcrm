@@ -107,10 +107,24 @@ class ParticipantForm(django.forms.ModelForm):
                 completion_model=models.Institution),
         }
 
-
 def autocomplete_modelform_factory(model, *args, **kwargs):
     """ Wrap autocomplete's modelform factory to inject our own form """
     if kwargs.get("form") is None:
         kwargs["form"] = AutoCompleteModelForm
 
     return forms.modelform_factory(model, *args, **kwargs)
+
+        
+class EventForm(django.forms.ModelForm):
+    class Meta:
+        model = models.Event
+        fields = "__all__"
+        exclude = ("participants", "archived",)
+        widgets = {
+            "organizer": widgets.SimpleFKAutocomplete(
+                completion_model=models.Participant),
+            "major_action": widgets.SimpleFKAutocomplete(
+                completion_model=models.Event),
+        }
+
+
