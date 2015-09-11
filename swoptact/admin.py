@@ -421,7 +421,6 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     form = st_forms.autocomplete_modelform_factory(
         model=models.Event,
         exclude=("participants", "archived"),
-        form=st_forms.TagSkippingAutoCompleteModelForm,
     )
     actions = None
     inline_form_config = {
@@ -475,7 +474,6 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
         exclude=("archived", "contacts",),
-        form=st_forms.TagSkippingAutoCompleteModelForm,
     )
     actions = None
     change_list_template = "admin/change_list_without_header.html"
