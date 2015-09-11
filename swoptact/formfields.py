@@ -115,18 +115,16 @@ def model_from_field(fieldname, create_if_not_found=True):
     model, you can set `create_if_not_found' to False.
     """
     def lookup(model, value):
-        # TODO: This will fail on multiple results, but we should
-        #       really pick the first one
-        try:
-            result = model.objects.get(**{fieldname: value})
-        except ObjectDoesNotExist:
-            if create_if_not_found:
-                result = model(**{fieldname: value})
-                result.save()
-            else:
-                result = None
+        results = model.objects.filter(**{fieldname: value})
 
-        return result
+        if results:
+            return results[0]
+        elif create_if_not_found:
+            new_instance = model(**{fieldname: value})
+            new_instance.save()
+            return new_instance
+        else:
+            return None
 
     return lookup
 
@@ -145,7 +143,10 @@ class AutoCompleteFKField(forms.CharField):
         super(AutoCompleteFKField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        return self.from_value(self.model, value)
+        if value:
+            return self.from_value(self.model, value)
+        else:
+            return None
 
 
 class BasicAutoCompleteField(AutoCompleteFKField):
@@ -155,5 +156,6 @@ class BasicAutoCompleteField(AutoCompleteFKField):
     """
     def __init__(self, model, fieldname, *args, **kwargs):
         from_value = model_from_field(fieldname)
+
         super(BasicAutoCompleteField, self).__init__(
             model, from_value, *args, **kwargs)
