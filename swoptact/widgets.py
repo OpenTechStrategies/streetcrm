@@ -97,7 +97,6 @@ class TwelveHourTimeWidget(forms.MultiWidget):
 
 PERSISTENT_AUTOCOMPLETE_TEMPLATE = """\
 <div class="persistent-autocomplete" {}>
-  <input type="hidden" class="real-value" {} />
   <input type="text" class="user-widget" {} />
 </div>"""
 
@@ -135,22 +134,21 @@ class PersistentTextAutocomplete(forms.Widget):
         return format_html(
             PERSISTENT_AUTOCOMPLETE_TEMPLATE,
             flatatt({"data-options": json.dumps(options)}),
-            flatatt({"name": name, "value": value}),
-            flatatt({"value": display_text}))
+            flatatt({"value": display_text, "name": name}))
 
 
 class SimpleFKAutocomplete(PersistentTextAutocomplete):
     """
     Like PersistentTextAutocomplete, but builds a simple completer
-    for you out of the completion_model
+    for you out of the model
     """
-    def __init__(self, completion_model, *args, **kwargs):
+    def __init__(self, model, to_string=str, *args, **kwargs):
         def gather_options():
-            return {str(i): i.id for i in completion_model.objects.all()}
+            return [to_string(i) for i in model.objects.all()]
 
         def get_display_text(value):
             if value:
-                return str(completion_model.objects.get(pk=value))
+                return str(model.objects.get(pk=value))
             else:
                 return ""
 

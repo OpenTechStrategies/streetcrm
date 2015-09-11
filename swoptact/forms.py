@@ -98,14 +98,14 @@ class AutoCompleteModelForm(forms.ModelForm):
 
 
 class ParticipantForm(django.forms.ModelForm):
+    institution = formfields.BasicAutoCompleteField(
+        models.Institution, "name")
+
     class Meta:
         model = models.Participant
         fields = "__all__"
         exclude = ("archived",)
-        widgets = {
-            "institution": widgets.SimpleFKAutocomplete(
-                completion_model=models.Institution),
-        }
+
 
 def autocomplete_modelform_factory(model, *args, **kwargs):
     """ Wrap autocomplete's modelform factory to inject our own form """
@@ -116,15 +116,13 @@ def autocomplete_modelform_factory(model, *args, **kwargs):
 
         
 class EventForm(django.forms.ModelForm):
+    organizer = formfields.BasicAutoCompleteField(
+        models.Participant, "name")
+    major_action = formfields.BasicAutoCompleteField(
+        models.Event, "name")
+
     class Meta:
         model = models.Event
         fields = "__all__"
-        exclude = ("participants", "archived",)
-        widgets = {
-            "organizer": widgets.SimpleFKAutocomplete(
-                completion_model=models.Participant),
-            "major_action": widgets.SimpleFKAutocomplete(
-                completion_model=models.Event),
-        }
-
-
+        exclude = (
+            "participants", "archived")
