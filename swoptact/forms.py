@@ -17,6 +17,7 @@ import collections
 
 import django.forms
 from django.core.exceptions import ValidationError
+from django.contrib.admin.widgets import AdminDateWidget
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
@@ -143,7 +144,12 @@ class SearchForm(django.forms.Form):
         required=False
     )
 
-    tags = forms.ModelMultipleChoiceField(
+    event_tags = forms.ModelMultipleChoiceField(
+        "ASTagAutocomplete",
+        required=False
+    )
+
+    institution_tags = forms.ModelMultipleChoiceField(
         "ASTagAutocomplete",
         required=False
     )
@@ -152,6 +158,17 @@ class SearchForm(django.forms.Form):
     search_model = django.forms.ChoiceField(choices=MODELS, required=False)
     exclude_major_events = django.forms.BooleanField(required=False)
     exclude_minor_events = django.forms.BooleanField(required=False)
+    start_date = django.forms.DateField(
+        required=False,
+        widget=AdminDateWidget()
+    )
+    start_time = formfields.TwelveHourTimeField(required=False)
+
+    end_date = django.forms.DateField(
+        required=False,
+        widget=AdminDateWidget()
+    )
+    end_time = formfields.TwelveHourTimeField(required=False)
 
     def clean(self, *args, **kwargs):
         # Call superclass clean method

@@ -16,6 +16,7 @@
 
 import copy
 import json
+import datetime
 import functools
 
 from django import template
@@ -148,9 +149,19 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # Look up all of the events that could fit the search, since this is
         # the only time we'll have a queryset and it's far faster to do this
         # in the database we should handle the situation of tags here too.
-        event_query = models.Event.objects
-        if data["tags"]:
-            event_query = event_query.filter(tags__in=data["tags"])
+        event_query = models.Event.objects.all()
+        if data["event_tags"]:
+            event_query = event_query.filter(tags__in=data["event_tags"])
+
+        # Filter by the datetime constraints if they have been given
+        if data["start_date"] is not None:
+            event_query = event_query.filter(date__gte=data["start_date"])
+        if data["start_time"] is not None:
+            event_query = event_query.filter(time__gte=data["start_time"])
+        if data["end_date"] is not None:
+            event_query = event_query.filter(date__lte=data["end_date"])
+        if data["end_time"] is not None:
+            event_query = event_query.filter(time__lte=data["end_time"])
 
         if isinstance(data["event"], str):
             major_events += event_query.filter(
@@ -166,9 +177,9 @@ class SWOPTACTAdminSite(admin.AdminSite):
         elif isinstance(data["event"], models.Event):
             # If there are tags double check it has the tags required
             shared_tags = [
-                t for t in data["tags"] if t in data["event"].tags.all()
+                t for t in data["event_tags"] if t in data["event"].tags.all()
             ]
-            if not data["tags"] or (data["tags"] and shared_tags):
+            if not data["event_tags"] or (data["event_tags"] and shared_tags):
                 # Add it to the correct list
                 if data["event"].is_prep:
                     minor_events.append(data["event"])
@@ -185,7 +196,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             for major_event in major_events:
                 minor_events += major_event.minor_events
 
-        # Lets now make a general Events
+        # Make a general Events list.
         events = []
         if not exclude_major:
             events += major_events
@@ -212,18 +223,21 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 (event, event.participants.all()) for event in events
             ))
 
-        # Remove the events which have no participants to list
-        event_participants = dict((
-            (e, p) for (e, p) in event_participants.items() if p
-        ))
-
         # If there has been a query on the institution we need to filter on that
         # unfortunately I can't think of any other way to do this so it'll be in
         # python, which will make it a little slower than the rest.
         institutions = []
+        institution_query = models.Institution.objects.all()
+
+        # Narrow the institutions down if there have been tags selected
+        if data["institution_tags"]:
+            institution_query = institution_query.filter(
+                tags__in=data["institution_tags"]
+            )
+
         if isinstance(data.get("institution"), str):
-            # Lets perform a search for the institution(s) which match
-            institutions += models.Institution.objects.filter(
+            # Perform a search for the institution(s) which match
+            institutions += institution_query.filter(
                 name__contains=data["institution"]
             )
         elif isinstance(data.get("institution"), models.Institution):
@@ -232,14 +246,18 @@ class SWOPTACTAdminSite(admin.AdminSite):
         elif categorize == form.INSTITUTION:
             # Because we're going to catagorise based on institution we need to
             # build the institution list with all the institutions
-            institutions += models.Institution.objects.all()
+            institutions += institution_query
 
-        # Lets build the end results
-        if categorize == form.PARTICIPANT or categorize == form.EVENT:
+        # Build the end results
+        if categorize == form.PARTICIPANT:
+            # When searching just for participants don't show a section, just list
+            # the participants on their own.
+            results = {None: set()}
+        elif categorize == form.EVENT:
             # Both participants and events, we actually want to group by event
             results = dict([(e, list()) for e, p in event_participants.items()])
         elif categorize == form.INSTITUTION:
-            results = dict([(i, list()) for i in institutions])
+            results = dict([(i, set()) for i in institutions])
 
         if categorize == form.INSTITUTION or data["institution"]:
             # We then should iterate through the institution and filter participants
@@ -252,13 +270,23 @@ class SWOPTACTAdminSite(admin.AdminSite):
                     intersection = [p for p in participants if p in contacts]
 
                     # Add it to the results depending what we're displaying by
-                    if categorize == form.PARTICIPANT or categorize == form.EVENT:
+                    if categorize == form.PARTICIPANT:
+                        results[None] = results[None] | set(intersection)
+                    elif categorize == form.EVENT:
                         # catagorise by event
-                        results[event] = intersection
+                        results[event] += intersection
                     elif categorize == form.INSTITUTION:
-                        results[institution] = intersection
-        else:
+                        results[institution] = results[institution] | set(intersection)
+        elif categorize == form.EVENT:
             results = event_participants
+        elif categorize == form.PARTICIPANT:
+            results = set()
+            for event, participants in event_participants.items():
+                results = results | set(participants)
+            results = {None: results}
+
+        # Remove any without participants
+        results = dict(((s, p) for s, p in results.items() if p))
 
         # Return the response.
         return TemplateResponse(

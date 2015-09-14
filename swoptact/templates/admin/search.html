@@ -3,6 +3,18 @@
 
 {% block title %}{% trans "Search" %}{% endblock %}
 
+{% block extrahead %}
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script
+<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ form.media }}
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
+{% endblock %}
+
 {% if not is_popup %} {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
@@ -40,15 +52,41 @@
       {{ form.event }}
       {% trans "that are part of" %}
       {{ form.institution }}
+      <br />
+      <br />
+      {% trans "From Date: " %}
+      {{ form.start_date }}
+      <br />
+      <br />
+      <div class="timeblock">
+	{% trans "From Time: " %}
+	{{ form.start_time }}
+      </div>
+      <br />
+      <br />
+      {% trans "End Date:" %}
+      {{ form.end_date }}
+      <br />
+      <br />
+      <div class="timeblock">
+	{% trans "Until Time:" %}
+	{{ form.end_time }}
+      </div>
+      <br />
       <br/>
       {{ form.exclude_major_events }}
-      {% trans "Exclude major actions" %}
+      {% trans "Exclude Major Actions" %}
       <br/>
       {{ form.exclude_minor_events }}
-      {% trans "Exclude minor actions" %}
-      <br/>
-      {% trans "with tags:" %}
-      {{ form.tags }}
+      {% trans "Exclude Minor Actions" %}
+      <br />
+      <br />
+      {% trans "Action Tags:" %}
+      {{ form.event_tags }}
+      <br />
+      <br />
+      {% trans "Institution Tags:" %}
+      {{ form.institution_tags }}
     </div>
     <!-- Use div to pad down a little -->
     <div style="padding-bottom: 1em;"></div>

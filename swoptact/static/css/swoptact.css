@@ -299,7 +299,7 @@ table#inlined-model-table .large-info {
    border-radius: 50%;
    height: 24px;
    width: 24px;
-   line-height: 19px; 
+   line-height: 19px;
    margin: 0px 10px;
    text-align: center;
    text-decoration: none;
@@ -342,13 +342,15 @@ ul#id_group {
     padding-left: 0;
 }
 
-ul#id_time_1 {
+ul#id_time_1,
+.timeblock li {
     list-style-type: none;
     padding-left: 10px;
     float: left;
 }
 
-ul#id_time_1 li {
+ul#id_time_1 li,
+.timeblock li {
   float: left;
   margin-right: 1em;
 }

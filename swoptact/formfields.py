@@ -69,18 +69,15 @@ class TwelveHourTimeField(forms.TimeField):
         if time in self.empty_values and suffix in self.empty_values:
             return None
 
+        # As you can't deselect radio buttons, assume no search on time is
+        # desired if we have no time but we have a suffix selected.
+        if time in self.empty_values and suffix not in self.empty_values:
+            return None
+
         # If no suffix has been supplied then we should display an error
         if time not in self.empty_values and suffix in self.empty_values:
             raise exceptions.ValidationError(
                 self.error_messages["invalid_suffix"],
-                code="invalid"
-            )
-
-        # If the time suffix has been supplied without a time we should check
-        # that too
-        if time in self.empty_values and suffix not in self.empty_values:
-            raise exceptions.ValidationError(
-                self.error_messages["invalid"],
                 code="invalid"
             )
 

@@ -13,4 +13,4 @@ def search_header(request):
     form.fields["query"].widget.attrs.update({"class": "form-control"})
 
     # Warning: don't call this a generic "form" as it might clash with others.
-    return {"header_search_form": forms}
+    return {"header_search_form": form}
