@@ -418,7 +418,10 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
-    form = st_forms.EventForm
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Event,
+        exclude=("participants", "archived"),
+    )
     actions = None
     inline_form_config = {
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
