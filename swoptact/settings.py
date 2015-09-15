@@ -143,6 +143,8 @@ USE_TZ = config["general"]["use_tz"]
 
 STATIC_URL = config["general"]["static_url"]
 
+STATIC_ROOT = config["general"]["static_root"]
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "swoptact", "static"),
 )
