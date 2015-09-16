@@ -47,10 +47,24 @@
 {% endblock %}
 {% endif %}
 
+{% comment %}
 {% block coltype %}flex{% endblock %}
+{% endcomment %}
+
+{% block content_title %}{% endblock %}
 
 {% block content %}
+    {% if title %}
+    <div class="padded">
+        {% if title %}
+        <h1 class="change-title">{{ title }}</h1>
+        {% endif %}
+    </div>
+    <div class="hr"></div>
+    {% endif %}
+
 {% block object-tools %}
+<div class="padded">    
 <div id="content-navbar-collapse" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
         {% block object-tools-items %}
@@ -76,9 +90,12 @@
         </li>
     </ul>
     {% endif %}
-    {% block search %}{% search_form cl %}{% endblock %}
+    {% comment removing 2nd search field; top search should handle all needs - NTT %}{% block search %}{% search_form cl %}{% endblock %}{% endcomment%}
+</div>
 </div>
 {% endblock %}
+
+<div class="padded">
 <form class="" id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
 
 {% if cl.formset.errors %}
@@ -99,7 +116,7 @@
 <div>{% admin_actions %}</div>
 {% endif %}
 
-<div id="content-main">
+
     <div class="module{% if cl.has_filters %} filtered{% endif %}" id="_changelist">
         {% block date_hierarchy %}
             {% date_hierarchy cl %}
@@ -108,9 +125,6 @@
         {% if cl.formset %}
             <div>{{ cl.formset.management_form }}</div>
         {% endif %}
-
-        <br />
-        <br />
 
         {% block result_list %}
         {% if opts.model_name == "institution" %}
@@ -124,10 +138,12 @@
     <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary">
       {% blocktrans with cl.opts.verbose_name as name %}Create new {{ name }}{% endblocktrans %}
     </a>
-</div>
+
 
 {% block pagination %}
     {% pagination cl %}
 {% endblock %}
 </form>
+</div>
+</div>
 {% endblock %}

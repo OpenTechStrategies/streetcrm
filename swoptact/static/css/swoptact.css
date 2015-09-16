@@ -27,11 +27,14 @@ body {
 }
 
 .container-fluid {
-    width: 55%;
+    width: 60%;
     min-width: 450px;
+    max-width: 800px;
     margin: auto;
 }
 
+/* Experimenting with removing this. It's only used in change_list and I don't see the benefit right now - NTT
+   (Also I changed that class to "colM")
 .flex {
     min-width: 75%;
     display: inline-block;
@@ -40,6 +43,7 @@ body {
 .flex .navbar-collapse {
     padding: 0em;
 }
+*/
 
 h1, h1 a, legend {
     font-family: Georgia,"Times New Roman",Times,serif;
@@ -157,54 +161,48 @@ a:focus,
 }
 */
 
-.change-content h1 {
+#content {
+    background-color: #F2F2F2;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 3px;
+    border-style: solid;
+    border-color: #48328F;
+}
+
+#content .padded {
+    padding: 15px;
+}
+
+#content h1 {
     color: #82532E;
     font-size: 200%;
     font-weight: bold;
-    padding: 15px;
-    margin-top: 10px;
-    margin-bottom: 0px;
-
-    border: 3px;
-    border-bottom: 0px;
-    border-style: solid;
-    border-color: #48328F;
-}
-
-.change-content .hr {
-    padding: 0px 15px;
-    background-color: #F2F2F2;
-    border-style: solid;
-    border-color: #48328F;
-    border-width: 0px 3px;
-}
-
-.change-content .hr hr {
+    padding: 0px;
     margin: 0px;
+}
+
+#content .hr {
+    width: 95%;
     height: 2px;
+    padding: 0px;
+    margin: auto;
     background-color: #4E0E6E;
 }
 
-#content {
-    background-color: #F2F2F2;
+#content .navbar-collapse {
+    padding: 0px;
 }
 
-#content-main {
-    background-bottom: 0px;
+#content fieldset {
+    background-color: transparent;
 }
 
-.change-content fieldset {
-    padding: 15px;
-    border-style: solid;
-    border-color: #48328F;
-    border-width: 0px 3px;
-}
-
-.change-content fieldset .control-label {
+#content fieldset .control-label {
     display: inline;
 }
 
-.change-content legend {
+#content legend {
     border-bottom: 0px;
 }
 
@@ -225,12 +223,12 @@ a:focus,
     border: 1px solid #DDDDDD;
 }
 */
-
+/* and this - NTT
 .change-title h1 {
     background-color: #999;
     margin-top: 0px;
 }
-
+*/
 /* Override design of filter list selector - Issue #7 */
 .selector select {
     height: 17.2em;
@@ -309,17 +307,8 @@ input[type="checkbox"] {
 
 .form-actions {
     position: relative;
-    height: 60px;
-    border-style: solid;
-    border-color: #48328F;
-    border-width: 0px 3px 3px 3px;
+    height: 35px;
 }
-
-.form-actions .pull-left, .form-actions .pull-right {
-    margin: 15px;
-}
-
-
 
 .navbar-nav a:hover {
     background-color: #337ab7 !important;
@@ -369,8 +358,9 @@ li.bold_name {
 }
 
 .scrollable-area {
-   max-height: 400px;
-   overflow: auto;
+    margin-top: 10px;
+    max-height: 400px;
+    overflow: auto;
 }
 
 table#inlined-model-table th.deleteButtonTH {
