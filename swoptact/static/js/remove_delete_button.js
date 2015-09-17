@@ -2,17 +2,18 @@
 // This is SWOP's request, see https://github.com/OpenTechStrategies/swoptact/issues/52
 
 function removeDefaultButtons() {
-    // remove the delete button
-    $("div.form-actions div.pull-left a.deletelink").remove();
-    // remove the default "Done" button.  This was replaced by a new
-    // button in templates/admin/inline_event_participants.html that
-    // saves open rows and submits the form.
-    $("div#form-actions div.pull-right input[name='_save'] ").remove();
-    // add a "save and stay on page" button after the first fieldset
-    $("div#form-actions div.pull-right ").appendTo("#fieldset-1");
-    $("input[name='_continue']").attr("style", "display: block;");
-    $("input[name='_continue']").attr("value", "Save Changes");
-    $("input[name='_continue']").attr("class", "btn-primary btn default");
+    // Hide all right-hand inputs for a second
+    $("#form-actions input").hide();
+    // Make some changes to the "save and stay" button that we're interested in
+    $("#form-actions input[name='_continue']").addClass("btn-primary btn default").val("Save Changes").show();
+
+    // Move the right-hand button set to a position after the first fieldset.
+    // We don't need it after ajax-generated table at the bottom of the form,
+    // where saves are done immediately after editing within the table cell.
+    $("#form-actions .pull-right").appendTo("#fieldset-1");
+    
+    // Remove the original "form-actions";
+    $("#form-actions").remove();
 }
 
 $(document).ready(function () {

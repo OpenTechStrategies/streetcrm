@@ -358,7 +358,7 @@ li.bold_name {
 }
 
 .scrollable-area {
-    margin-top: 10px;
+    margin: 10px 0px 30px 0px;
     max-height: 400px;
     overflow: auto;
 }
@@ -433,10 +433,6 @@ table#inlined-model-table .new-indicator {
     width: 20%;
     padding-left: 10px;
     font-weight: bold;
-}
-
-#addNewButtonDiv {
-    padding: 10px;
 }
 
 ul#id_group {
