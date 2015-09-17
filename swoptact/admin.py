@@ -418,7 +418,10 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
-    form = st_forms.EventForm
+    form = st_forms.autocomplete_modelform_factory(
+        model=models.Event,
+        exclude=("participants", "archived"),
+    )
     actions = None
     inline_form_config = {
         "autocomplete_url": "/autocomplete/ContactAutocomplete/",
@@ -519,7 +522,7 @@ class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
     change_form_template = "admin/change_tag_form.html"
-    excludes = ("archived",)
+    exclude = ("archived",)
 
     def __init__(self,*args,**kwargs):
         super(TagAdmin, self).__init__(*args, **kwargs)
