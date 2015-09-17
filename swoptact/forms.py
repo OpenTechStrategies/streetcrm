@@ -162,13 +162,10 @@ class SearchForm(django.forms.Form):
         required=False,
         widget=AdminDateWidget()
     )
-    start_time = formfields.TwelveHourTimeField(required=False)
-
     end_date = django.forms.DateField(
         required=False,
         widget=AdminDateWidget()
     )
-    end_time = formfields.TwelveHourTimeField(required=False)
 
     def clean(self, *args, **kwargs):
         # Call superclass clean method

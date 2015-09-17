@@ -156,12 +156,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # Filter by the datetime constraints if they have been given
         if data["start_date"] is not None:
             event_query = event_query.filter(date__gte=data["start_date"])
-        if data["start_time"] is not None:
-            event_query = event_query.filter(time__gte=data["start_time"])
         if data["end_date"] is not None:
             event_query = event_query.filter(date__lte=data["end_date"])
-        if data["end_time"] is not None:
-            event_query = event_query.filter(time__lte=data["end_time"])
 
         if isinstance(data["event"], str):
             major_events += event_query.filter(
