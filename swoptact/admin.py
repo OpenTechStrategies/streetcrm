@@ -522,7 +522,7 @@ class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
     change_form_template = "admin/change_tag_form.html"
-    excludes = ("archived",)
+    exclude = ("archived",)
 
     def __init__(self,*args,**kwargs):
         super(TagAdmin, self).__init__(*args, **kwargs)
