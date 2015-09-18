@@ -165,13 +165,10 @@ a:focus,
     background-color: #F2F2F2;
     margin-top: 10px;
     margin-bottom: 5px;
+    padding: 15px;
     border: 3px;
     border-style: solid;
     border-color: #48328F;
-}
-
-#content .padded {
-    padding: 15px;
 }
 
 #content h1 {
@@ -183,15 +180,15 @@ a:focus,
 }
 
 #content .hr {
-    width: 95%;
+    width: 100%;
     height: 2px;
-    padding: 0px;
-    margin: auto;
+    margin: 15px 0px;
     background-color: #4E0E6E;
 }
 
-#content .navbar-collapse {
+#content-navbar-collapse {
     padding: 0px;
+    margin: 15px 0px;
 }
 
 #content fieldset {
