@@ -1,27 +1,10 @@
-/*
-This page creates a jquery calendar for 
+/* Show or hide the associated major action based on the value of the
+ * "is this meeting part of a major action" checkbox. Note the unusual
+ * technique of calling a javascript method by passing its name into
+ * square brackets following the object.
 */
-function toggleMajorActionRow(){
-    if ($('#id_is_prep').prop('checked')){
-        $( ".row" ).eq(-1).show();
-    }
-    else{
-        $( ".row" ).eq(-1).hide();
-    }
-}
-
-function loadMajorAction() {
-    $('#id_is_prep').on(
-        "click",
- 	function(){
-            toggleMajorActionRow();
-        });
-
-    $(document).ready(function () {
-        toggleMajorActionRow();
+$(document).ready(function () {
+    $('#id_is_prep').on("click", function() {
+        $("#id_major_action-wrapper").closest(".row")[$("#id_is_prep").is(":checked") ? "show" : "hide"]();
     });
-
-
-}
-
-loadMajorAction();
+});
