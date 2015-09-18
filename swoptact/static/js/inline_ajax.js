@@ -360,12 +360,15 @@ function insertInlinedModel(inlined_model) {
 
     // Special hacks for the "new" inlined_model...
     if (inlined_model.id === "") {
+        var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
         // Turn on autocomplete,
         turnOnAttendeeAutocomplete(tableRow);
         // show the input field for the first field in the new model (and hide the static version),
         $(tableRow.find(".static")[0]).hide();
         $(tableRow.find(".editable")[0]).show();
-        // and put the focus there.
+        // scroll to the bottom of the table
+        scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
+        // and put the focus on the input element.
         $(tableRow.find(".editable")[0]).find("input").focus();
     }
 }
@@ -812,12 +815,24 @@ function setupInlinedModelCallbacks() {
 
         $("#addNewButtonDiv").append(addNewButton);
 
+        $("#inlined-model-table").on("keydown", "td .editable input", function(event) { console.log ("keydown: " + event.which); });
         $("#inlined-model-table").on(
             "keyup",
             "td .editable input",
             function (event) {
-                // 13 is enter key
-                if (event.which == 13) {
+                if (event.which == 9 || event.which == 13) {  // "tab" and "enter", respectively
+                    // Look for the next <td> that does not have a delete button
+                    var next = $(this).closest("td").next("td:not(:has(span.deleteButton))");
+                    if (next.length > 0) {
+                        // The next cell is not the delete button. Only edit it if it's empty.
+                        if (next.find("input").val().length == 0) {
+                            next.trigger("click");
+                        }
+                    }
+                    // else add a new row (but only if we're on the last row)
+                    else if ($(this).closest("tr").next("tr").length == 0) {
+                        $("#add-new-inlined-model-btn").trigger("click");
+                    }
                     // This will trigger the blur handler (below) and submit the change
                     $(this).blur();
                 }
@@ -831,7 +846,11 @@ function setupInlinedModelCallbacks() {
             else {                  
                 $(this).children(".static").hide();
                 $(this).children(".editable").show();
-                $(this).children(".editable").children("input").focus();
+                var input = $(this).children(".editable").children("input");
+                var len = input.val().length;
+                input.focus();
+                // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
+                input[0].setSelectionRange(len*2, len*2);
                 // Reset sticky headers in case table cell widths have changed.
                 setStickyHeaders();
             }
