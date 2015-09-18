@@ -30,7 +30,17 @@ body {
     width: 60%;
     min-width: 450px;
     max-width: 800px;
+    padding: 0px;
     margin: auto;
+}
+
+@media screen and (max-width: 750px) {
+    .container-fluid {
+        width: 100%;
+    }
+    .navbar > .container-fluid, #actual-navbar > .container-fluid {
+        padding: 0px 5px;
+    }
 }
 
 /* Experimenting with removing this. It's only used in change_list and I don't see the benefit right now - NTT
@@ -55,8 +65,13 @@ h1, h1 a, legend {
     min-width: 450px;
 }
 
+#logo-wrapper {
+    float: left;
+    margin: 0px 20px 0px 0px;
+}
+
 #user-menu-link {
-    margin: 10px 0px;
+    margin: 10px 0px 0px 0px;
     position: relative;
     cursor: pointer;
     float: right;
@@ -98,6 +113,7 @@ a:focus,
     font-size: 24pt;
     font-weight: bold;
     text-decoration: none;
+    margin-left: -15px;
 }
 
 /* Set the background to housestyle colours and remove borders */
@@ -143,6 +159,7 @@ a:focus,
 
 #search-form {
     width: 35%;
+    padding: 0px;
     display: inline-block;
     float: right;
 }
@@ -164,11 +181,17 @@ a:focus,
 #content {
     background-color: #F2F2F2;
     margin-top: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     padding: 15px;
     border: 3px;
     border-style: solid;
     border-color: #48328F;
+}
+
+@media screen and (max-width: 750px) {
+    #content {
+        margin-top: 0px;
+    }
 }
 
 #content h1 {

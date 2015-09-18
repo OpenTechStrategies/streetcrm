@@ -30,9 +30,7 @@
 		<!-- Header (inc. menu) -->
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
-				<div class="navbar-header">
-					{% block branding %}{% endblock %}
-				</div>
+        {% block branding %}{% endblock %}
 			</div>
 		</nav>
 		<!-- END Header -->
@@ -66,7 +64,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">
+    <div id="main" class="container-fluid">
 			<!-- Alerts & Messages -->
 			{% block messages %}
 			{% if messages %}

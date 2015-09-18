@@ -7,7 +7,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}
-<a href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50" style="float: left; padding-right: 30px"></a>
+<a id="logo-wrapper" href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50"></a>
 <a href="{% url 'admin:app_list' app_label='swoptact' %}" class="navbar-brand">{% trans "Contacts" %}</a>
 <div id="user-menu-link">
   <!-- three-lines icon from https://www.iconfinder.com/icons/134216/hamburger_lines_menu_icon -->
