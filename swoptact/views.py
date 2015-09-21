@@ -23,6 +23,10 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.admin.options import get_content_type_for_model
+from django.contrib.admin.models import (
+    LogEntry, ADDITION, CHANGE, DELETION)
+from django.utils.encoding import force_text
 
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
@@ -235,6 +239,22 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     def form_valid(self, form, *args, **kwargs):
         self.object = form.save()
         return self.produce_response()
+
+    def post(self, request, *args, **kwargs):
+        response = super(ParticipantAPI, self).post(
+            request, *args, **kwargs)
+
+        object = self.get_object()
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=force_text(object),
+            action_flag=CHANGE,
+            change_message="Changed fields",
+        )
+        return response
+
 
 class ContactParticipantAPI(ParticipantAPI):
     """
