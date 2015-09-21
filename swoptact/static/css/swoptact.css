@@ -201,7 +201,7 @@ input[type="checkbox"] {
     font-size: 1em;
 }
 /* Hide Today link */
-.datetimeshortcuts a:not(#calendarlink0) {
+.datetimeshortcuts a:not(#calendarlink0):not(#calendarlink1) {
     display:none;
 }
 

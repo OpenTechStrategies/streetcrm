@@ -4,8 +4,7 @@
 {% block title %}{% trans "Search" %}{% endblock %}
 
 {% block extrahead %}
-<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script
-<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
 <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
 {{ form.media }}
 {% endblock %}
@@ -56,6 +55,8 @@
       <br />
       {% trans "Start Date: " %}
       {{ form.start_date }}
+      <br />
+      <br />
       {% trans "End Date:" %}
       {{ form.end_date }}
       <br />
