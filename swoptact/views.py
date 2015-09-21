@@ -194,6 +194,101 @@ class APIMixin:
         )
 
 
+class LogCreateMixin:
+    """
+    Log a successful POST as a change of fields
+    """
+    def _log_change(self, request):
+        object = self.get_object()
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=force_text(object),
+            action_flag=ADDITION
+        )
+
+    def post(self, request, *args, **kwargs):
+        response = super(LogCreateMixin, self).post(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+    def put(self, request, *args, **kwargs):
+        response = super(LogCreateMixin, self).put(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+
+class LogChangeMixin:
+    """
+    Log a successful POST as a change of fields
+    """
+    def _log_change(self, request):
+        object = self.get_object()
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=force_text(object),
+            action_flag=CHANGE,
+            change_message="Changed fields",
+        )
+
+    def post(self, request, *args, **kwargs):
+        response = super(LogChangeMixin, self).post(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+    def put(self, request, *args, **kwargs):
+        response = super(LogChangeMixin, self).put(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+
+class LogDeleteMixin:
+    """
+    Log a successful removal of an object
+    """
+    def delete(self, request, *args, **kwargs):
+        response = super(LogDeleteMixin, self).delete(
+            request, *args, **kwargs)
+
+        object = self.get_object()
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=force_text(object),
+            action_flag=DELETION,
+        )
+        return response
+    
+
+def log_linking(request, main_object, linking_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(main_object).pk,
+        object_id=main_object.pk,
+        object_repr=force_text(main_object),
+        action_flag=CHANGE,
+        change_message="Linked \"%s\"" % force_text(linking_object),
+    )
+
+def log_unlinking(request, main_object, linking_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(main_object).pk,
+        object_id=main_object.pk,
+        object_repr=force_text(main_object),
+        action_flag=CHANGE,
+        change_message="Unlinked \"%s\"" % force_text(linking_object),
+    )
+
+
 def process_institution_field(api_view, body, model, field_name, value):
     if value == "" or value is None:
         # Nah, nothing to do
@@ -214,8 +309,7 @@ def process_institution_field(api_view, body, model, field_name, value):
         return
 
 
-
-class ParticipantAPI(APIMixin, generic.UpdateView):
+class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
     """
     Provides the view to retrive, create and update a participant
 
@@ -240,21 +334,6 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
         self.object = form.save()
         return self.produce_response()
 
-    def post(self, request, *args, **kwargs):
-        response = super(ParticipantAPI, self).post(
-            request, *args, **kwargs)
-
-        object = self.get_object()
-        LogEntry.objects.log_action(
-            user_id=request.user.pk,
-            content_type_id=get_content_type_for_model(object).pk,
-            object_id=object.pk,
-            object_repr=force_text(object),
-            action_flag=CHANGE,
-            change_message="Changed fields",
-        )
-        return response
-
 
 class ContactParticipantAPI(ParticipantAPI):
     """
@@ -270,7 +349,7 @@ class ContactParticipantAPI(ParticipantAPI):
     field_processors = {}
 
 
-class CreateParticipantAPI(APIMixin, generic.CreateView):
+class CreateParticipantAPI(LogCreateMixin, APIMixin, generic.CreateView):
     """
     Creates a participant from a JSON API
     """
@@ -355,6 +434,8 @@ class EventLinking(APIMixin, generic.DetailView):
         # Remove from the event
         self.object.participants.remove(self.participant)
 
+        log_unlinking(request, self.object, self.participant)
+
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
@@ -364,6 +445,8 @@ class EventLinking(APIMixin, generic.DetailView):
 
         # Add to the event
         self.object.participants.add(self.participant)
+
+        log_linking(request, self.object, self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
@@ -395,6 +478,8 @@ class ContactLinking(APIMixin, generic.DetailView):
         # Remove the participant as a contact
         self.object.contacts.remove(self.participant)
 
+        log_unlinking(request, self.object, self.participant)
+
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
@@ -416,6 +501,8 @@ class ContactLinking(APIMixin, generic.DetailView):
 
         # Add the participant as a contact
         self.object.contacts.add(self.participant)
+
+        log_linking(request, self.object, self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
