@@ -42,6 +42,36 @@ class SWOPTACTAdminSite(admin.AdminSite):
     search_template = "admin/search.html"
     advanced_search_template = "admin/advanced_search.html"
 
+    def _nested_search(self, haystack, test):
+        """
+        Find unique objects exist in the values of the structure
+
+        This takes a dictionary or dictionary of nested dictionaries, it
+        recursively goes over them and peforms the test on them, if so adds
+        them to a set which will be returned.
+
+        The test parameter is a callable test which takes one parameter and
+        returns a boolean on if it's to be included.
+        """
+        results = set()
+        for k, v in haystack.items():
+            if isinstance(v, dict):
+                results = results | self._nested_search(v, test)
+
+            # Apply the test to the key
+            if hasattr(k, "__iter__"):
+                results = results | k if test(k) else results
+            else:
+                results = results | {k} if test(k) else results
+
+            # Apply the tests to the value
+            if hasattr(v, "__iter__"):
+                results = results | v if test(v) else results
+            else:
+                results = results | {v} if test(v) else results
+
+        return results
+
     def has_permission(self, request):
         """
         Checks if the user has access to at least one admin page.
@@ -152,6 +182,14 @@ class SWOPTACTAdminSite(admin.AdminSite):
         event_query = models.Event.objects.all()
         if data["event_tags"]:
             event_query = event_query.filter(tags__in=data["event_tags"])
+
+        # If they've specified an organizer lets filter by that too.
+        if isinstance(data["event_organizer"], str):
+            event_query = event_query.filter(
+                organizer__name__contains=data["event_organizer"]
+            )
+        elif isinstance(data["event_organizer"], models.Participant):
+            event_query = event_query.filter(organizer=data["event_organizer"])
 
         # Filter by the datetime constraints if they have been given
         if data["start_date"] is not None:
@@ -273,16 +311,46 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         results[event] += intersection
                     elif categorize == form.INSTITUTION:
                         results[institution] = results[institution] | set(intersection)
-        elif categorize == form.EVENT:
-            results = event_participants
         elif categorize == form.PARTICIPANT:
             results = set()
             for event, participants in event_participants.items():
                 results = results | set(participants)
             results = {None: results}
+        if categorize == form.EVENT:
+            # Seperate the events up (yes i know we merged them above).
+            major = {}
+            minor = {}
+            for event, participants in event_participants.items():
+                if event.is_prep:
+                    minor[event] = participants
+                else:
+                    major[event] = participants
+
+            results = {
+                _("Major"): major,
+                _("Minor"): minor
+            }
 
         # Remove any without participants
         results = dict(((s, p) for s, p in results.items() if p))
+
+        # Build the counts
+        major_event_count = None
+        prep_event_count = None
+        institution_count = None
+        participant_count = len(self._nested_search(
+            results,
+            lambda o: isinstance(o, models.Participant)
+        ))
+
+        if categorize == form.EVENT:
+            prep_event_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event) and o.is_prep
+            ))
+            major_event_count = len(results) - prep_event_count
+        elif categorize == form.INSTITUTION:
+            institution_count = len(results)
 
         # Return the response.
         return TemplateResponse(
@@ -292,6 +360,10 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 "form": form,
                 "advanced": True,
                 "search_results": results,
+                "major_event_count": major_event_count,
+                "prep_event_count": prep_event_count,
+                "institution_count": institution_count,
+                "participant_count": participant_count,
             }
         )
 

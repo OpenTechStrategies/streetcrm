@@ -144,6 +144,11 @@ class SearchForm(django.forms.Form):
         required=False
     )
 
+    event_organizer = forms.ModelChoiceField(
+        "ASContactAutocomplete",
+        required=False
+    )
+
     event_tags = forms.ModelMultipleChoiceField(
         "ASTagAutocomplete",
         required=False

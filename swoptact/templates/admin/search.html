@@ -47,10 +47,12 @@
       <div style="padding-bottom: 1em;"></div>
 
       {{ form.participant }}
-      {% trans "participated in" %}
-      {{ form.event }}
       {% trans "that are part of" %}
       {{ form.institution }}
+      {% trans "who participated in" %}
+      {{ form.event }}
+      {% trans "organized by" %}
+      {{ form.event_organizer }}
       <br />
       <br />
       {% trans "Start Date: " %}
@@ -98,24 +100,21 @@
 
     {% block search_results %}
     <ul>
-      {% for section, objects in search_results.items %}
-      {% if section %}
-      <h3><a href="{{ section.admin_change_url }}">{{ section }}</a></h3>
-      {% else %}
-      <h3>{% trans "Results" %}</h3>
+      {% if major_event_count %}
+      <li>{% trans "Major Actions:" %} {{ major_event_count }}</li>
       {% endif %}
-      {% if objects %}
-      <ul>
-	{% for object in objects %}
-	<li><a href="{{ object.admin_change_url }}">{{ object }}</a></li>
-	{% endfor %}
-      </ul>
-      {% else %}
-      <p>{% trans "No search results found." %}</p>
+      {% if prep_event_count %}
+      <li>{% trans "Prep Actions:" %} {{ prep_event_count }}</li>
       {% endif %}
-      {% endfor %}
+      {% if institution_count %}
+      <li>{% trans "Institutions:" %} {{ institution_count }}</li>
+      {% endif %}
+      {% if participant_count %}
+      <li>{% trans "Unique Participants:" %} {{ participant_count }}</li>
+      {% endif %}
     </ul>
     {% endblock %}
   </form>
+  {% include "admin/includes/search_result_block.html" with search_results=search_results %}
 </div>
 {% endblock %}
