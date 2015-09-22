@@ -350,6 +350,13 @@ class CreateParticipantAPI(APIMixin, generic.CreateView):
             request, *args, **kwargs)
         return response
 
+class CreateContactAPI(CreateParticipantAPI):
+    """
+    Creates a participant, but from the instituions page...
+    """
+    fields = ["name", "title", "primary_phone"]
+    field_processors = {}
+
 
 class EventParticipantsAPI(APIMixin, generic.DetailView):
     """
