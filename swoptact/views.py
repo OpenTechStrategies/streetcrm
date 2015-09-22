@@ -194,33 +194,6 @@ class APIMixin:
         )
 
 
-class LogCreateMixin:
-    """
-    Log a successful POST as a change of fields
-    """
-    def _log_change(self, request):
-        object = self.get_object()
-        LogEntry.objects.log_action(
-            user_id=request.user.pk,
-            content_type_id=get_content_type_for_model(object).pk,
-            object_id=object.pk,
-            object_repr=force_text(object),
-            action_flag=ADDITION
-        )
-
-    def post(self, request, *args, **kwargs):
-        response = super(LogCreateMixin, self).post(
-            request, *args, **kwargs)
-        self._log_change(request)
-        return response
-
-    def put(self, request, *args, **kwargs):
-        response = super(LogCreateMixin, self).put(
-            request, *args, **kwargs)
-        self._log_change(request)
-        return response
-
-
 class LogChangeMixin:
     """
     Log a successful POST as a change of fields
@@ -249,24 +222,15 @@ class LogChangeMixin:
         return response
 
 
-class LogDeleteMixin:
-    """
-    Log a successful removal of an object
-    """
-    def delete(self, request, *args, **kwargs):
-        response = super(LogDeleteMixin, self).delete(
-            request, *args, **kwargs)
-
-        object = self.get_object()
-        LogEntry.objects.log_action(
-            user_id=request.user.pk,
-            content_type_id=get_content_type_for_model(object).pk,
-            object_id=object.pk,
-            object_repr=force_text(object),
-            action_flag=DELETION,
-        )
-        return response
-    
+# not used yet..
+def log_create(self, request, new_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(new_object).pk,
+        object_id=new_object.pk,
+        object_repr=force_text(new_object),
+        action_flag=ADDITION
+    )
 
 def log_linking(request, main_object, linking_object):
     LogEntry.objects.log_action(
@@ -349,7 +313,7 @@ class ContactParticipantAPI(ParticipantAPI):
     field_processors = {}
 
 
-class CreateParticipantAPI(LogCreateMixin, APIMixin, generic.CreateView):
+class CreateParticipantAPI(APIMixin, generic.CreateView):
     """
     Creates a participant from a JSON API
     """
@@ -362,7 +326,30 @@ class CreateParticipantAPI(LogCreateMixin, APIMixin, generic.CreateView):
 
     def form_valid(self, form, *args, **kwargs):
         self.object = form.save()
+        LogEntry.objects.log_action(
+            user_id=self.pk,
+            content_type_id=get_content_type_for_model(self.object).pk,
+            object_id=self.object.pk,
+            object_repr=force_text(self.object),
+            action_flag=ADDITION
+        )
         return self.produce_response()
+
+    def post(self, request, *args, **kwargs):
+        # terrible hack to make sure we can log properly
+        # basically multiple inheritance + method dispatch == the devil
+        self.pk = request.user.pk
+        response = super(CreateParticipantAPI, self).post(
+            request, *args, **kwargs)
+        return response
+
+    def put(self, request, *args, **kwargs):
+        # terrible hack to make sure we can log properly, again
+        self.pk = request.user.pk
+        response = super(CreateParticipantAPI, self).put(
+            request, *args, **kwargs)
+        return response
+
 
 class EventParticipantsAPI(APIMixin, generic.DetailView):
     """
