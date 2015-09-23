@@ -163,25 +163,26 @@ class SWOPTACTAdminSite(admin.AdminSite):
             objects = this_model.objects.filter(query)
 
             for obj in objects:
-                if not obj.archived:
-                    missing_fields = []
-                    for field in fields:
-                        if ((field.null and getattr(obj, field.field_name) is None)
-                            or (field.empty_string and
-                                getattr(obj, field.field_name) == "")):
-                            human_readable = obj._meta.get_field(
-                                field.field_name).verbose_name.title()
-                            missing_fields.append(
-                                MissingField(field.field_name, human_readable))
+                if  obj.archived:
+                    continue
+                missing_fields = []
+                for field in fields:
+                    if ((field.null and getattr(obj, field.field_name) is None)
+                        or (field.empty_string and
+                            getattr(obj, field.field_name) == "")):
+                        human_readable = obj._meta.get_field(
+                            field.field_name).verbose_name.title()
+                        missing_fields.append(
+                            MissingField(field.field_name, human_readable))
                         
-                    # If there are missing fields, append to the results
-                    if missing_fields:
-                        # Could make this more extensible if obj.id was ever
-                        admin_uri = change_uri_reverser(obj)
-                        results.append(
-                            ModelWithMissingFields(obj, str(obj),
-                                                   missing_fields, admin_uri))
-                    
+                # If there are missing fields, append to the results
+                if missing_fields:
+                    # Could make this more extensible if obj.id was ever
+                    admin_uri = change_uri_reverser(obj)
+                    results.append(
+                        ModelWithMissingFields(obj, str(obj),
+                                               missing_fields, admin_uri))
+                        
             return results
 
         def _gen_change_uri_func(reverse_name):
