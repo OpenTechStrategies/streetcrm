@@ -116,6 +116,11 @@ class SWOPTACTAdminSite(admin.AdminSite):
             url(r"^search/$", wrap(self.search_dispatcher), name="search"),
         )
 
+        urls.extend([
+            url(r"^missing_data/$", wrap(self.missing_data_view),
+                name="missing_data"),
+        ])
+
         return urls
 
     def search_dispatcher(self, request):
@@ -372,12 +377,6 @@ class SWOPTACTAdminSite(admin.AdminSite):
             }
         )
 
-        urls.extend([
-            url(r"^missing_data/$", wrap(self.missing_data_view),
-                name="missing_data"),
-        ])
-
-        return urls
 
     def missing_data_view(self, request):
         """
