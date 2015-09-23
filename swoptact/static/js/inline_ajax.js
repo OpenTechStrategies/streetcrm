@@ -31,6 +31,11 @@ Sounds confusing?  It's not too hard to use.  Take a look:
 /* Prevent the enter key from submitting the form. Enter is now reserved
  * for submitting changes to individual entity values via the
  * click-to-edit UI. */
+
+/* Since using "enter" to submit is one reason if not the main reason
+ * for having <form> tags at all, one wonders if these might be done
+ * away with entirely, with all network communication being done via
+ * ajax instead */
 $("form").keypress(function(e){
   if (e.which == 13) {
     return false;
@@ -53,35 +58,36 @@ function gummyStringFormatter(string_pattern) {
 }
 
 
-function setupTextInputStatic(field_def, cur_value) {
+function setupStaticDiv(field_def, cur_value) {
     if (!cur_value) {
         cur_value = "";
     }
-    var div_wrapper = $("<div/>");
-    div_wrapper.append("<span>" + cur_value + "</span>");
+    var div_wrapper = $("<div class=\"static\"/>");
+    div_wrapper.append("<span class=\"static-span\">" + cur_value + "</span>");
     return div_wrapper;
 }
 
-function setupTextInputEditable(field_def, cur_value) {
-    var div_wrapper = $("<div>");
+function setupEditableDiv(field_def, cur_value) {
+    var div_wrapper = $("<div class=\"editable\"/>");
     var input = $("<input/>", {
         "class": "vTextField " + field_def["form_name"],
         "type": "text",
         "value": cur_value});
     input.text(cur_value);
+    div_wrapper.append("<div class=\"validation-error\"/>");
     div_wrapper.append(input);
     return div_wrapper;
 }
 
-function getDataFromTextInput(column) {
+function getValueFromTextInput(column) {
     return column.find("input").val();
 }
 
-function setupFkeyAutoCompleteNameStatic(field_def, cur_value) {
+function setupAutoCompleteStaticDiv(field_def, cur_value) {
     if (cur_value) {
-        return setupTextInputStatic(field_def, cur_value.name);
+        return setupStaticDiv(field_def, cur_value.name);
     } else {
-        return setupTextInputStatic(field_def, "");
+        return setupStaticDiv(field_def, "");
     }
 }
 
@@ -112,13 +118,13 @@ stuff when we run that?
 So that's why this looks a bit tricky.  But it's not so bad.
 */
 
-function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
+function setupAutoCompleteEditableDiv(field_def, cur_value) {
     // named_fkey has some more complex code...
     if (cur_value) {
-        var named_fkey_div = setupTextInputEditable(
+        var named_fkey_div = setupEditableDiv(
             field_def, cur_value.name);
     } else {
-        var named_fkey_div = setupTextInputEditable(
+        var named_fkey_div = setupEditableDiv(
             field_def, "");
     }
 
@@ -188,56 +194,43 @@ function setupFkeyAutoCompleteNameEditable(field_def, cur_value) {
 
 var fieldTypes = {
     "text": {
-        setupStatic: setupTextInputStatic,
-        setupEdit: setupTextInputEditable,
-        getDataFromColumn: getDataFromTextInput
+        setupStatic: setupStaticDiv,
+        setupEdit: setupEditableDiv,
+        getValueFromColumn: getValueFromTextInput
     },
     "fkey_autocomplete_name": {
-        setupStatic: setupFkeyAutoCompleteNameStatic,
-        setupEdit: setupFkeyAutoCompleteNameEditable,
-        getDataFromColumn: getDataFromTextInput
+        setupStatic: setupAutoCompleteStaticDiv,
+        setupEdit: setupAutoCompleteEditableDiv,
+        getValueFromColumn: getValueFromTextInput
     }
 };
 
 
 
-function getDataForEditRow(row) {
-    var data = {};
+function getRowValues(row) {
+    var dict = {};
     $.makeArray(row.children("td[data-form-name]")).map(
         function(column) {
             var jq_column = $(column);
             var form_name = jq_column.attr("data-form-name");
             var input_type = jq_column.attr("data-input-type");
-            var handler = fieldTypes[input_type].getDataFromColumn;
-            data[form_name] = handler(jq_column);
+            var handler = fieldTypes[input_type].getValueFromColumn;
+            dict[form_name] = handler(jq_column);
         }
     );
-    return data;
+    return dict;
 }
 
-
-// Hide and show stuff
-
-function getInlinedModelStaticRow(inlined_model_id) {
-    return $("#inlined-model-static-" + inlined_model_id);
+function rowIsEmpty(row) {
+  var dict = getRowValues(row);
+  // This is very simplistic for now. It seems very possible that we
+  // might need more sophisticated ways of determining whether a row is
+  // "empty" or not.
+  for (prop in dict) {
+    if (dict[prop] != "") return false;
+  }
+  return true;
 }
-function hideInlinedModelStaticRow(inlined_model_id) {
-    getInlinedModelStaticRow(inlined_model_id).hide();
-}
-function showInlinedModelStaticRow(inlined_model_id) {
-    getInlinedModelStaticRow(inlined_model_id).show();
-}
-
-function getInlinedModelErrorsRow(inlined_model_id) {
-    return $("#inlined-model-errors-" + inlined_model_id);
-}
-function hideInlinedModelErrorsRow(inlined_model_id) {
-    getInlinedModelErrorsRow(inlined_model_id).hide();
-}
-function showInlinedModelErrorsRow(inlined_model_id) {
-    getInlinedModelErrorsRow(inlined_model_id).show();
-}
-
 
 /* Gets the model id this page represents. */
 function getPageModelId() {
@@ -311,7 +304,8 @@ function fillLinkInlinedModelUrl(page_model_id, inlined_model_id) {
 function fillExistingInlinedModelUrl(inlined_model_id) {
     var formatter = gummyStringFormatter(
         getInlineConfig()["existing_inlined_model_url"]);
-    return formatter({"<inlined_model_id>": inlined_model_id});
+    var formatter = formatter({"<inlined_model_id>": inlined_model_id});
+    return formatter;
 }
 
 function getExistingInlinedModelProfileUrl(inlined_model_id, url_string) {
@@ -339,76 +333,40 @@ function getNewInlinedModelNamePlural() {
 // </inline_config_uri_helpers>
 
 
-/* Handle the "edit" button for a inlined row. */
-function makeInlinedModelEditable(inlined_model_id) {
-    // TODO: Copy data into the edit form
-
-    // Hide display-only form
-    hideInlinedModelStaticRow(inlined_model_id);
-    // Show edit form
-    showInlinedModelEditRow(inlined_model_id);
-}
-
-
 function revertEditRow(inlined_model_id) {
     // TODO: base this on the filling system
 }
 
-
-/* Wipe the errors row by filling it with nothing */
-function clearErrors(inlined_model_id) {
-    fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, []);
-}
 
 /* Insert a inlined into the DOM.
 
 Here, the inlined is a json object, as fetched from the API.
 */
 function insertInlinedModel(inlined_model) {
-    // Our <table> has multiple <tbody>s, each of which groups an error
-    // row together with its static row. Multiple <tbody> elements are
-    // unusual but still totally legit.
-    var tbody = $("<tbody />");
-
-    // Construct and insert error row (empty for now)
-    // ----------------------------------------------
-    var errors_row = $(
-        "<tr />",
-        {"class": "form-row inlined-model-errors",
-         "id": "inlined-model-errors-" + inlined_model.id});
-    // Currently giving a colspan of '5' bc it will be wider than any
-    // model we have. We should be calculating this however.
-    errors_row.append("<td colspan='5' />");
-    errors_row.hide()
-    fillErrorsRow(errors_row, inlined_model.id, []);
-    tbody.append(errors_row);
-
     // TODO: Insert the inlined_model into a hashmap for later reference?
     //   (eg, if canceling an edit...)
 
-    // Construct and insert static row
+    // Construct and insert table row
     // -------------------------------
-    var static_row = $("<tr />");
-    static_row.addClass("form-row");
-    static_row.addClass("inlined-model-static"); // this might not be necessary anymore - NTT
-    static_row.data("id", inlined_model.id);
+    var tableRow = $("<tr />");
+    tableRow.addClass("form-row");
+    tableRow.data("id", inlined_model.id);
 
-    fillStaticRow(static_row, inlined_model);
-    tbody.append(static_row);
+    fillTableRow(tableRow, inlined_model);
 
     // It's important that we append to the table before (possibly)
     // focusing on an input element below.
-    $("#inlined-model-table").append(tbody);
+    $("#inlined-model-table").append(tableRow);
 
     // Special hacks for the "new" inlined_model...
     if (inlined_model.id === "") {
         // Turn on autocomplete,
-        turnOnAttendeeAutocomplete(static_row);
+        turnOnAttendeeAutocomplete(tableRow);
         // show the input field for the first field in the new model (and hide the static version),
-        $(static_row.find(".static")[0]).hide();
-        $(static_row.find(".editable")[0]).show();
+        $(tableRow.find(".static")[0]).hide();
+        $(tableRow.find(".editable")[0]).show();
         // and put the focus there.
-        $(static_row.find(".editable")[0]).find("input").focus();
+        $(tableRow.find(".editable")[0]).find("input").focus();
     }
 }
 
@@ -461,6 +419,7 @@ function turnOnAttendeeAutocomplete(edit_row) {
                 linkInlinedModel(inlined_model_id);
                 // Don't replace the input value with the ui.item.value
                 var tr =  $(this).closest("tr");
+                // Hide the "new" row because removing it (below) causes a blur event in Chrome browsers (see the "blur" handler
                 tr.hide();
                 tr.remove();
                 // Prevent form submission.
@@ -483,42 +442,41 @@ function createProfileLink(inlined_model_id, existing_element, url_for_profile) 
 }
 
 
-/* Wipe out the static row and fill it with the appripriate elements
+/* Fill the table row with the appropriate elements
 
 Arguments:
  - row: jquery DOM element for this inlined <tr> row
  - inlined: mapping representing this linked model's data
 */
-function fillStaticRow(row, inlined_model) {
+function fillTableRow(row, inlined_model) {
     var fields_config = getFieldsConfig();
 
     fields_config.map(
         function(field) {
-            var static_elt = fieldTypes[field.input_type].setupStatic(
+            var staticDiv = fieldTypes[field.input_type].setupStatic(
                 field,
                 // The current representation for this field on the model
                 inlined_model[field.form_name]);
-            static_elt.addClass("static");
+
             if (field['form_name'] == 'name'){
-                createProfileLink(inlined_model.id, static_elt);
+                createProfileLink(inlined_model.id, staticDiv);
             }
             else if (field['form_name'] == 'institution' && inlined_model.institution){
                 // this doesn't work yet because I don't know how to set the URL correctly
-                createProfileLink(inlined_model.institution.id, static_elt, "/swoptact/institution/");
+                createProfileLink(inlined_model.institution.id, staticDiv, "/swoptact/institution/");
             }
 
-            var edit_elt = fieldTypes[field.input_type].setupEdit(
+            var editableDiv = fieldTypes[field.input_type].setupEdit(
                 field,
                 // The current representation for this field on the model
                 inlined_model[field.form_name])
-            edit_elt.addClass("editable");
 
             td_wrap = $("<td/>");
             td_wrap.attr("data-form-name", field['form_name']);
             td_wrap.attr("data-input-type", field['input_type']);
 
-            td_wrap.append(static_elt);
-            td_wrap.append(edit_elt);
+            td_wrap.append(staticDiv);
+            td_wrap.append(editableDiv);
 
             row.append(td_wrap);
 
@@ -533,40 +491,6 @@ function fillStaticRow(row, inlined_model) {
     }
 }
 
-
-/* Wipe out the errors row and fill it with the appripriate elements
-
-You might notice that this takes a `inlined_model_id' rather than a full
-inlined object like the other "fill" methods... this is
-intentional since this is called possibly in some places where that
-full data is not available, and the other information is not used anyway.
-
-Arguments:
- - row: jquery DOM element for this inlined <tr> row
- - inlined_model_id: the identifier for this linked model
- - errors: a list of strings representing errors that should be
-   displayed.
-*/
-function fillErrorsRow(row, inlined_model_id, errors) {
-
-    // Get the <td> element in the errors row
-    var td = row.find("td:first-child");
-
-    // Empty it to clear out any previous errors first
-    td.empty();
-
-    if (errors.length > 0) {
-        td.append($("<p><i>Errors were found in the entry below...</i></p>"));
-    }
-
-    errors.forEach(function(error_msg) {
-        warning_div = $('<div class="alert alert-danger" />');
-        warning_div.text(error_msg);
-        td.append(warning_div);
-    });
-
-    row.append(td);
-}
 
 /*
   This works to show and hide a paticular message
@@ -658,7 +582,7 @@ function checkLimitReached() {
     }
 
     // How many linked models do we have?
-    var linkedModels = $("tr[id^='inlined-model-static-'");
+    var linkedModels = $("tr");
 
     // If it's less than the limit return false
     if (linkedModels.length < peopleLimit) {
@@ -699,64 +623,45 @@ function linkInlinedModel(inlined_model_id) {
                   insertInlinedModel(inlined_model);
               }, 'json');
     }, "json").fail(function (result) {
-	error = JSON.parse(result.responseText)["error"];
-	// Check for errors and if so display them.
-	if (error) {
-	    limitReached(MESSAGE_ERROR, error);
-	}
+        error = JSON.parse(result.responseText)["error"];
+        // Check for errors and if so display them.
+        if (error) {
+            limitReached(MESSAGE_ERROR, error);
+        }
     });
 }
 
 /* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
 function unlinkInlinedModel(row){
     var inlined_model_id = row.data("id");
-    var tbody = row.closest("tbody");  // will contain both 'row' and its error row
     var page_model_id = getPageModelId();
     var target_url = fillLinkInlinedModelUrl(page_model_id, inlined_model_id);
     $.ajax({
         url: target_url,
         type: 'DELETE',
-          success: function() {tbody.fadeOut(800, function() { tbody.remove(); })}
+        success: function() {row.fadeOut(800, function() { row.remove(); })}
     });
-}
-
-
-/*
-Helper function to find the correct rows and fill them using other functions,
-after a inlined is updated
-*/
-function recreateRows(inlined_model){
-
-    fillErrorsRow(getInlinedModelErrorsRow(inlined_model.id),
-                  inlined_model.id, []);
-
-    fillStaticRow(getInlinedModelStaticRow(inlined_model.id),
-                  inlined_model);
-
-    hideInlinedModelErrorsRow(inlined_model.id);
-
-    showInlinedModelStaticRow(inlined_model.id);
 }
 
 
 // @@: Shouldn't this be getting the failure descriptions from the server?
 //     That would be more consistent with how django form errors are displayed
 //     and would be much more flexible
-function handleJSONErrors(response, inlined_model_id){
-    responseText = jQuery.parseJSON(response.responseText);
-    var errors = responseText.form.errors;
-    var error_array = [];
-    if (errors.primary_phone){
-        error_array.push("Sorry, but we can't interpret this phone number.  Please use (xxx) xxx-xxxx format. ");
-    }
-    if (errors.name){
-        error_array.push("Sorry, but we can't interpret this name.  Please include at least one character.");
-    }
-    if (response.status == '400'){
-        //interpret and display errors in a meaningful way
-        fillErrorsRow(getInlinedModelErrorsRow(inlined_model_id), inlined_model_id, error_array);
-        showInlinedModelErrorsRow(inlined_model_id);
-    }
+//
+// The displayed error messages are now coming from the server. To
+// modify these, see formfields.py - NTT
+function handleJSONErrors(errors, row){
+    row.children("td").each(function() {
+        var ths = $(this)
+        var formName = ths.data("form-name");
+        if (errors.hasOwnProperty(formName)) {
+            var allErrors = errors[formName].join("; ");
+            ths.find(".validation-error").text(allErrors);
+            // Disable all sibling <td>s (except the delete row button)
+            ths.addClass("corrigendum");
+            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");
+        }
+    });
 }
 
 /* Save inlined model on server and update the UI
@@ -766,9 +671,9 @@ Arguments:
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
-function saveInlinedModel(row) {
+function saveInlinedModel(row, cell) {
     var inlined_model_id = row.data("id");
-    var form_data = getDataForEditRow(row);
+    var form_data = getRowValues(row);
 
     // Handle if this is a new row, or an existing one
     //
@@ -811,11 +716,19 @@ function saveInlinedModel(row) {
                       data: JSON.stringify(data_to_submit),
                       type: 'PUT',
                       error: function (response) {
-                          handleJSONErrors(response, inlined_model_id);
+                          var errors = jQuery.parseJSON(response.responseText).form.errors;
+                          handleJSONErrors(errors, row);
                       },
                       success: function (response) {
-                          recreateRows(response);
-			  checkLimitReached();
+                          checkLimitReached();
+                          row.find("td").removeClass("disabled").removeClass("corrigendum");
+                          cell.find(".validation-error").empty();
+                          cell.find(".static").show();
+                          cell.find(".editable").hide();
+                      },
+                      complete: function() {
+                          // Reset sticky headers in case table cell widths have changed.
+                          setStickyHeaders();
                       },
                       dataType: 'json'
                   });
@@ -825,8 +738,9 @@ function saveInlinedModel(row) {
             url: getNewInlinedModelUrl(),
             data: JSON.stringify(form_data),
             type: 'POST',
-            error: function (response, jqXHR) {
-                handleJSONErrors(response, inlined_model_id);
+            error: function (response) {
+                var errors = jQuery.parseJSON(response.responseText).form.errors;
+                handleJSONErrors(errors, row);
             },
             success: function (response) {
                 var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
@@ -836,10 +750,19 @@ function saveInlinedModel(row) {
                               // remove the "new" row from the UI and add one by the same method others were added.
                               row.remove();
                               insertInlinedModel(inlined_model);
-			      checkLimitReached();
+                              checkLimitReached();
+                              // Not sure if the below are necessary since I don't think a row can qualify as
+                              // "new" with a pre-existing error in one of the cells, but leaving in for now.
+                              row.find("td").removeClass("disabled").removeClass("corrigendum");
+                              cell.find(".validation-error").empty();
+                              cell.find(".static").show();
+                              cell.find(".editable").hide();
                           }, 'json');
-                  }, "json");
-                
+                }, "json");
+            },
+            complete: function() {
+                // Reset sticky headers in case table cell widths have changed.
+                setStickyHeaders();
             },
             dataType: 'json'
         });
@@ -895,20 +818,34 @@ function setupInlinedModelCallbacks() {
             function (event) {
                 // 13 is enter key
                 if (event.which == 13) {
-                    // This will trigger the focusout handler (below) and submit the change
+                    // This will trigger the blur handler (below) and submit the change
                     $(this).blur();
                 }
             });
 
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
-            $(this).children(".static").hide();
-            $(this).children(".editable").show();
-            $(this).children(".editable").children("input").focus();
-            // Reset sticky headers in case table cell widths have changed.
-            setStickyHeaders();
+            if ($(this).hasClass("disabled")) {
+                alert("This cell cannot be edited until errors in this row are corrected.");
+            }
+            else {                  
+                $(this).children(".static").hide();
+                $(this).children(".editable").show();
+                $(this).children(".editable").children("input").focus();
+                // Reset sticky headers in case table cell widths have changed.
+                setStickyHeaders();
+            }
         });
+        
         $("#inlined-model-table").on("blur", "td", function(e) {
+            var row = $(this).closest("tr");
+            var cell = $(this).closest("td");
+            if (row.data("id") == "" && rowIsEmpty(row)) {
+              // We've clicked out of a new and still empty row, so
+              // leave without saving anything.
+              row.remove();
+              return false;
+            }
             // Check whether the row containing this td is visible, and
             // only continue saving if is is. The row will not be
             // visible if this blur occurred when the user chose an
@@ -921,25 +858,21 @@ function setupInlinedModelCallbacks() {
             // reach this point in the code, but for Chrome we hide the
             // row as a way of saying that autocomplete has taken over
             // and we don't need to save a new entity to the DB.
-            var tr = $(this).closest("tr");
-            if (tr.is(":visible")) {
+            if (row.is(":visible")) {
               // Update the UI with the new data.
-              $(this).children(".static").children("span").text($(this).find("input").val());
+              $(this).children(".static").children("span.static-span").text($(this).find("input").val());
               // Also save to the DB (arguably more important).
-              saveInlinedModel(tr);
-              $(this).children(".static").show();
-              $(this).children(".editable").hide();
-              // Reset sticky headers in case table cell widths have changed.
-              setStickyHeaders();
+              saveInlinedModel(row, cell);
             }
         });
     
         // Handler on "delete row" buttons
         $("#inlined-model-table").on(
             "click", ".deleteButton",
-            function(event) {
-            unlinkInlinedModel($(this).closest("tr"));
-        });
+            function() {
+                unlinkInlinedModel($(this).closest("tr"));
+            }
+        );
     }
 }
 

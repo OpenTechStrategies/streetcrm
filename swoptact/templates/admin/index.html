@@ -25,6 +25,11 @@
                 {# Use app+model ordering from ADMIN_ORDERING in settings.py #}
                 {% if app_list %} {% app_order %} {% endif %}
 
+    {% if title %}
+        <h1 class="change-title">{{ title }}</h1>
+    {% endif %}
+    <div class="hr"></div>
+
 		{% for app in app_list %}
 			<table summary="{% blocktrans with name=app.name %}Models available in the {{ name }} application.{% endblocktrans %}" class="table table-bordered">
 			{% for model in app.models %}
@@ -40,10 +45,21 @@
 				</tr>
 			{% endfor %}
 			</table>
-		{% empty %}
-			<p>{% trans "You don't have permission to edit anything." %}</p>
-		{% endfor %}
+      {% empty %}
+			  <p>{% trans "You don't have permission to edit anything." %}</p>
+      {% endfor %}
 	</div>
+	<div class="col-sm-12">
+    <div class="hr"></div>
+  </div>
+	<div class="col-sm-12">
+      <div id="other-actions">
+          <h1>Reports</h1>
+          <ul>
+            <li><a href="{% url 'admin:missing_data' %}">Missing data report</a></li>
+          </ul>
+      </div>
+  </div>
 </div>
 {% endblock %}
 

@@ -98,9 +98,20 @@ class AutoCompleteModelForm(forms.ModelForm):
                 self.data[name] = model.pk
         super(AutoCompleteModelForm, self).full_clean(*args, **kwargs)
 
-def autocomplete_modelform_factory(model, form=None, *args, **kwargs):
+
+class ParticipantForm(django.forms.ModelForm):
+    institution = formfields.BasicAutoCompleteField(
+        models.Institution, "name")
+
+    class Meta:
+        model = models.Participant
+        fields = "__all__"
+        exclude = ("archived",)
+
+
+def autocomplete_modelform_factory(model, *args, **kwargs):
     """ Wrap autocomplete's modelform factory to inject our own form """
-    if form is None:
+    if kwargs.get("form") is None:
         kwargs["form"] = AutoCompleteModelForm
 
     return forms.modelform_factory(model, *args, **kwargs)
@@ -235,3 +246,15 @@ class SearchForm(django.forms.Form):
             useful_data[field] = raw_data[autocomplete_field]
 
         return useful_data
+        
+class EventForm(django.forms.ModelForm):
+    organizer = formfields.BasicAutoCompleteField(
+        models.Participant, "name")
+    major_action = formfields.BasicAutoCompleteField(
+        models.Event, "name")
+
+    class Meta:
+        model = models.Event
+        fields = "__all__"
+        exclude = (
+            "participants", "archived")

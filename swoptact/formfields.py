@@ -19,6 +19,7 @@ import phonenumbers
 
 from django import forms
 from django.core import validators, exceptions
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 from phonenumber_field import formfields
@@ -50,9 +51,11 @@ class LocalPhoneNumberField(formfields.PhoneNumberField):
                 national_number=value.national_number
             )
 
-        return super(LocalPhoneNumberField, self).to_python(
+        try: return super(LocalPhoneNumberField, self).to_python(
             value, *args, **kwargs
         )
+        except:
+            raise exceptions.ValidationError("Please enter a phone number in the format (xxx) xxx-xxxx", code="invalid")
 
 class TwelveHourTimeField(forms.TimeField):
     widget = widgets.TwelveHourTimeWidget
@@ -93,3 +96,63 @@ class TwelveHourTimeField(forms.TimeField):
 
         # Feed this into datetime.time and return
         return datetime.time(hour=twentyfour_hour)
+
+
+def model_from_field(fieldname, create_if_not_found=True):
+    """
+    Factory function which produces a procedure to look up whether
+    an object exists for FIELDNAME.  The returned procedure
+    will take two arguments, MODEL and VALUE.  Perfect for
+    AutoCompleteFKField!
+
+    If `create_if_not_found' is True, this will also make an instance
+    of a model if it does not exist and then link it.
+    But on a model where the autocomplete lookup on a field does
+    not provide enough information to create a new version of that
+    model, you can set `create_if_not_found' to False.
+    """
+    def lookup(model, value):
+        results = model.objects.filter(**{fieldname: value})
+
+        if results:
+            return results[0]
+        elif create_if_not_found:
+            new_instance = model(**{fieldname: value})
+            new_instance.save()
+            return new_instance
+        else:
+            return None
+
+    return lookup
+
+
+class AutoCompleteFKField(forms.CharField):
+    """
+    Provide an autocomplete field
+    """
+    def __init__(self, model, from_value, *args, **kwargs):
+        self.model = model
+        self.from_value = from_value
+
+        widget = widgets.SimpleFKAutocomplete(model=model)
+        kwargs.setdefault("widget", widget)
+
+        super(AutoCompleteFKField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if value:
+            return self.from_value(self.model, value)
+        else:
+            return None
+
+
+class BasicAutoCompleteField(AutoCompleteFKField):
+    """
+    Basic autocompletion field, with autocomplete widget.
+    Completes MODEL, and saves matching model against FIELDNAME.
+    """
+    def __init__(self, model, fieldname, *args, **kwargs):
+        from_value = model_from_field(fieldname)
+
+        super(BasicAutoCompleteField, self).__init__(
+            model, from_value, *args, **kwargs)

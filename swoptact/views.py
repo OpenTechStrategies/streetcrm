@@ -23,10 +23,21 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.admin.options import get_content_type_for_model
+from django.contrib.admin.models import (
+    LogEntry, ADDITION, CHANGE, DELETION)
+from django.utils.encoding import force_text
 
 from swoptact import models
 from swoptact.decorators import swoptact_login_required
 
+# Needed for reporting validation errors. Otherwise execution will
+# stumble when trying to serialize one of our models (e.g., Institution)
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, models.SerializeableMixin):
+            return obj.serialize()
+        return json.JSONEncoder.default(self, obj)
 
 def process_field_general(api_view, body, model, field_name, value):
     """
@@ -174,13 +185,72 @@ class APIMixin:
     def render_to_response(self, context, **response_kwargs):
         """ Provides a JSON response based on the context provided """
         if isinstance(context, (dict, list, tuple)):
-            context = json.dumps(context)
+            context = json.dumps(context, cls=MyEncoder)
 
         return http.HttpResponse(
             context,
             content_type="application/json",
             **response_kwargs
         )
+
+
+class LogChangeMixin:
+    """
+    Log a successful POST as a change of fields
+    """
+    def _log_change(self, request):
+        object = self.get_object()
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(object).pk,
+            object_id=object.pk,
+            object_repr=force_text(object),
+            action_flag=CHANGE,
+            change_message="Changed fields",
+        )
+
+    def post(self, request, *args, **kwargs):
+        response = super(LogChangeMixin, self).post(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+    def put(self, request, *args, **kwargs):
+        response = super(LogChangeMixin, self).put(
+            request, *args, **kwargs)
+        self._log_change(request)
+        return response
+
+
+# not used yet..
+def log_create(self, request, new_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(new_object).pk,
+        object_id=new_object.pk,
+        object_repr=force_text(new_object),
+        action_flag=ADDITION
+    )
+
+def log_linking(request, main_object, linking_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(main_object).pk,
+        object_id=main_object.pk,
+        object_repr=force_text(main_object),
+        action_flag=CHANGE,
+        change_message="Linked \"%s\"" % force_text(linking_object),
+    )
+
+def log_unlinking(request, main_object, linking_object):
+    LogEntry.objects.log_action(
+        user_id=request.user.pk,
+        content_type_id=get_content_type_for_model(main_object).pk,
+        object_id=main_object.pk,
+        object_repr=force_text(main_object),
+        action_flag=CHANGE,
+        change_message="Unlinked \"%s\"" % force_text(linking_object),
+    )
 
 
 def process_institution_field(api_view, body, model, field_name, value):
@@ -203,8 +273,7 @@ def process_institution_field(api_view, body, model, field_name, value):
         return
 
 
-
-class ParticipantAPI(APIMixin, generic.UpdateView):
+class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
     """
     Provides the view to retrive, create and update a participant
 
@@ -228,6 +297,7 @@ class ParticipantAPI(APIMixin, generic.UpdateView):
     def form_valid(self, form, *args, **kwargs):
         self.object = form.save()
         return self.produce_response()
+
 
 class ContactParticipantAPI(ParticipantAPI):
     """
@@ -256,7 +326,37 @@ class CreateParticipantAPI(APIMixin, generic.CreateView):
 
     def form_valid(self, form, *args, **kwargs):
         self.object = form.save()
+        LogEntry.objects.log_action(
+            user_id=self.pk,
+            content_type_id=get_content_type_for_model(self.object).pk,
+            object_id=self.object.pk,
+            object_repr=force_text(self.object),
+            action_flag=ADDITION
+        )
         return self.produce_response()
+
+    def post(self, request, *args, **kwargs):
+        # terrible hack to make sure we can log properly
+        # basically multiple inheritance + method dispatch == the devil
+        self.pk = request.user.pk
+        response = super(CreateParticipantAPI, self).post(
+            request, *args, **kwargs)
+        return response
+
+    def put(self, request, *args, **kwargs):
+        # terrible hack to make sure we can log properly, again
+        self.pk = request.user.pk
+        response = super(CreateParticipantAPI, self).put(
+            request, *args, **kwargs)
+        return response
+
+class CreateContactAPI(CreateParticipantAPI):
+    """
+    Creates a participant, but from the instituions page...
+    """
+    fields = ["name", "title", "primary_phone"]
+    field_processors = {}
+
 
 class EventParticipantsAPI(APIMixin, generic.DetailView):
     """
@@ -328,6 +428,8 @@ class EventLinking(APIMixin, generic.DetailView):
         # Remove from the event
         self.object.participants.remove(self.participant)
 
+        log_unlinking(request, self.object, self.participant)
+
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
@@ -337,6 +439,8 @@ class EventLinking(APIMixin, generic.DetailView):
 
         # Add to the event
         self.object.participants.add(self.participant)
+
+        log_linking(request, self.object, self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
@@ -368,6 +472,8 @@ class ContactLinking(APIMixin, generic.DetailView):
         # Remove the participant as a contact
         self.object.contacts.remove(self.participant)
 
+        log_unlinking(request, self.object, self.participant)
+
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())
 
@@ -389,6 +495,8 @@ class ContactLinking(APIMixin, generic.DetailView):
 
         # Add the participant as a contact
         self.object.contacts.add(self.participant)
+
+        log_linking(request, self.object, self.participant)
 
         # Just return a successful status code
         return self.render_to_response(self.get_context_data())

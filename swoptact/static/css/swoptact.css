@@ -18,9 +18,33 @@
 
 body {
     font-family: Verdana,Arial,sans-serif;
-    background-color: #F8F2EB;
+    /* background-color: #F8F2EB; */
+    background: url('/static/images/dawn-818102_1920.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
+.container-fluid {
+    width: 60%;
+    min-width: 450px;
+    max-width: 800px;
+    padding: 0px;
+    margin: auto;
+}
+
+@media screen and (max-width: 750px) {
+    .container-fluid {
+        width: 100%;
+    }
+    .navbar > .container-fluid, #actual-navbar > .container-fluid {
+        padding: 0px 5px;
+    }
+}
+
+/* Experimenting with removing this. It's only used in change_list and I don't see the benefit right now - NTT
+   (Also I changed that class to "colM")
 .flex {
     min-width: 75%;
     display: inline-block;
@@ -29,15 +53,47 @@ body {
 .flex .navbar-collapse {
     padding: 0em;
 }
+*/
 
 h1, h1 a, legend {
     font-family: Georgia,"Times New Roman",Times,serif;
     color: #82532E;
 }
 
+.navbar-header {
+    width: 100%;
+    min-width: 450px;
+}
+
+#logo-wrapper {
+    float: left;
+    margin: 0px 20px 0px 0px;
+}
+
+#user-menu-link {
+    margin: 10px 0px 0px 0px;
+    position: relative;
+    cursor: pointer;
+    float: right;
+}
+
+#user-menu-link img {
+    float: right;
+}
+
+#user-menu {
+    position: absolute;
+    right: 0px;
+    z-index: 3;
+}
+
+.clearblock {
+    clear: both;
+}
+
 /* Purple hrefs that are underlined until you hover over them */
 a {
-    color: #48328F;
+    color: #5F1F7F;
     text-decoration: underline;
 }
 
@@ -45,7 +101,7 @@ a:hover,
 a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #48328F;
+    color: #5F1F7F;
     text-decoration: none;
 }
 
@@ -57,6 +113,7 @@ a:focus,
     font-size: 24pt;
     font-weight: bold;
     text-decoration: none;
+    margin-left: -15px;
 }
 
 /* Set the background to housestyle colours and remove borders */
@@ -64,6 +121,7 @@ a:focus,
     height: 70px;
     border: 0;
     padding-top: 10px;
+    margin-bottom: 0px;
     border-radius: 0;
     background-color: #FFFFFF;
 }
@@ -71,12 +129,7 @@ a:focus,
 .navbar-default .navbar-brand,
 .navbar-default .navbar-text,
 .navbar-default .navbar-nav > li > a {
-    color: #48328F;
-}
-
-/* Pad the "Welcome, <username>" text 15px away from right */
-.navbar-default .navbar-right {
-    padding-right: 15px;
+    color: #5F1F7F;
 }
 
 /* Shrink tables to fit content (but don't shrink too much either) */
@@ -85,7 +138,34 @@ a:focus,
   width: auto;
 }
 
+#actual-navbar {
+    padding: 5px 0px 3px 0px;
+    background-color: #4E0E6E;
+    color: white;
+}
+
+.breadcrumb {
+    width: 60%;
+    margin: 0px;
+    padding: 0px;
+    line-height: 250%;
+    display: inline-block;
+    background-color: inherit;
+}
+
+.breadcrumb a {
+    color: white;
+}
+
+#search-form {
+    width: 35%;
+    padding: 0px;
+    display: inline-block;
+    float: right;
+}
+
 /* Give tables and breadcrumbs a white background and border */
+/* Experimenting with losing this rule - NTT
 .breadcrumbs,
 .change-content table,
 .table-bordered > thead > tr > th,
@@ -96,35 +176,53 @@ a:focus,
 .table-bordered > tfoot > tr > td {
     background-color: #FFFFFF;
 }
+*/
 
-.change-content h1 {
-    color: #82532E;
-    font-size: 18pt;
-    padding-top: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 5px;
-    margin-bottom: 0px;
-    background-color: #FFFFFF;
-
-    border: 10px;
-    border-bottom: 0px;
+#content {
+    background-color: #F2F2F2;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 3px;
     border-style: solid;
-    border-color: #EDDDCF;
+    border-color: #48328F;
 }
 
-.content-main {
-    background-bottom: 0px;
+@media screen and (max-width: 750px) {
+    #content {
+        margin-top: 0px;
+    }
 }
 
-.change-content fieldset {
-    padding-top: 5px;
-    background-color: #FFFFFF;
-    border: 10px solid #EDDDCF;
-    margin-bottom: 15px;
+#content h1 {
+    color: #82532E;
+    font-size: 200%;
+    font-weight: bold;
+    padding: 0px;
+    margin: 0px;
 }
 
-.change-content legend {
+#content .hr {
+    width: 100%;
+    height: 2px;
+    margin: 15px 0px;
+    background-color: #4E0E6E;
+}
+
+#content-navbar-collapse {
+    padding: 0px;
+    margin: 15px 0px;
+}
+
+#content fieldset {
+    background-color: transparent;
+}
+
+#content fieldset .control-label {
+    display: inline;
+}
+
+#content legend {
     border-bottom: 0px;
 }
 
@@ -134,6 +232,7 @@ a:focus,
     background-color: #F5F5F5;
 }
 
+/* Experiementing with losing this rule too - NTT
 .breadcrumbs,
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
@@ -143,12 +242,13 @@ a:focus,
 .table-bordered > tfoot > tr > td {
     border: 1px solid #DDDDDD;
 }
-
+*/
+/* and this - NTT
 .change-title h1 {
-    background-color: #999999;
-    margin-top: 0;
+    background-color: #999;
+    margin-top: 0px;
 }
-
+*/
 /* Override design of filter list selector - Issue #7 */
 .selector select {
     height: 17.2em;
@@ -205,27 +305,33 @@ input[type="checkbox"] {
     display:none;
 }
 
-input.vTextField {
-    width: 200px;
+.form-horizontal .control-label {
+    padding-top: 0px;
 }
-input.vTextField#id_description {
-    width: 500px;
+.form-horizontal input[type='text'] {
+    width: 50%;
+    margin-top: .3em;
 }
-input.vTextField#id_title {
-    width: 500px;
+.form-horizontal input#id_description {
+    width: 100%;
 }
-input.vTextField#id_inst_street_address {
-    width: 500px;
+.form-horizontal input#id_title {
+    width: 100%;
 }
-input.vTextField#id_participant_street_address {
-    width: 500px;
+.form-horizontal input#id_inst_street_address {
+    width: 100%;
 }
-.navbar-nav a:hover {
-    background-color: #337ab7 !important;
+.form-horizontal input#id_participant_street_address {
+    width: 100%;
 }
 
-div.form-actions div.pull-right {
-    padding-right: 30%;
+.form-actions {
+    position: relative;
+    height: 35px;
+}
+
+.navbar-nav a:hover {
+    background-color: #337ab7 !important;
 }
 
 li.pull-left {
@@ -272,8 +378,18 @@ li.bold_name {
 }
 
 .scrollable-area {
-   max-height: 400px;
-   overflow: auto;
+    margin-top: 10px;
+    max-height: 400px;
+    overflow: auto;
+    border: 1px solid #DDD;
+}
+
+#addNewButtonDiv {
+    margin-top: 30px;
+}
+
+#form-actions {
+    margin-top: 15px;
 }
 
 table#inlined-model-table th.deleteButtonTH {
@@ -287,6 +403,20 @@ appear (and makes the static div disappear) */
 visible when the user clicks in the corresponding uneditable sibling div */
 table#inlined-model-table td {
     padding: 6px;
+    vertical-align: middle;
+}
+
+table#inlined-model-table .validation-error {
+    font-weight: bold;
+    color: #F00;
+}
+
+table#inlined-model-table td.disabled {
+    background-color: #F66;
+}
+
+table#inlined-model-table td.corrigendum {
+     border: 2px solid #F22;
 }
 
 table#inlined-model-table .editable {
@@ -295,7 +425,7 @@ table#inlined-model-table .editable {
 
 table#inlined-model-table .large-info {
    font-size: 16px;
-   border: 2px solid #48328F;
+   border: 2px solid #5F1F7F;
    border-radius: 50%;
    height: 24px;
    width: 24px;
@@ -308,13 +438,14 @@ table#inlined-model-table .large-info {
 }
 
 table#inlined-model-table span.deleteButton {
-   font-size: 10px;
+   font-size: 11px;
    background-color: red;
    color: white;
    border: 2px solid gray;
    border-radius: 50%;
-   height: 20px;
-   width: 20px;
+   height: 21px;
+   width: 21px;
+   line-height: 17px;
    margin: 2px auto 0px auto;
    text-align: center;
    cursor: pointer;
@@ -331,10 +462,6 @@ table#inlined-model-table .new-indicator {
     width: 20%;
     padding-left: 10px;
     font-weight: bold;
-}
-
-#addNewButtonDiv {
-    padding: 10px;
 }
 
 ul#id_group {

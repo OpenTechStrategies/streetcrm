@@ -201,5 +201,5 @@ Updating swoptact
 
 When updating to a newer version of swoptact, run:
 
-        $ pip install -r requirements -U
+        $ pip install -r requirements.txt -U
         $ python manage.py migrate
