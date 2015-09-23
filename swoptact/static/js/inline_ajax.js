@@ -563,6 +563,9 @@ function handleJSONErrors(errors, row){
             // Disable all sibling <td>s (except the delete row button)
             ths.addClass("corrigendum");
             ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");
+            // scroll to the bottom of the table
+            var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
+            scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
         }
     });
 }
