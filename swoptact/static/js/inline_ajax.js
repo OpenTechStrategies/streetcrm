@@ -44,7 +44,7 @@ function gummyStringFormatter(string_pattern) {
 }
 
 
-/* Generate a new <tr> element including all necessary <td>s and
+/* Generate a new <tr> element including all internal structures and
  * handlers, but no data. */
 function getNewTableRow() {
     var tableRow = $("<tr />");
@@ -55,6 +55,7 @@ function getNewTableRow() {
     fields_config.map(function(field) {
         var staticDiv = $("<div class=\"static\"/>");
         staticDiv.append("<span class=\"static-span\"/>");
+        staticDiv.append("<a class=\"profile-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
 
         var editableDiv = $("<div class=\"editable\"/>");
         editableDiv.append("<div class=\"validation-error\"/>");
@@ -322,8 +323,6 @@ function turnOnAttendeeAutocomplete(tableRow) {
             // selected an autocomplete option by hitting 'enter', that
             // keydown event will not be interpreted as "save and move
             // the the next cell for further data entry".
-            // KNOWN ISSUE: THIS LEAVES A VERY MESSY TABLE ROW BEHIND. EDITABLE DIVS HAVE TO BE CLOSED, PROFILE LINKS ADDED, ETC.
-            // WHAT IS CORRECT BEHAVIOR WHEN EDITING THE INLINE TABLE IF A KNOWN ATTENDEE IS SELECTED FROM AN AUTOCOMPLETE?
             event.stopPropagation();
         }
     });
@@ -332,11 +331,6 @@ function turnOnAttendeeAutocomplete(tableRow) {
 /*
   Create a link to the change form of an inlined model with the given ID
 */
-function createProfileLinks(tableRow) {
-    var model = tableRow.data("model");
-    tableRow.children("td").each(function() { createProfileLink(model, $(this)); });
-}
-
 function createProfileLink(model, cell) {
     var id, url;
     if (cell.data("form-name") == "name") {
@@ -348,11 +342,10 @@ function createProfileLink(model, cell) {
         url = "/swoptact/institution/";
     }
     if (id != undefined) {
-        var link_to_profile = $("<a/>");
-        link_to_profile.html("<span class=\"large-info\">&#x2139;</span>");
-        link_to_profile.attr("href", getExistingInlinedModelProfileUrl(id, url));
-        link_to_profile.attr("target", "_blank");
-        cell.children(".static").append(link_to_profile);
+        // Give the profile link an href attribute and make it visible.
+        var profileLink = cell.children(".static").children("a.profile-link");
+        profileLink.attr("href", getExistingInlinedModelProfileUrl(id, url));
+        profileLink.css("visibility", "visible");
     }
 }
 
@@ -367,10 +360,11 @@ function fillTableRow(tableRow) {
     var inlinedModel = tableRow.data("model");
     var staticDiv, editableDiv, fieldName, val;
     tableRow.children("td").each(function() {
-        staticDiv = $(this).children(".static");
-        editableDiv = $(this).children(".editable");
-        fieldName = $(this).data("form-name");
-        if ($(this).data("input-type") == "fkey_autocomplete_name") {
+        var cell = $(this);
+        staticDiv = cell.children(".static");
+        editableDiv = cell.children(".editable");
+        fieldName = cell.data("form-name");
+        if (cell.data("input-type") == "fkey_autocomplete_name") {
             val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : "";
         }
         else {
@@ -378,6 +372,8 @@ function fillTableRow(tableRow) {
         }           
         staticDiv.children(".static-span").text(val);
         editableDiv.children("input").val(val);
+        // Add a profile link (letter "i" in a circle)
+        createProfileLink(inlinedModel, cell);
     });
 }
 
@@ -494,7 +490,6 @@ function loadInitialAttendees() {
             newRow = getNewTableRow();
             newRow.data("model", people_list[i]);
             fillTableRow(newRow);
-            createProfileLinks(newRow);
             $("#inlined-model-table").append(newRow);
         }
         setStickyHeaders();
@@ -513,10 +508,23 @@ function linkInlinedModel(tableRow, inlined_model_id) {
     var url = fillLinkInlinedModelUrl(getPageModelId(), inlined_model_id);
     $.post(url, function (result) {
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
-              function (existing_model) {
-                  tableRow.data("model", existing_model);
-                  fillTableRow(tableRow);
-              }, 'json');
+            function (existing_model) {
+                tableRow.data("model", existing_model);
+                fillTableRow(tableRow);
+                // User just filled table row by selecting an autocomplete
+                // option. Open a new row if it was the last row.
+                if (tableRow.next("tr").length == 0) {
+                    $("#add-new-inlined-model-btn").trigger("click");
+                }
+                // else close the cell we're working on by triggering a click event
+                // that will close any cells being edited and save the new values.
+                else {
+                    // It won't close an element with the focus though, so blur it.
+                    $(document.activeElement).blur();
+                    $(document).trigger("click");
+                }
+            },
+        "json");
     }, "json").fail(function (result) {
         error = JSON.parse(result.responseText)["error"];
         // Check for errors and if so display them.
@@ -647,7 +655,6 @@ function saveInlinedModel(row, cell) {
                           function (updated_model) {
                               row.data("model", updated_model);
                               fillTableRow(row);
-                              createProfileLinks(row);
                               checkLimitReached();
                               // Not sure if the below are necessary since I don't think a row can qualify as
                               // "new" with a pre-existing error in one of the cells, but leaving in for now.
@@ -689,6 +696,18 @@ function setStickyHeaders(e) {
     });
 }
 
+function turnOnEditing(cell) {
+    cell.children(".static").hide();
+    cell.children(".editable").show();
+    var input = cell.children(".editable").children("input");
+    var len = input.val().length;
+    input.focus();
+    // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
+    input[0].setSelectionRange(len*2, len*2);
+    // Reset sticky headers in case table cell widths have changed.
+    setStickyHeaders();
+}
+
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
     // Adjust sticky headers on window resize
@@ -719,7 +738,7 @@ function setupInlinedModelCallbacks() {
         addNewButton.on("click", function(event) {
             // event.preventDefault(); commenting this out until I understand what it does.
             var newRow = getNewTableRow();
-            newRow.data("model", {"id": ""});
+            newRow.data("model", {"id": ""});  // This seems hacky. Find a better way.
             fillTableRow(newRow);
             $("#inlined-model-table").append(newRow);
 
@@ -728,7 +747,7 @@ function setupInlinedModelCallbacks() {
             // scroll to the bottom of the table
             var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
             scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
-            newRow.children("td:first-of-type").trigger("click");
+            turnOnEditing(newRow.children("td:first-of-type"));
         });
 
         $("#addNewButtonDiv").append(addNewButton);
@@ -796,17 +815,12 @@ function setupInlinedModelCallbacks() {
             if ($(this).hasClass("disabled")) {
                 alert("This cell cannot be edited until errors in this row are corrected.");
             }
-            else {                  
-                $(this).children(".static").hide();
-                $(this).children(".editable").show();
-                var input = $(this).children(".editable").children("input");
-                var len = input.val().length;
-                input.focus();
-                // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
-                input[0].setSelectionRange(len*2, len*2);
-                // Reset sticky headers in case table cell widths have changed.
-                setStickyHeaders();
+            else {
+                turnOnEditing($(this));
             }
+            // The click event will now bubble up to the document level,
+            // where any other cells being edited will be saved and
+            // closed.
         });
     
         // Handler on "delete row" buttons

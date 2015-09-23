@@ -419,6 +419,10 @@ table#inlined-model-table td.corrigendum {
      border: 2px solid #F22;
 }
 
+table#inlined-model-table .static a.profile-link {
+    visibility: hidden;
+}
+
 table#inlined-model-table .editable {
     display: none;
 }
