@@ -163,6 +163,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
             objects = this_model.objects.filter(query)
 
             for obj in objects:
+                if  obj.archived:
+                    continue
                 missing_fields = []
                 for field in fields:
                     if ((field.null and getattr(obj, field.field_name) is None)
@@ -172,7 +174,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                             field.field_name).verbose_name.title()
                         missing_fields.append(
                             MissingField(field.field_name, human_readable))
-
+                        
                 # If there are missing fields, append to the results
                 if missing_fields:
                     # Could make this more extensible if obj.id was ever
@@ -180,7 +182,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                     results.append(
                         ModelWithMissingFields(obj, str(obj),
                                                missing_fields, admin_uri))
-
+                        
             return results
 
         def _gen_change_uri_func(reverse_name):

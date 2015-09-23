@@ -62,7 +62,44 @@
     "pk": 2,
     "model": "auth.group",
     "fields": {
-        "permissions": [],
+        "permissions": [
+            [
+                "add_event",
+                "swoptact",
+                "event"
+            ],
+            [
+                "change_event",
+                "swoptact",
+                "event"
+            ],
+            [
+                "add_institution",
+                "swoptact",
+                "institution"
+            ],
+            [
+                "change_institution",
+                "swoptact",
+                "institution"
+            ],
+            [
+                "add_participant",
+                "swoptact",
+                "participant"
+            ],
+            [
+                "change_participant",
+                "swoptact",
+                "participant"
+            ],
+            [
+                "delete_participant",
+                "swoptact",
+                "participant"
+            ]
+            
+        ],
         "name": "staff"
     }
 },
