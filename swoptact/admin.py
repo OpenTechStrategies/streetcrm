@@ -304,7 +304,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
                      "participant_state_address",
                      "participant_zipcode_address")
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "US_primary_phone", "institution", "participant_street_address",)
+    list_display = ("name", "US_primary_phone", "institution", "participant_street_address", "participant_city_address",)
     readonly_fields = ("action_history", "event_history_name")
     fieldsets = (
         (None, {

@@ -135,7 +135,7 @@ class ArchiveAbstract(SWOPTactModel):
 
 class Tag(ArchiveAbstract, SerializeableMixin, InspectMixin):
     """ Tags act as descriptors for such models as Event """
-    name = models.CharField(max_length=15, unique=True, verbose_name="Tag")
+    name = models.CharField(max_length=25, unique=True, verbose_name="Tag")
     description = models.CharField(max_length=255, null=True,
                                    blank=True, verbose_name="Tag Description")
     date_created = models.DateField(null=True, blank=True,
@@ -198,7 +198,7 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     participant_street_address = models.CharField(null=True, blank=True, max_length=1000,
                                verbose_name="Participant Street Address")
     participant_city_address = models.CharField(null=True, blank=True, max_length=255,
-                               verbose_name="Participant City")
+                               verbose_name="City")
     participant_state_address = models.CharField(null=True, blank=True, max_length=255,
                                verbose_name="Participant State")
     participant_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
@@ -236,21 +236,23 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
                                            verbose_name="Time of Action")
     organizer = models.ForeignKey(Participant, related_name="Organizer",
                                   blank=True, null=True)
+    secondary_organizer = models.ForeignKey(Participant, related_name="Organizer2",
+                                  blank=True, null=True)
     location = models.CharField(max_length=255, blank=True,
                                 verbose_name="Action Location")
     participants = models.ManyToManyField(Participant, blank=True)
+    narrative = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(
         Tag, blank=True,
-        verbose_name="Action Tag(s)",
+        verbose_name="Tags",
         help_text=NEW_TAGS_NOT_CREATED_HELPTEXT)
-    issue_area = models.CharField(max_length=255, blank=True, null=True,
-                                  verbose_name="Action Issue Area")
     is_prep = models.BooleanField(
         default=False,
         blank=True,
         verbose_name="This meeting is part of a major action:"
     )
-    major_action = models.ForeignKey("self", null=True, blank=True)
+    major_action = models.ForeignKey("self", null=True, blank=True,
+                                     verbose_name="Connected Action")
 
     def __str__(self):
         return self.name
