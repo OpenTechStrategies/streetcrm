@@ -202,8 +202,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("date", null=True, empty_string=False),
              CheckField("time", null=True, empty_string=False),
              CheckField("organizer", null=True, empty_string=False),
-             CheckField("location", null=True, empty_string=True),
-             CheckField("issue_area", null=True, empty_string=True)],
+             CheckField("location", null=True, empty_string=True)],
             _gen_change_uri_func("admin:swoptact_event_change"))
 
         participant_results = gather_results(
