@@ -378,6 +378,7 @@ li.bold_name {
 }
 
 .scrollable-area {
+    position: relative;
     margin-top: 10px;
     max-height: 400px;
     overflow: auto;

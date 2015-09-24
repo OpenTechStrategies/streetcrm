@@ -559,13 +559,38 @@ function handleJSONErrors(errors, row){
         var formName = ths.data("form-name");
         if (errors.hasOwnProperty(formName)) {
             var allErrors = errors[formName].join("; ");
-            ths.find(".validation-error").text(allErrors);
-            // Disable all sibling <td>s (except the delete row button)
+            // Adding the error message into the cell may change the
+            // cell's dimensions, which may change the dimensions of
+            // other cells, which may move the relevant cell out of the
+            // constant-height viewport that is part of the sticky table
+            // headers implementation. Therefore make sure the distance
+            // between the top of the errored cell and the top of the
+            // viewport remains constant.
+
+            // Measure position before the text is added...
+            var pos1 = $(this).position().top;
+            $(this).find(".validation-error").text(allErrors);
+            // and after.
+            var pos2 = $(this).position().top;
+
+            // Then scroll into position. Note that the value of
+            // scrollableArea.scrollTop() after adding the text
+            // will be the same as it was before.
+            var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");            
+            scrollableArea.scrollTop(scrollableArea.scrollTop() + (pos2-pos1));
+            
+            // If the error is on the bottom row, the bottom of the cell
+            // might still be out of view. If this is the case, scroll a
+            // little more (and add 15 px for padding).
+            var offsetDifference = ($(this).offset().top + $(this).outerHeight() + 15) - (scrollableArea.offset().top + scrollableArea.outerHeight());
+            if (offsetDifference > 0) {
+                scrollableArea.scrollTop(scrollableArea.scrollTop() + offsetDifference);
+            }
+
+            // Mark the errored cell as such.
             ths.addClass("corrigendum");
-            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");
-            // scroll to the bottom of the table
-            var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
-            scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
+            // Disable all sibling <td>s (except the delete row button)
+            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");            
         }
     });
 }
