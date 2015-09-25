@@ -348,10 +348,12 @@ input[type="checkbox"] {
 .form-horizontal .control-label {
     padding-top: 0px;
 }
-.form-horizontal input[type='text'] {
-    width: 50%;
-    margin-top: .3em;
+
+.form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
 }
+
 .form-horizontal input#id_description {
     width: 100%;
 }
