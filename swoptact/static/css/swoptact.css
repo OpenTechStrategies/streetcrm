@@ -285,6 +285,7 @@ value. */
 }
 
 .selector ul.selector-chooser {
+    margin: 0 0 5px 45%;
     background-color: #FFF;
 }
 
@@ -323,6 +324,11 @@ value. */
 
 .selector-filter input {
     color: #000;
+}
+
+/* Prevent text in help-block from sneaking around the side of the filter widget */
+.help-block {
+    clear: both;
 }
 
 /* Hide the "save an add another" and "save and continue editing" buttons */
