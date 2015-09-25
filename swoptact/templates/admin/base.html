@@ -72,20 +72,28 @@
     </div>
 
     <div id="main" class="container-fluid">
-			<!-- Alerts & Messages -->
-			{% block messages %}
-			{% if messages %}
-			<ul class="messagelist">
-				{% for message in messages %}
-				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-			{% endblock messages %}
-			<!-- END Alerts & Messages -->
 
 			<!-- Content -->
 			<div id="content" class="{% block coltype %}colM{% endblock %}">
+
+        <!-- Alerts & Messages -->
+        {% block messages %}
+        {% if messages %}
+          {% if messages|length == 1 %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          {% else %}
+            <ul class="messagelist">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endif %}
+        {% endblock messages %}
+        <!-- END Alerts & Messages -->
+
 				{% block pretitle %}{% endblock %}
 				{% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
 				{% block content %}

@@ -178,6 +178,27 @@ a:focus,
 }
 */
 
+/* The "alert-error" class below complements the "alert-success",
+"alert-info", and "alert-warning" classes in bootstrap.css. It actually
+duplicates the "alert-danger" class in that file. I've added
+"alert-error" because Django messages come with a "tag" property whose
+value will be one of "success", "info", "warning", or "error". In other
+words, it almost lines up with the bootstrap alert flavors, but has
+"error" instead of "danger". Adding "alert-error" therefore makes it
+easy to use stylings appropriate to each Django tag by parsing its
+value. */
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert-error hr {
+  border-top-color: #e4b9c0;
+}
+.alert-error .alert-link {
+  color: #843534;
+}
+
 #content {
     background-color: #F2F2F2;
     margin-top: 10px;
