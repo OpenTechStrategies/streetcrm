@@ -95,7 +95,8 @@
         <!-- END Alerts & Messages -->
 
 				{% block pretitle %}{% endblock %}
-				{% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+
+        {% if title %}<h1 class="change-title">{{ title }}</h1><div class="hr"></div>{% endif %}
 				{% block content %}
 				{% block object-tools %}{% endblock %}
 				{{ content }}

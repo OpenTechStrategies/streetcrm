@@ -43,12 +43,6 @@
 </div>
 {% endif %}
 
-{% if title %}
-    <h1 class="change-title">{{ title }}</h1>
-{% endif %}
-
-<div class="hr"></div>
-
     <div id="content-main">
 
         {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
@@ -92,5 +86,5 @@
            </script>
         {% endif %}
     </div>
-</div>
+
 {% endblock %}
