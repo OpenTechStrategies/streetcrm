@@ -271,8 +271,17 @@ value. */
 }
 */
 /* Override design of filter list selector - Issue #7 */
+.selector.stacked {
+    width: 100%;
+}
+
+.selector h2 {
+    margin-top: 5px;
+}
+
 .selector select {
     height: 17.2em;
+    width: 100%;
 }
 
 .selector ul.selector-chooser {
@@ -289,6 +298,10 @@ value. */
     border-color: #777;
     border-top: 0px;
     border-bottom: 0px;
+}
+
+.selector .selector-available, .selector .selector-chosen {
+    width: 100%;
 }
 
 .selector .selector-available h2, .selector .selector-chosen h2 {

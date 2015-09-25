@@ -547,12 +547,16 @@ class UserAdmin(auth.admin.UserAdmin):
     filter_horizontal = tuple()
     filter_vertical = ('groups', 'user_permissions',)
 
+class GroupAdmin(auth.admin.GroupAdmin):
+    filter_horizontal = tuple()
+    filter_vertical = ('permissions',)
+
 
 # Create the admin site
 site = SWOPTACTAdminSite()
 
 # Register auth AdminModels
-site.register(auth.admin.Group, auth.admin.GroupAdmin)
+site.register(auth.admin.Group, GroupAdmin)
 site.register(auth.admin.User, UserAdmin)
 
 # Register SWOPTACT AdminModels
