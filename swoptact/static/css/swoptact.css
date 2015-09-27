@@ -28,7 +28,7 @@ body {
 
 .container-fluid {
     width: 60%;
-    min-width: 450px;
+    min-width: 600px;
     max-width: 800px;
     padding: 0px;
     margin: auto;
@@ -70,11 +70,22 @@ h1, h1 a, legend {
     margin: 0px 20px 0px 0px;
 }
 
-#user-menu-link {
-    margin: 10px 0px 0px 0px;
-    position: relative;
-    cursor: pointer;
+#top-right-wrapper {
     float: right;
+    margin: 10px 0px 0px 0px;
+    vertical-align: middle;
+}
+
+#welcome-message {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#user-menu-link {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
 }
 
 #user-menu-link img {

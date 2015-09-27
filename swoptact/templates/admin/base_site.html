@@ -9,19 +9,38 @@
 {% load staticfiles %}
 <a id="logo-wrapper" href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50"></a>
 <a href="{% url 'admin:app_list' app_label='swoptact' %}" class="navbar-brand">{% trans "Contacts" %}</a>
-<div id="user-menu-link">
-&nbsp &nbsp &nbsp
-  <!-- three-lines icon from https://www.iconfinder.com/icons/134216/hamburger_lines_menu_icon -->
-  <img src="{% static "images/three_lines_purple.png" %}">
-  <div class="clearblock"></div>
-  <ul id="user-menu">
-    {% if user.is_active %}
-    {% if user.has_usable_password and perms.auth.can_change_password %}
-    <li><a href="{% url 'admin:password_change' %}">{% trans 'Change&nbsp;password' %}</a></li>
-    {% endif %}
-    <li><a href="{% url 'admin:logout' %}">{% trans 'Log&nbsp;out' %}</a></li>
-    {% endif %}
-  </ul>
+<div id="top-right-wrapper">
+    <div id="welcome-message">
+        {% if user.is_active %}
+        {% block welcome-msg %}
+            {% trans 'Welcome,' %}
+            {% if user.get_short_name %}
+                {% if user.get_short_name|length > 15 %}
+                    {{ user.get_short_name|slice:":12" }}{% trans '...' %}
+                {% else %}
+                    {{ user.get_short_name }}
+                {% endif %}
+            {% elif user.get_username|length > 15 %}
+              {{ user.get_username|slice:":12" }}{% trans '...' %}
+            {% else %}
+              {{ user.get_username }}
+            {% endif %}
+        {% endblock %}
+        {% endif %}
+    </div>
+    <div id="user-menu-link">
+      <!-- three-lines icon from https://www.iconfinder.com/icons/134216/hamburger_lines_menu_icon -->
+      <img src="{% static "images/three_lines_purple.png" %}">
+      <div class="clearblock"></div>
+      <ul id="user-menu">
+        {% if user.is_active %}
+        {% if user.has_usable_password and perms.auth.can_change_password %}
+        <li><a href="{% url 'admin:password_change' %}">{% trans 'Change&nbsp;password' %}</a></li>
+        {% endif %}
+        <li><a href="{% url 'admin:logout' %}">{% trans 'Log&nbsp;out' %}</a></li>
+        {% endif %}
+      </ul>
+    </div>
 </div>
 {% endblock %}
 {% block nav-global %}{% endblock %}
