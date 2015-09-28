@@ -153,9 +153,6 @@
 },
 {
     "fields": {
-        "group": [
-            "staff"
-        ],
         "archived": null,
         "description": "testing the model",
         "date_created": "2015-06-11",
@@ -166,9 +163,6 @@
 },
 {
     "fields": {
-        "group": [
-            "admin"
-        ],
         "archived": null,
         "description": "Illinois grant for children",
         "date_created": "2015-06-11",
@@ -179,9 +173,6 @@
 },
 {
     "fields": {
-        "group": [
-            "staff"
-        ],
         "archived": null,
         "description": "Swim lessons.",
         "date_created": "2015-06-11",
@@ -192,9 +183,6 @@
 },
 {
     "fields": {
-        "group": [
-            "leader"
-        ],
         "archived": null,
         "description": "Day of the Dead",
         "date_created": "2015-06-11",
