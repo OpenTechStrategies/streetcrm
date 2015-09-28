@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import collections
 import copy
 import json
 import datetime
@@ -76,6 +77,18 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 results = results | {v} if test(v) else results
 
         return results
+
+    def _remove_empty_values(self, structure):
+        """ Takes in a dict and removes empty values of all nested dicts """
+        processed = collections.OrderedDict()
+        for k, v in structure.items():
+            if isinstance(v, dict):
+                v = self._remove_empty_values(v)
+
+            if v:
+                processed[k] = v
+
+        return processed
 
     def has_permission(self, request):
         """
@@ -267,6 +280,27 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 (event, event.participants.all()) for event in events
             ))
 
+        # Find the participants which aren't related to any of the events.
+        unique_participants = set()
+        for p in event_participants.values():
+            participant_ids = [p1.id for p1 in p]
+            unique_participants = unique_participants | set(participant_ids)
+        
+        non_event_participants = models.Participant.objects.exclude(
+            pk__in=unique_participants
+        )
+
+        if isinstance(data.get("participant"), str):
+            non_event_participants = non_event_participants.filter(
+                name__contains=data["participant"]
+            )
+        elif isinstance(data.get("participant"), models.Participant):
+            non_event_participants = non_event_participants.filter(
+                pk=data["participant"].pk
+            )
+
+        event_participants[None] = non_event_participants
+
         # If there has been a query on the institution we need to filter on that
         # unfortunately I can't think of any other way to do this so it'll be in
         # python, which will make it a little slower than the rest.
@@ -321,6 +355,24 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         results[event] += intersection
                     elif categorize == form.INSTITUTION:
                         results[institution] = results[institution] | set(intersection)
+
+            if categorize == form.INSTITUTION:
+                institution_participants = set()
+                for participants in results.values():
+                    pks = [p.pk for p in participants]
+                    institution_participants = institution_participants | set(pks)
+                non_institution_participants = models.Participant.objects.exclude(
+                    pk__in=institution_participants
+                )
+                if isinstance(data["participant"], str):
+                    non_institution_participants = non_institution_participants.filter(
+                        name__contains=data["participant"]
+                    )
+                elif isinstance(data["participant"], models.Participant):
+                    non_institution_participants = non_institution_participants.filter(
+                        pk=data["participant"].pk
+                    )
+                results[_("No Institution")] = non_institution_participants
         elif categorize == form.PARTICIPANT:
             results = set()
             for event, participants in event_participants.items():
@@ -330,19 +382,23 @@ class SWOPTACTAdminSite(admin.AdminSite):
             # Seperate the events up (yes i know we merged them above).
             major = {}
             minor = {}
+            no_event = []
             for event, participants in event_participants.items():
-                if event.is_prep:
+                if event is None:
+                    no_event += participants
+                elif event.is_prep:
                     minor[event] = participants
                 else:
                     major[event] = participants
 
-            results = {
-                _("Major"): major,
-                _("Minor"): minor
-            }
+            results = collections.OrderedDict((
+                (_("Major"), major),
+                (_("Minor"), minor),
+                (_("No Event"), no_event),
+            ))
 
         # Remove any without participants
-        results = dict(((s, p) for s, p in results.items() if p))
+        results = self._remove_empty_values(results)
 
         # Build the counts
         major_event_count = None
@@ -358,9 +414,15 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 results,
                 lambda o: isinstance(o, models.Event) and o.is_prep
             ))
-            major_event_count = len(results) - prep_event_count
+            major_event_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event) and not o.is_prep
+            ))
         elif categorize == form.INSTITUTION:
-            institution_count = len(results)
+            institution_count = len(self._nested_search(
+                results,
+                lambda i: isinstance(i, models.Institution)
+            ))
 
         # Return the response.
         return TemplateResponse(
