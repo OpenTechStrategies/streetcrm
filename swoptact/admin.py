@@ -518,7 +518,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
     search_fields = ("name",)
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "description", "group")
+    list_display = ("name", "description",)
     actions = None
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm

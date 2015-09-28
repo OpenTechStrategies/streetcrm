@@ -140,9 +140,6 @@ class Tag(ArchiveAbstract, SerializeableMixin, InspectMixin):
                                    blank=True, verbose_name="Tag Description")
     date_created = models.DateField(null=True, blank=True,
                                     default=timezone.now, verbose_name="Date Tag Created")
-    # Group which can use this tag
-    group = models.ForeignKey(auth_models.Group,
-                              verbose_name = "Group Assignment")
 
     # This should be put on Meta but sigh - issue #5793
     SERIALIZE_EXCLUDE = ["group"]
