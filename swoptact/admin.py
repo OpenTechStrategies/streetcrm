@@ -350,23 +350,20 @@ class SWOPTACTAdminSite(admin.AdminSite):
             results = dict([(i, set()) for i in institutions])
 
         if categorize == form.INSTITUTION or data["institution"]:
-            # We then should iterate through the institution and filter participants
-            # out which are not part contacts of the institution.
-            for institution in institutions:
-                contacts = institution.contacts.all()
-
-                # Look at the intersection between event_participants and contacts
-                for event, participants in event_participants.items():
-                    intersection = [p for p in participants if p in contacts]
-
+            # Look at the intersection between event_participants and contacts
+            for event, participants in event_participants.items():
+                for participant in participants:
+                    # If it's not in the institutions, skip it.
+                    if participant.institution not in institutions:
+                        continue
+   
                     # Add it to the results depending what we're displaying by
                     if categorize == form.PARTICIPANT:
-                        results[None] = results[None] | set(intersection)
+                        results[None].add(participant)
                     elif categorize == form.EVENT:
-                        # catagorise by event
-                        results[event] += intersection
+                        results[event].append(participant)
                     elif categorize == form.INSTITUTION:
-                        results[institution] = results[institution] | set(intersection)
+                        results[participant.institution].add(participant)
 
             if categorize == form.INSTITUTION and not institution_filtered:
                 institution_participants = set()
