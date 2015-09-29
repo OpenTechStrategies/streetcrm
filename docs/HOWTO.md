@@ -1,0 +1,99 @@
+# How To Use Engagemint #
+
+-  Discuss elements on "Home" page
+   - SWOP and contacts return to list of editable things
+   - breadcrumb
+   - search (see "Miscellaneous")
+   - log out and change password
+   - editable things
+   - missing data report
+-  list of actions
+   - filters: tag, archived
+   - sort list (both ways, "x" to remove sorting)
+- add an action
+  - note the autocompletion fields (organizer, second organizer, tags, connected action)
+  - click on calendar to add date
+  - note that you need to save before adding attendees
+- edit action
+  - Note that checking/unchecking the major action box will show or hide the connected action
+  - add attendees with autocompletion
+  - add or create institutions with autocompletion
+  - add phone number (note the possible errors)
+  - remove link
+  - explain what save changes does
+  - auto saving
+  - note tabbing and entering
+  (note that they will be re-ordered?)
+  - describe when new attendee will be added vs. when an existing one will be edited
+-  list of institutions
+   - (can't filter by tags?)
+   - filter by archived status
+-  add an institution
+   - note autocompletion on tags
+   - member y/n checkbox
+   - save to add contacts
+-  edit an institution
+   - can add multiple tags (so the input remains to the right of the existing tags)
+   - click pencil to remove tag
+   - add contact with "add new"
+   - limited to 4 contacts
+   - click "i" to see the full participant page in a new tab
+   - edit title here
+   - same possible phone number errors
+-  list of participants
+   - sort by column headers
+   - filter by archived
+-  add a participant
+   - institution is required
+   - save changes v. done
+   - action history will be empty until they are listed as attending an action
+   - phone formatting
+-  edit participant
+   - same, but with links to the action if any are listed
+   - action list is limited to more recent 5 actions
+- list of tags
+  - sort by column headers
+  - filter by archived
+- create a tag
+  - name is short and to the point (limited to 25 chars)
+  - description can give more details
+- edit tag
+  - see above
+- list of activity log
+  - shows recent changes ordered by date/time of change
+  - not sortable
+- create activity log
+  - One is automatically created whenever anything is changed.  I don't think it's a great idea to create them manually.
+- edit activity log
+  - Again, these are created automatically, so it's probably not good to make manual edits to them.  However, you could do so to store extra information about a change.
+  - Note that an edit to an activity log is itself stored in the log
+  - Don't change the "object_repr" field, the content type, or the object id.
+
+# User Administration #
+
+- list of users
+  - sort by column headers
+  - filter by active/inactive
+  - filter by group membership (note that people can and will be in multiple groups)
+- create a user
+  - unique username
+  - passwords can be changed after the fact
+  - click "done" and then choose what group(s) the user should be in.  Do not grant superuser status.  Don't edit the dates.
+  - setting user active or inactive (with checkbox) allows them to log in or not
+- list of groups
+  - We set these groups up, but others could be made with a different combination of existing permissions.
+  - the dropdown is used to delete groups, if necessary (but really, please don't)
+- create a group
+- edit a group
+
+# Miscellaneous #
+
+- add a tag to an institution or action
+  - see edit institution and edit action sections
+-  add a contact to an institution
+   - see edit institution section
+-  add an attendee to an event
+   - see "edit action" section
+- missing data report
+- search
+- advanced search (once it comes)
