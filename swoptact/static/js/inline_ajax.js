@@ -401,37 +401,10 @@ MESSAGE_WARNING = "alert-warning";
 MESSAGE_ERROR = "alert-danger";
 
 /* Shows the message box */
-function showMessage(error, message) {
+function showMessage(level, message) {
     var errorBox = $("#inlined-error-box");
     // Firstly call the Message clean function this will ensure the
     // box is cleanly setup so we can display the message.
-    cleanMessage();
-
-    // Add the error class
-    errorBox.addClass(error)
-
-    // Add show the text
-    errorBox.text(message);
-
-    // ensure it's visable
-    errorBox.css("visibility", "visible");
-}
-
-/* Hides the message box */
-function hideMessage() {
-    var errorBox = $("#inlined-error-box");
-
-    // Clean it just in case.
-    cleanMessage();
-
-    // Hide the box
-    errorBox.css("visibility", "hidden");
-}
-
-/* Cleans any extra things that has been added from the message box */
-function cleanMessage() {
-    var errorBox = $("#inlined-error-box");
-
     // firstly remove any extra classes on it.
     errorBox.removeClass();
 
@@ -440,22 +413,32 @@ function cleanMessage() {
 
     // Remove any text inside
     errorBox.empty();
+
+    // Add stylings for success, error, etc.
+    errorBox.addClass(level)
+
+    // Add show the text
+    errorBox.text(message);
+
+    // ensure it's visable
+    errorBox.show();
+}
+
+/* Hides the message box */
+function hideMessage() {
+    $("#inlined-error-box").hide();
 }
 
 /* This shows limit reached message and disables the buttons to add more */
-function limitReached(error, message) {
+function limitReached(message) {
     // Populate default message if one isn't given
     if (!message) {
-	var peopleLimit = getInlineConfig()["link_limit"];
-	message = "You have reached the limit of " + peopleLimit + " contacts.";
+        var peopleLimit = getInlineConfig()["link_limit"];
+        message = "You have reached the limit of " + peopleLimit + " contacts.";
     }
 
     // Show the error message
-    showMessage(error, message);
-
-    // Hide the "+ Add new" button
-    var addNewButton = $("#add-new-inlined-model-btn");
-    addNewButton.css("visibility", "hidden");
+    showMessage(MESSAGE_WARNING, message);
 }
 
 /* Checks if the limit has been reached - if so calls limitReached */
@@ -463,21 +446,12 @@ function checkLimitReached() {
     var peopleLimit = getInlineConfig()["link_limit"];
 
     // Check if there is a limit
-    if (!peopleLimit) {
-	return false;
+    if (peopleLimit && $("#inlined-model-table tbody tr").length >= peopleLimit) {
+        return true;
     }
-
-    // How many linked models do we have?
-    var linkedModels = $("tr");
-
-    // If it's less than the limit return false
-    if (linkedModels.length < peopleLimit) {
-	return false;
-
+    else {
+        return false;
     }
-
-    limitReached(MESSAGE_WARNING);
-    return true;
 }
 
 /* Grab the initial list of linked items from the server & render */
@@ -493,11 +467,9 @@ function loadInitialAttendees() {
             $("#inlined-model-table").append(newRow);
         }
         setStickyHeaders();
-        // Check if we're over the limit and if so show a meesage
-        // and stop the user adding more
-        var peopleLimit = getInlineConfig()["link_limit"];
-        if (peopleLimit && people_list.length >= peopleLimit) {
-            limitReached(MESSAGE_WARNING);
+        // Warn the user if we're at the max number of contacts.
+        if (checkLimitReached() == true) {
+            limitReached();
         }
     }, "json");
 }
@@ -526,10 +498,10 @@ function linkInlinedModel(tableRow, inlined_model_id) {
             },
         "json");
     }, "json").fail(function (result) {
-        error = JSON.parse(result.responseText)["error"];
+        message = JSON.parse(result.responseText)["error"];
         // Check for errors and if so display them.
         if (error) {
-            limitReached(MESSAGE_ERROR, error);
+            showMessage(MESSAGE_ERROR, message);
         }
     });
 }
@@ -542,7 +514,7 @@ function unlinkInlinedModel(row){
     $.ajax({
         url: target_url,
         type: 'DELETE',
-        success: function() {row.fadeOut(800, function() { row.remove(); })}
+        success: function() {row.fadeOut(800, function() { row.remove(); if (checkLimitReached() == false) { hideMessage(); } })}
     });
 }
 
@@ -651,7 +623,7 @@ function saveInlinedModel(row, cell) {
                           handleJSONErrors(errors, row);
                       },
                       success: function (updated_model) {
-                          checkLimitReached();
+                          if (checkLimitReached() == true) { limitReached(); }
                           row.find("td").removeClass("disabled").removeClass("corrigendum");
                           cell.find(".validation-error").empty();
                           cell.children(".static").children("span.static-span").text(cell.find("input").val());
@@ -683,7 +655,7 @@ function saveInlinedModel(row, cell) {
                           function (updated_model) {
                               row.data("model", updated_model);
                               fillTableRow(row);
-                              checkLimitReached();
+                              if (checkLimitReached() == true) { limitReached(); }
                               // Not sure if the below are necessary since I don't think a row can qualify as
                               // "new" with a pre-existing error in one of the cells, but leaving in for now.
                               row.find("td").removeClass("disabled").removeClass("corrigendum");
@@ -728,10 +700,12 @@ function turnOnEditing(cell) {
     cell.children(".static").hide();
     cell.children(".editable").show();
     var input = cell.children(".editable").children("input");
-    var len = input.val().length;
+    var val = input.val();
     input.focus();
-    // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
-    input[0].setSelectionRange(len*2, len*2);
+    if (val) {
+        // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
+        input[0].setSelectionRange(val.length*2, val.length*2);
+    }
     // Reset sticky headers in case table cell widths have changed.
     setStickyHeaders();
 }
@@ -765,17 +739,31 @@ function setupInlinedModelCallbacks() {
 
         addNewButton.on("click", function(event) {
             // event.preventDefault(); commenting this out until I understand what it does.
-            var newRow = getNewTableRow();
-            newRow.data("model", {"id": ""});  // This seems hacky. Find a better way.
-            fillTableRow(newRow);
-            $("#inlined-model-table").append(newRow);
+            if (!checkLimitReached()) {
+                var newRow = getNewTableRow();
+                newRow.data("model", {"id": ""});  // This seems hacky. Find a better way.
+                fillTableRow(newRow);
+                $("#inlined-model-table").append(newRow);
 
-            // Turn on autocomplete for attendee names (only applies to new rows).
-            turnOnAttendeeAutocomplete(newRow);
-            // scroll to the bottom of the table
-            var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
-            scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
-            turnOnEditing(newRow.children("td:first-of-type"));
+                // Turn on autocomplete for attendee names (only applies to new rows).
+                turnOnAttendeeAutocomplete(newRow);
+                // scroll to the bottom of the table
+                var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
+                scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
+                turnOnEditing(newRow.children("td:first-of-type"));
+            }
+            else {
+                var inlinedErrorBox = $("#inlined-error-box");
+                if (inlinedErrorBox.is(":visible")) {
+                    // This requires the animate-colors library for jQuery
+                    var origBackground = inlinedErrorBox.css("background-color");
+                    inlinedErrorBox.css("background-color", "red");
+                    inlinedErrorBox.animate({"backgroundColor": origBackground}, 1000);
+                }
+                else {
+                    limitReached();
+                }
+            }
         });
 
         $("#addNewButtonDiv").append(addNewButton);

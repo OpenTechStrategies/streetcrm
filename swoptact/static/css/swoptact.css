@@ -415,6 +415,11 @@ li.bold_name {
     font-weight: bold;
 }
 
+#inlined-error-box {
+    display: none;
+    margin: 1em 0em;
+}
+
 .inline-deletelink, .inline-deletelink:visited, .inline-deletelink:hover, .inline-deletelink:active  {
     float: none;
     text-indent: -9999px;
