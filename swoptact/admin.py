@@ -533,6 +533,7 @@ class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
 
 class LogAdmin(admin.ModelAdmin):
     actions = None
+    readonly_fields = ("user", "content_type", "object_id", "object_repr", "action_flag",)
 
 class UserAdmin(auth.admin.UserAdmin):
     fieldsets = (
