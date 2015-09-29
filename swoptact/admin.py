@@ -240,20 +240,10 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # If there is an event found by the autocompletion
         elif isinstance(data["event"], models.Event):
             event_filtered = True
-            # If there are tags double check it has the tags required
-            shared_tags = [
-                t for t in data["event_tags"] if t in data["event"].tags.all()
-            ]
-            if not data["event_tags"] or (data["event_tags"] and shared_tags):
-                # Add it to the correct list
-                if data["event"].is_prep:
-                    minor_events.append(data["event"])
-                else:
-                    major_events.append(data["event"])
+            event_query = event_query.filter(pk=data["event"].pk)
 
-        else:
-            major_events += event_query.filter(is_prep=False)
-            minor_events += event_query.filter(is_prep=True)
+        major_events += event_query.filter(is_prep=True)
+        minor_events += event_query.filter(is_prep=False)
 
         # If we are to include minor events we should look up all the minor
         # events for the major events that we have found so far.
