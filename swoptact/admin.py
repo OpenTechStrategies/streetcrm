@@ -203,24 +203,31 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # the only time we'll have a queryset and it's far faster to do this
         # in the database we should handle the situation of tags here too.
         event_query = models.Event.objects.all()
+        event_filtered = False
         if data["event_tags"]:
+            event_filtered = True
             event_query = event_query.filter(tags__in=data["event_tags"])
 
         # If they've specified an organizer lets filter by that too.
         if isinstance(data["event_organizer"], str):
+            event_filtered = True
             event_query = event_query.filter(
                 organizer__name__contains=data["event_organizer"]
             )
         elif isinstance(data["event_organizer"], models.Participant):
+            event_filtered = True
             event_query = event_query.filter(organizer=data["event_organizer"])
 
         # Filter by the datetime constraints if they have been given
         if data["start_date"] is not None:
+            event_filtered = True
             event_query = event_query.filter(date__gte=data["start_date"])
         if data["end_date"] is not None:
+            event_filtered = True
             event_query = event_query.filter(date__lte=data["end_date"])
 
         if isinstance(data["event"], str):
+            event_filtered = True
             major_events += event_query.filter(
                 name__contains=data["event"],
                 is_prep=False
@@ -232,6 +239,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
         # If there is an event found by the autocompletion
         elif isinstance(data["event"], models.Event):
+            event_filtered = True
             # If there are tags double check it has the tags required
             shared_tags = [
                 t for t in data["event_tags"] if t in data["event"].tags.all()
@@ -281,44 +289,48 @@ class SWOPTACTAdminSite(admin.AdminSite):
             ))
 
         # Find the participants which aren't related to any of the events.
-        unique_participants = set()
-        for p in event_participants.values():
-            participant_ids = [p1.id for p1 in p]
-            unique_participants = unique_participants | set(participant_ids)
+        if not event_filtered:
+            unique_participants = set()
+            for p in event_participants.values():
+                participant_ids = [p1.id for p1 in p]
+                unique_participants = unique_participants | set(participant_ids)
         
-        non_event_participants = models.Participant.objects.exclude(
-            pk__in=unique_participants
-        )
-
-        if isinstance(data.get("participant"), str):
-            non_event_participants = non_event_participants.filter(
-                name__contains=data["participant"]
-            )
-        elif isinstance(data.get("participant"), models.Participant):
-            non_event_participants = non_event_participants.filter(
-                pk=data["participant"].pk
+            non_event_participants = models.Participant.objects.exclude(
+                pk__in=unique_participants
             )
 
-        event_participants[None] = non_event_participants
+            if isinstance(data.get("participant"), str):
+                non_event_participants = non_event_participants.filter(
+                    name__contains=data["participant"]
+                )
+            elif isinstance(data.get("participant"), models.Participant):
+                non_event_participants = non_event_participants.filter(
+                    pk=data["participant"].pk
+                )
+
+            event_participants[None] = non_event_participants
 
         # If there has been a query on the institution we need to filter on that
         # unfortunately I can't think of any other way to do this so it'll be in
         # python, which will make it a little slower than the rest.
         institutions = []
         institution_query = models.Institution.objects.all()
-
+        institution_filtered = False 
         # Narrow the institutions down if there have been tags selected
         if data["institution_tags"]:
+            institution_filtered = True
             institution_query = institution_query.filter(
                 tags__in=data["institution_tags"]
             )
 
         if isinstance(data.get("institution"), str):
             # Perform a search for the institution(s) which match
+            institution_filtered = True
             institutions += institution_query.filter(
                 name__contains=data["institution"]
             )
         elif isinstance(data.get("institution"), models.Institution):
+            institution_filtered = True
             # This is when the autocomplete has found one
             institutions.append(data["institution"])
         elif categorize == form.INSTITUTION:
@@ -356,7 +368,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                     elif categorize == form.INSTITUTION:
                         results[institution] = results[institution] | set(intersection)
 
-            if categorize == form.INSTITUTION:
+            if categorize == form.INSTITUTION and not institution_filtered:
                 institution_participants = set()
                 for participants in results.values():
                     pks = [p.pk for p in participants]
