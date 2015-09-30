@@ -10,7 +10,6 @@
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% static "js/warn_unsaved.js" %}"></script>
-<script type="text/javascript" src="{% static "js/handle_submit_button.js" %}"></script>
 {% url 'admin:jsi18n' as jsi18nurl %}
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {{ media }}
@@ -62,7 +61,7 @@
             {% endblock %}
 
             {% block after_field_sets %}{% endblock %}
-        </form>
+        </div>
         {% block inline_field_sets %}
         {% for inline_admin_formset in inline_admin_formsets %}
             {% include inline_admin_formset.opts.template %}
@@ -85,6 +84,6 @@
                })(django.jQuery);
            </script>
         {% endif %}
-    </div>
+    </form>
 
 {% endblock %}
