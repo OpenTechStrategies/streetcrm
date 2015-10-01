@@ -1,5 +1,8 @@
 # TESTING.md
 
+## General functionality
+- Objects can be saved and edited.
+
 ## Inlined Models: Contacts and Sign-in Sheet
 
 - Names autocomplete when adding new, but not when editing
@@ -15,7 +18,6 @@
 - Removing an inlined object removes the link between the page object
   and the inlined object, but does not remove the inlined object from
   the DB
-
 
 ## Permissions
 

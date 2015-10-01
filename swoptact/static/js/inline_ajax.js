@@ -28,20 +28,6 @@ Sounds confusing?  It's not too hard to use.  Take a look:
   var my_url = url_formatter({"<froob_id>": 35});
 */
 
-/* Prevent the enter key from submitting the form. Enter is now reserved
- * for submitting changes to individual entity values via the
- * click-to-edit UI. */
-
-/* Since using "enter" to submit is one reason if not the main reason
- * for having <form> tags at all, one wonders if these might be done
- * away with entirely, with all network communication being done via
- * ajax instead */
-$("form").keypress(function(e){
-  if (e.which == 13) {
-    return false;
-  }
-});
-
 function gummyStringFormatter(string_pattern) {
     return function(replace_map) {
         var new_str = "";
@@ -58,154 +44,105 @@ function gummyStringFormatter(string_pattern) {
 }
 
 
-function setupStaticDiv(field_def, cur_value) {
-    if (!cur_value) {
-        cur_value = "";
-    }
-    var div_wrapper = $("<div class=\"static\"/>");
-    div_wrapper.append("<span class=\"static-span\">" + cur_value + "</span>");
-    return div_wrapper;
-}
+/* Generate a new <tr> element including all internal structures and
+ * handlers, but no data. */
+function getNewTableRow() {
+    var tableRow = $("<tr />");
+    tableRow.addClass("form-row");
 
-function setupEditableDiv(field_def, cur_value) {
-    var div_wrapper = $("<div class=\"editable\"/>");
-    var input = $("<input/>", {
-        "class": "vTextField " + field_def["form_name"],
-        "type": "text",
-        "value": cur_value});
-    input.text(cur_value);
-    div_wrapper.append("<div class=\"validation-error\"/>");
-    div_wrapper.append(input);
-    return div_wrapper;
+    var fields_config = getFieldsConfig();
+
+    fields_config.map(function(field) {
+        var staticDiv = $("<div class=\"static\"/>");
+        staticDiv.append("<span class=\"static-span\"/>");
+        staticDiv.append("<a class=\"profile-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
+
+        var editableDiv = $("<div class=\"editable\"/>");
+        editableDiv.append("<div class=\"validation-error\"/>");
+
+        var input = $("<input class=\"vTextField " + field["form_name"] + "\" type=\"text\"/>");
+        editableDiv.append(input);
+        
+        if (field["input_type"] == "fkey_autocomplete_name") {
+            var newIndicator = $("<span class=\"new-indicator\">[NEW]</span>");
+            newIndicator.hide();
+            editableDiv.append(newIndicator);
+
+            // Possibly update the [NEW] label on keystroke
+            input.on("keyup", function (e) {
+                // 13 is enter key, and we have a different handler for that
+                if (e.which != 13) {
+                    maybeUpdateNew(newIndicator, input.val(), field["autocomplete_uri"]);
+                }
+            });
+
+            // Named_fkey autocomplete stuff
+            input.autocomplete({
+                select: function (e, ui) {
+                    if (ui.item) {
+                        newIndicator.hide();
+                    }
+                },
+                source: autoCompleteSourceHelper(field["autocomplete_uri"]),
+                // If we can focus on it, it's definitely not [NEW]
+                focus: function (event, ui) {newIndicator.hide();},
+                // But be sure after a close, we may have "reverted" the value
+                close: function (event, ui) {maybeUpdateNew(newIndicator, input.val(), field["autocomplete_uri"]);}
+            });
+        }
+
+        var td_wrap = $("<td/ id=\"col-" + tableRow.children("td").length + "\">");
+        td_wrap.attr("data-form-name", field["form_name"]);
+        td_wrap.attr("data-input-type", field["input_type"]);
+
+        td_wrap.append(staticDiv);
+        td_wrap.append(editableDiv);
+
+        tableRow.append(td_wrap);
+    });
+
+    // Now append the buttons if the user has enough privileges
+    if (userCanEdit()) {
+       tableRow.append('<td><span class="deleteButton">&#10006;</span></td>');
+    }
+
+    return tableRow;
 }
 
 function getValueFromTextInput(column) {
     return column.find("input").val();
 }
 
-function setupAutoCompleteStaticDiv(field_def, cur_value) {
-    if (cur_value) {
-        return setupStaticDiv(field_def, cur_value.name);
-    } else {
-        return setupStaticDiv(field_def, "");
-    }
-}
-
-
-
-/*
-           ..   ..
-            \.-./
-      \     (o o)    \ 
-      /\    /"""\    /\
-           ''   ''
-  BEWARE OF FALLING LAMBDAS!
-
-... just kidding, everything's okay.  It's just a little bit more
-intense of a function than I'd like.  Besides, every codebase needs
-a reference to "lambda" to show the authors are with it, right?
-
-Basically we're going to set up a field here for the autocomplete field.
-But that thing needs to indicate clearly to the user when something
-is new or not to the user, so we set up a [NEW] widget, hide it by default,
-but as soon as a user types something, we check to see if that's new.
-
-But we simultaneously also hook in the autocomplete stuff.  (Pull out
-the URL for that out of the field definition!)  It turns out we've
-already got an "on typing" handler there, so why not tack on the [NEW]
-stuff when we run that?
-
-So that's why this looks a bit tricky.  But it's not so bad.
-*/
-
-function setupAutoCompleteEditableDiv(field_def, cur_value) {
-    // named_fkey has some more complex code...
-    if (cur_value) {
-        var named_fkey_div = setupEditableDiv(
-            field_def, cur_value.name);
-    } else {
-        var named_fkey_div = setupEditableDiv(
-            field_def, "");
-    }
-
-    var named_fkey_input = $(named_fkey_div.find("input")[0]);
-    var new_indicator = $("<span class=\"new-indicator\">[NEW]</span>");
-    named_fkey_div.append(new_indicator);
-    new_indicator.hide();
-
-    // Otherwise, check for whether or not this is a new item on each keydown
-    // @@: Can we reduce a request per keystroke by rolling this into
-    //   the autocomplete's signals?
-    function maybeUpdateNew () {
-        $.ajax({
-            url: field_def.autocomplete_uri,
-            datatype: "html",
-            data: {
-                q: named_fkey_input.val(),
-            },
-            success: function(data) {
-                var lower_input = named_fkey_input.val().toLowerCase();
-                var result_as_array = $.makeArray($(data));
-                var found_match = false;
-                // Search through all results, see if there's a match
-                // that matches by lowercase
-                for (var i = 0; i < result_as_array.length; i++) {
-                    var this_result = result_as_array[i];
-                    if ($(this_result).text().toLowerCase() == lower_input) {
-                        found_match = true;
-                        break;
-                    }
-                }
-
-                // If there's a match, hide the [NEW], but show it otherwise
-                if (found_match || lower_input.length == 0) {
-                    new_indicator.hide();
-                } else {
-                    new_indicator.show();
+// Check for whether or not this is a new item on each keydown
+function maybeUpdateNew (newIndicator, val, autocomplete_uri) {
+    $.ajax({
+        url: autocomplete_uri,
+        datatype: "html",
+        data: {
+            q: val,
+        },
+        success: function(data) {
+            var lower_input = val.toLowerCase();
+            var result_as_array = $.makeArray($(data));
+            var found_match = false;
+            // Search through all results, see if there's a match
+            // that matches by lowercase
+            for (var i = 0; i < result_as_array.length; i++) {
+                var this_result = result_as_array[i];
+                if ($(this_result).text().toLowerCase() == lower_input) {
+                    found_match = true;
+                    break;
                 }
             }
-        });
-    }
-
-    // Possibly update the [NEW] thing on keystroke
-    named_fkey_div.on(
-        "keyup",
-        function (event) {
-            // 13 is enter key, and we have a different handler for that
-            if (event.which != 13) {
-                maybeUpdateNew();
-            }});
-
-    // Named_fkey autocomplete stuff
-    named_fkey_input.autocomplete({
-        select: function (event, ui) {
-            if (ui.item) {
-                new_indicator.hide();
-            }},
-        source: autoCompleteSourceHelper(field_def.autocomplete_uri),
-        // If we can focus on it, it's definitely not [NEW]
-        focus: function (event, ui) {new_indicator.hide();},
-        // But be sure after a close, we may have "reverted" the value
-        close: function (event, ui) {maybeUpdateNew();},
+             // If there's a match, hide the [NEW], but show it otherwise
+            if (found_match || lower_input.length == 0) {
+                newIndicator.hide();
+            } else {
+                newIndicator.show();
+            }
+        }
     });
-
-    return named_fkey_div;
 }
-
-var fieldTypes = {
-    "text": {
-        setupStatic: setupStaticDiv,
-        setupEdit: setupEditableDiv,
-        getValueFromColumn: getValueFromTextInput
-    },
-    "fkey_autocomplete_name": {
-        setupStatic: setupAutoCompleteStaticDiv,
-        setupEdit: setupAutoCompleteEditableDiv,
-        getValueFromColumn: getValueFromTextInput
-    }
-};
-
-
 
 function getRowValues(row) {
     var dict = {};
@@ -214,8 +151,7 @@ function getRowValues(row) {
             var jq_column = $(column);
             var form_name = jq_column.attr("data-form-name");
             var input_type = jq_column.attr("data-input-type");
-            var handler = fieldTypes[input_type].getValueFromColumn;
-            dict[form_name] = handler(jq_column);
+            dict[form_name] = getValueFromTextInput(jq_column);
         }
     );
     return dict;
@@ -337,40 +273,6 @@ function revertEditRow(inlined_model_id) {
     // TODO: base this on the filling system
 }
 
-
-/* Insert a inlined into the DOM.
-
-Here, the inlined is a json object, as fetched from the API.
-*/
-function insertInlinedModel(inlined_model) {
-    // TODO: Insert the inlined_model into a hashmap for later reference?
-    //   (eg, if canceling an edit...)
-
-    // Construct and insert table row
-    // -------------------------------
-    var tableRow = $("<tr />");
-    tableRow.addClass("form-row");
-    tableRow.data("id", inlined_model.id);
-
-    fillTableRow(tableRow, inlined_model);
-
-    // It's important that we append to the table before (possibly)
-    // focusing on an input element below.
-    $("#inlined-model-table").append(tableRow);
-
-    // Special hacks for the "new" inlined_model...
-    if (inlined_model.id === "") {
-        // Turn on autocomplete,
-        turnOnAttendeeAutocomplete(tableRow);
-        // show the input field for the first field in the new model (and hide the static version),
-        $(tableRow.find(".static")[0]).hide();
-        $(tableRow.find(".editable")[0]).show();
-        // and put the focus there.
-        $(tableRow.find(".editable")[0]).find("input").focus();
-    }
-}
-
-
 /* Helper utility for constructing autocomplete functions
 
 Return a closure to help us construct autocomplete source functions
@@ -407,24 +309,21 @@ function autoCompleteSourceHelper(url) {
 Contact autocomplete is *only* on for completing the names of existing
 inlined models when adding a new row!
 */
-function turnOnAttendeeAutocomplete(edit_row) {
-
+function turnOnAttendeeAutocomplete(tableRow) {
     // Hook in the autocomplete function
-    edit_row.find("input.name").autocomplete({
+    tableRow.find("input.name").autocomplete({
         source: autoCompleteSourceHelper(getAutoCompleteUrl()),
         select: function(event, ui) {
             if (ui.item) {
                 var inlined_model_id = ui.item.data.id;
                 // Insert the inlined and make them immediately editable
-                linkInlinedModel(inlined_model_id);
-                // Don't replace the input value with the ui.item.value
-                var tr =  $(this).closest("tr");
-                // Hide the "new" row because removing it (below) causes a blur event in Chrome browsers (see the "blur" handler
-                tr.hide();
-                tr.remove();
-                // Prevent form submission.
-                event.preventDefault();
+                linkInlinedModel(tableRow, inlined_model_id);
             }
+            // We must stop event propagation so that if the user
+            // selected an autocomplete option by hitting 'enter', that
+            // keydown event will not be interpreted as "save and move
+            // the the next cell for further data entry".
+            event.stopPropagation();
         }
     });
 }
@@ -432,63 +331,50 @@ function turnOnAttendeeAutocomplete(edit_row) {
 /*
   Create a link to the change form of an inlined model with the given ID
 */
-function createProfileLink(inlined_model_id, existing_element, url_for_profile) {
-    if (url_for_profile == undefined) { url_for_profile = null; }
-    var link_to_profile = $("<a/>");
-    link_to_profile.html("<span class=\"large-info\">&#x2139;</span>");
-    link_to_profile.attr("href", getExistingInlinedModelProfileUrl(inlined_model_id, url_for_profile));
-    link_to_profile.attr("target", "_blank");
-    existing_element.append(link_to_profile);
+function createProfileLink(model, cell) {
+    var id, url;
+    if (cell.data("form-name") == "name") {
+        id = model.id;
+        url = null;
+    }
+    else if (cell.data("form-name") == "institution" && model.institution) {
+        id = model.institution.id;
+        url = "/swoptact/institution/";
+    }
+    if (id != undefined) {
+        // Give the profile link an href attribute and make it visible.
+        var profileLink = cell.children(".static").children("a.profile-link");
+        profileLink.attr("href", getExistingInlinedModelProfileUrl(id, url));
+        profileLink.css("visibility", "visible");
+    }
 }
 
 
-/* Fill the table row with the appropriate elements
+/* Populate the table row with values
 
 Arguments:
- - row: jquery DOM element for this inlined <tr> row
- - inlined: mapping representing this linked model's data
+ - row: a <tr> element with all structure but no data
+ - inlinedModel: mapping representing this linked model's data
 */
-function fillTableRow(row, inlined_model) {
-    var fields_config = getFieldsConfig();
-
-    fields_config.map(
-        function(field) {
-            var staticDiv = fieldTypes[field.input_type].setupStatic(
-                field,
-                // The current representation for this field on the model
-                inlined_model[field.form_name]);
-
-            if (field['form_name'] == 'name'){
-                createProfileLink(inlined_model.id, staticDiv);
-            }
-            else if (field['form_name'] == 'institution' && inlined_model.institution){
-                // this doesn't work yet because I don't know how to set the URL correctly
-                createProfileLink(inlined_model.institution.id, staticDiv, "/swoptact/institution/");
-            }
-
-            var editableDiv = fieldTypes[field.input_type].setupEdit(
-                field,
-                // The current representation for this field on the model
-                inlined_model[field.form_name])
-
-            td_wrap = $("<td/>");
-            td_wrap.attr("data-form-name", field['form_name']);
-            td_wrap.attr("data-input-type", field['input_type']);
-
-            td_wrap.append(staticDiv);
-            td_wrap.append(editableDiv);
-
-            row.append(td_wrap);
-
+function fillTableRow(tableRow) {
+    var inlinedModel = tableRow.data("model");
+    var staticDiv, editableDiv, fieldName, val;
+    tableRow.children("td").each(function() {
+        var cell = $(this);
+        staticDiv = cell.children(".static");
+        editableDiv = cell.children(".editable");
+        fieldName = cell.data("form-name");
+        if (cell.data("input-type") == "fkey_autocomplete_name") {
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : "";
         }
-    );
-    // Now append the buttons if the user has enough privileges
-    // if (getInlineConfig()["user_can_edit"]) {
-    //    row.append('<td><span class="deleteButton">&#10006;</span></td>');
-    // }
-    if (userCanEdit()) {
-       row.append('<td><span class="deleteButton">&#10006;</span></td>');
-    }
+        else {
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName] : "";
+        }           
+        staticDiv.children(".static-span").text(val);
+        editableDiv.children("input").val(val);
+        // Add a profile link (letter "i" in a circle)
+        createProfileLink(inlinedModel, cell);
+    });
 }
 
 
@@ -515,37 +401,10 @@ MESSAGE_WARNING = "alert-warning";
 MESSAGE_ERROR = "alert-danger";
 
 /* Shows the message box */
-function showMessage(error, message) {
+function showMessage(level, message) {
     var errorBox = $("#inlined-error-box");
     // Firstly call the Message clean function this will ensure the
     // box is cleanly setup so we can display the message.
-    cleanMessage();
-
-    // Add the error class
-    errorBox.addClass(error)
-
-    // Add show the text
-    errorBox.text(message);
-
-    // ensure it's visable
-    errorBox.css("visibility", "visible");
-}
-
-/* Hides the message box */
-function hideMessage() {
-    var errorBox = $("#inlined-error-box");
-
-    // Clean it just in case.
-    cleanMessage();
-
-    // Hide the box
-    errorBox.css("visibility", "hidden");
-}
-
-/* Cleans any extra things that has been added from the message box */
-function cleanMessage() {
-    var errorBox = $("#inlined-error-box");
-
     // firstly remove any extra classes on it.
     errorBox.removeClass();
 
@@ -554,22 +413,32 @@ function cleanMessage() {
 
     // Remove any text inside
     errorBox.empty();
+
+    // Add stylings for success, error, etc.
+    errorBox.addClass(level)
+
+    // Add show the text
+    errorBox.text(message);
+
+    // ensure it's visable
+    errorBox.show();
+}
+
+/* Hides the message box */
+function hideMessage() {
+    $("#inlined-error-box").hide();
 }
 
 /* This shows limit reached message and disables the buttons to add more */
-function limitReached(error, message) {
+function limitReached(message) {
     // Populate default message if one isn't given
     if (!message) {
-	var peopleLimit = getInlineConfig()["link_limit"];
-	message = "You have reached the limit of " + peopleLimit + " contacts.";
+        var peopleLimit = getInlineConfig()["link_limit"];
+        message = "You have reached the limit of " + peopleLimit + " contacts.";
     }
 
     // Show the error message
-    showMessage(error, message);
-
-    // Hide the "+ Add new" button
-    var addNewButton = $("#add-new-inlined-model-btn");
-    addNewButton.css("visibility", "hidden");
+    showMessage(MESSAGE_WARNING, message);
 }
 
 /* Checks if the limit has been reached - if so calls limitReached */
@@ -577,21 +446,12 @@ function checkLimitReached() {
     var peopleLimit = getInlineConfig()["link_limit"];
 
     // Check if there is a limit
-    if (!peopleLimit) {
-	return false;
+    if (peopleLimit && $("#inlined-model-table tbody tr").length >= peopleLimit) {
+        return true;
     }
-
-    // How many linked models do we have?
-    var linkedModels = $("tr");
-
-    // If it's less than the limit return false
-    if (linkedModels.length < peopleLimit) {
-	return false;
-
+    else {
+        return false;
     }
-
-    limitReached(MESSAGE_WARNING);
-    return true;
 }
 
 /* Grab the initial list of linked items from the server & render */
@@ -599,47 +459,62 @@ function loadInitialAttendees() {
     var page_model_id = getPageModelId();
     var url = fillCurrentInlinesUrl(page_model_id);
     $.get(url, function (people_list) {
+        var newRow;
         for (i = 0; i < people_list.length; i++){
-            insertInlinedModel(people_list[i]);
+            newRow = getNewTableRow();
+            newRow.data("model", people_list[i]);
+            fillTableRow(newRow);
+            $("#inlined-model-table").append(newRow);
         }
         setStickyHeaders();
-        // Check if we're over the limit and if so show a meesage
-	// and stop the user adding more
-	var peopleLimit = getInlineConfig()["link_limit"];
-	if (peopleLimit && people_list.length >= peopleLimit) {
-	    limitReached(MESSAGE_WARNING);
-	}
-
+        // Warn the user if we're at the max number of contacts.
+        if (checkLimitReached() == true) {
+            limitReached();
+        }
     }, "json");
 }
 
 
 /* Add the inlined model on the backend and link on the frontend */
-function linkInlinedModel(inlined_model_id) {
+function linkInlinedModel(tableRow, inlined_model_id) {
     var url = fillLinkInlinedModelUrl(getPageModelId(), inlined_model_id);
     $.post(url, function (result) {
         $.get(fillExistingInlinedModelUrl(inlined_model_id),
-              function (inlined_model) {
-                  insertInlinedModel(inlined_model);
-              }, 'json');
+            function (existing_model) {
+                tableRow.data("model", existing_model);
+                fillTableRow(tableRow);
+                // User just filled table row by selecting an autocomplete
+                // option. Open a new row if it was the last row.
+                if (tableRow.next("tr").length == 0) {
+                    $("#add-new-inlined-model-btn").trigger("click");
+                }
+                // else close the cell we're working on by triggering a click event
+                // that will close any cells being edited and save the new values.
+                else {
+                    // It won't close an element with the focus though, so blur it.
+                    $(document.activeElement).blur();
+                    $(document).trigger("click");
+                }
+            },
+        "json");
     }, "json").fail(function (result) {
-        error = JSON.parse(result.responseText)["error"];
+        message = JSON.parse(result.responseText)["error"];
         // Check for errors and if so display them.
         if (error) {
-            limitReached(MESSAGE_ERROR, error);
+            showMessage(MESSAGE_ERROR, message);
         }
     });
 }
 
 /* Remove inlined model with INLINED_MODEL_ID from server and the UI. */
 function unlinkInlinedModel(row){
-    var inlined_model_id = row.data("id");
+    var inlined_model_id = row.data("model").id;
     var page_model_id = getPageModelId();
     var target_url = fillLinkInlinedModelUrl(page_model_id, inlined_model_id);
     $.ajax({
         url: target_url,
         type: 'DELETE',
-        success: function() {row.fadeOut(800, function() { row.remove(); })}
+        success: function() {row.fadeOut(800, function() { row.remove(); if (checkLimitReached() == false) { hideMessage(); } })}
     });
 }
 
@@ -656,10 +531,38 @@ function handleJSONErrors(errors, row){
         var formName = ths.data("form-name");
         if (errors.hasOwnProperty(formName)) {
             var allErrors = errors[formName].join("; ");
-            ths.find(".validation-error").text(allErrors);
-            // Disable all sibling <td>s (except the delete row button)
+            // Adding the error message into the cell may change the
+            // cell's dimensions, which may change the dimensions of
+            // other cells, which may move the relevant cell out of the
+            // constant-height viewport that is part of the sticky table
+            // headers implementation. Therefore make sure the distance
+            // between the top of the errored cell and the top of the
+            // viewport remains constant.
+
+            // Measure position before the text is added...
+            var pos1 = $(this).position().top;
+            $(this).find(".validation-error").text(allErrors);
+            // and after.
+            var pos2 = $(this).position().top;
+
+            // Then scroll into position. Note that the value of
+            // scrollableArea.scrollTop() after adding the text
+            // will be the same as it was before.
+            var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");            
+            scrollableArea.scrollTop(scrollableArea.scrollTop() + (pos2-pos1));
+            
+            // If the error is on the bottom row, the bottom of the cell
+            // might still be out of view. If this is the case, scroll a
+            // little more (and add 15 px for padding).
+            var offsetDifference = ($(this).offset().top + $(this).outerHeight() + 15) - (scrollableArea.offset().top + scrollableArea.outerHeight());
+            if (offsetDifference > 0) {
+                scrollableArea.scrollTop(scrollableArea.scrollTop() + offsetDifference);
+            }
+
+            // Mark the errored cell as such.
             ths.addClass("corrigendum");
-            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");
+            // Disable all sibling <td>s (except the delete row button)
+            ths.siblings("td:not(:has(span.deleteButton))").addClass("disabled");            
         }
     });
 }
@@ -667,12 +570,12 @@ function handleJSONErrors(errors, row){
 /* Save inlined model on server and update the UI
 
 Arguments:
- - inlined_model_id: the identifier for this linked model
+ - inlined_model: this linked model
  - submit_flag: whether or not to submit the entire form
    NOTE: this is broken, see issue #105
 */
 function saveInlinedModel(row, cell) {
-    var inlined_model_id = row.data("id");
+    var inlined_model = row.data("model");
     var form_data = getRowValues(row);
 
     // Handle if this is a new row, or an existing one
@@ -681,8 +584,8 @@ function saveInlinedModel(row, cell) {
     //   supported here.  We should simplify the code to just ""
     //   because otherwise we're going to end up with a lot of
     //   missed conditions and extra checks.
-    if (inlined_model_id != "empty" && inlined_model_id != ""){
-        return $.get(fillExistingInlinedModelUrl(inlined_model_id),
+    if (inlined_model.id != "empty" && inlined_model.id != ""){
+        return $.get(fillExistingInlinedModelUrl(inlined_model.id),
               function (inlined_model_dbstate) {
                   // @@: Unfortunately, we're fetching the existing representation from
                   //   the server and then modifying that with the form before update.
@@ -712,17 +615,20 @@ function saveInlinedModel(row, cell) {
                   }
                   
                   $.ajax({
-                      url: fillExistingInlinedModelUrl(inlined_model_id),
+                      url: fillExistingInlinedModelUrl(inlined_model.id),
                       data: JSON.stringify(data_to_submit),
                       type: 'PUT',
                       error: function (response) {
                           var errors = jQuery.parseJSON(response.responseText).form.errors;
                           handleJSONErrors(errors, row);
                       },
-                      success: function (response) {
-                          checkLimitReached();
+                      success: function (updated_model) {
+                          if (checkLimitReached() == true) { limitReached(); }
                           row.find("td").removeClass("disabled").removeClass("corrigendum");
                           cell.find(".validation-error").empty();
+                          cell.children(".static").children("span.static-span").text(cell.find("input").val());
+                          createProfileLink(updated_model, cell);
+                          row.data("model", updated_model);
                           cell.find(".static").show();
                           cell.find(".editable").hide();
                       },
@@ -746,11 +652,10 @@ function saveInlinedModel(row, cell) {
                 var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
                 $.post(url, function (result) {
                     $.get(fillExistingInlinedModelUrl(response.id),
-                          function (inlined_model) {
-                              // remove the "new" row from the UI and add one by the same method others were added.
-                              row.remove();
-                              insertInlinedModel(inlined_model);
-                              checkLimitReached();
+                          function (updated_model) {
+                              row.data("model", updated_model);
+                              fillTableRow(row);
+                              if (checkLimitReached() == true) { limitReached(); }
                               // Not sure if the below are necessary since I don't think a row can qualify as
                               // "new" with a pre-existing error in one of the cells, but leaving in for now.
                               row.find("td").removeClass("disabled").removeClass("corrigendum");
@@ -791,10 +696,39 @@ function setStickyHeaders(e) {
     });
 }
 
+function turnOnEditing(cell) {
+    cell.children(".static").hide();
+    cell.children(".editable").show();
+    var input = cell.children(".editable").children("input");
+    var val = input.val();
+    input.focus();
+    if (val) {
+        // Put cursor at end of input. Mult. len by 2 is a hack for Opera.
+        input[0].setSelectionRange(val.length*2, val.length*2);
+    }
+    // Reset sticky headers in case table cell widths have changed.
+    setStickyHeaders();
+}
+
 /* Set up all the main widget callbacks */
 function setupInlinedModelCallbacks() {
     // Adjust sticky headers on window resize
     $(window).on("resize", setStickyHeaders);
+
+
+    /* Prevent the enter key from submitting the form. Enter is now reserved
+     * for submitting changes to individual entity values via the
+     * click-to-edit UI. */
+    
+    /* Since using "enter" to submit is one reason if not the main reason
+     * for having <form> tags at all, one wonders if these might be done
+     * away with entirely, with all network communication being done via
+     * ajax instead */
+    $("form").keypress(function(e){
+        if (e.which == 13) {
+            return false;
+        }
+    });
 
     if (userCanEdit()) {
         // Put the "add new" button into the form
@@ -803,67 +737,106 @@ function setupInlinedModelCallbacks() {
         var addNewButtonText = "✚ " + gettext("Add New");
         addNewButton.text(addNewButtonText);
 
-        addNewButton.on(
-            "click",
-            function(event) {
-                event.preventDefault();
-                insertInlinedModel({"id": ""});
-            });
+        addNewButton.on("click", function(event) {
+            // event.preventDefault(); commenting this out until I understand what it does.
+            if (!checkLimitReached()) {
+                var newRow = getNewTableRow();
+                newRow.data("model", {"id": ""});  // This seems hacky. Find a better way.
+                fillTableRow(newRow);
+                $("#inlined-model-table").append(newRow);
+
+                // Turn on autocomplete for attendee names (only applies to new rows).
+                turnOnAttendeeAutocomplete(newRow);
+                // scroll to the bottom of the table
+                var scrollableArea = $("#inlined-model-table").closest(".scrollable-area");
+                scrollableArea.scrollTop(scrollableArea.prop("scrollHeight"));
+                turnOnEditing(newRow.children("td:first-of-type"));
+            }
+            else {
+                var inlinedErrorBox = $("#inlined-error-box");
+                if (inlinedErrorBox.is(":visible")) {
+                    // This requires the animate-colors library for jQuery
+                    var origBackground = inlinedErrorBox.css("background-color");
+                    inlinedErrorBox.css("background-color", "red");
+                    inlinedErrorBox.animate({"backgroundColor": origBackground}, 1000);
+                }
+                else {
+                    limitReached();
+                }
+            }
+        });
 
         $("#addNewButtonDiv").append(addNewButton);
 
+        /* On any click in the document, check to see if we need to save any
+           data in the ajax-populated table. */
+        $(document).on("click", function(e) {
+            // Find the closest editable div to the clicked element.
+            var closest = $(document.activeElement).closest("td");
+
+            // Loop through all visible editable divs and save their data;
+            // but if the click occured in an editable div, skip that one.
+            $("#inlined-model-table td:has(.editable:visible)").not(closest).each(function() {
+                var row = $(this).closest("tr");
+                var cell = $(this);  // a td object
+                if (row.data("model").id == "" && rowIsEmpty(row)) {
+                    // We've clicked out of a new and still empty row, so
+                    // leave without saving anything.
+                    row.remove();
+                }
+                else {
+                    // Update the UI with the new data.
+                    saveInlinedModel(row, cell);
+                }
+            });
+        });
+
         $("#inlined-model-table").on(
-            "keyup",
+            "keydown",
             "td .editable input",
             function (event) {
-                // 13 is enter key
-                if (event.which == 13) {
-                    // This will trigger the blur handler (below) and submit the change
-                    $(this).blur();
+                if (event.which == 9 || event.which == 13) {  // "tab" and "enter", respectively
+                    // Look for the next <td> that does not have a delete button
+                    var next = $(this).closest("td").next("td:not(:has(span.deleteButton))");
+                    if (next.length > 0) {
+                        // The next cell is not the delete button. Only edit it if it's empty.
+                        if (next.find("input").val().length == 0) {
+                            // This will trigger other editable divs to be saved and closed.
+                            next.trigger("click");
+                        }
+                    }
+                    // else add a new row (but only if we're on the last row)
+                    else if ($(this).closest("tr").next("tr").length == 0) {
+                        $("#add-new-inlined-model-btn").trigger("click");
+                    }
+                    // else close the cell we're working on by triggering a click event
+                    // that will close any cells being edited and save the new values.
+                    else {
+                        // It won't close an element with the focus though, so blur it.
+                        $(document.activeElement).blur();
+                        $(document).trigger("click");
+                    }
+                    event.stopPropagation();
+                    return false; // This is also necessary to prevent default TAB action.
                 }
             });
 
         // Add handler to make static divs in table turn magically into editable divs
         $("#inlined-model-table").on("click", "td", function(e) {
+            if ($(e.target).hasClass("large-info")) {
+                // The user clicked on a profile link, so don't do anything.
+                return;
+            }
+            // else
             if ($(this).hasClass("disabled")) {
                 alert("This cell cannot be edited until errors in this row are corrected.");
             }
-            else {                  
-                $(this).children(".static").hide();
-                $(this).children(".editable").show();
-                $(this).children(".editable").children("input").focus();
-                // Reset sticky headers in case table cell widths have changed.
-                setStickyHeaders();
+            else {
+                turnOnEditing($(this));
             }
-        });
-        
-        $("#inlined-model-table").on("blur", "td", function(e) {
-            var row = $(this).closest("tr");
-            var cell = $(this).closest("td");
-            if (row.data("id") == "" && rowIsEmpty(row)) {
-              // We've clicked out of a new and still empty row, so
-              // leave without saving anything.
-              row.remove();
-              return false;
-            }
-            // Check whether the row containing this td is visible, and
-            // only continue saving if is is. The row will not be
-            // visible if this blur occurred when the user chose an
-            // option from the autocomplete list of options.
-            //
-            // This check is needed for Chrom(e/ium) browsers.  In
-            // Chrome, calling "remove" on the <tr> element (which
-            // happens in the autocomplete "select" function) triggers
-            // "blur".  In other browsers it doesn't, and we won't even
-            // reach this point in the code, but for Chrome we hide the
-            // row as a way of saying that autocomplete has taken over
-            // and we don't need to save a new entity to the DB.
-            if (row.is(":visible")) {
-              // Update the UI with the new data.
-              $(this).children(".static").children("span.static-span").text($(this).find("input").val());
-              // Also save to the DB (arguably more important).
-              saveInlinedModel(row, cell);
-            }
+            // The click event will now bubble up to the document level,
+            // where any other cells being edited will be saved and
+            // closed.
         });
     
         // Handler on "delete row" buttons

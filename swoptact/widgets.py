@@ -147,8 +147,11 @@ class SimpleFKAutocomplete(PersistentTextAutocomplete):
             return [to_string(i) for i in model.objects.all()]
 
         def get_display_text(value):
-            if value:
+            if value and isinstance(value, int):
                 return str(model.objects.get(pk=value))
+            # Should be a string then...
+            elif value:
+                return value
             else:
                 return ""
 

@@ -28,7 +28,7 @@ body {
 
 .container-fluid {
     width: 60%;
-    min-width: 450px;
+    min-width: 600px;
     max-width: 800px;
     padding: 0px;
     margin: auto;
@@ -70,11 +70,22 @@ h1, h1 a, legend {
     margin: 0px 20px 0px 0px;
 }
 
-#user-menu-link {
-    margin: 10px 0px 0px 0px;
-    position: relative;
-    cursor: pointer;
+#top-right-wrapper {
     float: right;
+    margin: 10px 0px 0px 0px;
+    vertical-align: middle;
+}
+
+#welcome-message {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#user-menu-link {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
 }
 
 #user-menu-link img {
@@ -178,6 +189,27 @@ a:focus,
 }
 */
 
+/* The "alert-error" class below complements the "alert-success",
+"alert-info", and "alert-warning" classes in bootstrap.css. It actually
+duplicates the "alert-danger" class in that file. I've added
+"alert-error" because Django messages come with a "tag" property whose
+value will be one of "success", "info", "warning", or "error". In other
+words, it almost lines up with the bootstrap alert flavors, but has
+"error" instead of "danger". Adding "alert-error" therefore makes it
+easy to use stylings appropriate to each Django tag by parsing its
+value. */
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert-error hr {
+  border-top-color: #e4b9c0;
+}
+.alert-error .alert-link {
+  color: #843534;
+}
+
 #content {
     background-color: #F2F2F2;
     margin-top: 10px;
@@ -250,11 +282,21 @@ a:focus,
 }
 */
 /* Override design of filter list selector - Issue #7 */
+.selector.stacked {
+    width: 100%;
+}
+
+.selector h2 {
+    margin-top: 5px;
+}
+
 .selector select {
     height: 17.2em;
+    width: 100%;
 }
 
 .selector ul.selector-chooser {
+    margin: 0 0 5px 45%;
     background-color: #FFF;
 }
 
@@ -268,6 +310,10 @@ a:focus,
     border-color: #777;
     border-top: 0px;
     border-bottom: 0px;
+}
+
+.selector .selector-available, .selector .selector-chosen {
+    width: 100%;
 }
 
 .selector .selector-available h2, .selector .selector-chosen h2 {
@@ -291,6 +337,11 @@ a:focus,
     color: #000;
 }
 
+/* Prevent text in help-block from sneaking around the side of the filter widget */
+.help-block {
+    clear: both;
+}
+
 /* Hide the "save an add another" and "save and continue editing" buttons */
 input[name="_addanother"],input[name="_continue"],input[name="_saveasnew"]{
     display: none;
@@ -308,10 +359,12 @@ input[type="checkbox"] {
 .form-horizontal .control-label {
     padding-top: 0px;
 }
-.form-horizontal input[type='text'] {
-    width: 50%;
-    margin-top: .3em;
+
+.form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
 }
+
 .form-horizontal input#id_description {
     width: 100%;
 }
@@ -362,6 +415,11 @@ li.bold_name {
     font-weight: bold;
 }
 
+#inlined-error-box {
+    display: none;
+    margin: 1em 0em;
+}
+
 .inline-deletelink, .inline-deletelink:visited, .inline-deletelink:hover, .inline-deletelink:active  {
     float: none;
     text-indent: -9999px;
@@ -378,6 +436,7 @@ li.bold_name {
 }
 
 .scrollable-area {
+    position: relative;
     margin-top: 10px;
     max-height: 400px;
     overflow: auto;
@@ -411,12 +470,20 @@ table#inlined-model-table .validation-error {
     color: #F00;
 }
 
+/* Uncommenting this will mean that if there is a validation error in a
+row, the other cells in that row which themseleves do not contain the
+error but which cannot be edited until the error is fixed will turn pink
 table#inlined-model-table td.disabled {
     background-color: #F66;
 }
+*/
 
 table#inlined-model-table td.corrigendum {
      border: 2px solid #F22;
+}
+
+table#inlined-model-table .static a.profile-link {
+    visibility: hidden;
 }
 
 table#inlined-model-table .editable {

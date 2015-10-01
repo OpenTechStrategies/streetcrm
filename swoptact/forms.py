@@ -68,12 +68,18 @@ class AutoCompleteModelForm(forms.ModelForm):
     this will not provide this functionality.
     """
 
+    no_autocreate = set()
+
     def full_clean(self, *args, **kwargs):
         """ Look through fields to see which need models creating """
         if self.data:
             for name, field in self.fields.items():
                 # If it's not an autocompletion field we're not interested.
                 if not hasattr(field, "autocomplete"):
+                    continue
+
+                # We also skip anything in no_autocreate
+                if name in self.no_autocreate:
                     continue
 
                 # Turns out sometimes it has a prefix (for formsets I think)
@@ -98,6 +104,12 @@ class AutoCompleteModelForm(forms.ModelForm):
                 self.data[name] = model.pk
         super(AutoCompleteModelForm, self).full_clean(*args, **kwargs)
 
+
+# Doing this via subclassing is so dumb, but I was having trouble
+# with doing it in .__init__() in AutoCompleteForm producting super weird errors
+# :\
+class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
+    no_autocreate = set(["tags"])
 
 class ParticipantForm(django.forms.ModelForm):
     institution = formfields.BasicAutoCompleteField(

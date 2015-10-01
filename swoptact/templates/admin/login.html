@@ -5,7 +5,7 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-<div class="padded">
+
 {% if form.errors and not form.non_field_errors %}
 <p class="errornote">
 	{% if form.errors.items|length == 1 %}
@@ -23,20 +23,19 @@
 {% endif %}
 
 <div class="row">
-	<div class="col-md-4 col-md-offset-4">
 	<form action="{{ app_path }}" method="post" class="form-horizontal">
 		{% csrf_token %}
 		<div class="form-group">
 			{{ form.username.errors }}
-			<label for="inputUsername" class="col-sm-4 control-label">{{ form.username.label }}</label>
-			<div class="col-sm-8">
+			<label for="inputUsername" class="col-sm-5 control-label">{{ form.username.label }}</label>
+			<div class="col-sm-7">
 				{{ form.username }}
 			</div>
 		</div>
 		<div class="form-group">
 			{{ form.password.errors }}
-			<label for="inputPassword" class="col-sm-4 control-label">{{ form.password.label }}</label>
-			<div class="col-sm-8">
+			<label for="inputPassword" class="col-sm-5 control-label">{{ form.password.label }}</label>
+			<div class="col-sm-7">
 				{{ form.password }}
 			</div>
 		</div>
@@ -48,15 +47,12 @@
 			<a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
 		</div>
 		{% endif %}
-  		<div class="form-group">
-  			<div class="col-sm-offset-4 col-sm-8">
-				<button type="submit" class="btn btn-default">{% trans 'Log in' %}</button>
-			</div>
+		<div class="col-sm-offset-5 col-sm-7">
+			<button type="submit" class="btn btn-default">{% trans 'Log in' %}</button>
 		</div>
 	</form>
 	<script type="text/javascript">
 		document.getElementById('id_username').focus()
 	</script>
-</div>
 </div>
 {% endblock %}

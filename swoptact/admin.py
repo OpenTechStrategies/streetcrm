@@ -555,8 +555,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("date", null=True, empty_string=False),
              CheckField("time", null=True, empty_string=False),
              CheckField("organizer", null=True, empty_string=False),
-             CheckField("location", null=True, empty_string=True),
-             CheckField("issue_area", null=True, empty_string=True)],
+             CheckField("location", null=True, empty_string=True)],
             _gen_change_uri_func("admin:swoptact_event_change"))
 
         participant_results = gather_results(
@@ -628,7 +627,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
                      "participant_state_address",
                      "participant_zipcode_address")
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "US_primary_phone", "institution", "participant_street_address",)
+    list_display = ("name", "US_primary_phone", "institution", "participant_street_address", "participant_city_address",)
     readonly_fields = ("action_history", "event_history_name")
     fieldsets = (
         (None, {
@@ -747,6 +746,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     form = st_forms.autocomplete_modelform_factory(
         model=models.Event,
         exclude=("participants", "archived"),
+        form=st_forms.TagSkippingAutoCompleteModelForm,
     )
     actions = None
     inline_form_config = {
@@ -800,6 +800,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
         exclude=("archived", "contacts",),
+        form=st_forms.TagSkippingAutoCompleteModelForm,
     )
     actions = None
     inline_form_config = {
@@ -843,7 +844,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
     search_fields = ("name",)
     list_filter = (admin_filters.ArchiveFilter,)
-    list_display = ("name", "description", "group")
+    list_display = ("name", "description",)
     actions = None
     readonly_fields = ("date_created",)
     form = st_forms.TagAdminForm
@@ -856,6 +857,7 @@ class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
 
 class LogAdmin(admin.ModelAdmin):
     actions = None
+    readonly_fields = ("user", "content_type", "object_id", "object_repr", "action_flag",)
 
 class UserAdmin(auth.admin.UserAdmin):
     fieldsets = (
@@ -869,12 +871,19 @@ class UserAdmin(auth.admin.UserAdmin):
     list_display = ("username", "email", "first_name", "last_name")
     list_filter = ("is_superuser", "is_active", "groups")
     actions = None
+    filter_horizontal = tuple()
+    filter_vertical = ('groups', 'user_permissions',)
+
+class GroupAdmin(auth.admin.GroupAdmin):
+    filter_horizontal = tuple()
+    filter_vertical = ('permissions',)
+
 
 # Create the admin site
 site = SWOPTACTAdminSite()
 
 # Register auth AdminModels
-site.register(auth.admin.Group, auth.admin.GroupAdmin)
+site.register(auth.admin.Group, GroupAdmin)
 site.register(auth.admin.User, UserAdmin)
 
 # Register SWOPTACT AdminModels

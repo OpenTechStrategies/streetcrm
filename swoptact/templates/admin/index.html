@@ -25,11 +25,6 @@
                 {# Use app+model ordering from ADMIN_ORDERING in settings.py #}
                 {% if app_list %} {% app_order %} {% endif %}
 
-    {% if title %}
-        <h1 class="change-title">{{ title }}</h1>
-    {% endif %}
-    <div class="hr"></div>
-
 		{% for app in app_list %}
 			<table summary="{% blocktrans with name=app.name %}Models available in the {{ name }} application.{% endblocktrans %}" class="table table-bordered">
 			{% for model in app.models %}

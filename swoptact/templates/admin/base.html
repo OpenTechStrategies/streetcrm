@@ -12,6 +12,7 @@
 		<script src="{% static "js/jquery.js" %}" type="text/javascript"></script>
                 <script type="text/javascript" src="{% static 'js/alias_jquery.js' %}"></script>
     <script type="text/javascript" src="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.animate-colors-min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/initialize_menu.js" %}"></script>
 
 		{% include 'autocomplete_light/static.html' %}
@@ -34,10 +35,7 @@
 		<!-- Header (inc. menu) -->
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
-				<div class="navbar-header">
-					{% block branding %}{% endblock %}
-				</div>
-
+          {% block branding %}{% endblock %}
 			</div>
 		</nav>
 		<!-- END Header -->
@@ -72,22 +70,31 @@
     </div>
 
     <div id="main" class="container-fluid">
-			<!-- Alerts & Messages -->
-			{% block messages %}
-			{% if messages %}
-			<ul class="messagelist">
-				{% for message in messages %}
-				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-			{% endblock messages %}
-			<!-- END Alerts & Messages -->
 
 			<!-- Content -->
 			<div id="content" class="{% block coltype %}colM{% endblock %}">
+
+        <!-- Alerts & Messages -->
+        {% block messages %}
+        {% if messages %}
+          {% if messages|length == 1 %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          {% else %}
+            <ul class="messagelist">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endif %}
+        {% endblock messages %}
+        <!-- END Alerts & Messages -->
+
 				{% block pretitle %}{% endblock %}
-				{% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+
+        {% if title %}<h1 class="change-title">{{ title }}</h1><div class="hr"></div>{% endif %}
 				{% block content %}
 				{% block object-tools %}{% endblock %}
 				{{ content }}
