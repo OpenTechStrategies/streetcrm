@@ -143,8 +143,6 @@ class SearchForm(django.forms.Form):
 
     MODELS = (
         (PARTICIPANT, "Participants"),
-        (INSTITUTION, "Institutions"),
-        (EVENT, "Actions"),
     )
 
     # Regular basic search fields (must not be required as not used in advanced)

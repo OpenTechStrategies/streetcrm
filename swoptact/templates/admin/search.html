@@ -46,13 +46,16 @@
       <!-- Use div to pad down a little -->
       <div style="padding-bottom: 1em;"></div>
 
-      {{ form.participant }}
-      {% trans "that are part of" %}
-      {{ form.institution }}
-      {% trans "who participated in" %}
-      {{ form.event }}
-      {% trans "organized by" %}
-      {{ form.event_organizer }}
+      {% trans "Member of this institution: " %}
+      {{ form.institution }}<br />
+      {% trans "Or a member of any institution tagged:" %}
+      {{ form.institution_tags }}<br />
+      {% trans "Participated in this action: " %}
+      {{ form.event }} <br />
+      {% trans "Or participated in any action organized by: " %}
+      {{ form.event_organizer }} <br />
+      {% trans "Or participated in any action tagged:" %}
+      {{ form.event_tags }}
       <br />
       <br />
       {% trans "Start Date: " %}
@@ -62,20 +65,6 @@
       {% trans "End Date:" %}
       {{ form.end_date }}
       <br />
-      <br/>
-      {{ form.exclude_major_events }}
-      {% trans "Exclude Major Actions" %}
-      <br/>
-      {{ form.exclude_minor_events }}
-      {% trans "Exclude Minor Actions" %}
-      <br />
-      <br />
-      {% trans "Action Tags:" %}
-      {{ form.event_tags }}
-      <br />
-      <br />
-      {% trans "Institution Tags:" %}
-      {{ form.institution_tags }}
     </div>
     <!-- Use div to pad down a little -->
     <div style="padding-bottom: 1em;"></div>
