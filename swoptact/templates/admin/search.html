@@ -31,7 +31,7 @@
 
 <h2>{% trans "Search" %}</h2>
 <div>
-  <form method="POST" action="{% url 'admin:search' %}?advanced={% if advanced %}1{% endif %}">
+  <form id="advanced_search_form" method="POST" action="{% url 'admin:search' %}?advanced={% if advanced %}1{% endif %}">
     {% csrf_token %}
     {% block search %}
     {% if advanced %}
@@ -46,37 +46,48 @@
 
       <!-- Use div to pad down a little -->
       <div style="padding-bottom: 1em;"></div>
-
-      <div id="participant_search_fields">
-      {% trans "Member of this institution: " %}
-      {{ form.institution }}<br />
-      {% trans "Or a member of any institution tagged:" %}
-      {{ form.institution_tags }}<br />
-      {% trans "Participated in this action: " %}
-      {{ form.event }} <br />
-      {% trans "Or participated in any action organized by: " %}
-      {{ form.event_organizer }} <br />
-      {% trans "Or participated in any action tagged:" %}
-      {{ form.event_tags }}
-      </div>
-
-      <div id="action_search_fields">      
-      {% trans "Attended by: " %}
-      {{ form.participant }} <br />
-      {% trans "Organized by: " %}
-      {{ form.event_organizer }} <br />
-      {% trans "Tagged:" %}
-      {{ form.event_tags }}
-      </div>
-      <br />
-      <br />
-      {% trans "Start Date: " %}
-      {{ form.start_date }}
-      <br />
-      <br />
-      {% trans "End Date:" %}
-      {{ form.end_date }}
-      <br />
+      <table>
+        <tr class="participant_search_fields">
+          <td>{% trans "Member of this institution: " %}</td>
+          <td>{{ form.institution }}</td>
+        </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Or a member of any institution tagged:" %}</td>
+          <td>{{ form.institution_tags }}</td>
+        </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Participated in this action: " %}</td>
+          <td>{{ form.event }}</td>
+        </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Or participated in any action organized by: " %}</td>
+          <td>{{ form.event_organizer }}</td>
+        </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Or participated in any action tagged:" %}</td>
+          <td>{{ form.event_tags }}</td>
+        </tr>
+        <tr class="action_search_fields">
+          <td>{% trans "Attended by: " %}</td>
+          <td>{{ form.participant }} </td>
+        </tr>
+        <tr class="action_search_fields">
+          <td>{% trans "Organized by: " %}</td>
+          <td>{{ form.event_organizer }}</td>
+        </tr>
+        <tr class="action_search_fields">
+          <td>{% trans "Tagged:" %}</td>
+          <td>{{ form.event_tags }}</td>
+        </tr>
+        <tr>
+          <td>{% trans "Start Date: " %}</td>
+          <td>{{ form.start_date }}</td>
+        </tr>
+        <tr>
+          <td>{% trans "End Date:" %}</td>
+          <td>{{ form.end_date }}</td>
+        </tr>
+      </table>
     </div>
     <!-- Use div to pad down a little -->
     <div style="padding-bottom: 1em;"></div>
@@ -84,6 +95,7 @@
     {{ form.query }}
     {% endif %}
     <button>{% trans "Search" %}</button>
+    <button id="clear_filters_button">{% trans "Clear filters" %}</button>
     {% endblock %}
 
     <br />
