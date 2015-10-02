@@ -12,6 +12,7 @@
 {% block extrastyle %}
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
+<script type="text/javascript" src="{% static 'js/change_advanced_fields.js' %}"></script>
 {% endblock %}
 
 {% if not is_popup %} {% block breadcrumbs %}
@@ -46,6 +47,7 @@
       <!-- Use div to pad down a little -->
       <div style="padding-bottom: 1em;"></div>
 
+      <div id="participant_search_fields">
       {% trans "Member of this institution: " %}
       {{ form.institution }}<br />
       {% trans "Or a member of any institution tagged:" %}
@@ -56,6 +58,16 @@
       {{ form.event_organizer }} <br />
       {% trans "Or participated in any action tagged:" %}
       {{ form.event_tags }}
+      </div>
+
+      <div id="action_search_fields">      
+      {% trans "Attended by: " %}
+      {{ form.participant }} <br />
+      {% trans "Organized by: " %}
+      {{ form.event_organizer }} <br />
+      {% trans "Tagged:" %}
+      {{ form.event_tags }}
+      </div>
       <br />
       <br />
       {% trans "Start Date: " %}
