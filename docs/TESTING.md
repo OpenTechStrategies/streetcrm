@@ -2,6 +2,9 @@
 
 ## General functionality
 - Objects can be saved and edited.
+- Be sure to test saving users, in particular.  The "select-multiple"
+there has been shown to be a special case. 
+- Autocompletion works on regular form items and on AJAX-y form items.
 
 ## Inlined Models: Contacts and Sign-in Sheet
 
@@ -26,7 +29,7 @@
 - all users can add and edit Institutions, Participants, and Actions
 - all users can add and edit Attendees of Actions
 - admin users can create new Users
-- admin users can create and edit Tags
-- leader and staff users can neither create nor edit Tags
+- admin and staff users can create and edit Tags
+- leader users can neither create nor edit Tags
 
 
