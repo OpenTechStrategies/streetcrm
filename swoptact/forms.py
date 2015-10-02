@@ -171,6 +171,11 @@ class SearchForm(django.forms.Form):
         required=False
     )
 
+    connected_action = forms.ModelChoiceField(
+        "ASEventAutocomplete",
+        required=False
+    )
+
     event_tags = forms.ModelMultipleChoiceField(
         "ASTagAutocomplete",
         required=False
