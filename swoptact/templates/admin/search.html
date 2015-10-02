@@ -99,7 +99,9 @@
     {{ form.query }}
     {% endif %}
     <button>{% trans "Search" %}</button>
+    {% if advanced %}    
     <button id="clear_filters_button">{% trans "Clear filters" %}</button>
+    {% endif %}
     {% endblock %}
 
     <br />
