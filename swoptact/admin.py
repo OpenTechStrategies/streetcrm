@@ -231,6 +231,17 @@ class SWOPTACTAdminSite(admin.AdminSite):
             event_filtered = True
             event_query = event_query.filter(organizer=data["event_organizer"])
 
+        # If they've searched on a major event then we also filter by that.
+        if isinstance(data["connected_action"], str):
+            event_filtered = True
+            event_query = event_query.filter(
+                major_action__name__contains=data["connected_action"]
+            )
+        elif isinstance(data["connected_action"], models.Event):
+            event_filtered = True
+            event_query = event_query.filter(major_action=data["connected_action"])
+
+            
         # Filter by the datetime constraints if they have been given
         if data["start_date"] is not None:
             event_filtered = True

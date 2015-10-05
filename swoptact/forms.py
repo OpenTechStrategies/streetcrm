@@ -143,6 +143,7 @@ class SearchForm(django.forms.Form):
 
     MODELS = (
         (PARTICIPANT, "Participants"),
+        (EVENT, "Actions"),
     )
 
     # Regular basic search fields (must not be required as not used in advanced)
@@ -167,6 +168,11 @@ class SearchForm(django.forms.Form):
 
     event_organizer = forms.ModelChoiceField(
         "ASContactAutocomplete",
+        required=False
+    )
+
+    connected_action = forms.ModelChoiceField(
+        "ASEventAutocomplete",
         required=False
     )
 
