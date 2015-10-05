@@ -818,7 +818,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     search_filter = ("name", "inst_street_address", "inst_city_address", "inst_state_address"
                      "inst_zipcode_address")
-    list_filter = (admin_filters.ArchiveFilter,)
+    list_filter = (admin_filters.ArchiveFilter, "tags__name")
     list_display = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
