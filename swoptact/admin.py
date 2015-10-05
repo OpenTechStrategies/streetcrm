@@ -148,6 +148,15 @@ class SWOPTACTAdminSite(admin.AdminSite):
 
         # If it's a GET request or the form is invalid, return now.
         if request.method == "GET" or not form.is_valid():
+            # Show results from basic search, but still show the
+            # advanced form when requested
+            if request.method == "GET" and not advanced:
+                search_query = request.GET.get("q")
+                
+                # If a search term is provided, show results
+                if search_query is not None and search_query is not "":
+                    return self.basic_search_view(request, form, search_query)
+
             return TemplateResponse(
                 request,
                 self.search_template,
@@ -163,12 +172,16 @@ class SWOPTACTAdminSite(admin.AdminSite):
         else:
             return self.basic_search_view(request, form)
 
-    def basic_search_view(self, request, form):
+    def basic_search_view(self, request, form, search_query=None):
         """
         View for the basic search for objects
         """
-        # Peform the search
-        results = self.search_engine.search(form.cleaned_data["query"])
+        # Perform the search, whether passed from header or the basic
+        # form
+        if not search_query:
+            results = self.search_engine.search(form.cleaned_data["query"])
+        else:
+            results = self.search_engine.search(search_query)
 
         # Process the results into their objects
         results = [result.object for result in results]
