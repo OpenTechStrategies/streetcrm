@@ -56,15 +56,19 @@
           <td>{{ form.institution_tags }}</td>
         </tr>
         <tr class="participant_search_fields">
-          <td>{% trans "Participated in this action: " %}</td>
+          <th>Action-specific fields: </th>
+          <th></th>
+        </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Participated in an action named: " %}</td>
           <td>{{ form.event }}</td>
         </tr>
         <tr class="participant_search_fields">
-          <td>{% trans "Or participated in any action organized by: " %}</td>
+          <td>{% trans "Any action organized by: " %}</td>
           <td>{{ form.event_organizer }}</td>
         </tr>
         <tr class="participant_search_fields">
-          <td>{% trans "Or participated in any action tagged:" %}</td>
+          <td>{% trans "Any action tagged:" %}</td>
           <td>{{ form.event_tags }}</td>
         </tr>
         <tr class="action_search_fields">
@@ -84,11 +88,11 @@
           <td>{{ form.event_tags }}</td>
         </tr>
         <tr>
-          <td>{% trans "Start Date: " %}</td>
+          <td>{% trans "From start date: " %}</td>
           <td>{{ form.start_date }}</td>
         </tr>
         <tr>
-          <td>{% trans "End Date:" %}</td>
+          <td>{% trans "To end date:" %}</td>
           <td>{{ form.end_date }}</td>
         </tr>
       </table>
@@ -124,9 +128,6 @@
       {% endif %}
       {% if prep_event_count %}
       <li>{% trans "Prep Actions:" %} {{ prep_event_count }}</li>
-      {% endif %}
-      {% if institution_count %}
-      <li>{% trans "Institutions:" %} {{ institution_count }}</li>
       {% endif %}
       {% if participant_count %}
       <li>{% trans "Unique Participants:" %} {{ participant_count }}</li>

@@ -1,22 +1,26 @@
 {% load i18n %}
-<ul>
+  <h1>{% trans "Results" %}</h1>
+  <ul>
+    {% if not result_count %}
+    Sorry, there were no results for this search.  Try using fewer
+    search terms to find more results. 
+    {% endif %}
+    
   {% for section, objects in search_results.items %}
-  {% if section and section.admin_change_url %}
-  <h3><a href="{{ section.admin_change_url }}">{{ section }}</a></h3>
-  {% elif section %}
-  <h3>{{ section }}</h3>
-  {% else %}
-  <h3>{% trans "Results" %}</h3>
-  {% endif %}
 
-  {% if objects and objects.items %}
-  {% include "admin/includes/search_result_block.html" with search_results=objects %}
-  {% else %}
   <ul>
     {% for object in objects %}
-    <li><a href="{{ object.admin_change_url }}">{{ object }}</a></li>
+
+    {% comment %}
+    Exclude the participants who haven't attended any actions, since
+    we're just showing actions without attendees, now.
+    {% endcomment %}
+    
+    {% if section != "No Event" %}
+    <li><a href="{{ object.admin_change_url }}">{{ object }}</a>
+    {% if section %} ({{ section }}) {% endif %} </li>
+    {% endif %}
     {% endfor %}
   </ul>
-  {% endif %}
   {% endfor %}
 </ul>

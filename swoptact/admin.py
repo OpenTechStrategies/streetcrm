@@ -421,17 +421,18 @@ class SWOPTACTAdminSite(admin.AdminSite):
             ))
 
         # Remove any without participants
-        results = self._remove_empty_values(results)
+        # results = self._remove_empty_values(results)
 
         # Build the counts
         major_event_count = None
         prep_event_count = None
         institution_count = None
-        participant_count = len(self._nested_search(
-            results,
-            lambda o: isinstance(o, models.Participant)
-        ))
-
+        result_count = None
+        participant_count = None
+        if categorize == form.PARTICIPANT:
+            participant_count = len(results[None])
+            result_count = participant_count
+        
         if categorize == form.EVENT:
             prep_event_count = len(self._nested_search(
                 results,
@@ -440,6 +441,10 @@ class SWOPTACTAdminSite(admin.AdminSite):
             major_event_count = len(self._nested_search(
                 results,
                 lambda o: isinstance(o, models.Event) and not o.is_prep
+            ))
+            result_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event)
             ))
         elif categorize == form.INSTITUTION:
             institution_count = len(self._nested_search(
@@ -459,6 +464,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 "prep_event_count": prep_event_count,
                 "institution_count": institution_count,
                 "participant_count": participant_count,
+                "result_count": result_count
             }
         )
 
