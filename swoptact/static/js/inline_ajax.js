@@ -733,8 +733,18 @@ function setupInlinedModelCallbacks() {
     if (userCanEdit()) {
         // Put the "add new" button into the form
         var addNewButton = $("<button type=\"submit\" class=\"btn-primary btn default\" name=\"_select\" id=\"add-new-inlined-model-btn\"></button>");
+        // Get the name of the page model (Institution or Action) and
+        // then set the name of the inlined model
+        var page_model_name = $("#page_model_name").val();
+        var inlined_model_name = "";
+        if (page_model_name == "institution") {
+            inlined_model_name = "contact";
+        }
+        else if (page_model_name == "event") {
+            inlined_model_name = "attendee";
+        }
         // Get the button text from a Django function that translates according to user's locale.
-        var addNewButtonText = "✚ " + gettext("Add New");
+        var addNewButtonText = "✚ " + gettext("Add new") + " " + inlined_model_name;
         addNewButton.text(addNewButtonText);
 
         addNewButton.on("click", function(event) {

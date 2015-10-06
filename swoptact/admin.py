@@ -906,7 +906,7 @@ class UserAdmin(auth.admin.UserAdmin):
 class GroupAdmin(auth.admin.GroupAdmin):
     filter_horizontal = tuple()
     filter_vertical = ('permissions',)
-
+    actions = None
 
 # Create the admin site
 site = SWOPTACTAdminSite()
