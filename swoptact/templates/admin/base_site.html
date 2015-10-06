@@ -7,8 +7,8 @@
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}
-<a id="logo-wrapper" href="{% url 'admin:app_list' app_label='swoptact' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50"></a>
-<a href="{% url 'admin:app_list' app_label='swoptact' %}" class="navbar-brand">{% trans "Contacts" %}</a>
+<a id="logo-wrapper" href="{% url 'admin:index' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50"></a>
+<a href="{% url 'admin:index' %}" class="navbar-brand">{% trans "Contacts" %}</a>
 <div id="top-right-wrapper">
     <div id="welcome-message">
         {% if user.is_active %}
