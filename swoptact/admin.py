@@ -882,8 +882,10 @@ class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
 class LogAdmin(admin.ModelAdmin):
     actions = None
     readonly_fields = ("user", "content_type", "object_id", "object_repr", "action_flag",)
-    
+    list_display = ("object_repr", "change_message", "user", "action_time",)
     def has_add_permission(self, request):
+        return False
+    def has_delete_permission(self, request, obj=None):
         return False
 
 class UserAdmin(auth.admin.UserAdmin):
