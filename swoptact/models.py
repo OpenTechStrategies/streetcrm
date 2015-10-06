@@ -25,6 +25,58 @@ import phonenumbers
 import datetime
 
 NEW_TAGS_NOT_CREATED_HELPTEXT = "Note that new tags added here are not created."
+STATES = (
+    ("AL", "Alabama"),
+    ("AK", "Alaska"),
+    ("AZ", "Arizona"),
+    ("AR", "Arkansas"),
+    ("CA", "California"),
+    ("CO", "Colorado"),
+    ("CT", "Connecticut"),
+    ("DE", "Delaware"),
+    ("FL", "Florida"),
+    ("GA", "Georgia"),
+    ("HI", "Hawaii"),
+    ("ID", "Idaho"),
+    ("IL", "Illinois"),
+    ("IN", "Indiana"),
+    ("IA", "Iowa"),
+    ("KS", "Kansas"),
+    ("KY", "Kentucky"),
+    ("LA", "Louisiana"),
+    ("ME", "Maine"),
+    ("MD", "Maryland"),
+    ("MA", "Massachusetts"),
+    ("MI", "Michigan"),
+    ("MN", "Minnesota"),
+    ("MS", "Mississippi"),
+    ("MO", "Missouri"),
+    ("MT", "Montana"),
+    ("NE", "Nebraska"),
+    ("NV", "Nevada"),
+    ("NH", "New Hampshire"),
+    ("NJ", "New Jersey"),
+    ("NM", "New Mexico"),
+    ("NY", "New York"),
+    ("NC", "North Carolina"),
+    ("ND", "North Dakota"),
+    ("OH", "Ohio"),
+    ("OK", "Oklahoma"),
+    ("OR", "Oregon"),
+    ("PA", "Pennsylvania"),
+    ("RI", "Rhode Island"),
+    ("SC", "South Carolina"),
+    ("SD", "South Dakota"),
+    ("TN", "Tennessee"),
+    ("TX", "Texas"),
+    ("UT", "Utah"),
+    ("VT", "Vermont"),
+    ("VA", "Virginia"),
+    ("WA", "Washington"),
+    ("WV", "West Virginia"),
+    ("WI", "Wisconsin"),
+    ("WY", "Wyoming"),
+)
 
 class SerializeableMixin:
     """
@@ -160,7 +212,7 @@ class Institution(ArchiveAbstract, SerializeableMixin):
                                verbose_name="Institution Street Address")
     inst_city_address = models.CharField(null=True, blank=True, max_length=255,
                                verbose_name="City")
-    inst_state_address = models.CharField(null=True, blank=True, max_length=255,
+    inst_state_address = models.CharField(choices=STATES, null=True, blank=True, max_length=255,
                                verbose_name="State")
     inst_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
                                verbose_name="Zip")
@@ -196,8 +248,10 @@ class Participant(ArchiveAbstract, SerializeableMixin):
                                verbose_name="Participant Street Address")
     participant_city_address = models.CharField(null=True, blank=True, max_length=255,
                                verbose_name="City")
-    participant_state_address = models.CharField(null=True, blank=True, max_length=255,
-                               verbose_name="Participant State")
+    participant_state_address = models.CharField(choices=STATES,
+                                                 null=True, blank=True,
+                                                 max_length=255,
+                                                 verbose_name="Participant State")
     participant_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
                                verbose_name="Participant Zipcode")
     institution = models.ForeignKey(Institution, null=True, blank=True,
