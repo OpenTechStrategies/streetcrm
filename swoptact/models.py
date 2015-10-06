@@ -159,14 +159,14 @@ class Institution(ArchiveAbstract, SerializeableMixin):
     inst_street_address = models.CharField(null=True, blank=True, max_length=1000,
                                verbose_name="Institution Street Address")
     inst_city_address = models.CharField(null=True, blank=True, max_length=255,
-                               verbose_name="Institution City")
+                               verbose_name="City")
     inst_state_address = models.CharField(null=True, blank=True, max_length=255,
-                               verbose_name="Institution State")
+                               verbose_name="State")
     inst_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
-                               verbose_name="Institution Zipcode")
+                               verbose_name="Zip")
     tags = models.ManyToManyField(
         Tag, blank=True,
-        verbose_name="Institution Tags",
+        verbose_name="Tags",
         help_text=NEW_TAGS_NOT_CREATED_HELPTEXT)
     contacts = models.ManyToManyField(
         "Participant",
