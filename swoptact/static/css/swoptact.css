@@ -395,6 +395,10 @@ td.field-US_primary_phone {
     font-weight: bold;
 }
 
+th.field-name a {
+    font-weight: bold;
+}
+
 input[type=checkbox] {
     -ms-transform: scale(1.5); /* IE */
     -moz-transform: scale(1.5); /* FF */

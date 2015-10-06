@@ -53,6 +53,7 @@
                                             {% endcomment %}
                                         {% else %}
                                                 {% dab_field_rendering field.field %}
+                                        <input type="hidden" id="{{ field.field.label }}-hidden-value" value="{{ field.field.value }}" />
                                         {% endif %}
                                         {% if not field.is_readonly and field.errors %}<span class="text-danger">{{ field.errors|striptags }}</span>{% endif %}
                                         {% if field.field.help_text %}

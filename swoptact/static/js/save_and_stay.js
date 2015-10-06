@@ -6,6 +6,19 @@ function addSaveAndStayButton() {
     $("input[name='_continue']").attr("class", "btn-primary btn default");
 }
 
+function addInstitutionLink() {
+    var institutionID = $("#Institution-hidden-value").val();
+    if (institutionID != "None") {
+        // get the div that holds the institution:
+        var staticDiv = $("input[name=institution]").parent();
+        // add a link to it
+        staticDiv.append("<a class=\"profile-link\" id=\"institution-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
+        var profileLink = $("#institution-link");
+        profileLink.attr("href", "/swoptact/institution/" + institutionID + "/");
+    }
+}
+
 $(document).ready(function () {
     addSaveAndStayButton();
+    addInstitutionLink();
 });
