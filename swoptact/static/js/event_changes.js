@@ -4,6 +4,7 @@
  * square brackets following the object.
 */
 $(document).ready(function () {
+    $("#id_major_action-wrapper").closest(".row")[$("#id_is_prep").is(":checked") ? "show" : "hide"]();
     $('#id_is_prep').on("click", function() {
         $("#id_major_action-wrapper").closest(".row")[$("#id_is_prep").is(":checked") ? "show" : "hide"]();
     });
