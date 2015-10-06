@@ -583,15 +583,4 @@ form .form-row p {
     height: 100px;
 }
 
-.autocomplete-light-widget .deck [data-value] .remove
-{
-    background-image: none;
-    text-indent: 0px;
-    width: auto;
-}
 
-.autocomplete-light-widget .deck [data-value] .remove:before
-{
-    color: black;
-    content: "✎";
-}
