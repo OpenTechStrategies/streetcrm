@@ -576,4 +576,7 @@ form .form-row p {
     height: 100px;
 }
 
-
+ul#model_list {
+    list-style-type: none;
+    padding-left: 0;
+}

@@ -21,40 +21,27 @@
 
 <div class="row">
 	<div id="content-main" class="col-sm-12">
-
+          <ul id="model_list">
                 {# Use app+model ordering from ADMIN_ORDERING in settings.py #}
                 {% if app_list %} {% app_order %} {% endif %}
 
 		{% for app in app_list %}
-			<table summary="{% blocktrans with name=app.name %}Models available in the {{ name }} application.{% endblocktrans %}" class="table table-bordered">
 			{% for model in app.models %}
-				<tr>
-					<th scope="row">
-						{% if model.admin_url %}
-						<a href="{{ model.admin_url }}">{{ model.name }}</a>
-						{% else %}
-						{{ model.name }}
-						{% endif %}
+		{% if model.admin_url %}
+		<li><b><a href="{{ model.admin_url }}">{{ model.name }}</a></b></li>
+		{% else %}
+		{{ model.name }}
+		{% endif %}
 
-					</th>
-				</tr>
-			{% endfor %}
-			</table>
+		{% endfor %}
+                <div class="hr"></div>
+                
       {% empty %}
 			  <p>{% trans "You don't have permission to edit anything." %}</p>
-      {% endfor %}
-	</div>
-	<div class="col-sm-12">
-    <div class="hr"></div>
-  </div>
-	<div class="col-sm-12">
-      <div id="other-actions">
-          <h1>Reports</h1>
-          <ul>
-            <li><a href="{% url 'admin:search' %}?advanced=1">Advanced search</a></li>            
+                          {% endfor %}
+                          <li><b><a href="{% url 'admin:search' %}?advanced=1">Advanced search</a></b></li>
           </ul>
-      </div>
-  </div>
+	</div>
 </div>
 {% endblock %}
 
