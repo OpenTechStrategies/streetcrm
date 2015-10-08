@@ -25,21 +25,7 @@
             <div class="row"><div class="control-group {% if line.fields|length_is:'1' and line.errors %} error{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% endfor %}">
                 {% for field in line %}
                     <div class="col-md-{{ group_column_width }} form-group {% if not line.fields|length_is:'1' %} field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% endif %}">
-                        {% if field.is_checkbox %}
-                            <div class="control-label col-md-3">
-                                {{ field.label_tag }}
-                            </div>
-                            <div class="controls col-md-9">
-                                <div class="checkbox">
-                                    {% dab_field_rendering field.field %} {% if field.field.help_text %}<span class="help-block">{{ field.field.help_text|safe }}</span>{% endif %}
-                                </div>
-                            </div>
-                        {% else %}
-                            {% if title == 'Change user' and field.field.label == 'User permissions' %}
-                                {% comment %}
-                                    If we are on the "change user" screen and in the "user permissions" block, print nothing. Otherwise...
-                                {% endcomment %}
-                            {% else %}
+                      {% if field.field.label != 'Superuser status' and field.field.label != 'User permissions' %}
                                 <div class="control-label col-md-3">
                                     {{ field.label_tag }}
                                 </div>
@@ -48,21 +34,23 @@
                                         <p class="readonly">{{ field.contents }}</p>
                                     {% else %}
                                         {% if title == 'Change user' and field.field.label == 'Password' %}
-                                            {% comment %}
-                                                Don't print gobbeldy-gook (algorithm, iterations, salt, hash) about the user's password.
-                                            {% endcomment %}
+                                        {% comment %}
+                                        Don't print gobbledy-gook
+                                    (algorithm, iterations, salt, hash)
+                                    about the user's password. 
+                                        {% endcomment %}
                                         {% else %}
                                                 {% dab_field_rendering field.field %}
                                         <input type="hidden" id="{{ field.field.label }}-hidden-value" value="{{ field.field.value }}" />
                                         {% endif %}
-                                        {% if not field.is_readonly and field.errors %}<span class="text-danger">{{ field.errors|striptags }}</span>{% endif %}
+                                        {% if not field.is_readonly and field.errors %}<span class="text-danger">{{ field.errors|striptags }}</span>
+                                        {% endif %}
                                         {% if field.field.help_text %}
                                             <span class="help-block">{{ field.field.help_text|safe }}</span>
                                         {% endif %}
                                     {% endif %}
                                 </div>
-                            {% endif %}
-                        {% endif %}
+                      {% endif %}
                     </div>
                 {% endfor %}
             </div></div>

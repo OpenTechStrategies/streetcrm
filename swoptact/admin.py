@@ -904,7 +904,7 @@ class UserAdmin(auth.admin.UserAdmin):
     )
 
     list_display = ("username", "email", "first_name", "last_name")
-    list_filter = ("is_superuser", "is_active", "groups")
+    list_filter = ("is_active", "groups")
     actions = None
     filter_horizontal = tuple()
     filter_vertical = ('groups', 'user_permissions',)
