@@ -51,8 +51,7 @@ body {
 */
 
 h1, h1 a, legend {
-    font-family: Georgia,"Times New Roman",Times,serif;
-    color: #82532E;
+    color: black;
 }
 
 .navbar-header {
@@ -100,7 +99,6 @@ h1, h1 a, legend {
 /* Purple hrefs that are underlined until you hover over them */
 a {
     color: #5F1F7F;
-    text-decoration: underline;
 }
 
 a:hover,
@@ -108,7 +106,7 @@ a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
     color: #5F1F7F;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 
@@ -222,7 +220,7 @@ value. */
 }
 
 #content h1 {
-    color: #82532E;
+    color: black;
     font-size: 200%;
     font-weight: bold;
     padding: 0px;
@@ -255,7 +253,7 @@ value. */
 
 .table-bordered > thead > tr > th,
 .table-bordered > thead > tr > th a {
-    color: #82532E;
+    color: black;
     background-color: #F5F5F5;
 }
 
