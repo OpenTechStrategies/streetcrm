@@ -12,17 +12,17 @@
    
 ### Click on "Actions"   
 -  You'll see a list of actions.
-   - This list can be filtered by tag and by whether or not the action has been archived.  These filteres are available on the right side of the center panel.
+   - This list can be filtered by tag and by whether or not the action has been archived.  These filters are available on the right side of the center panel.
    - You can also sort the list by the column headers.  When you sort by a header, an arrow will appear to show which direction the list is being sorted, and an X will appear that allows you to undo the sorting if you want.  You can sort by multiple columns, so if you want to sort by one and then by another (instead of combining them), make sure you click the "X" to get rid of the first sort.
 - Click on "Create new action"
   - Most of the fields are straightforward.  Some are filled by autocompletion: organizer, second organizer, tags, connected action.  To fill those in, start typing and then select something from the autocompletion list that appears.  If the organizer (or secondary organizer) you need doesn't appear in the list, just type his or her name.  Similarly, if you don't see the connected action that you need, just type its name and it will be created when you save the page.  However, new tags _cannot_ be created on this page.  You can only use a tag if it appears via autocompletion.
   - Click on the calendar icon to add date of action.
   - Note the message at the bottom that reminds you that you need to save before adding attendees.
   - Click "Save Changes."
-    - explain what save changes does
+    - Clicking this will save the page and stay here.
   - To leave the page and return to the list of actions, click on "Actions" in the breadcrumb in the purple bar at the top of the page.  Or, click on the logo and then click on "Actions" again from the front page.
 - Edit an action.  Click on the action you just created.
-  - The organizers and connected action now show up as static text with a pencil.  Clicking the pencil will remove them and return an empty text box.  Click the pencil to change those fields.
+  - The organizers and connected action now show up as static text with an "x" next to them.  Clicking the "x" will remove them and return an empty text box.  Click the "x" to change those fields.
   - Scroll down to the "Attendees" section.
     - Click "Add New" to add the first attendee.  Use autocompletion to find the names from the sign-in sheet.  If the name doesn't show up in the autocompletion list, then just keep typing it.  Tab to the next column to enter the institution.
     - Similarly, the institution should be entered from the autocompletion selections, but if it doesn't appear, type the name of the institution.  The word "[NEW]" will appear next to the institution name if it doesn't appear already in the database.  Tabbing away or entering will save that new institution and link it to the participant.
@@ -43,7 +43,7 @@
    - Some institutions will have contacts.  You must save the institution first in order to add contacts as a next step.  Click "Done" to save a new institution, and see below to add contacts.  Clicking "Done" will return you to the list of institutions.
 -  Edit an institution.  Click on the institution you just created, or any institution name from the list of institutions.
    - Just as with actions, you can add multiple tags to an institution.  The text box will remain to the right of the tags you've added, so that you can continue to type into it to add tags.  Once again, tags cannot be created here.  Type into the text box and choose a tag from the autocompletion menu that appears.  If you don't see the tag you need and you are an administrator, go to the Create Tag page to create the tag.
-   - If you add an incorrect tag, click the pencil icon to remove it.
+   - If you add an incorrect tag, click the "x" to remove it.
    - Scroll down to the "Contacts" section.
       - This section works exactly like the "Attendees" section on an Action, except that only administrative users can add and edit institutional contacts.
       - Add a new contact to the institution by clicking the "add new" button.
@@ -64,8 +64,7 @@
 - Edit participant.  Click on the name of the participant you just created, or any other participant on the list.
    - This page looks the same as the "create participant" page, but with an "Action History" section at the bottom.
    - The action history will be empty until the participant has been listed as attending an action (in the "Attendees" section of that action's page).
-   - The action list is limited to the 5 most recent actions that the person has attended, and links to these actions, if any.
-   - Note that if you want to see the full list of all the actions that a person has attended you should use the "Advanced Search" (see the "Miscellaneous" section, below).
+   - The action list is limited to the 5 most recent actions that the person has attended by default, but offers the option to view more.
    - Click "Done" to return to the list of participants.
    
 ### Click on "Tags"
@@ -81,17 +80,6 @@
   - Most likely you won't need to edit tags, except possibly to fix typos.  This page looks exactly like it does when creating the tag, and all the same notes apply.
   - Return to the home page.
   
-### Click on "Activity Log"  
-- List of activities.
-  - This list shows recent changes to the database ordered by the date/time of the change.  
-  - It isn't sortable, because the changes are meant to be viewed by most recent to least recent (farthest back).
-  - This list is intended as a quick reference point to the kinds of changes that have recently been made, but more information is available by clicking into one of the logs.
-- Add an activity log.  Notice that there is no option to create an activity log.
-  - A log entry is automatically created whenever anything is changed in the database, so there should be no reason to create one manually.
-- Edit activity log.  Click any entry.
-  - Again, these are created automatically, so there's generally no need to make manual edits to them.  However, you could do so to store extra information about a change.  The only field that is editable is the "Change message" field.  You could note the exact change that was made, if desired.
-  - Note that an edit to an activity log is itself stored in the log.
-
 # User Administration #
 
 ### Click on "Users"
@@ -107,12 +95,7 @@
   - The first and last name and email address are not entirely necessary, but could be good for record-keeping purposes.
   - If a user logs in and sees the message "You don't have permission to edit anything," then he or she has not been added to a group and needs an administrator to make that change to his or her user profile.
 
-### Groups
-- Groups are not available to anyone except superusers.  There shouldn't be any need to edit them or to add new groups.
-
 
 # Miscellaneous #
 
-- missing data report
-- search
-- advanced search 
+- Basic and advanced search
