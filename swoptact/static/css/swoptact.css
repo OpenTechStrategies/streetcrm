@@ -18,12 +18,7 @@
 
 body {
     font-family: Verdana,Arial,sans-serif;
-    /* background-color: #F8F2EB; */
-    background: url('/static/images/dawn-818102_1920.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: url('/static/images/concrete_seamless.png');
 }
 
 .container-fluid {
@@ -494,7 +489,7 @@ table#inlined-model-table .editable {
     display: none;
 }
 
-table#inlined-model-table .large-info {
+.large-info {
    font-size: 16px;
    border: 2px solid #5F1F7F;
    border-radius: 50%;

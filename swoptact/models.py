@@ -300,7 +300,7 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
     is_prep = models.BooleanField(
         default=False,
         blank=True,
-        verbose_name="This meeting is part of a major action:"
+        verbose_name="Is this directly related to a future action?"
     )
     major_action = models.ForeignKey("self", null=True, blank=True,
                                      verbose_name="Connected Action")
