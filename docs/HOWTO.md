@@ -31,6 +31,7 @@
   - You'll see that each row has "i"s that link to the participant page and institution page.  Click either of those (they'll each open in a new tab) to see and edit more information about the person and the institution (respectively).
   - Clicking, tabbing, or clicking enter from each cell in this table will auto save it.
   - If you see a typo in an attendee name that has already been entered, editing it from the attendee list will edit it everywhere in the database.  Therefore, if you realize that someone is on the attendee list who should not be, click the red "x" to remove the row instead of editing the name.  Editing the name will not add a different person -- it will change the name of that person, which might mean that the new name is associated with the wrong institution, phone number, title, and other information.
+  
 ### Click on "Institutions"
 - List of institutions
    - Like actions, you can filter the institutions by archived status.  Active institutions are those that have not been archived.  All shows both archived and active institutions.
@@ -50,6 +51,7 @@
       - Each contact has an "i" next to his or her name.  Click the "i" to see more information about the person open in a new tab.
       - If you are an administrative user, you can edit the contact's name, title, and phone number right in this table, just as we edited "Attendees" above.
       - The phone number errors are exactly the same as those for attendees.  If the phone number does not have the area code or has an invalid area code then it will error and not save.
+      
 ### Click on "Participants"
 - List of participants.
    - Just as with actions, participants can be sorted by the column headers of this table.  To reverse the sort order, click the arrow in the header.  To remove sorting, click the "X" in the header of the column.
@@ -65,6 +67,7 @@
    - The action list is limited to the 5 most recent actions that the person has attended, and links to these actions, if any.
    - Note that if you want to see the full list of all the actions that a person has attended you should use the "Advanced Search" (see the "Miscellaneous" section, below).
    - Click "Done" to return to the list of participants.
+   
 ### Click on "Tags"
 - This will only be available if you are an administrator.  If you don't see "Tags" on your homepage, then skip down to the "Miscellaneous" section below.
 - List of tags.
@@ -77,6 +80,7 @@
 - Edit tag.  Click on the tag you just created or any tag name in the list.
   - Most likely you won't need to edit tags, except possibly to fix typos.  This page looks exactly like it does when creating the tag, and all the same notes apply.
   - Return to the home page.
+  
 ### Click on "Activity Log"  
 - List of activities.
   - This list shows recent changes to the database ordered by the date/time of the change.  
