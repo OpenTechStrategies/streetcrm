@@ -401,11 +401,11 @@ input[type=checkbox] {
 }
 
 label {
-    font-size: 120%;
+    font-size: 20px;
 }
 
 td {
-    font-size: 120%;
+    font-size: 20px;
 }
 
 li.bold_name {
@@ -562,7 +562,7 @@ p.readonly {
 
 form .form-row p {
     padding-left: 0px;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .form-horizontal .checkbox {
