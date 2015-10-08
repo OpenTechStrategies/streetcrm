@@ -18,7 +18,15 @@ function addInstitutionLink() {
     }
 }
 
-$(document).ready(function () {
+function toggleExtraActions() {
+    $("tr.more_actions").hide();
+    $("#toggle_more_actions").on("click", function () {
+        $("tr.more_actions").toggle();
+    });
+}
+
+$(document).ready( function () {
     addSaveAndStayButton();
     addInstitutionLink();
+    toggleExtraActions();
 });
