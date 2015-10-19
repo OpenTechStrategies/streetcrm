@@ -259,6 +259,7 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     title = models.CharField(null=True, blank=True, max_length=255,
                              help_text="e.g. Pastor, Director",
                              verbose_name="Participant's Title")
+    leadership = models.ManyToManyField('LeaderStage', through='LeadershipGrowth', related_name='stage')
 
     def __str__(self):
         return self.name
@@ -318,3 +319,17 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
 
     def attendee_count(self):
         return self.participants.count()
+
+
+class LeaderStage(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class LeadershipGrowth(models.Model):
+    stage = models.ForeignKey(LeaderStage, related_name="growth_step")
+    person = models.ForeignKey(Participant, related_name="tracked_growth")
+    date_reached = models.DateField(null=True, blank=True,
+                                    default=timezone.now)
+    

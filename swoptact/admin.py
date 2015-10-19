@@ -649,6 +649,12 @@ class ContactInline(admin.TabularInline):
         exclude=tuple()
     )
 
+class LeaderGrowthInline(admin.TabularInline):
+    model =  models.LeadershipGrowth
+    extra = 0
+    verbose_name = "leader stage"
+    verbose_name_plural = "Leader Stages"
+    
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, watson.SearchAdmin):
     """ Admin UI for participant including listing event history """
     search_fields = ("name", "primary_phone", "title", "email",
@@ -683,6 +689,8 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
             "fields": ("action_history",),
         }),
     )
+
+    inlines = [LeaderGrowthInline,]
 
     def get_fieldsets(self, request, obj=None):
         if obj:
@@ -912,6 +920,9 @@ class UserAdmin(auth.admin.UserAdmin):
 class GroupAdmin(auth.admin.GroupAdmin):
     filter_horizontal = tuple()
     filter_vertical = ('permissions',)
+    actions = None
+
+class LeaderStageAdmin(admin.ModelAdmin):
     actions = None
 
 # Create the admin site
