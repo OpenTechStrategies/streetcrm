@@ -332,4 +332,9 @@ class LeadershipGrowth(models.Model):
     person = models.ForeignKey(Participant, related_name="tracked_growth")
     date_reached = models.DateField(null=True, blank=True,
                                     default=timezone.now)
+    def __str__(self):
+        return self.stage.name
     
+    def save(self, *args, **kwargs):
+        self.date_reached = timezone.now()
+        super(LeadershipGrowth, self).save(*args, **kwargs)

@@ -638,22 +638,13 @@ class SWOPTACTAdminSite(admin.AdminSite):
             context)
 
 
-class ContactInline(admin.TabularInline):
-    model = models.Institution.contacts.through
-    extra = 0
-    verbose_name = "Key Contact"
-    verbose_name_plural = "Key Contacts"
-    template = "admin/institution_contacts_inline_tabular.html"
-    form = st_forms.autocomplete_modelform_factory(
-        model=models.Institution.contacts.through,
-        exclude=tuple()
-    )
-
 class LeaderGrowthInline(admin.TabularInline):
     model =  models.LeadershipGrowth
-    extra = 0
+    extra = 1
+    template = "admin/leader_stage_inline_tabular.html"    
     verbose_name = "leader stage"
     verbose_name_plural = "Leader Stages"
+    readonly_fields = ("date_reached", )
     
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, watson.SearchAdmin):
     """ Admin UI for participant including listing event history """
