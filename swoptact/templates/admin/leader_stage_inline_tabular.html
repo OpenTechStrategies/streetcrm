@@ -1,13 +1,11 @@
 {% load i18n admin_static admin_modify %}{% load cycle from future %}
-<input type="hidden" id="institution_object_id" value="{{ object_id }}" />
 <div class="inline-group" id="{{ inline_admin_formset.formset.prefix }}-group">
   <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
 {{ inline_admin_formset.formset.management_form }}
 <fieldset class="module">
-   <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
-  <script type="text/javascript" src="{% static "js/remove_key_contacts.js" %}"></script>
+  <h2 id="stages-header">&#9654; {{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
    {{ inline_admin_formset.formset.non_form_errors }}
-   <table id="contacts-table">
+   <table id="stages-table">
      <thead><tr>
      {% for field in inline_admin_formset.fields %}
        {% if not field.widget.is_hidden %}
@@ -25,11 +23,7 @@
         {% endif %}
         <tr class="form-row {% cycle "row1" "row2" %} {% if forloop.last %} empty-form{% endif %}"
              id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
-            <input type="hidden" class="participant-id" value="{{ inline_admin_form.original.participant.id }}">
         <td class="original">
-          {% if inline_admin_form.original or inline_admin_form.show_url %}<p>
-
-            </p>{% endif %}
           {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
           {{ inline_admin_form.fk_field.field }}
           {% spaceless %}
@@ -47,32 +41,12 @@
             {% for field in line %}
               {% if not field.field.is_hidden %}
               <td{% if field.field.name %} class="field-{{ field.field.name }}"{% endif %}>
-              {% if field.field.name == "participant" %}
-                {% if inline_admin_form.original %}{{ field.field.errors.as_ul }}{{ field.field }}{% endif %}
-                {% comment %}
-                Just show a link icon to get to the Participant's profile.
-
-                Note we could use &#x1F6C8; instead of &#x2139;.
-                The former is the Unicode "circled information source"
-                icon, but it was only introduced in 2014 and most browsers
-                don't know how to render it yet.  For more information see:
-                http://www.emojibase.com/emoji/1f6c8/circledinformationsource
-
-                So for now we go with the non-circled version,
-                &#x2139;, which looks kind of like a plain "i" but a
-                little broader and flatter.  A portable solution
-                would be to use an actual image, of course, and
-                maybe that's the right long-term solution anyway.
-                {% endcomment %}
-                {% if inline_admin_form.original %}&nbsp;<a href="/swoptact/participant/{{ inline_admin_form.original.participant.id }}/">&#x2139;</a>{% endif %}
-              {% else %}
                 {% if field.is_readonly %}
                     <p>{{ field.contents }}</p>
                 {% else %}
                     {{ field.field.errors.as_ul }}
                     {{ field.field }}
                 {% endif %}
-              {% endif %}
               </td>
               {% endif %}
             {% endfor %}
@@ -81,7 +55,7 @@
         {% if inline_admin_formset.formset.can_delete %}
           <td class="delete">
             {% if inline_admin_form.original %}
-            <button type="submit" name="_unlink" class="btn contact-unlink">✘ Remove</button>
+            <button type="button" name="_unlink" class="btn contact-unlink">✘ Remove</button>
             {% endif %}
           </td>
         {% endif %}

@@ -25,8 +25,17 @@ function toggleExtraActions() {
     });
 }
 
+function toggleLeaderStages() {
+    $("#stages-table").hide();
+    $("#stages-header").on("click", function () {
+        $("#stages-table").toggle();
+    });
+}
+
+
 $(document).ready( function () {
     addSaveAndStayButton();
     addInstitutionLink();
     toggleExtraActions();
+    toggleLeaderStages();
 });

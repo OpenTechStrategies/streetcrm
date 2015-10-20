@@ -580,3 +580,10 @@ ul#model_list {
     list-style-type: none;
     padding-left: 0;
 }
+
+h2#stages-header:hover {
+    color: #5F1F7F;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
