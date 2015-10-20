@@ -24,6 +24,16 @@
                 "user"
             ],
             [
+                "add_leadershipgrowth",
+                "swoptact",
+                "leadershipgrowth"
+            ],
+            [
+                "change_leadershipgrowth",
+                "swoptact",
+                "leadershipgrowth"
+            ],
+            [
                 "delete_event",
                 "swoptact",
                 "event"
@@ -62,6 +72,16 @@
     "fields": {
         "name": "staff",
         "permissions": [
+            [
+                "add_leadershipgrowth",
+                "swoptact",
+                "leadershipgrowth"
+            ],
+            [
+                "change_leadershipgrowth",
+                "swoptact",
+                "leadershipgrowth"
+            ],
             [
                 "add_event",
                 "swoptact",
