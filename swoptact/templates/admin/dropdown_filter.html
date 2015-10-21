@@ -1,0 +1,14 @@
+{% load i18n static %}
+{% block extrahead %}
+<script type="text/javascript" src="{% static "js/filter_change_list.js" %}"></script>
+{% endblock %}
+
+{% comment %}
+May need to change the header styling.
+{% endcomment %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+<select class="filter_dropdown">
+{% for choice in choices %}
+    <option {% if choice.selected %} selected="selected"{% endif %} value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>
+{% endfor %}
+</select>

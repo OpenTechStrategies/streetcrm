@@ -1,4 +1,3 @@
-
 from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 from swoptact.models import Tag
@@ -6,6 +5,7 @@ from swoptact.models import Tag
 class ArchiveFilter(SimpleListFilter):
     title = _("Archive Status")
     parameter_name = "archive_status"
+    template = 'admin/dropdown_filter.html'
 
     def lookups(self, request, model_admin):
         active_count = str(model_admin.model.objects.filter(archived__isnull=True).count())
@@ -38,10 +38,12 @@ class ArchiveFilter(SimpleListFilter):
 
 class TagFilter(SimpleListFilter):
     title = _("Tag")
+    template = 'admin/dropdown_filter.html'
     parameter_name = "tags__name"
 
     def lookups(self, request, model_admin):
-        tag_set = Tag.objects.all().order_by("name")
+        object_type = Tag
+        tag_set = object_type.objects.all().order_by("name")
         all_count = str(model_admin.model.objects.all().count())
         choices_set = [("all", _("All"  + " (" + all_count + ")")),]
         for name in tag_set:
@@ -62,11 +64,11 @@ class TagFilter(SimpleListFilter):
 
     def choices(self, cl):
         for lookup, title in self.lookup_choices:
+            selected = (str(self.value()) == str(lookup))
             yield {
-                'selected': self.value() == lookup,
+                'selected': selected,
                 'query_string': cl.get_query_string({
                     self.parameter_name: lookup,
                 }, []),
                 'display': title,
             }
-            
