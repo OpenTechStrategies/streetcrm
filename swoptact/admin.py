@@ -653,7 +653,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
                      "participant_city_address",
                      "participant_state_address",
                      "participant_zipcode_address")
-    list_filter = (admin_filters.ArchiveFilter,)
+    list_filter = (admin_filters.ArchivedFilter,)
     list_display = ("name", "US_primary_phone", "institution", "participant_street_address", "participant_city_address",)
     readonly_fields = ("action_history", "event_history_name")
     fieldsets = (
@@ -823,7 +823,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     search_filter = ("name", "inst_street_address", "inst_city_address", "inst_state_address"
                      "inst_zipcode_address")
-    list_filter = (admin_filters.ArchiveFilter, admin_filters.TagFilter,)
+    list_filter = (admin_filters.ArchivedFilter, admin_filters.TagFilter,)
     list_display = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
@@ -872,7 +872,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 
 class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
     search_fields = ("name",)
-    list_filter = (admin_filters.ArchiveFilter,)
+    list_filter = (admin_filters.ArchivedFilter,)
     list_display = ("name", "description",)
     actions = None
     readonly_fields = ("date_created",)
@@ -903,7 +903,7 @@ class UserAdmin(auth.admin.UserAdmin):
     )
 
     list_display = ("username", "email", "first_name", "last_name")
-    list_filter = ("is_active", "groups")
+    list_filter = (admin_filters.GroupFilter,)
     actions = None
     filter_horizontal = tuple()
     filter_vertical = ('groups', 'user_permissions',)

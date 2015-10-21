@@ -6,7 +6,9 @@
 {% comment %}
 May need to change the header styling.
 {% endcomment %}
-<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+{% if title %}
+<h3>{% blocktrans with filter_title=title %} Filter by {{ filter_title }} {% endblocktrans %}</h3>
+{% endif %}
 <select class="filter_dropdown">
 {% for choice in choices %}
     <option {% if choice.selected %} selected="selected"{% endif %} value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>
