@@ -39,6 +39,8 @@ When you log in to SWOPtact, you log in as a user with one of the following thre
 
 * **Admin** can do everything above, plus create users.
 
+See the [HOWTO](docs/HOWTO.md) guide for task-oriented documentation. 
+
 # Installation
 
 See [INSTALL.md](INSTALL.md).
