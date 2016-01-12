@@ -49,7 +49,7 @@ Build the virtual enviroment for the website:
 Make the config directory and copy the config file over:
 
         $ mkdir -p /var/www/.config/swoptact/
-        $ cp /var/www/swoptact/config.example.ini /var/www/.config/swoptact/config.ini
+        $ cp config.example.ini /var/www/.config/swoptact/config.ini
 
 (If you're somewhere other than `/var/www/swoptact/`, for example
 under your home directory because you're doing a development
