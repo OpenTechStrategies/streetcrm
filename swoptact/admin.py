@@ -34,7 +34,10 @@ from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
-import watson
+from watson import search as watson
+from watson import admin as watson_admin
+from watson.admin import SearchAdmin
+
 import autocomplete_light
 
 from swoptact import forms as st_forms
@@ -44,7 +47,7 @@ from swoptact import mixins, models, admin_filters
 class SWOPTACTAdminSite(admin.AdminSite):
 
     login_form = st_forms.AdminLoginForm
-    search_engine = watson.admin.admin_search_engine
+    search_engine = watson_admin.admin_search_engine
     search_template = "admin/search.html"
     advanced_search_template = "admin/advanced_search.html"
 
@@ -646,7 +649,7 @@ class LeaderGrowthInline(admin.TabularInline):
     verbose_name_plural = "Leader Stages"
     readonly_fields = ("date_reached", )
     
-class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, watson.SearchAdmin):
+class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, SearchAdmin):
     """ Admin UI for participant including listing event history """
     search_fields = ("name", "primary_phone", "title", "email",
                      "participant_street_address",
@@ -727,7 +730,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, w
         super(ParticipantAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = ''
 
-class AjaxyInlineAdmin(watson.SearchAdmin):
+class AjaxyInlineAdmin(SearchAdmin):
     """
     Base class for those using the ajax'y inline form stuff.
 
@@ -870,7 +873,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "swoptact.add_contact", "swoptact.add_institution"])
 
 
-class TagAdmin(mixins.AdminArchiveMixin, watson.SearchAdmin):
+class TagAdmin(mixins.AdminArchiveMixin, SearchAdmin):
     search_fields = ("name",)
     list_filter = (admin_filters.ArchivedFilter,)
     list_display = ("name", "description",)
