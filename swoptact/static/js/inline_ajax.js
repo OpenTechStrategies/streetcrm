@@ -101,8 +101,8 @@ function getNewTableRow() {
         tableRow.append(td_wrap);
     });
 
-    // Now append the buttons if the user has enough privileges
-    if (userCanEdit()) {
+    // Now append the delete button if the user has enough privileges
+    if (userCanDelete()) {
        tableRow.append('<td><span class="deleteButton">&#10006;</span></td>');
     }
 
@@ -211,6 +211,19 @@ function userCanEdit() {
     switch (model) {
       case "event": return true;
       case "institution": return userRank > 2 ? true : false;
+      default: return userRank > 3 ? true : false;
+    }
+}
+
+/* Check if the current user can delete a user row from an ajax table,
+   based on user rank and model. */
+function userCanDelete() {
+    var userRank = getUserRank(getInlineConfig()["user_group"]);
+    var model = $("#model_name").val();
+    switch (model) {
+      case "event":
+      case "institution": 
+        return userRank > 2 ? true : false;
       default: return userRank > 3 ? true : false;
     }
 }
@@ -685,7 +698,7 @@ function insertFormHeaders() {
             new_elt.text(field["descriptive_name"]);
             $("#inlined-model-table thead tr").append(new_elt);
         });
-    if (userCanEdit()) {
+    if (userCanDelete()) {
         $("#inlined-model-table thead tr").append($("<th class=\"deleteButtonTH\">&nbsp;</th>"));
     }
 }
