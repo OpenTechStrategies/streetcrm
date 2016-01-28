@@ -139,11 +139,25 @@ class APIMixin:
 
     def post(self, request, *args, **kwrgs):
         request.POST = self.process_json(request.body)
-        # store the nonce in `nonce_to_id` table
+        sent_nonce = request.POST['nonce']
+        if not request.POST['nonce']:
+            print("DEBUG: nope on the nonce -- this should send an error")
+
+        # by the way, super looks for APIMixin's parent class and calls
+        # the post() method of *that* class (probably Models.model, or
+        # something like that)
+        
+        new_object = super(APIMixin, self).post(request, *args, **kwrgs)
+        object_json = self.process_json(new_object._container[0])
+        new_id = object_json['id']
+        # save new_id and nonce to the `swoptact_nonce_to_id` table :)
         #
-        # the only problem is that the ID is only created in this return
-        # statement (I think)
-        return super(APIMixin, self).post(request, *args, **kwrgs)
+        # but only do this if the incoming request was, in fact, a
+        # POST.  I'm unexpectedly seeing this happen for each PUT, as well.
+        new_nonce = models.nonce_to_id(participant=new_id, nonce=sent_nonce)
+        new_nonce.save()
+        
+        return new_object
 
     def put(self, request, *args, **kwrgs):
         print("DEBUG: inside the put")
