@@ -45,7 +45,12 @@ def process_field_general(api_view, body, model, field_name, value):
     to something to attach to the model
     """
     # Find the field that the model is on.
-    field = model._meta.get_field(field_name)
+    try:
+        field = model._meta.get_field(field_name)
+    # the field does not exist on the model (in practice, this should only be "nonce")
+    except Exception:
+        field = None
+        body[field_name] = value
 
     if isinstance(field, related.RelatedField):
         if value is None:
@@ -134,10 +139,17 @@ class APIMixin:
 
     def post(self, request, *args, **kwrgs):
         request.POST = self.process_json(request.body)
+        # store the nonce in `nonce_to_id` table
+        #
+        # the only problem is that the ID is only created in this return
+        # statement (I think)
         return super(APIMixin, self).post(request, *args, **kwrgs)
 
     def put(self, request, *args, **kwrgs):
+        print("DEBUG: inside the put")
         request.POST = self.process_json(request.body)
+        print(request.POST['id'])
+        # we should be able to manage the nonce -> id transition here
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
     def form_invalid(self, form, *args, **kwargs):
@@ -275,7 +287,7 @@ def process_institution_field(api_view, body, model, field_name, value):
 
 class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
     """
-    Provides the view to retrive, create and update a participant
+    Provides the view to retrieve, create and update a participant
 
     If called with the PUT verb this expects a JSON serialized participant
     object which is the updated participant that will be saved.
@@ -289,7 +301,7 @@ class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
             "institution": process_institution_field}
 
     def get(self, request, *args, **kwargs):
-        """ Retrival of an existing participant """
+        """ Retrieval of an existing participant """
         # Lookup the object that we want to return
         self.object = self.get_object()
         return self.produce_response()

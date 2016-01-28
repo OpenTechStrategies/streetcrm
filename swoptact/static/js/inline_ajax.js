@@ -105,7 +105,8 @@ function getNewTableRow() {
     if (userCanEdit()) {
        tableRow.append('<td><span class="deleteButton">&#10006;</span></td>');
     }
-
+    // add a hidden element to store the nonce (if necessary)
+    tableRow.append( '<input type="hidden" class="nonce" />');
     return tableRow;
 }
 
@@ -154,6 +155,7 @@ function getRowValues(row) {
             dict[form_name] = getValueFromTextInput(jq_column);
         }
     );
+    dict['nonce'] = row.find(".nonce").val();
     return dict;
 }
 
@@ -569,6 +571,7 @@ function handleJSONErrors(errors, row){
 
 /* Save inlined model on server and update the UI
 
+TODO: fix this docstring
 Arguments:
  - inlined_model: this linked model
  - submit_flag: whether or not to submit the entire form
@@ -577,14 +580,32 @@ Arguments:
 function saveInlinedModel(row, cell) {
     var inlined_model = row.data("model");
     var form_data = getRowValues(row);
-
-    // Handle if this is a new row, or an existing one
+    var nonce = row.find(".nonce").val();
+    
+    // skeleton for #268:
+    if (inlined_model.id) {
+        // send a PUT
+    }
+    else {
+        if (nonce) {
+            // send a PUT
+            console.log("DEBUG: nonce exists, and is " + nonce);
+        }
+        else {
+            // create the nonce
+            nonce = 'nonce-' + Math.random().toString(36).slice(-5);
+            // then save the nonce to the row
+            row.find(".nonce").val(nonce);
+            // save it to form-data
+            form_data['nonce'] = nonce;
+            
+            // send a POST
+        }
+    }
+    // Handle if this is a new row, or an existing one.
     //
-    // @@: we shouldn't really have both "empty" and ""
-    //   supported here.  We should simplify the code to just ""
-    //   because otherwise we're going to end up with a lot of
-    //   missed conditions and extra checks.
-    if (inlined_model.id != "empty" && inlined_model.id != ""){
+    // if the client has the participant ID
+    if ( inlined_model.id != "" ) {
         return $.get(fillExistingInlinedModelUrl(inlined_model.id),
               function (inlined_model_dbstate) {
                   // @@: Unfortunately, we're fetching the existing representation from
