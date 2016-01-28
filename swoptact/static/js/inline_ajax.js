@@ -581,31 +581,72 @@ function saveInlinedModel(row, cell) {
     var inlined_model = row.data("model");
     var form_data = getRowValues(row);
     var nonce = row.find(".nonce").val();
-    
-    // skeleton for #268:
+
+    // Handle if this is a new row, or an existing one.
     if (inlined_model.id) {
         // send a PUT
+        putInlinedModel(form_data, inlined_model, row, cell);
     }
     else {
         if (nonce) {
             // send a PUT
-            console.log("DEBUG: nonce exists, and is " + nonce);
+            putInlinedModel(form_data, inlined_model, row, cell);
         }
         else {
             // create the nonce
             nonce = 'nonce-' + Math.random().toString(36).slice(-5);
-            // then save the nonce to the row
+            // then save the nonce to the row for later requests
             row.find(".nonce").val(nonce);
-            // save it to form-data
+            // save it to form-data for this request
             form_data['nonce'] = nonce;
             
             // send a POST
+            postInlinedModel(form_data, row, cell);
         }
     }
-    // Handle if this is a new row, or an existing one.
-    //
-    // if the client has the participant ID
-    if ( inlined_model.id != "" ) {
+}
+
+/*
+ * POST an inlined model (usually a participant) to the server
+*/
+function postInlinedModel(form_data, row, cell) {
+        return $.ajax({
+            url: getNewInlinedModelUrl(),
+            data: JSON.stringify(form_data),
+            type: 'POST',
+            error: function (response) {
+                var errors = jQuery.parseJSON(response.responseText).form.errors;
+                handleJSONErrors(errors, row);
+            },
+            success: function (response) {
+                var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
+                $.post(url, function (result) {
+                    $.get(fillExistingInlinedModelUrl(response.id),
+                          function (updated_model) {
+                              row.data("model", updated_model);
+                              fillTableRow(row);
+                              if (checkLimitReached() == true) { limitReached(); }
+                              // Not sure if the below are necessary since I don't think a row can qualify as
+                              // "new" with a pre-existing error in one of the cells, but leaving in for now.
+                              row.find("td").removeClass("disabled").removeClass("corrigendum");
+                              cell.find(".validation-error").empty();
+                              cell.find(".static").show();
+                              cell.find(".editable").hide();
+                          }, 'json');
+                }, "json");
+            },
+            complete: function() {
+                // Reset sticky headers in case table cell widths have changed.
+                setStickyHeaders();
+            },
+            dataType: 'json'
+        });
+}
+
+/*
+ * PUT an inlined model (usually a participant) to the server
+*/
+function putInlinedModel(form_data, inlined_model, row, cell) {
         return $.get(fillExistingInlinedModelUrl(inlined_model.id),
               function (inlined_model_dbstate) {
                   // @@: Unfortunately, we're fetching the existing representation from
@@ -660,39 +701,6 @@ function saveInlinedModel(row, cell) {
                       dataType: 'json'
                   });
               }, 'json');
-    } else {
-        return $.ajax({
-            url: getNewInlinedModelUrl(),
-            data: JSON.stringify(form_data),
-            type: 'POST',
-            error: function (response) {
-                var errors = jQuery.parseJSON(response.responseText).form.errors;
-                handleJSONErrors(errors, row);
-            },
-            success: function (response) {
-                var url = fillLinkInlinedModelUrl(getPageModelId(), response.id);
-                $.post(url, function (result) {
-                    $.get(fillExistingInlinedModelUrl(response.id),
-                          function (updated_model) {
-                              row.data("model", updated_model);
-                              fillTableRow(row);
-                              if (checkLimitReached() == true) { limitReached(); }
-                              // Not sure if the below are necessary since I don't think a row can qualify as
-                              // "new" with a pre-existing error in one of the cells, but leaving in for now.
-                              row.find("td").removeClass("disabled").removeClass("corrigendum");
-                              cell.find(".validation-error").empty();
-                              cell.find(".static").show();
-                              cell.find(".editable").hide();
-                          }, 'json');
-                }, "json");
-            },
-            complete: function() {
-                // Reset sticky headers in case table cell widths have changed.
-                setStickyHeaders();
-            },
-            dataType: 'json'
-        });
-    }
 }
 
 function insertFieldsetHeader() {
