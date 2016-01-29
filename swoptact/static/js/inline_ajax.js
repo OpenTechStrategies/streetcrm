@@ -645,36 +645,55 @@ function postInlinedModel(form_data, row, cell) {
 
 /*
  * PUT an inlined model (usually a participant) to the server
+ * send:
+ * the old participant object (pre-change from the client) (get this from the row?)
+ *    - maybe just a checksum of this
+ * the names of the field(s) that were changed
+ * the new value(s) of th(os)e field(s)
 */
 function putInlinedModel(form_data, inlined_model, row, cell) {
-        return $.get(fillExistingInlinedModelUrl(inlined_model.id),
-              function (inlined_model_dbstate) {
-                  // @@: Unfortunately, we're fetching the existing representation from
-                  //   the server and then modifying that with the form before update.
-                  //   The reason is that whatever fields aren't supplied are dropped...
-                  //   and we don't want that!
-                  //   
-                  //   ... this is potentially DANGEROUS depending on how the
-                  //   page model is defined!  The API is non-symmetrical,
-                  //   meaning that data representation of existing models is not
-                  //   guaranteed (and often is not) the same as the representation
-                  //   used to add new / save adjustments to models.
-                  //   For example, a foreign key will return a hashmap of data
-                  //   whereas a referenced-by-name-on-save will just take a string
-                  //   back.  This means THIS WILL BREAK for this kind of data
-                  //   if not represented in this field.
-                  //
-                  //   ... So if it's possible to only save adjustments to the fields
-                  //   we're representing, we should do that. :P
-                  //
-                  // ... we're not doing a clean copy of this data, because it isn't
-                  // necessary and it's not trivial to do in javascript, but keep
-                  // in mind that this does mutate inlined_model_dbstate too.
-                  //
-                  var data_to_submit = inlined_model_dbstate;
-                  for (key in form_data) {
-                      data_to_submit[key] = form_data[key];
-                  }
+    // loop through form_data and compare to row.data("model") (the
+    // original data from the server when this page was loaded) to find
+    // the changed fields
+    var changed_fields = [];
+    var new_values = [];
+    for (var field in form_data) {
+        // does each field value match the value in row.data("model")?
+        if (field in row.data("model")) {
+            var check_value = row.data("model")[field];
+            if (field == 'institution') {
+                // catch false positives for institution (because
+                // form_data stores the institution name, while row.data
+                // stores institution id)
+                if (row.data("model")[field]) {
+                    check_value = row.data("model")[field].name;
+                }
+                else {
+                    check_value = null;
+                }
+            }
+            if (form_data[field] == "") {
+                // otherwise we'd have a false positive in the next
+                // conditional where the stored value is null and the
+                // incoming value is ""
+                form_data[field] = null;
+            }
+            if (check_value != form_data[field]) {
+                // this is a changed field, so we add it to our
+                // changed_fields list and store the new value
+                changed_fields.push(field);
+                new_values[field] = form_data[field];
+            }
+        }
+        else {
+            // nonce will end up here, which is fine.  others would be
+            // unexpected.
+            console.log("row data does not have "  + field);
+        }
+    }
+    //
+    // send changed values, nonce, and old object values to server
+    var data_to_submit = [new_values, form_data['nonce'], row.data("model")]
                   
                   $.ajax({
                       url: fillExistingInlinedModelUrl(inlined_model.id),
@@ -700,7 +719,6 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
                       },
                       dataType: 'json'
                   });
-              }, 'json');
 }
 
 function insertFieldsetHeader() {
