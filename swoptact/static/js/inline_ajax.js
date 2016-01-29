@@ -694,31 +694,31 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
     //
     // send changed values, nonce, and old object values to server
     var data_to_submit = [new_values, form_data['nonce'], row.data("model")]
-                  
-                  $.ajax({
-                      url: fillExistingInlinedModelUrl(inlined_model.id),
-                      data: JSON.stringify(data_to_submit),
-                      type: 'PUT',
-                      error: function (response) {
-                          var errors = jQuery.parseJSON(response.responseText).form.errors;
-                          handleJSONErrors(errors, row);
-                      },
-                      success: function (updated_model) {
-                          if (checkLimitReached() == true) { limitReached(); }
-                          row.find("td").removeClass("disabled").removeClass("corrigendum");
-                          cell.find(".validation-error").empty();
-                          cell.children(".static").children("span.static-span").text(cell.find("input").val());
-                          createProfileLink(updated_model, cell);
-                          row.data("model", updated_model);
-                          cell.find(".static").show();
-                          cell.find(".editable").hide();
-                      },
-                      complete: function() {
-                          // Reset sticky headers in case table cell widths have changed.
-                          setStickyHeaders();
-                      },
-                      dataType: 'json'
-                  });
+    
+    $.ajax({
+        url: fillExistingInlinedModelUrl(inlined_model.id),
+        data: JSON.stringify(data_to_submit),
+        type: 'PUT',
+        error: function (response) {
+            var errors = jQuery.parseJSON(response.responseText).form.errors;
+            handleJSONErrors(errors, row);
+        },
+        success: function (updated_model) {
+            if (checkLimitReached() == true) { limitReached(); }
+            row.find("td").removeClass("disabled").removeClass("corrigendum");
+            cell.find(".validation-error").empty();
+            cell.children(".static").children("span.static-span").text(cell.find("input").val());
+            createProfileLink(updated_model, cell);
+            row.data("model", updated_model);
+            cell.find(".static").show();
+            cell.find(".editable").hide();
+        },
+        complete: function() {
+            // Reset sticky headers in case table cell widths have changed.
+            setStickyHeaders();
+        },
+        dataType: 'json'
+    });
 }
 
 function insertFieldsetHeader() {
