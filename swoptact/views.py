@@ -162,8 +162,25 @@ class APIMixin:
     def put(self, request, *args, **kwrgs):
         print("DEBUG: inside the put")
         request.POST = self.process_json(request.body)
-        print(request.POST['id'])
         # we should be able to manage the nonce -> id transition here
+        if request.POST['nonce'] and not request.POST['id']:
+            print("look up the id in the nonce_to_id table")
+            matching_queryset = models.nonce_to_id.objects.filter(
+                nonce=request.POST['nonce'])
+            matching_id = matching_queryset[0].participant
+            request.POST['id'] = matching_id
+        elif request.POST['id'] and not request.POST['nonce']:
+            print("default (original design)")
+        elif request.POST['id'] and request.POST['nonce']:
+            print("find and delete the matching rows from nonce_to_id")
+            removable_queryset = models.nonce_to_id.objects.filter(
+                nonce=request.POST['nonce'],
+                participant=request.POST['id']) 
+            for obj in removable_queryset:
+                obj.delete()
+        elif not request.POST['id'] and not request.POST['nonce']:
+            print("send an error")
+        
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
     def form_invalid(self, form, *args, **kwargs):
