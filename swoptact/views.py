@@ -158,6 +158,12 @@ class APIMixin:
         # by the way, super looks for APIMixin's parent class and calls
         # the post() method of *that* class (probably Models.model, or
         # something like that)
+        if is_put:
+            try:
+                request.POST['institution'] = request.POST['institution']['id']
+            except:
+                request.POST['institution'] = request.POST['institution']
+        
         new_object = super(APIMixin, self).post(request, *args, **kwrgs)
         if is_put is None:
             object_json = self.process_json(new_object._container[0])
