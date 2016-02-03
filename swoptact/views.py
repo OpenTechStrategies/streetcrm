@@ -160,7 +160,6 @@ class APIMixin:
         return new_object
 
     def put(self, request, *args, **kwrgs):
-        print("DEBUG: inside the put")
         request.POST = self.process_json(request.body)
         # we should be able to manage the nonce -> id transition here
         if request.POST['nonce'] and not request.POST['id']:
@@ -169,8 +168,6 @@ class APIMixin:
                 nonce=request.POST['nonce'])
             matching_id = matching_queryset[0].participant
             request.POST['id'] = matching_id
-        elif request.POST['id'] and not request.POST['nonce']:
-            print("default (original design)")
         elif request.POST['id'] and request.POST['nonce']:
             print("find and delete the matching rows from nonce_to_id")
             removable_queryset = models.nonce_to_id.objects.filter(
@@ -180,7 +177,31 @@ class APIMixin:
                 obj.delete()
         elif not request.POST['id'] and not request.POST['nonce']:
             print("send an error")
-        
+
+        # get the server's record for this participant, using the ID
+        relevant_participant = models.Participant.objects.filter(
+            id=request.POST['id'])[0]
+        for field in request.POST:
+            # get server_value for that field, if that field exists on
+            # the server (nonce will not, and id shouldn't really be
+            # checked because we already managed it above)
+            server_field = getattr(relevant_participant, field)
+            client_original = request.POST[field]['old']
+            if field != 'id' and field != 'nonce':
+                if client_original == server_field or client_original == server_field.id:
+                    inst_set = models.Institution.objects.filter(
+                        id=request.POST[field]['new'])
+                    inst = inst_set[0]
+                    if inst:
+                        setattr(relevant_participant, field, inst)
+                        relevant_participant.save()
+                    else:
+                        print("DEBUG: no such institution")
+                else:
+                    print("send error: old doesn't match what's on the server")
+            else:
+                print("field should be nonce or id: " + field)
+
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
     def form_invalid(self, form, *args, **kwargs):
@@ -300,20 +321,30 @@ def process_institution_field(api_view, body, model, field_name, value):
     if value == "" or value is None:
         # Nah, nothing to do
         return
+    # account for the old and new values, now
 
-    # Try to see if we have an institution with this name
+    body[field_name] = {'old': None, 'new': None}
+    
+    # Find the id of the old institution
+    if value['old']:
+        result = models.Institution.objects.get(name__iexact=value['old'])
+        body[field_name]['old'] = result.id
+    else:
+        body[field_name]['old'] = None
+    
+    # Try to see if we have an institution with this name (for the new institution)
     try:
-        result = models.Institution.objects.get(name__iexact=value)
-        body[field_name] = result.id
-        return
+        result = models.Institution.objects.get(name__iexact=value['new'])
+        body[field_name]['new'] = result.id
 
     except models.Institution.DoesNotExist:
         # Nope!  Let's make a new one.
-        new_institution = models.Institution(name=value)
+        new_institution = models.Institution(name=value['new'])
         new_institution.save()
         api_view._objects_created.append(new_institution)
-        body[field_name] = new_institution.id
-        return
+        body[field_name]['new'] = new_institution.id
+
+    return
 
 
 class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):

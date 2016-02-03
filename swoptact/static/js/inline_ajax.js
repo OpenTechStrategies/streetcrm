@@ -655,8 +655,14 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
     // loop through form_data and compare to row.data("model") (the
     // original data from the server when this page was loaded) to find
     // the changed fields
-    var changed_fields = [];
-    var new_values = [];
+    var changed_values = {};
+    changed_values.nonce = form_data['nonce'];
+    if (inlined_model.id) {
+        changed_values.id = inlined_model.id;
+    }
+    else {
+        changed_values.id = null;
+    }
     for (var field in form_data) {
         // does each field value match the value in row.data("model")?
         if (field in row.data("model")) {
@@ -681,8 +687,7 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
             if (check_value != form_data[field]) {
                 // this is a changed field, so we add it to our
                 // changed_fields list and store the new value
-                changed_fields.push(field);
-                new_values[field] = form_data[field];
+                changed_values[field] = {old: check_value, new: form_data[field]};
             }
         }
         else {
@@ -692,8 +697,9 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
         }
     }
     //
-    // send changed values, nonce, and old object values to server
-    var data_to_submit = [new_values, form_data['nonce'], row.data("model")]
+    // send nonce, id if it exists, and old and new values of changed fields to server
+    console.log(changed_values);
+    var data_to_submit = changed_values;
     
     $.ajax({
         url: fillExistingInlinedModelUrl(inlined_model.id),
