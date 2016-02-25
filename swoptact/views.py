@@ -163,8 +163,15 @@ class APIMixin:
                 request.POST['institution'] = request.POST['institution']['id']
             except:
                 request.POST['institution'] = request.POST['institution']
-        
-        new_object = super(APIMixin, self).post(request, *args, **kwrgs)
+
+        new_object = None
+        try:
+            new_object = super(APIMixin, self).post(request, *args, **kwrgs)
+        except AttributeError:
+            new_object = None
+            print("DEBUG: attribute error")
+            print(AttributeError)
+
         if is_put is None:
             object_json = self.process_json(new_object._container[0])
             new_id = object_json['id']
@@ -177,12 +184,17 @@ class APIMixin:
     def put(self, request, *args, **kwrgs):
         incoming_fields = self.process_json(request.body)
         # we manage the nonce -> id transition here
+        try:
+            print(incoming_fields['id'])
+        except:
+            incoming_fields['id'] = None
         if incoming_fields['nonce'] and not incoming_fields['id']:
             #look up the id in the nonce_to_id table
             matching_queryset = models.nonce_to_id.objects.filter(
                 nonce=incoming_fields['nonce'])
-            matching_id = matching_queryset[0].participant
-            incoming_fields['id'] = matching_id
+            if matching_queryset:
+                matching_id = matching_queryset[0].participant
+                incoming_fields['id'] = matching_id
         elif incoming_fields['id'] and incoming_fields['nonce']:
             #find and delete the matching rows from nonce_to_id
             removable_queryset = models.nonce_to_id.objects.filter(
@@ -229,7 +241,7 @@ class APIMixin:
 
                 # should check whether the "old" exists
                 client_original = incoming_fields[field]['old']
-                if client_original == server_field or client_original == server_field.id:
+                if client_original == server_field or client_original == server_field['id']:
                     # update the field
                     request.POST[field] = incoming_fields[field]['new']
                 else:
