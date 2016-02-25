@@ -113,7 +113,7 @@ class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
 
 class ParticipantForm(django.forms.ModelForm):
     institution = formfields.BasicAutoCompleteField(
-        models.Institution, "name")
+        models.Institution, "name", required=False)
 
     class Meta:
         model = models.Participant
