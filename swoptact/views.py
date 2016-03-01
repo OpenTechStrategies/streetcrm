@@ -222,6 +222,7 @@ class APIMixin:
         request.POST = relevant_participant.serialize()
         #get rid of id and nonce before this for loop
         del incoming_fields['nonce']
+        model_id = incoming_fields['id']
         del incoming_fields['id']
         
         for field in incoming_fields:
@@ -249,6 +250,9 @@ class APIMixin:
             else:
                 print("DEBUG: field " + field + " does not exist in this object")
 
+        # here the self tries to call get_object and triggers the attribute error
+        # we can override get_object with the incoming_fields['id']
+        setattr(self, 'kwargs', {'pk': model_id})
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
     def form_invalid(self, form, *args, **kwargs):
