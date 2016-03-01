@@ -585,12 +585,12 @@ function saveInlinedModel(row, cell) {
     // Handle if this is a new row, or an existing one.
     if (inlined_model.id) {
         // send a PUT
-        putInlinedModel(form_data, inlined_model, row, cell);
+        putInlinedModel(form_data, inlined_model.id, row, cell);
     }
     else {
         if (nonce) {
             // send a PUT
-            putInlinedModel(form_data, inlined_model, row, cell);
+            putInlinedModel(form_data, inlined_model.id, row, cell);
         }
         else {
             // create the nonce
@@ -651,16 +651,19 @@ function postInlinedModel(form_data, row, cell) {
  * the names of the field(s) that were changed
  * the new value(s) of th(os)e field(s)
 */
-function putInlinedModel(form_data, inlined_model, row, cell) {
+function putInlinedModel(form_data, model_id, row, cell) {
     // loop through form_data and compare to row.data("model") (the
     // original data from the server when this page was loaded) to find
     // the changed fields
     var changed_values = {};
     changed_values.nonce = form_data['nonce'];
-    if (inlined_model.id) {
-        changed_values.id = inlined_model.id;
+    var url = "";
+    if (model_id) {
+        url = fillExistingInlinedModelUrl(model_id);
+        changed_values.id = model_id;
     }
     else {
+        url = fillExistingInlinedModelUrl(changed_values.nonce);
         changed_values.id = null;
     }
     for (var field in form_data) {
@@ -702,7 +705,7 @@ function putInlinedModel(form_data, inlined_model, row, cell) {
     var data_to_submit = changed_values;
     
     $.ajax({
-        url: fillExistingInlinedModelUrl(inlined_model.id),
+        url: url,
         data: JSON.stringify(data_to_submit),
         type: 'PUT',
         error: function (response) {
