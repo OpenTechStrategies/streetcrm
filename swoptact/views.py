@@ -242,7 +242,11 @@ class APIMixin:
 
                 # should check whether the "old" exists
                 client_original = incoming_fields[field]['old']
-                if client_original == server_field or client_original == server_field['id']:
+                try:
+                    existing_inst = server_field['id']
+                except:
+                    existing_inst = None
+                if client_original == server_field or client_original == existing_inst: 
                     # update the field
                     request.POST[field] = incoming_fields[field]['new']
                 else:

@@ -590,7 +590,7 @@ function saveInlinedModel(row, cell) {
     else {
         if (nonce) {
             // send a PUT
-            putInlinedModel(form_data, inlined_model.id, row, cell);
+            putInlinedModel(form_data, null, row, cell);
         }
         else {
             // create the nonce
@@ -667,36 +667,27 @@ function putInlinedModel(form_data, model_id, row, cell) {
         changed_values.id = null;
     }
     for (var field in form_data) {
-        // does each field value match the value in row.data("model")?
-        if (field in row.data("model")) {
-            var check_value = row.data("model")[field];
-            if (field == 'institution') {
-                // catch false positives for institution (because
-                // form_data stores the institution name, while row.data
-                // stores institution id)
-                if (row.data("model")[field]) {
-                    check_value = row.data("model")[field].name;
-                }
-                else {
-                    check_value = null;
-                }
-            }
-            if (form_data[field] == "") {
-                // otherwise we'd have a false positive in the next
-                // conditional where the stored value is null and the
-                // incoming value is ""
-                form_data[field] = null;
-            }
-            if (check_value != form_data[field]) {
-                // this is a changed field, so we add it to our
-                // changed_fields list and store the new value
+        // does each field value match the value in row.data("model")?  Or, does the value not exist in row.data("model")?
+        var check_value = null;
+        if (row.data("model")[field] && field != 'institution' ) {
+            check_value = row.data("model")[field];
+        }
+        else if (field == 'institution' && row.data("model")[field]) {
+            check_value = row.data("model")[field].name;
+        }
+
+        if (form_data[field] == "") {
+            // otherwise we'd have a false positive in the next
+            // conditional where the stored value is null and the
+            // incoming value is the empty string
+            form_data[field] = null;
+        }
+        if (check_value != form_data[field]) {
+            // this is a changed field, so we add it to our
+            // changed_fields list and store the new value
+            if (! changed_values[field]) {
                 changed_values[field] = {old: check_value, new: form_data[field]};
             }
-        }
-        else {
-            // nonce will end up here, which is fine.  others would be
-            // unexpected.
-            console.log("row data does not have "  + field);
         }
     }
     //
