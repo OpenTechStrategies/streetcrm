@@ -152,9 +152,6 @@ class APIMixin:
         except KeyError:
             sent_nonce = None
         
-        if not sent_nonce:
-            print("DEBUG: nope on the nonce -- this should send an error")
-
         # by the way, super looks for APIMixin's parent class and calls
         # the post() method of *that* class (probably Models.model, or
         # something like that)

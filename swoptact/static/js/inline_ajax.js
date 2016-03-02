@@ -365,12 +365,17 @@ function fillTableRow(tableRow) {
         var cell = $(this);
         staticDiv = cell.children(".static");
         editableDiv = cell.children(".editable");
+        // get the current text in the cell
+        var preval = editableDiv.children("input").val();
         fieldName = cell.data("form-name");
+        // Instead of defaulting to the empty string here, I want to
+        // fill the cell with whatever it had before the row was
+        // refilled (e.g. if a user was halfway through a word)
         if (cell.data("input-type") == "fkey_autocomplete_name") {
-            val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : "";
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : preval;
         }
         else {
-            val = inlinedModel[fieldName] ? inlinedModel[fieldName] : "";
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName] : preval;
         }           
         staticDiv.children(".static-span").text(val);
         editableDiv.children("input").val(val);
@@ -692,7 +697,6 @@ function putInlinedModel(form_data, model_id, row, cell) {
     }
     //
     // send nonce, id if it exists, and old and new values of changed fields to server
-    console.log(changed_values);
     var data_to_submit = changed_values;
     
     $.ajax({
