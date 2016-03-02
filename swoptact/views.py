@@ -147,85 +147,75 @@ class APIMixin:
             request.POST = self.process_json(request.body)
             is_put = None
 
-        try:
-            sent_nonce = request.POST['nonce']
-        except KeyError:
-            sent_nonce = None
-        
-        # by the way, super looks for APIMixin's parent class and calls
-        # the post() method of *that* class (probably Models.model, or
-        # something like that)
+
+        # manage institution
         if is_put:
             try:
                 request.POST['institution'] = request.POST['institution']['id']
             except:
                 request.POST['institution'] = request.POST['institution']
 
-        new_object = None
         try:
             new_object = super(APIMixin, self).post(request, *args, **kwrgs)
         except AttributeError:
             new_object = None
-            print("DEBUG: attribute error")
+            print("DEBUG: Can't post the object because it doesn't have the correct pk_url_kwarg")
             print(AttributeError)
 
         if is_put is None:
             object_json = self.process_json(new_object._container[0])
             new_id = object_json['id']
-            # save new_id and nonce to the `swoptact_nonce_to_id` table :)
-            new_nonce = models.nonce_to_id(participant=new_id, nonce=sent_nonce)
-            new_nonce.save()
+            # save new_id and nonce to the `swoptact_nonce_to_id` table
+            try:
+                new_nonce = models.nonce_to_id(participant=new_id, nonce=request.POST['nonce'])
+                new_nonce.save()
+            except KeyError:
+                print("DEBUG: No incoming nonce, so we can't save the nonce record")
 
         return new_object
 
-    def put(self, request, *args, **kwrgs):
-        incoming_fields = self.process_json(request.body)
-        # we manage the nonce -> id transition here
+    def find_id(self, incoming_fields):
+        # function that takes the result of process_json and returns the
+        # id (or throws an error)
         try:
-            print(incoming_fields['id'])
+            model_id = incoming_fields['id']
+            del incoming_fields['id']
         except:
-            incoming_fields['id'] = None
-        if incoming_fields['nonce'] and not incoming_fields['id']:
+            model_id = None
+
+        if incoming_fields['nonce'] and not model_id:
             #look up the id in the nonce_to_id table
             matching_queryset = models.nonce_to_id.objects.filter(
                 nonce=incoming_fields['nonce'])
             if matching_queryset:
                 matching_id = matching_queryset[0].participant
-                incoming_fields['id'] = matching_id
-        elif incoming_fields['id'] and incoming_fields['nonce']:
+                model_id = matching_id
+        elif model_id and incoming_fields['nonce']:
             #find and delete the matching rows from nonce_to_id
             removable_queryset = models.nonce_to_id.objects.filter(
                 nonce=incoming_fields['nonce'],
-                participant=incoming_fields['id']) 
+                participant=model_id) 
             for obj in removable_queryset:
                 obj.delete()
-        elif not incoming_fields['id'] and not incoming_fields['nonce']:
+        elif not model_id and not incoming_fields['nonce']:
             print("send an error")
 
-        # get the db's record for this object, using the incoming (or
-        # produced above) ID
-        #
-        # compare the old values of the fields in incoming_fields to the
-        # values of the fields in the database
-        #
-        # if they match, update the request with the new values
-        #
-        # create a new request.POST from the db object, with all fields
-        # and updated values, and send that to the post() function.
-        #
-        # CAN'T ASSUME IT'LL BE A PARTICIPANT!
-        relevant_participant = models.Participant.objects.get(
-            id=incoming_fields['id'])
-        request.POST = relevant_participant.serialize()
-        #get rid of id and nonce before this for loop
-        del incoming_fields['nonce']
-        model_id = incoming_fields['id']
-        del incoming_fields['id']
+        return model_id
+
+
+    def put(self, request, *args, **kwrgs):
+        incoming_fields = self.process_json(request.body)
+        model_id = self.find_id(incoming_fields)
+        
+        # Can we assume it's a participant?
+        relevant_object = models.Participant.objects.get(
+            id=model_id)
+        request.POST = relevant_object.serialize()
         
         for field in incoming_fields:
             # Check to see whether the object has such a field
             try:
-                getattr(relevant_participant, field)
+                getattr(relevant_object, field)
                 field_exists = True
             except AttributeError:
                 field_exists = False
@@ -251,8 +241,7 @@ class APIMixin:
             else:
                 print("DEBUG: field " + field + " does not exist in this object")
 
-        # here the self tries to call get_object and triggers the attribute error
-        # we can override get_object with the incoming_fields['id']
+        # use the model_id as the url pk in the request
         setattr(self, 'kwargs', {'pk': model_id})
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
