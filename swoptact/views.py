@@ -159,8 +159,16 @@ class APIMixin:
             new_object = super(APIMixin, self).post(request, *args, **kwrgs)
         except AttributeError:
             new_object = None
-            print("DEBUG: Can't post the object because it doesn't have the correct pk_url_kwarg")
-            print(AttributeError)
+            # most likely an incorrect pk_url_kwarg
+            context = self.get_context_data(
+                error= { 'name': ["Sorry, there's a problem with your request.  Please try again."]}
+            )
+            # but the AttributeError makes this fail, too.
+            return self.render_to_response(
+                context,
+                status=400
+            )
+
 
         if is_put is None:
             object_json = self.process_json(new_object._container[0])
@@ -176,7 +184,7 @@ class APIMixin:
 
     def find_id(self, incoming_fields):
         # function that takes the result of process_json and returns the
-        # id (or throws an error)
+        # id or, if there's an error, the text of the error
         try:
             model_id = incoming_fields['id']
             del incoming_fields['id']
@@ -198,7 +206,7 @@ class APIMixin:
             for obj in removable_queryset:
                 obj.delete()
         elif not model_id and not incoming_fields['nonce']:
-            print("send an error")
+            model_id = "We weren't able to save this data.  Please try again."
 
         return model_id
 
@@ -206,10 +214,26 @@ class APIMixin:
     def put(self, request, *args, **kwrgs):
         incoming_fields = self.process_json(request.body)
         model_id = self.find_id(incoming_fields)
-        
-        # Can we assume it's a participant?
-        relevant_object = models.Participant.objects.get(
+        try:
+            # Can we assume it's a participant here?
+            relevant_object = models.Participant.objects.get(
             id=model_id)
+        except ValueError:
+            # find_id failed to get an int
+            # find fieldname to position error correctly
+            for key in incoming_fields:
+                if key is not 'nonce' and key is not 'id':
+                    fieldname = key
+                    break
+            context = self.get_context_data(
+                # error should be of form fieldname => Array(errortext1, ...)
+                error= { fieldname: [model_id]}
+            )
+            return self.render_to_response(
+                context,
+                status=400
+            )
+
         request.POST = relevant_object.serialize()
         
         for field in incoming_fields:
@@ -237,7 +261,14 @@ class APIMixin:
                     # update the field
                     request.POST[field] = incoming_fields[field]['new']
                 else:
-                    print("send error: old doesn't match what's on the server")
+                    # error: client original value doesn't match what's on the server
+                    context = self.get_context_data(
+                        error= { field: ["Your data is out of date and must be updated.  Please refresh."]}
+                    )
+                    return self.render_to_response(
+                        context,
+                        status=400
+                    )
             else:
                 print("DEBUG: field " + field + " does not exist in this object")
 
@@ -283,6 +314,10 @@ class APIMixin:
                 "errors": context["form"].errors,
                 "cleaned_data": context["form"].cleaned_data,
                 "has_changed": context["form"].has_changed(),
+            }
+        elif "error" in context:
+            context["form"] = {
+                "errors": context["error"]
             }
 
         return args or context
