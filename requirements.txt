@@ -2,5 +2,5 @@ django<1.9
 configobj
 django-admin-bootstrapped
 django-phonenumber-field
-django-autocomplete-light
+django-autocomplete-light<3
 django-watson
