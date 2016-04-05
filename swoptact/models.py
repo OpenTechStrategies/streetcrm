@@ -338,3 +338,9 @@ class LeadershipGrowth(models.Model):
     def save(self, *args, **kwargs):
         self.date_reached = timezone.now()
         super(LeadershipGrowth, self).save(*args, **kwargs)
+
+
+class nonce_to_id(models.Model):
+    nonce =  models.CharField(max_length=12)
+    participant = models.IntegerField()
+    timestamp =  models.DateTimeField(default=timezone.now)

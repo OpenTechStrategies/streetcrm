@@ -22,6 +22,16 @@ there has been shown to be a special case.
   and the inlined object, but does not remove the inlined object from
   the DB
 
+###  Slow connections
+
+- When a new person is added to an action on a slow connection (e.g. 50
+  kb/s with 500ms RTT when testing on Chrome), only one copy of that
+  person is created.
+- PUT requests to create or link an institution to a person succeed
+- PUT requests to update or add a phone number succeed
+- Autocompletion on participant and institution names works
+- Data entered while other requests are pending is not lost
+
 ## Permissions
 
 - admin users can add and edit Contacts

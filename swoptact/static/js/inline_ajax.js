@@ -105,7 +105,8 @@ function getNewTableRow() {
     if (userCanDelete()) {
        tableRow.append('<td><span class="deleteButton">&#10006;</span></td>');
     }
-
+    // add a hidden element to store the nonce (if necessary)
+    tableRow.append( '<input type="hidden" class="nonce" />');
     return tableRow;
 }
 
@@ -154,6 +155,7 @@ function getRowValues(row) {
             dict[form_name] = getValueFromTextInput(jq_column);
         }
     );
+    dict['nonce'] = row.find(".nonce").val();
     return dict;
 }
 
@@ -376,12 +378,17 @@ function fillTableRow(tableRow) {
         var cell = $(this);
         staticDiv = cell.children(".static");
         editableDiv = cell.children(".editable");
+        // get the current text in the cell
+        var preval = editableDiv.children("input").val();
         fieldName = cell.data("form-name");
+        // Instead of defaulting to the empty string here, I want to
+        // fill the cell with whatever it had before the row was
+        // refilled (e.g. if a user was halfway through a word)
         if (cell.data("input-type") == "fkey_autocomplete_name") {
-            val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : "";
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName].name : preval;
         }
         else {
-            val = inlinedModel[fieldName] ? inlinedModel[fieldName] : "";
+            val = inlinedModel[fieldName] ? inlinedModel[fieldName] : preval;
         }           
         staticDiv.children(".static-span").text(val);
         editableDiv.children("input").val(val);
@@ -582,6 +589,7 @@ function handleJSONErrors(errors, row){
 
 /* Save inlined model on server and update the UI
 
+TODO: fix this docstring
 Arguments:
  - inlined_model: this linked model
  - submit_flag: whether or not to submit the entire form
@@ -590,69 +598,36 @@ Arguments:
 function saveInlinedModel(row, cell) {
     var inlined_model = row.data("model");
     var form_data = getRowValues(row);
+    var nonce = row.find(".nonce").val();
 
-    // Handle if this is a new row, or an existing one
-    //
-    // @@: we shouldn't really have both "empty" and ""
-    //   supported here.  We should simplify the code to just ""
-    //   because otherwise we're going to end up with a lot of
-    //   missed conditions and extra checks.
-    if (inlined_model.id != "empty" && inlined_model.id != ""){
-        return $.get(fillExistingInlinedModelUrl(inlined_model.id),
-              function (inlined_model_dbstate) {
-                  // @@: Unfortunately, we're fetching the existing representation from
-                  //   the server and then modifying that with the form before update.
-                  //   The reason is that whatever fields aren't supplied are dropped...
-                  //   and we don't want that!
-                  //   
-                  //   ... this is potentially DANGEROUS depending on how the
-                  //   page model is defined!  The API is non-symmetrical,
-                  //   meaning that data representation of existing models is not
-                  //   guaranteed (and often is not) the same as the representation
-                  //   used to add new / save adjustments to models.
-                  //   For example, a foreign key will return a hashmap of data
-                  //   whereas a referenced-by-name-on-save will just take a string
-                  //   back.  This means THIS WILL BREAK for this kind of data
-                  //   if not represented in this field.
-                  //
-                  //   ... So if it's possible to only save adjustments to the fields
-                  //   we're representing, we should do that. :P
-                  //
-                  // ... we're not doing a clean copy of this data, because it isn't
-                  // necessary and it's not trivial to do in javascript, but keep
-                  // in mind that this does mutate inlined_model_dbstate too.
-                  //
-                  var data_to_submit = inlined_model_dbstate;
-                  for (key in form_data) {
-                      data_to_submit[key] = form_data[key];
-                  }
-                  
-                  $.ajax({
-                      url: fillExistingInlinedModelUrl(inlined_model.id),
-                      data: JSON.stringify(data_to_submit),
-                      type: 'PUT',
-                      error: function (response) {
-                          var errors = jQuery.parseJSON(response.responseText).form.errors;
-                          handleJSONErrors(errors, row);
-                      },
-                      success: function (updated_model) {
-                          if (checkLimitReached() == true) { limitReached(); }
-                          row.find("td").removeClass("disabled").removeClass("corrigendum");
-                          cell.find(".validation-error").empty();
-                          cell.children(".static").children("span.static-span").text(cell.find("input").val());
-                          createProfileLink(updated_model, cell);
-                          row.data("model", updated_model);
-                          cell.find(".static").show();
-                          cell.find(".editable").hide();
-                      },
-                      complete: function() {
-                          // Reset sticky headers in case table cell widths have changed.
-                          setStickyHeaders();
-                      },
-                      dataType: 'json'
-                  });
-              }, 'json');
-    } else {
+    // Handle if this is a new row, or an existing one.
+    if (inlined_model.id) {
+        // send a PUT
+        putInlinedModel(form_data, inlined_model.id, row, cell);
+    }
+    else {
+        if (nonce) {
+            // send a PUT
+            putInlinedModel(form_data, null, row, cell);
+        }
+        else {
+            // create the nonce
+            nonce = 'nonce-' + Math.random().toString(36).slice(-5);
+            // then save the nonce to the row for later requests
+            row.find(".nonce").val(nonce);
+            // save it to form-data for this request
+            form_data['nonce'] = nonce;
+            
+            // send a POST
+            postInlinedModel(form_data, row, cell);
+        }
+    }
+}
+
+/*
+ * POST an inlined model (usually a participant) to the server
+*/
+function postInlinedModel(form_data, row, cell) {
         return $.ajax({
             url: getNewInlinedModelUrl(),
             data: JSON.stringify(form_data),
@@ -684,7 +659,83 @@ function saveInlinedModel(row, cell) {
             },
             dataType: 'json'
         });
+}
+
+/*
+ * PUT an inlined model (usually a participant) to the server
+ * send:
+ * the old participant object (pre-change from the client) (get this from the row?)
+ *    - maybe just a checksum of this
+ * the names of the field(s) that were changed
+ * the new value(s) of th(os)e field(s)
+*/
+function putInlinedModel(form_data, model_id, row, cell) {
+    // loop through form_data and compare to row.data("model") (the
+    // original data from the server when this page was loaded) to find
+    // the changed fields
+    var changed_values = {};
+    changed_values.nonce = form_data['nonce'];
+    var url = "";
+    if (model_id) {
+        url = fillExistingInlinedModelUrl(model_id);
+        changed_values.id = model_id;
     }
+    else {
+        url = fillExistingInlinedModelUrl(changed_values.nonce);
+        changed_values.id = null;
+    }
+    for (var field in form_data) {
+        // does each field value match the value in row.data("model")?  Or, does the value not exist in row.data("model")?
+        var check_value = null;
+        if (row.data("model")[field] && field != 'institution' ) {
+            check_value = row.data("model")[field];
+        }
+        else if (field == 'institution' && row.data("model")[field]) {
+            check_value = row.data("model")[field].name;
+        }
+
+        if (form_data[field] == "") {
+            // otherwise we'd have a false positive in the next
+            // conditional where the stored value is null and the
+            // incoming value is the empty string
+            form_data[field] = null;
+        }
+        if (check_value != form_data[field]) {
+            // this is a changed field, so we add it to our
+            // changed_fields list and store the new value
+            if (! changed_values[field]) {
+                changed_values[field] = {old: check_value, new: form_data[field]};
+            }
+        }
+    }
+    //
+    // send nonce, id if it exists, and old and new values of changed fields to server
+    var data_to_submit = changed_values;
+    
+    $.ajax({
+        url: url,
+        data: JSON.stringify(data_to_submit),
+        type: 'PUT',
+        error: function (response) {
+            var errors = jQuery.parseJSON(response.responseText).form.errors;
+            handleJSONErrors(errors, row);
+        },
+        success: function (updated_model) {
+            if (checkLimitReached() == true) { limitReached(); }
+            row.find("td").removeClass("disabled").removeClass("corrigendum");
+            cell.find(".validation-error").empty();
+            cell.children(".static").children("span.static-span").text(cell.find("input").val());
+            createProfileLink(updated_model, cell);
+            row.data("model", updated_model);
+            cell.find(".static").show();
+            cell.find(".editable").hide();
+        },
+        complete: function() {
+            // Reset sticky headers in case table cell widths have changed.
+            setStickyHeaders();
+        },
+        dataType: 'json'
+    });
 }
 
 function insertFieldsetHeader() {

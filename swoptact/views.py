@@ -16,6 +16,7 @@
 import json
 
 from django import http
+from django.core import serializers
 from django.conf import settings
 from django.views import generic
 from django.db.models.fields import related
@@ -45,7 +46,12 @@ def process_field_general(api_view, body, model, field_name, value):
     to something to attach to the model
     """
     # Find the field that the model is on.
-    field = model._meta.get_field(field_name)
+    try:
+        field = model._meta.get_field(field_name)
+    # the field does not exist on the model (in practice, this should only be "nonce")
+    except Exception:
+        field = None
+        body[field_name] = value
 
     if isinstance(field, related.RelatedField):
         if value is None:
@@ -133,11 +139,141 @@ class APIMixin:
         return body
 
     def post(self, request, *args, **kwrgs):
-        request.POST = self.process_json(request.body)
-        return super(APIMixin, self).post(request, *args, **kwrgs)
+        # If this is not a PUT
+        try:
+            # this is a PUT
+            is_put = request.POST['id']
+        except:
+            request.POST = self.process_json(request.body)
+            is_put = None
+
+
+        # manage institution
+        if is_put:
+            try:
+                request.POST['institution'] = request.POST['institution']['id']
+            except:
+                request.POST['institution'] = request.POST['institution']
+
+        try:
+            new_object = super(APIMixin, self).post(request, *args, **kwrgs)
+        except AttributeError:
+            new_object = None
+            # most likely an incorrect pk_url_kwarg
+            context = self.get_context_data(
+                error= { 'name': ["Sorry, there's a problem with your request.  Please try again."]}
+            )
+            # but the AttributeError makes this fail, too.
+            return self.render_to_response(
+                context,
+                status=400
+            )
+
+
+        if is_put is None:
+            object_json = self.process_json(new_object._container[0])
+            new_id = object_json['id']
+            # save new_id and nonce to the `swoptact_nonce_to_id` table
+            try:
+                new_nonce = models.nonce_to_id(participant=new_id, nonce=request.POST['nonce'])
+                new_nonce.save()
+            except KeyError:
+                print("DEBUG: No incoming nonce, so we can't save the nonce record")
+
+        return new_object
+
+    def find_id(self, incoming_fields):
+        # function that takes the result of process_json and returns the
+        # id or, if there's an error, the text of the error
+        try:
+            model_id = incoming_fields['id']
+            del incoming_fields['id']
+        except:
+            model_id = None
+
+        if incoming_fields['nonce'] and not model_id:
+            #look up the id in the nonce_to_id table
+            matching_queryset = models.nonce_to_id.objects.filter(
+                nonce=incoming_fields['nonce'])
+            if matching_queryset:
+                matching_id = matching_queryset[0].participant
+                model_id = matching_id
+        elif model_id and incoming_fields['nonce']:
+            #find and delete the matching rows from nonce_to_id
+            removable_queryset = models.nonce_to_id.objects.filter(
+                nonce=incoming_fields['nonce'],
+                participant=model_id) 
+            for obj in removable_queryset:
+                obj.delete()
+        elif not model_id and not incoming_fields['nonce']:
+            model_id = "We weren't able to save this data.  Please try again."
+
+        return model_id
+
 
     def put(self, request, *args, **kwrgs):
-        request.POST = self.process_json(request.body)
+        incoming_fields = self.process_json(request.body)
+        model_id = self.find_id(incoming_fields)
+        try:
+            # Can we assume it's a participant here?
+            relevant_object = models.Participant.objects.get(
+            id=model_id)
+        except ValueError:
+            # find_id failed to get an int
+            # find fieldname to position error correctly
+            for key in incoming_fields:
+                if key is not 'nonce' and key is not 'id':
+                    fieldname = key
+                    break
+            context = self.get_context_data(
+                # error should be of form fieldname => Array(errortext1, ...)
+                error= { fieldname: [model_id]}
+            )
+            return self.render_to_response(
+                context,
+                status=400
+            )
+
+        request.POST = relevant_object.serialize()
+        
+        for field in incoming_fields:
+            # Check to see whether the object has such a field
+            try:
+                getattr(relevant_object, field)
+                field_exists = True
+            except AttributeError:
+                field_exists = False
+            
+            if field_exists:
+                # then whether it has a value
+                if request.POST[field]:
+                    server_field = request.POST[field]
+                else:
+                    server_field = None
+
+                # should check whether the "old" exists
+                client_original = incoming_fields[field]['old']
+                try:
+                    existing_inst = server_field['id']
+                except:
+                    existing_inst = None
+                if client_original == server_field or client_original == existing_inst: 
+                    # update the field
+                    request.POST[field] = incoming_fields[field]['new']
+                else:
+                    # error: client original value doesn't match what's on the server
+                    context = self.get_context_data(
+                        error= { field: ["Your data is out of date and must be updated.  Please refresh."]}
+                    )
+                    return self.render_to_response(
+                        context,
+                        status=400
+                    )
+            else:
+                print("DEBUG: field " + field + " does not exist in this object")
+
+        # use the model_id as the url pk in the request
+        setattr(self, 'kwargs', {'pk': model_id})
         return super(APIMixin, self).put(request, *args, **kwrgs)
 
     def form_invalid(self, form, *args, **kwargs):
@@ -178,6 +314,10 @@ class APIMixin:
                 "errors": context["form"].errors,
                 "cleaned_data": context["form"].cleaned_data,
                 "has_changed": context["form"].has_changed(),
+            }
+        elif "error" in context:
+            context["form"] = {
+                "errors": context["error"]
             }
 
         return args or context
@@ -257,25 +397,35 @@ def process_institution_field(api_view, body, model, field_name, value):
     if value == "" or value is None:
         # Nah, nothing to do
         return
+    # account for the old and new values, now
 
-    # Try to see if we have an institution with this name
+    body[field_name] = {'old': None, 'new': None}
+    
+    # Find the id of the old institution
+    if value['old']:
+        result = models.Institution.objects.get(name__iexact=value['old'])
+        body[field_name]['old'] = result.id
+    else:
+        body[field_name]['old'] = None
+    
+    # Try to see if we have an institution with this name (for the new institution)
     try:
-        result = models.Institution.objects.get(name__iexact=value)
-        body[field_name] = result.id
-        return
+        result = models.Institution.objects.get(name__iexact=value['new'])
+        body[field_name]['new'] = result.id
 
     except models.Institution.DoesNotExist:
         # Nope!  Let's make a new one.
-        new_institution = models.Institution(name=value)
+        new_institution = models.Institution(name=value['new'])
         new_institution.save()
         api_view._objects_created.append(new_institution)
-        body[field_name] = new_institution.id
-        return
+        body[field_name]['new'] = new_institution.id
+
+    return
 
 
 class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
     """
-    Provides the view to retrive, create and update a participant
+    Provides the view to retrieve, create and update a participant
 
     If called with the PUT verb this expects a JSON serialized participant
     object which is the updated participant that will be saved.
@@ -289,7 +439,7 @@ class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
             "institution": process_institution_field}
 
     def get(self, request, *args, **kwargs):
-        """ Retrival of an existing participant """
+        """ Retrieval of an existing participant """
         # Lookup the object that we want to return
         self.object = self.get_object()
         return self.produce_response()
