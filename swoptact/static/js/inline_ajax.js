@@ -54,8 +54,12 @@ function getNewTableRow() {
 
     fields_config.map(function(field) {
         var staticDiv = $("<div class=\"static\"/>");
-        staticDiv.append("<span class=\"static-span\"/>");
-        staticDiv.append("<a class=\"profile-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
+        // Put the i-in-a-circle before instead of after the item
+        // (that is, to the left instead of to the right, in LTR text).
+        // This makes the "ℹ" circles line up vertically, like list
+        // dots where each table row is one list item.
+        staticDiv.prepend("<span class=\"static-span\"/>");
+        staticDiv.prepend("<a class=\"profile-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
 
         var editableDiv = $("<div class=\"editable\"/>");
         editableDiv.append("<div class=\"validation-error\"/>");
