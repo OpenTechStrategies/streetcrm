@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 
-from swoptact import views, admin
+from streetcrm import views, admin
 
 urlpatterns = patterns("",
     # Autocomplete app URLs

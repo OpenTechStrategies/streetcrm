@@ -8,7 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0037_auto_20150610_1740'),
+        ('streetcrm', '0037_auto_20150610_1740'),
     ]
 
     operations = [

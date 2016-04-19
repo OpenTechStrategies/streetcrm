@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0036_convert_address_textfield'),
+        ('streetcrm', '0036_convert_address_textfield'),
     ]
 
     # If we were working with real data at the time this migration was

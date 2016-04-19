@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-Django settings for swoptact project.
+Django settings for streetcrm project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -38,10 +38,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Find the configuration file.
 CONFIG_PATH = os.path.join(
     os.path.expanduser(os.getenv("XDG_CONFIG_PATH", "~/.config")),
-    "swoptact",
+    "streetcrm",
     "config.ini"
 )
-CONFIG_PATH = os.getenv("SWOPTACT_CONFIG", CONFIG_PATH)
+CONFIG_PATH = os.getenv("STREETCRM_CONFIG", CONFIG_PATH)
 
 if not os.path.exists(CONFIG_PATH):
     raise exceptions.ImproperlyConfigured("No config file provided")
@@ -55,7 +55,7 @@ if mode & stat.S_IRWXO != 0:
     )
 
 # Open config file
-CONFIG_SPEC = os.path.join(BASE_DIR, "swoptact", "config_spec.ini")
+CONFIG_SPEC = os.path.join(BASE_DIR, "streetcrm", "config_spec.ini")
 
 config = configobj.ConfigObj(CONFIG_PATH, configspec=CONFIG_SPEC)
 config.validate(validate.Validator())
@@ -79,7 +79,7 @@ ALLOWED_HOSTS = config["general"]["allowed_hosts"]
 
 # Application definition
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "swoptact", "templates"),
+    os.path.join(BASE_DIR, "streetcrm", "templates"),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -90,7 +90,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.template.context_processors.static",
     "django.template.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "swoptact.context_processors.search_header",
+    "streetcrm.context_processors.search_header",
 )
 
 
@@ -103,7 +103,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'swoptact',
+    'streetcrm',
     'watson',
 )
 
@@ -117,9 +117,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'swoptact.urls'
+ROOT_URLCONF = 'streetcrm.urls'
 
-WSGI_APPLICATION = 'swoptact.wsgi.application'
+WSGI_APPLICATION = 'streetcrm.wsgi.application'
 
 LOGIN_URL = urlresolvers.reverse_lazy("login")
 
@@ -156,7 +156,7 @@ USE_TZ = config["general"]["use_tz"]
 STATIC_URL = config["general"]["static_url"]
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "swoptact", "static"),
+    os.path.join(BASE_DIR, "streetcrm", "static"),
 )
 
 # Specify the hierarchy of the groups when a user is added the key should be
@@ -169,7 +169,7 @@ GROUP_HIERARCHY = {
 
 # Specify the order in which models are present in the admin index page list.
 ADMIN_ORDERING = (
-    ("Swoptact", ("Actions", "Institutions", "Participants", "Tags", "Activity Log",)),
+    ("StreetCRM", ("Actions", "Institutions", "Participants", "Tags", "Activity Log",)),
 )
 
 # This setting controls how many participants/contacts can be linked at any

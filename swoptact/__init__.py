@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,5 +14,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import the signals (needs to happen to reigster them)self.
-from swoptact import signals
+# import the signals (needs to happen to register them)self.
+from streetcrm import signals

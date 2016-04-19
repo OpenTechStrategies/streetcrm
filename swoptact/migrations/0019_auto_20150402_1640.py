@@ -8,7 +8,7 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0018_auto_20150324_1553'),
+        ('streetcrm', '0018_auto_20150324_1553'),
     ]
 
     operations = [
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
                 ('name', models.CharField(max_length=255)),
-                ('address', models.ForeignKey(blank=True, to='swoptact.Address')),
+                ('address', models.ForeignKey(blank=True, to='streetcrm.Address')),
             ],
             options={
             },

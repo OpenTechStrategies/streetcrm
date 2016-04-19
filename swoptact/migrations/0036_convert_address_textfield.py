@@ -40,7 +40,7 @@ def address_to_string(address):
 
 def migrate_addresses(apps, schema_editor):
     """ Migrates the addresses over to the new fields. """
-    Institution = apps.get_model("swoptact", "Institution")
+    Institution = apps.get_model("streetcrm", "Institution")
     for institution in Institution.objects.all():
         # Skip institutions which don't have addresses
         if institution.address is None:
@@ -49,7 +49,7 @@ def migrate_addresses(apps, schema_editor):
         institution.new_address = address_to_string(institution.address)
         institution.save()
 
-    Participant = apps.get_model("swoptact", "Participant")
+    Participant = apps.get_model("streetcrm", "Participant")
     for participant in Participant.objects.all():
         # Skip participants which don't have addresses
         if participant.address is None:
@@ -72,7 +72,7 @@ def remove_address_contenttype(apps, schema_editor):
     """
     ContentType = apps.get_model("contenttypes", "ContentType")
     address_ct = ContentType.objects.filter(
-        app_label="swoptact",
+        app_label="streetcrm",
         model="address"
     )
 
@@ -82,7 +82,7 @@ def remove_address_contenttype(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("swoptact", "0035_auto_20150605_1600"),
+        ("streetcrm", "0035_auto_20150605_1600"),
     ]
 
     operations = [

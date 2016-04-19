@@ -5,7 +5,7 @@ from django.db import models, migrations
 
 
 def migrate_own_contact(apps, schema_editor):
-    Institution = apps.get_model("swoptact", "Institution")
+    Institution = apps.get_model("streetcrm", "Institution")
 
     for institution in Institution.objects.all():
         # Iterate over each contact and write them onto the contacts many to many
@@ -15,7 +15,7 @@ def migrate_own_contact(apps, schema_editor):
 def remove_stale_contact_content_type(apps, schema_editor):
     ContentType = apps.get_model("contenttypes", "ContentType")
     contact_ct = ContentType.objects.filter(
-        app_label="swoptact",
+        app_label="streetcrm",
         model="contact"
     )
 
@@ -25,7 +25,7 @@ def remove_stale_contact_content_type(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0050_auto_20150807_1436'),
+        ('streetcrm', '0050_auto_20150807_1436'),
     ]
 
     operations = [
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="institution",
             name="contacts",
-            field=models.ManyToManyField(to="swoptact.Participant")
+            field=models.ManyToManyField(to="streetcrm.Participant")
         ),
 
         # Run the data migration

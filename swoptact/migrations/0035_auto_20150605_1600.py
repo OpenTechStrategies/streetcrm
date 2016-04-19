@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('admin', '0001_initial'),
-        ('swoptact', '0034_auto_20150529_1458'),
+        ('streetcrm', '0034_auto_20150529_1458'),
     ]
 
     operations = [
@@ -30,11 +30,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='tags',
-            field=models.ManyToManyField(blank=True, to='swoptact.Tag'),
+            field=models.ManyToManyField(blank=True, to='streetcrm.Tag'),
         ),
         migrations.AlterField(
             model_name='institution',
             name='tags',
-            field=models.ManyToManyField(blank=True, to='swoptact.Tag'),
+            field=models.ManyToManyField(blank=True, to='streetcrm.Tag'),
         ),
     ]

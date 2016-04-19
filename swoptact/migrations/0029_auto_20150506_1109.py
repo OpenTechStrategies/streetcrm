@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0028_auto_20150429_1248'),
+        ('streetcrm', '0028_auto_20150429_1248'),
     ]
 
     operations = [
@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
-                ('institution', models.ForeignKey(related_name='organization', to='swoptact.Institution')),
-                ('participant', models.ForeignKey(related_name='leaders', to='swoptact.Participant')),
+                ('institution', models.ForeignKey(related_name='organization', to='streetcrm.Institution')),
+                ('participant', models.ForeignKey(related_name='leaders', to='streetcrm.Participant')),
             ],
             options={
             },
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='institution',
             name='contact',
-            field=models.ManyToManyField(through='swoptact.Contact', to='swoptact.Participant', related_name='main_contact'),
+            field=models.ManyToManyField(through='streetcrm.Contact', to='streetcrm.Participant', related_name='main_contact'),
             preserve_default=True,
         ),
     ]

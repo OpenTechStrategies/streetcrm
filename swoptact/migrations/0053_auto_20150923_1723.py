@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0052_add_staff_permissions'),
+        ('streetcrm', '0052_add_staff_permissions'),
     ]
 
     operations = [
@@ -23,27 +23,27 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='secondary_organizer',
-            field=models.ForeignKey(blank=True, related_name='Organizer2', null=True, to='swoptact.Participant'),
+            field=models.ForeignKey(blank=True, related_name='Organizer2', null=True, to='streetcrm.Participant'),
         ),
         migrations.AlterField(
             model_name='event',
             name='major_action',
-            field=models.ForeignKey(blank=True, null=True, verbose_name='Connected Action', to='swoptact.Event'),
+            field=models.ForeignKey(blank=True, null=True, verbose_name='Connected Action', to='streetcrm.Event'),
         ),
         migrations.AlterField(
             model_name='event',
             name='tags',
-            field=models.ManyToManyField(verbose_name='Tags', to='swoptact.Tag', blank=True, help_text='Note that new tags added here are not created.'),
+            field=models.ManyToManyField(verbose_name='Tags', to='streetcrm.Tag', blank=True, help_text='Note that new tags added here are not created.'),
         ),
         migrations.AlterField(
             model_name='institution',
             name='contacts',
-            field=models.ManyToManyField(to='swoptact.Participant', related_name='main_contact'),
+            field=models.ManyToManyField(to='streetcrm.Participant', related_name='main_contact'),
         ),
         migrations.AlterField(
             model_name='institution',
             name='tags',
-            field=models.ManyToManyField(verbose_name='Institution Tags', to='swoptact.Tag', blank=True, help_text='Note that new tags added here are not created.'),
+            field=models.ManyToManyField(verbose_name='Institution Tags', to='streetcrm.Tag', blank=True, help_text='Note that new tags added here are not created.'),
         ),
         migrations.AlterField(
             model_name='participant',

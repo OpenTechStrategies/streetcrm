@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0049_add_permissions_to_groups'),
+        ('streetcrm', '0049_add_permissions_to_groups'),
     ]
 
     operations = [

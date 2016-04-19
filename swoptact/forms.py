@@ -1,5 +1,6 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
-# Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
+# StreetCRM is a list of contacts with a history of their event
+# attendance. Copyright (C) 2015 Local Initiatives Support Corporation
+# (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -23,7 +24,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from autocomplete_light import forms
 
-from swoptact import models, widgets, formfields
+from streetcrm import models, widgets, formfields
 
 class AdminLoginForm(AdminAuthenticationForm):
     """
@@ -133,7 +134,7 @@ class SearchForm(django.forms.Form):
     Form that is used to provide advanced search
 
     This specifically does NOT use the AutoCompleteModelForm that most forms do
-    in SWOPtact because we specifically don't want the search creating new models
+    in StreetCRM because we specifically don't want the search creating new models
     if what the user wants isn't found.
     """
 

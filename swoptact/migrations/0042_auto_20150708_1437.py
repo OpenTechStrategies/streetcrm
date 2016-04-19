@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0041_auto_20150629_1040'),
+        ('streetcrm', '0041_auto_20150629_1040'),
     ]
 
     operations = [
@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institution',
             name='is_member',
-            field=models.BooleanField(verbose_name='Is this institution a member of SWOP?', default=False),
+            field=models.BooleanField(verbose_name='Is this institution a member?', default=False),
         ),
     ]

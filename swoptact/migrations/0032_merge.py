@@ -7,8 +7,8 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0031_auto_20150506_1138'),
-        ('swoptact', '0031_auto_20150508_0656'),
+        ('streetcrm', '0031_auto_20150506_1138'),
+        ('streetcrm', '0031_auto_20150508_0656'),
     ]
 
     operations = [

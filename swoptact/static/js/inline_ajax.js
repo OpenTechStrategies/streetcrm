@@ -358,7 +358,7 @@ function createProfileLink(model, cell) {
     }
     else if (cell.data("form-name") == "institution" && model.institution) {
         id = model.institution.id;
-        url = "/swoptact/institution/";
+        url = "/streetcrm/institution/";
     }
     if (id != undefined) {
         // Give the profile link an href attribute and make it visible.

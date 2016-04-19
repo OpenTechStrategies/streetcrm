@@ -8,7 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0059_add_leadership_permission'),
+        ('streetcrm', '0059_add_leadership_permission'),
     ]
 
     operations = [

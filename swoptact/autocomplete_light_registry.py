@@ -1,7 +1,7 @@
 import autocomplete_light
 from django.db.models import Q
 
-from swoptact import models
+from streetcrm import models
 
 class BaseAutocomplete(autocomplete_light.AutocompleteModelBase):
     attrs = {

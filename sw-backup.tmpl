@@ -7,36 +7,36 @@
 # user & group.
 #
 # Add this user as a Postgres role and give it read access to the
-# swoptact database:
+# streetcrm database:
 #
-#   CREATE USER swbackup PASSWORD '<password>';
-#   GRANT CONNECT ON DATABASE <db_name> TO swbackup;
-#   GRANT USAGE ON SCHEMA public TO swbackup;
-#   GRANT SELECT ON ALL TABLES IN SCHEMA public TO swbackup;
-#   GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO swbackup;
+#   CREATE USER scbackup PASSWORD '<password>';
+#   GRANT CONNECT ON DATABASE <db_name> TO scbackup;
+#   GRANT USAGE ON SCHEMA public TO scbackup;
+#   GRANT SELECT ON ALL TABLES IN SCHEMA public TO scbackup;
+#   GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO scbackup;
 #
 # Then edit this script with your destination directory and DB username
 # and password.
 #
-# Now you have an 'sw-backup' script that you can run as in a cron job
-# as user 'swbackup', assuming you set up permissions appropriately.
+# Now you have an 'sc-backup' script that you can run as in a cron job
+# as user 'scbackup', assuming you set up permissions appropriately.
 # For example, you could put this in /etc/crontab
 #
-#   30 3 * * * swbackup /usr/local/bin/sw-backup
+#   30 3 * * * scbackup /usr/local/bin/sc-backup
 #
 # ...to have the script run at 3:30am every morning and put the backup
-# in /home/swbackup/backups/DATE/.  (Of course, you might want to have
+# in /home/scbackup/backups/DATE/.  (Of course, you might want to have
 # another cron job that then copies the backup to a remote location.)
 #
 
-BACKUPS_TOP=/home/swbackup
+BACKUPS_TOP=/home/scbackup
 BACKUP_USER=__USER__
 DATE_YMD_PREFIX="%Y-%m-%d"
 DATE_FULL_FORMAT="%Y-%m-%d_%H.%M.%S"
 DATABASE_NAME=<db_name>
 
 # You could customize this if you want, but there's no real reason to:
-BACKUP_PREFIX=swoptact-prod-backup
+BACKUP_PREFIX=streetcrm-prod-backup
 
 # Get the date now, so that even if intermediate steps are so slow as
 # to let more than a second pass, or if they cross midnight and change

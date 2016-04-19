@@ -8,19 +8,19 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0008_auto_20150317_1335'),
+        ('streetcrm', '0008_auto_20150317_1335'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='event',
             name='address',
-            field=models.ForeignKey(to='swoptact.Address', blank=True),
+            field=models.ForeignKey(to='streetcrm.Address', blank=True),
         ),
         migrations.AlterField(
             model_name='event',
             name='participants',
-            field=models.ManyToManyField(blank=True, to='swoptact.Participant'),
+            field=models.ManyToManyField(blank=True, to='streetcrm.Participant'),
         ),
         migrations.AlterField(
             model_name='event',

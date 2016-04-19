@@ -8,7 +8,7 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0003_auto_20150305_1131'),
+        ('streetcrm', '0003_auto_20150305_1131'),
     ]
 
     operations = [

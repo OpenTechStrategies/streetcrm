@@ -25,42 +25,42 @@
             ],
             [
                 "add_leadershipgrowth",
-                "swoptact",
+                "streetcrm",
                 "leadershipgrowth"
             ],
             [
                 "change_leadershipgrowth",
-                "swoptact",
+                "streetcrm",
                 "leadershipgrowth"
             ],
             [
                 "delete_event",
-                "swoptact",
+                "streetcrm",
                 "event"
             ],
             [
                 "delete_institution",
-                "swoptact",
+                "streetcrm",
                 "institution"
             ],
             [
                 "delete_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ],
             [
                 "add_tag",
-                "swoptact",
+                "streetcrm",
                 "tag"
             ],
             [
                 "change_tag",
-                "swoptact",
+                "streetcrm",
                 "tag"
             ],
             [
                 "delete_tag",
-                "swoptact",
+                "streetcrm",
                 "tag"
             ]
         ]
@@ -74,57 +74,57 @@
         "permissions": [
             [
                 "add_leadershipgrowth",
-                "swoptact",
+                "streetcrm",
                 "leadershipgrowth"
             ],
             [
                 "change_leadershipgrowth",
-                "swoptact",
+                "streetcrm",
                 "leadershipgrowth"
             ],
             [
                 "add_event",
-                "swoptact",
+                "streetcrm",
                 "event"
             ],
             [
                 "change_event",
-                "swoptact",
+                "streetcrm",
                 "event"
             ],
             [
                 "add_institution",
-                "swoptact",
+                "streetcrm",
                 "institution"
             ],
             [
                 "change_institution",
-                "swoptact",
+                "streetcrm",
                 "institution"
             ],
             [
                 "add_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ],
             [
                 "change_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ],
             [
                 "delete_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ],
             [
                 "add_tag",
-                "swoptact",
+                "streetcrm",
                 "tag"
             ],
             [
                 "change_tag",
-                "swoptact",
+                "streetcrm",
                 "tag"
             ]
         ]
@@ -138,32 +138,32 @@
         "permissions": [
             [
                 "add_event",
-                "swoptact",
+                "streetcrm",
                 "event"
             ],
             [
                 "change_event",
-                "swoptact",
+                "streetcrm",
                 "event"
             ],
             [
                 "add_institution",
-                "swoptact",
+                "streetcrm",
                 "institution"
             ],
             [
                 "change_institution",
-                "swoptact",
+                "streetcrm",
                 "institution"
             ],
             [
                 "add_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ],
             [
                 "change_participant",
-                "swoptact",
+                "streetcrm",
                 "participant"
             ]
         ]
@@ -179,7 +179,7 @@
         "name": "ttm"
     },
     "pk": 1,
-    "model": "swoptact.tag"
+    "model": "streetcrm.tag"
 },
 {
     "fields": {
@@ -189,7 +189,7 @@
         "name": "il4kids"
     },
     "pk": 2,
-    "model": "swoptact.tag"
+    "model": "streetcrm.tag"
 },
 {
     "fields": {
@@ -199,7 +199,7 @@
         "name": "swimming"
     },
     "pk": 4,
-    "model": "swoptact.tag"
+    "model": "streetcrm.tag"
 },
 {
     "fields": {
@@ -209,7 +209,7 @@
         "name": "dia_muertos"
     },
     "pk": 5,
-    "model": "swoptact.tag"
+    "model": "streetcrm.tag"
 },
 {
     "fields": {
@@ -227,7 +227,7 @@
         "is_member": false
     },
     "pk": 1,
-    "model": "swoptact.institution"
+    "model": "streetcrm.institution"
 },
 {
     "fields": {
@@ -244,7 +244,7 @@
         "is_member": true
     },
     "pk": 2,
-    "model": "swoptact.institution"
+    "model": "streetcrm.institution"
 },
 {
     "fields": {
@@ -259,7 +259,7 @@
         "is_member": false
     },
     "pk": 3,
-    "model": "swoptact.institution"
+    "model": "streetcrm.institution"
 },
 {
     "fields": {
@@ -276,7 +276,7 @@
         "primary_phone": null
     },
     "pk": 9,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -293,7 +293,7 @@
         "primary_phone": "+17737021233"
     },
     "pk": 14,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -310,7 +310,7 @@
         "primary_phone": null
     },
     "pk": 24,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -327,7 +327,7 @@
         "primary_phone": null
     },
     "pk": 26,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -344,7 +344,7 @@
         "primary_phone": null
     },
     "pk": 27,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -361,7 +361,7 @@
         "primary_phone": null
     },
     "pk": 28,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -378,7 +378,7 @@
         "primary_phone": null
     },
     "pk": 30,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -395,7 +395,7 @@
         "primary_phone": null
     },
     "pk": 31,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -412,7 +412,7 @@
         "primary_phone": "+13127726767"
     },
     "pk": 32,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -429,7 +429,7 @@
         "primary_phone": null
     },
     "pk": 33,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -446,7 +446,7 @@
         "primary_phone": null
     },
     "pk": 35,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -463,7 +463,7 @@
         "primary_phone": "+13127025434"
     },
     "pk": 36,
-    "model": "swoptact.participant"
+    "model": "streetcrm.participant"
 },
 {
     "fields": {
@@ -485,7 +485,7 @@
         "organizer": null
     },
     "pk": 2,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -495,7 +495,7 @@
         "archived": null,
         "location": "Conference Center",
         "date": null,
-        "name": "Swoptact Initiation Forum",
+        "name": "Streetcrm Initiation Forum",
         "narrative": null,
         "tags": [],
         "is_prep": false,
@@ -506,7 +506,7 @@
         "organizer": null
     },
     "pk": 3,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -525,7 +525,7 @@
         "organizer": null
     },
     "pk": 4,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -546,7 +546,7 @@
         "organizer": null
     },
     "pk": 5,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -567,7 +567,7 @@
         "organizer": null
     },
     "pk": 6,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -589,7 +589,7 @@
         "organizer": null
     },
     "pk": 7,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -617,7 +617,7 @@
         "organizer": null
     },
     "pk": 8,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -642,7 +642,7 @@
         "organizer": null
     },
     "pk": 9,
-    "model": "swoptact.event"
+    "model": "streetcrm.event"
 },
 {
     "fields": {
@@ -655,7 +655,7 @@
         "content": "ttm",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "tag"
         ]
     },
@@ -673,7 +673,7 @@
         "content": "il4kids",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "tag"
         ]
     },
@@ -691,7 +691,7 @@
         "content": "test",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "tag"
         ]
     },
@@ -709,7 +709,7 @@
         "content": "New",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "tag"
         ]
     },
@@ -727,7 +727,7 @@
         "content": "Lauren Russo None None lbeethoven@test.com None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -745,7 +745,7 @@
         "content": "Theodore Rose +17737021233 None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -763,7 +763,7 @@
         "content": "Daria Lagos None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -781,7 +781,7 @@
         "content": "Felicia Brown None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -799,7 +799,7 @@
         "content": "Simple Addition None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -817,7 +817,7 @@
         "content": "Chris Topher None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -835,7 +835,7 @@
         "content": "Eustace Solares None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -853,7 +853,7 @@
         "content": "Jill Martinez None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -871,7 +871,7 @@
         "content": "Dante Stallworth +13127726767 None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -889,7 +889,7 @@
         "content": "Jesenya Guadalupe None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -907,7 +907,7 @@
         "content": "Harry Potter None None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -925,7 +925,7 @@
         "content": "Ted Neumann +13127025434 None  None None None None",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "participant"
         ]
     },
@@ -943,7 +943,7 @@
         "content": "New Homeowners Support Group SWOP",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -953,15 +953,15 @@
 {
     "fields": {
         "url": "",
-        "title": "Swoptact Initiation Forum",
+        "title": "Streetcrm Initiation Forum",
         "description": "",
         "object_id_int": 3,
         "meta_encoded": "{}",
         "object_id": "3",
-        "content": "Swoptact Initiation Forum Conference Center",
+        "content": "Streetcrm Initiation Forum Conference Center",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -979,7 +979,7 @@
         "content": "International Women's Day Global",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -997,7 +997,7 @@
         "content": "Organizer Retreat SWOP Auxiliary Office",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -1015,7 +1015,7 @@
         "content": "MADD Meeting ",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -1033,7 +1033,7 @@
         "content": "Kick-off Meeting ",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -1051,7 +1051,7 @@
         "content": "Local Baseball Tournament ",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },
@@ -1069,7 +1069,7 @@
         "content": "Board Meeting Home Office",
         "engine_slug": "admin",
         "content_type": [
-            "swoptact",
+            "streetcrm",
             "event"
         ]
     },

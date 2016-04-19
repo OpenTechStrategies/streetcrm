@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0027_auto_20150429_1222'),
+        ('streetcrm', '0027_auto_20150429_1222'),
     ]
 
     operations = [

@@ -1,6 +1,6 @@
 from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
-from swoptact.models import Tag
+from streetcrm.models import Tag
 from django.contrib.auth.models import Group
 
 class DropdownFilter(SimpleListFilter):

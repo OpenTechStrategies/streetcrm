@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-WSGI config for swoptact project.
+WSGI config for streetcrm project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -24,7 +24,7 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "swoptact.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "streetcrm.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

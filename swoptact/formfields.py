@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 from phonenumber_field import formfields
 
-from swoptact import widgets
+from streetcrm import widgets
 
 class LocalPhoneNumberField(formfields.PhoneNumberField):
     """ National representation of phone number """

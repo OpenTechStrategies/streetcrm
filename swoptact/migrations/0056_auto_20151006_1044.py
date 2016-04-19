@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0055_remove_tag_group'),
+        ('streetcrm', '0055_remove_tag_group'),
     ]
 
     operations = [
@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institution',
             name='tags',
-            field=models.ManyToManyField(to='swoptact.Tag', verbose_name='Tags', blank=True, help_text='Note that new tags added here are not created.'),
+            field=models.ManyToManyField(to='streetcrm.Tag', verbose_name='Tags', blank=True, help_text='Note that new tags added here are not created.'),
         ),
     ]

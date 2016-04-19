@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
 from django.utils import timezone
 
-from swoptact import mixins, modelfields, managers
+from streetcrm import mixins, modelfields, managers
 import phonenumbers
 import datetime
 
@@ -137,7 +137,7 @@ class InspectMixin:
         """ Gets a field by it's name """
         return cls._meta.get_field_by_name(name)[0]
 
-class SWOPTactModel(models.Model):
+class StreetcrmModel(models.Model):
     """
     Provides anything required on all models/objects
     """
@@ -156,7 +156,7 @@ class SWOPTactModel(models.Model):
         # Lookup and return URL for current object
         return urlresolvers.reverse(url_name, args=(self.pk,))
 
-class ArchiveAbstract(SWOPTactModel):
+class ArchiveAbstract(StreetcrmModel):
     """
     Provides archivability for models
 

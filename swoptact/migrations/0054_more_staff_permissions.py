@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ def add_staff_permissions(apps, schema_editor):
 
     # Look up the ContentTypes for the models we're using
     tag_ct = ContentType.objects.get(
-        app_label="swoptact",
+        app_label="streetcrm",
         model="tag"
     )
 
@@ -57,8 +57,8 @@ class Migration(migrations.Migration):
     dependencies = [
         ("contenttypes", "__first__"),
         ("auth", "__first__"),
-        ('swoptact', '0051_auto_20150810_0513'),
-        ('swoptact', '0053_auto_20150923_1723'),
+        ('streetcrm', '0051_auto_20150810_0513'),
+        ('streetcrm', '0053_auto_20150923_1723'),
     ]
 
     operations = [

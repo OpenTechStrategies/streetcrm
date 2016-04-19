@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0046_auto_20150720_0710'),
+        ('streetcrm', '0046_auto_20150720_0710'),
     ]
 
     operations = [
@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='organizer',
-            field=models.ForeignKey(blank=True, null=True, related_name='Organizer', to='swoptact.Participant'),
+            field=models.ForeignKey(blank=True, null=True, related_name='Organizer', to='streetcrm.Participant'),
         ),
     ]

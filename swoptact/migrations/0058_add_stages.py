@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ from django.db import migrations
 def add_initial_stages(apps, schema_editor):
     """This will add the 'primary,' 'secondary,' 'tertiary,' and 'not
 applicable' stages of leader growth. """
-    Stage = apps.get_model("swoptact", "LeaderStage")
+    Stage = apps.get_model("streetcrm", "LeaderStage")
 
     # Make the groups
     primary_stage = Stage(name="Primary")
@@ -37,7 +37,7 @@ applicable' stages of leader growth. """
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0057_auto_20151019_1254'),
+        ('streetcrm', '0057_auto_20151019_1254'),
     ]
 
     operations = [

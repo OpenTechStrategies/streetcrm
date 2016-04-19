@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ class SignInSheetAdminMixin:
     def sheet_view(self, request):
         """ View for the sign in sheet """
         # To prevent circular imports keep this here.
-        from swoptact import models
+        from streetcrm import models
 
         return render_to_response(self.sheet_template, {
             "opts": self.model._meta,

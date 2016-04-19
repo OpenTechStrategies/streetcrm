@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# Refresh and restart a swoptact development server in the current directory.
+# Refresh and restart a streetcrm development server in the current directory.
 #
 # WARNING: This will drop your database and reload it with sample data.
 #
 # This should be used for development purposes only.  It assumes that your
-# config is in ~/.config/swoptact/config.ini, that you are developing with
+# config is in ~/.config/streetcrm/config.ini, that you are developing with
 # an SQLite3 database, and that you don't care about the data in your db.
 #
 # Usage: ./dev-refresh   # no arguments required
 
-SWOPTACT_CONFIG=${HOME}/.config/swoptact/config.ini
-export SWOPTACT_CONFIG
+STREETCRM_CONFIG=${HOME}/.config/streetcrm/config.ini
+export STREETCRM_CONFIG
 
 if [ "${VIRTUAL_ENV}X" = "X" ]; then
     echo "ERROR: You do not appear to be running in a Python virtualenv.  Run"
@@ -20,15 +20,15 @@ if [ "${VIRTUAL_ENV}X" = "X" ]; then
     exit 1
 fi
 
-if [ ! -f ${SWOPTACT_CONFIG} ]; then
-    echo "ERROR: '${SWOPTACT_CONFIG}' not found.  You need to create it."
+if [ ! -f ${STREETCRM_CONFIG} ]; then
+    echo "ERROR: '${STREETCRM_CONFIG}' not found.  You need to create it."
     exit 1
 fi
 
 if ! grep -q -E                                                             \
    "^[[:space:]]*engine[[:space:]]+=[[:space:]]+django.db.backends.sqlite3" \
-   ${SWOPTACT_CONFIG}; then
-    echo "ERROR: No SQLite3 configuration found in '${SWOPTACT_CONFIG}'."
+   ${STREETCRM_CONFIG}; then
+    echo "ERROR: No SQLite3 configuration found in '${STREETCRM_CONFIG}'."
     echo "       Expected to see 'engine = django.db.backends.sqlite3'"
     echo "       in the '[database]' section.  Are you sure this is a"
     echo "       development configuration?"
@@ -38,7 +38,7 @@ fi
 # This is not as robust in the presence of extra spaces as the previous
 # grep detecting SQLite3 configuration, but in practice that probably
 # doesn't matter.  We can make it more robust if we ever need to.
-SQLITE3_DB_NAME=`grep -E "^[[:space:]]*name[[:space:]]+=[[:space:]]+[a-zA-Z0-9_.-]+" ${SWOPTACT_CONFIG} | cut -d' ' -f3`
+SQLITE3_DB_NAME=`grep -E "^[[:space:]]*name[[:space:]]+=[[:space:]]+[a-zA-Z0-9_.-]+" ${STREETCRM_CONFIG} | cut -d' ' -f3`
 
 rm -rf ${SQLITE3_DB_NAME}
 

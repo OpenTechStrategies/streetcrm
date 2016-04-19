@@ -14,7 +14,7 @@ function addInstitutionLink() {
         // add a link to it
         staticDiv.append("<a class=\"profile-link\" id=\"institution-link\" target=\"_blank\"><span class=\"large-info\">&#x2139;</span>");
         var profileLink = $("#institution-link");
-        profileLink.attr("href", "/swoptact/institution/" + institutionID + "/");
+        profileLink.attr("href", "/streetcrm/institution/" + institutionID + "/");
     }
 }
 

@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -40,11 +40,11 @@ from watson.admin import SearchAdmin
 
 import autocomplete_light
 
-from swoptact import forms as st_forms
-from swoptact import mixins, models, admin_filters
+from streetcrm import forms as st_forms
+from streetcrm import mixins, models, admin_filters
 
 
-class SWOPTACTAdminSite(admin.AdminSite):
+class STREETCRMAdminSite(admin.AdminSite):
 
     login_form = st_forms.AdminLoginForm
     search_engine = watson_admin.admin_search_engine
@@ -111,14 +111,14 @@ class SWOPTACTAdminSite(admin.AdminSite):
         if not request.user.has_perm("auth.can_change_password"):
             raise exceptions.PermissionDenied
 
-        return super(SWOPTACTAdminSite, self).password_change(
+        return super(STREETCRMAdminSite, self).password_change(
             request,
             *args,
             **kwargs
         )
 
     def get_urls(self, *args, **kwargs):
-        urls = super(SWOPTACTAdminSite, self).get_urls(*args, **kwargs)
+        urls = super(STREETCRMAdminSite, self).get_urls(*args, **kwargs)
 
         def wrap(view, cacheable=False):
             def wrapper(*args, **kwargs):
@@ -589,7 +589,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
              CheckField("time", null=True, empty_string=False),
              CheckField("organizer", null=True, empty_string=False),
              CheckField("location", null=True, empty_string=True)],
-            _gen_change_uri_func("admin:swoptact_event_change"))
+            _gen_change_uri_func("admin:streetcrm_event_change"))
 
         participant_results = gather_results(
             models.Participant,
@@ -608,7 +608,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         null=True, empty_string=False),
              CheckField("title",
                         null=True, empty_string=True)],
-            _gen_change_uri_func("admin:swoptact_participant_change"))
+            _gen_change_uri_func("admin:streetcrm_participant_change"))
 
         institution_results = gather_results(
             models.Institution,
@@ -621,7 +621,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                         null=True, empty_string=True),
              CheckField("inst_zipcode_address",
                         null=True, empty_string=True)],
-            _gen_change_uri_func("admin:swoptact_institution_change"))
+            _gen_change_uri_func("admin:streetcrm_institution_change"))
 
         results = [
             TableResults("Events", event_results),
@@ -791,7 +791,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
         "existing_inlined_model_url": [
             "/api/participants/", "<inlined_model_id>", "/"],
         "existing_inlined_model_profile_url": [
-            "/swoptact/participant/", "<inlined_model_id>", "/"],
+            "/streetcrm/participant/", "<inlined_model_id>", "/"],
         "new_inlined_model_url": "/api/participants/",
         "inlined_model_name_plural": "Attendees",
         "fields": [
@@ -817,10 +817,10 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
             return True
 
         return user.is_staff and user.has_perms(
-            ["swoptact.change_event", "swoptact.change_participant",
-             "swoptact.change_contact", "swoptact.change_institution",
-             "swoptact.add_event", "swoptact.add_participant",
-             "swoptact.add_contact", "swoptact.add_institution"])
+            ["streetcrm.change_event", "streetcrm.change_participant",
+             "streetcrm.change_contact", "streetcrm.change_institution",
+             "streetcrm.add_event", "streetcrm.add_participant",
+             "streetcrm.add_contact", "streetcrm.add_institution"])
 
 
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
@@ -846,7 +846,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
         "existing_inlined_model_url": [
             "/api/participants/contact/", "<inlined_model_id>", "/"],
         "existing_inlined_model_profile_url": [
-            "/swoptact/participant/", "<inlined_model_id>", "/"],
+            "/streetcrm/participant/", "<inlined_model_id>", "/"],
         "new_inlined_model_url": "/api/contacts/",
         "inlined_model_name_plural": "Contacts",
         "fields": [
@@ -867,10 +867,10 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
             return True
 
         return user.is_staff and user.has_perms(
-            ["swoptact.change_participant",
-             "swoptact.change_contact", "swoptact.change_institution,"
-             "swoptact.add_participant",
-             "swoptact.add_contact", "swoptact.add_institution"])
+            ["streetcrm.change_participant",
+             "streetcrm.change_contact", "streetcrm.change_institution,"
+             "streetcrm.add_participant",
+             "streetcrm.add_contact", "streetcrm.add_institution"])
 
 
 class TagAdmin(mixins.AdminArchiveMixin, SearchAdmin):
@@ -920,13 +920,13 @@ class LeaderStageAdmin(admin.ModelAdmin):
     actions = None
 
 # Create the admin site
-site = SWOPTACTAdminSite()
+site = STREETCRMAdminSite()
 
 # Register auth AdminModels
 site.register(auth.admin.Group, GroupAdmin)
 site.register(auth.admin.User, UserAdmin)
 
-# Register SWOPTACT AdminModels
+# Register STREETCRM AdminModels
 site.register(models.Participant, ParticipantAdmin)
 site.register(models.Event, EventAdmin)
 site.register(models.Institution, InstitutionAdmin)

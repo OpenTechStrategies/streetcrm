@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from django.core import exceptions
 
-def swoptact_login_required(func):
+def streetcrm_login_required(func):
     """
     Decorator tests that a user is logged in.
     If the user is not authenticated it will raise the PermissionDenied

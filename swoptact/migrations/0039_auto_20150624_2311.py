@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0038_auto_20150611_1206'),
+        ('streetcrm', '0038_auto_20150611_1206'),
     ]
 
     operations = [
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='tags',
-            field=models.ManyToManyField(verbose_name='Action Tag(s)', blank=True, to='swoptact.Tag'),
+            field=models.ManyToManyField(verbose_name='Action Tag(s)', blank=True, to='streetcrm.Tag'),
         ),
         migrations.AlterField(
             model_name='event',

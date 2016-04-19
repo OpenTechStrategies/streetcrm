@@ -8,7 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0056_auto_20151006_1044'),
+        ('streetcrm', '0056_auto_20151006_1044'),
     ]
 
     operations = [
@@ -44,16 +44,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='leadershipgrowth',
             name='person',
-            field=models.ForeignKey(to='swoptact.Participant', related_name='tracked_growth'),
+            field=models.ForeignKey(to='streetcrm.Participant', related_name='tracked_growth'),
         ),
         migrations.AddField(
             model_name='leadershipgrowth',
             name='stage',
-            field=models.ForeignKey(to='swoptact.LeaderStage', related_name='growth_step'),
+            field=models.ForeignKey(to='streetcrm.LeaderStage', related_name='growth_step'),
         ),
         migrations.AddField(
             model_name='participant',
             name='leadership',
-            field=models.ManyToManyField(to='swoptact.LeaderStage', through='swoptact.LeadershipGrowth', related_name='stage'),
+            field=models.ManyToManyField(to='streetcrm.LeaderStage', through='streetcrm.LeadershipGrowth', related_name='stage'),
         ),
     ]

@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,8 @@ from django.contrib.admin.models import (
     LogEntry, ADDITION, CHANGE, DELETION)
 from django.utils.encoding import force_text
 
-from swoptact import models
-from swoptact.decorators import swoptact_login_required
+from streetcrm import models
+from streetcrm.decorators import streetcrm_login_required
 
 # Needed for reporting validation errors. Otherwise execution will
 # stumble when trying to serialize one of our models (e.g., Institution)
@@ -97,7 +97,7 @@ class APIMixin:
 
         return super(APIMixin, self).__init__(*args, **kwargs)
 
-    @method_decorator(swoptact_login_required)
+    @method_decorator(streetcrm_login_required)
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(APIMixin, self).dispatch(*args, **kwargs)
@@ -173,7 +173,7 @@ class APIMixin:
         if is_put is None:
             object_json = self.process_json(new_object._container[0])
             new_id = object_json['id']
-            # save new_id and nonce to the `swoptact_nonce_to_id` table
+            # save new_id and nonce to the `streetcrm_nonce_to_id` table
             try:
                 new_nonce = models.nonce_to_id(participant=new_id, nonce=request.POST['nonce'])
                 new_nonce.save()

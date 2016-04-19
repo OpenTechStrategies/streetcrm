@@ -61,4 +61,4 @@ lib/
 lib64/
 
 # developer's sqlite database (or, where the docs suggest it goes)
-/swoptact_db
+/streetcrm_db

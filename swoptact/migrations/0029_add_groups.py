@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
     dependencies = [
         # I'm not sure why we need to have 0028_auto_20150429_1248 as a
         # dependency but it complains without so it's there.
-        ('swoptact', '0028_auto_20150429_1248'),
+        ('streetcrm', '0028_auto_20150429_1248'),
         ('auth', '0006_require_contenttypes_0002'),
     ]
 

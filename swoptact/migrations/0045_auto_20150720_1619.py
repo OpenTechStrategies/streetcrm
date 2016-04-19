@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.utils.timezone
-import swoptact.modelfields
+import streetcrm.modelfields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0044_auto_20150714_1351'),
+        ('streetcrm', '0044_auto_20150714_1351'),
     ]
 
     operations = [
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institution',
             name='tags',
-            field=models.ManyToManyField(verbose_name='Institution Tags', blank=True, to='swoptact.Tag'),
+            field=models.ManyToManyField(verbose_name='Institution Tags', blank=True, to='streetcrm.Tag'),
         ),
         migrations.AlterField(
             model_name='participant',
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='participant',
             name='institution',
-            field=models.ForeignKey(verbose_name="Participant's Institution", to='swoptact.Institution', blank=True, null=True),
+            field=models.ForeignKey(verbose_name="Participant's Institution", to='streetcrm.Institution', blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='participant',
@@ -51,12 +51,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='participant',
             name='primary_phone',
-            field=swoptact.modelfields.PhoneNumberField(max_length=128, verbose_name='Participant Phone', blank=True, null=True),
+            field=streetcrm.modelfields.PhoneNumberField(max_length=128, verbose_name='Participant Phone', blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='participant',
             name='secondary_phone',
-            field=swoptact.modelfields.PhoneNumberField(max_length=128, verbose_name='Secondary\n                                                   Participant Phone', blank=True, null=True),
+            field=streetcrm.modelfields.PhoneNumberField(max_length=128, verbose_name='Secondary\n                                                   Participant Phone', blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='participant',

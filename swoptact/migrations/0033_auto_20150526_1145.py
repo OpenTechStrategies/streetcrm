@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import datetime
 
 from django.db import models, migrations
-import swoptact.modelfields
+import streetcrm.modelfields
 
 TIMES = {
     "10am": datetime.time(hour=10),
@@ -14,7 +14,7 @@ TIMES = {
 
 def migrate_time(apps, schema_editor):
     """ Migrates the time from a text/choice field to datetime.time field """
-    Event = apps.get_model("swoptact", "Event")
+    Event = apps.get_model("streetcrm", "Event")
     for event in Event.objects.all():
         # Skip if the time is None
         if event.time is None:
@@ -26,14 +26,14 @@ def migrate_time(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swoptact', '0032_merge'),
+        ('streetcrm', '0032_merge'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='event',
             name='tags',
-            field=models.ManyToManyField(to='swoptact.Tag', null=True, blank=True),
+            field=models.ManyToManyField(to='streetcrm.Tag', null=True, blank=True),
         ),
 
         # Add the temp field to migrate the data to
@@ -68,21 +68,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institution',
             name='address',
-            field=models.ForeignKey(to='swoptact.Address', blank=True, null=True),
+            field=models.ForeignKey(to='streetcrm.Address', blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='institution',
             name='tags',
-            field=models.ManyToManyField(to='swoptact.Tag', null=True, blank=True),
+            field=models.ManyToManyField(to='streetcrm.Tag', null=True, blank=True),
         ),
         migrations.AlterField(
             model_name='participant',
             name='primary_phone',
-            field=swoptact.modelfields.PhoneNumberField(null=True, blank=True, max_length=128),
+            field=streetcrm.modelfields.PhoneNumberField(null=True, blank=True, max_length=128),
         ),
         migrations.AlterField(
             model_name='participant',
             name='secondary_phone',
-            field=swoptact.modelfields.PhoneNumberField(null=True, blank=True, max_length=128),
+            field=streetcrm.modelfields.PhoneNumberField(null=True, blank=True, max_length=128),
         ),
     ]
