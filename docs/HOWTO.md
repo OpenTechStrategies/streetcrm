@@ -1,9 +1,9 @@
-# How To Use SWOPtact #
+# How To Use StreetCRM #
 
 ### Log in
   - An admin user will need to create a username and password for you.  Use these to log in.
 -  "Site Administration" page
-   - Clicking on either the SWOP logo or "Contacts" title will return you to this list of the kinds of elements that the logged-in user has permission to edit.
+   - Clicking on either the logo or "Contacts" title will return you to this list of the kinds of elements that the logged-in user has permission to edit.
    - The purple banner will show you where you are in the site at all times.  Right now it shows "Home," and you can always click on the home (or the logo) to get out of an inner page.
    - Search (see "Miscellaneous" for details).  If you know that you're looking for a specific person, institution, or action, type the name in the search bar.
    - To log out or change the password (if the logged-in user has permission to change their password), click the three horizontal lines at the top right, next to the "welcome, (user)" text.  You need to click directly on the text in that dropdown menu, not elsewhere in the highlighted row.
@@ -39,7 +39,7 @@
 - Click on "Create new institution"
   - The only required field here is the institution's name, but as usual you should fill in as much information as you have.
    - Tags will autocomplete.  New tags can't be created here.  If you are an administrator, you'll be able to create them on a separate page.
-   - The checkbox next to "Is this institution a member of SWOP?" just indicates yes or no.  Check it if the institution you're adding is a member of SWOP.
+   - The checkbox next to "Is this institution a member?" just indicates yes or no.  Check it if the institution you're adding is a member of the umbrella organization.
    - Some institutions will have contacts.  You must save the institution first in order to add contacts as a next step.  Click "Done" to save a new institution, and see below to add contacts.  Clicking "Done" will return you to the list of institutions.
 -  Edit an institution.  Click on the institution you just created, or any institution name from the list of institutions.
    - Just as with actions, you can add multiple tags to an institution.  The text box will remain to the right of the tags you've added, so that you can continue to type into it to add tags.  Once again, tags cannot be created here.  Type into the text box and choose a tag from the autocompletion menu that appears.  If you don't see the tag you need and you are an administrator, go to the Create Tag page to create the tag.

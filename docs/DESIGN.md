@@ -1,4 +1,4 @@
-                           SWOPtact Design.
+                           StreetCRM Design.
                            ================
 
 *TODO (2015-11-19):* _This document is still incomplete_

@@ -1,4 +1,4 @@
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
