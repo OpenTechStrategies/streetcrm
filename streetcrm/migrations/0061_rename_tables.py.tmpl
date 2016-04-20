@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.utils.timezone
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('swoptact', '0060_nonce_to_id'),
+    ]
+
+    operations = [
+        migrations.AlterModelTable('Event', 'streetcrm_event'),
+        migrations.AlterModelTable('Institution', 'streetcrm_institution'),
+        migrations.AlterModelTable('LeadershipGrowth', 'streetcrm_leadershipgrowth'),
+        migrations.AlterModelTable('LeaderStage', 'streetcrm_leaderstage'),
+        migrations.AlterModelTable('nonce_to_id', 'streetcrm_nonce_to_id'),
+        migrations.AlterModelTable('Participant', 'streetcrm_participant'),
+        migrations.AlterModelTable('Tag', 'streetcrm_tag'),
+    ]
+    
