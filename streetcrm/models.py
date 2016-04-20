@@ -19,6 +19,7 @@ from django.core import urlresolvers
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
 from django.utils import timezone
+from django.conf import settings
 
 from streetcrm import mixins, modelfields, managers
 import phonenumbers
@@ -225,10 +226,14 @@ class Institution(ArchiveAbstract, SerializeableMixin):
         related_name="main_contact"
     )
 
+    # pull org name from config file in order to structure this label
+    org = settings.ORG_NAME
+    is_member_text = "Is this institution a member of " + org + "?"
+
     is_member = models.BooleanField(
         default=False,
         blank=True,
-        verbose_name="Is this institution a member of SWOP?"
+        verbose_name=is_member_text
     )
 
     def __str__(self):

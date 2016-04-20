@@ -83,6 +83,11 @@ needs -- at a minimum you probably want something like this:
         # Set "allowed_hosts" to the domain of the URL people will access
         # the site on (only needed for PostgreSQL, not for SQLite3):
         allowed_hosts = ["example.com"]
+        
+        # This will be used to construct one of the labels (on
+        # Institution), so you may want to use a shorter version of your
+        # org name.
+        org_name = __YOUR_ORG_HERE__
 
         [database]
         # This is for PostgreSQL.  But for development purposes, it's
@@ -109,6 +114,23 @@ migrations, you probably have an old database interfering.  The
 solution is just to drop the database (`drop database` in PostgreSQL,
 or in SQLite just remove the database file) and run the
 `makemigration` and `migrate` steps again.
+
+If you've changed the organization name in the config file, you'll need
+to create a migration for it to take effect in the label (before you do
+that the label will show "Is this institution a member of StreetCRM
+Default Org?").  So, after you've set the org name in the config file,
+do the following:
+
+        $ python manage.py makemigrations
+        # you'll see something like the following:
+        # Migrations for 'streetcrm':
+        #  MIGRATION-FILE-NAME.py:
+        #    - Alter field is_member on institution
+        $ python manage.py migrate
+        # Running migrations:
+        #  Rendering model states... DONE
+        #  Applying streetcrm.MIGRATION-FILE-NAME... OK
+        
 
 Load sample data if necessary
 -----------------------------

@@ -69,6 +69,8 @@ SECRET_KEY = config["general"].get("secret_key", None)
 if SECRET_KEY is None:
     raise exceptions.ImproperlyConfigured("Secret key must be defined.")
 
+ORG_NAME = config["general"].get("org_name", None)
+
 # This should never be True in production.
 DEBUG = config["general"]["debug"]
 TEMPLATE_DEBUG = DEBUG
