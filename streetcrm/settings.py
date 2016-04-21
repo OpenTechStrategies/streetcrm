@@ -93,6 +93,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.template.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     "streetcrm.context_processors.search_header",
+    "streetcrm.context_processors.for_logo",
 )
 
 

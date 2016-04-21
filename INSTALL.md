@@ -130,7 +130,18 @@ do the following:
         # Running migrations:
         #  Rendering model states... DONE
         #  Applying streetcrm.MIGRATION-FILE-NAME... OK
-        
+
+
+If you want to set a different logo for the top left of the screen
+(where, by default, you see the StreetCRM logo), from the root of this
+repository do the following:
+
+        $ cp /path/to/your-logo-file.png streetcrm/static/images/logo.png
+
+Our logo image is 1029x273px, for reference.  Once your file is there it
+will show up in the app.  You can remove it or change it whenever you
+like.
+
 
 Load sample data if necessary
 -----------------------------

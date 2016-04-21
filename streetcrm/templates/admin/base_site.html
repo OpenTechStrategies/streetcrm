@@ -7,7 +7,13 @@
 {% block title %}{{ title }}{% endblock %}
 {% block branding %}
 {% load staticfiles %}
-<a id="logo-wrapper" href="{% url 'admin:index' %}" ><img src="{% static "images/logo-swop.png" %}" alt="SWOP logo" height="50"></a>
+  <a id="logo-wrapper" href="{% url 'admin:index' %}" >
+    {% if logo %}
+        <img src="{% static "images/logo.png" %}" alt="organization's logo" height="50">
+    {% else %}
+        <img src="{% static "images/streetcrm-logo.png" %}" alt="streetcrm logo" height="50">
+    {% endif %}
+  </a>
 <a href="{% url 'admin:index' %}" class="navbar-brand">{% trans "Contacts" %}</a>
 <div id="top-right-wrapper">
     <div id="welcome-message">
