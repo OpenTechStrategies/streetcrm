@@ -225,3 +225,37 @@ When updating to a newer version of StreetCRM, run:
 
         $ pip install -r requirements.txt -U
         $ python manage.py migrate
+
+
+Old Versions (pre-rename)
+------------------------
+
+For instances that were set up with the original name of StreetCRM,
+SWOPtact, you may need to do some careful migration management.  To
+update to the renamed app, do the following:
+
+        $ cp streetcrm/migrations/0061_rename_tables.py.tmpl streetcrm/migrations/0061_rename_tables.py 
+        
+        # Now you'll have an unmigrated migration.  This is left as a
+        # ".tmpl" file in the repo because new instances shouldn't run
+        # it.  It's only necessary for instances that need to manually
+        # do the rename.  If you're doing the rename, run the migration.
+
+        $ python manage.py migrate
+
+        # For future migrations, you'll need to fake up to the previous
+        # migration.  That will make future migrations work so that
+        # changes introduced in commit 7b4f817 won't cause trouble.
+
+        $ python manage.py migrate --fake streetcrm 0060
+
+        # Then run the next migration, likely a name change in config:
+        $ python manage.py migrate streetcrm 0061_auto_20160420_1340
+
+You only need to do the `--fake` command for the first migration
+post-rename.  After that, migrations should all work as expected and you can just run
+
+        $ python manage.py migrate
+
+as usual.
+
