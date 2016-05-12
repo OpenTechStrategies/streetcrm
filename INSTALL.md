@@ -250,17 +250,19 @@ update to the renamed app, do the following:
         # Now you'll have an unmigrated migration.  This is left as a
         # ".tmpl" file in the repo because new instances shouldn't run
         # it.  It's only necessary for instances that need to manually
-        # do the rename.  If you're doing the rename, run the migration.
+        # do the rename.  If you're doing the rename, run the migration
+        # as usual.
 
         $ python manage.py migrate
 
-        # For future migrations, you'll need to fake up to the previous
-        # migration.  That will make future migrations work so that
-        # changes introduced in commit 7b4f817 won't cause trouble.
+        # For future migrations (AFTER 61), you'll need to fake up to
+        # the previous migration.  That will make future migrations work
+        # so that changes introduced in commit 7b4f817 won't cause
+        # trouble.
 
         $ python manage.py migrate --fake streetcrm 0060
 
-        # Then run the next migration, likely a name change in config:
+        # Then run the next migration, which is likely a name change in the config:
         $ python manage.py migrate streetcrm 0061_auto_20160420_1340
 
 You only need to do the `--fake` command for the first migration

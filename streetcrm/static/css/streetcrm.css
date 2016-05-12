@@ -98,14 +98,14 @@ h1, h1 a, legend {
 
 /* Purple hrefs that are underlined until you hover over them */
 a {
-    color: #5F1F7F;
+    color: #1e6b27;
 }
 
 a:hover,
 a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #5F1F7F;
+    color: #1e6b27;
     text-decoration: underline;
 }
 
@@ -133,7 +133,7 @@ a:focus,
 .navbar-default .navbar-brand,
 .navbar-default .navbar-text,
 .navbar-default .navbar-nav > li > a {
-    color: #5F1F7F;
+    color: #1e6b27;
 }
 
 /* Shrink tables to fit content (but don't shrink too much either) */
@@ -144,7 +144,7 @@ a:focus,
 
 #actual-navbar {
     padding: 5px 0px 3px 0px;
-    background-color: #4E0E6E;
+    background-color: #1e6b27;
     color: white;
 }
 
@@ -210,7 +210,7 @@ value. */
     padding: 15px;
     border: 3px;
     border-style: solid;
-    border-color: #48328F;
+    border-color: #1e6b27;
 }
 
 @media screen and (max-width: 750px) {
@@ -231,7 +231,7 @@ value. */
     width: 100%;
     height: 2px;
     margin: 15px 0px;
-    background-color: #4E0E6E;
+    background-color: #1e6b27;
 }
 
 #content-navbar-collapse {
@@ -489,7 +489,7 @@ table#inlined-model-table .editable {
 
 .large-info {
    font-size: 16px;
-   border: 2px solid #5F1F7F;
+   border: 2px solid #1e6b27;
    border-radius: 50%;
    height: 24px;
    width: 24px;
@@ -582,7 +582,7 @@ ul#model_list {
 }
 
 h2#stages-header:hover {
-    color: #5F1F7F;
+    color: #1e6b27;
     text-decoration: underline;
     cursor: pointer;
 }
