@@ -150,6 +150,18 @@ the site to be styled correctly:
 Once you've done that, edit `streetcrm.css` to have whatever branding
 you'd like.
 
+You might also want to update the colors of the three-line menu icon
+that is usually in the upper right of the screen.  The icon image is
+`streetcrm/static/images/three_lines_default.png`.  You can change the
+colors programmatically like this:
+
+    $ convert three_lines_default.png -fuzz 100% -fill "#YOUR_COLOR" -opaque "#1e6b27" tmp.png
+    $ mv tmp.png three_lines_default.png
+
+This is not yet a very good story for how to change the menu colors,
+since the result is that a versioned file is modified.  We'll fix that
+soon, but in the meantime, the above will at least let you control
+your menu icon's color.
 
 Load sample data if necessary
 -----------------------------
