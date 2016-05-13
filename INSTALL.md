@@ -142,6 +142,14 @@ Our logo image is 1029x273px, for reference.  Once your file is there it
 will show up in the app.  You can remove it or change it whenever you
 like.
 
+Everyone will need to do the following with the CSS file in order for
+the site to be styled correctly:
+
+       $ cp streetcrm/static/css/streetcrm.css.tmpl streetcrm/static/css/streetcrm.css
+
+Once you've done that, edit `streetcrm.css` to have whatever branding
+you'd like.
+
 
 Load sample data if necessary
 -----------------------------
