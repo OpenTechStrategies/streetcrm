@@ -42,6 +42,9 @@ Build the virtual enviroment for the website:
 
         $ cd streetcrm
         $ virtualenv --python=python3.4 .
+        # Note: if you don't have python 3.4, check which version you
+        # have by running python3 --version.  You might want to replace
+        # this with `virtualenv --python=python3.5 .` or similar.
         $ source bin/activate
         $ pip install -U -r requirements.txt
         $ pip install psycopg2
@@ -213,6 +216,10 @@ these two commands seen earlier:
 
 Now you can invoke `python manage.py runserver` from the proper
 environment.
+
+If you want to exit the `virtualenv` environment, run:
+
+        $ deactivate
 
 To run StreetCRM for production use, see the "HTTP Server" section below.
 
