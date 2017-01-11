@@ -715,7 +715,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, S
     action_history.allow_tags = True
 
     def US_primary_phone(self, obj):
-        if obj.primary_phone is None:
+        if obj.primary_phone is None or obj.primary_phone == "":
             return None
 
         # Is it a US number
