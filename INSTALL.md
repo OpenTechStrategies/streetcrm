@@ -109,7 +109,7 @@ needs -- at a minimum you probably want something like this:
         name = streetcrm
         # 'user' is for PostgreSQL; for SQLite3, just comment this out:
         user = streetcrm
-        # 'user' is for PostgreSQL; for SQLite3, just comment this out:
+        # 'password' is for PostgreSQL; for SQLite3, just comment this out:
         password = DB_PASSWORD_HERE
 
 Now create the tables in the database and setup the initial superuser:
