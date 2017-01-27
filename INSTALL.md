@@ -1,10 +1,10 @@
 # StreetCRM deployment on Debian GNU/Linux
 
-You need python 3.4 and python's virtualenv to use this.  In Debian
+You need Python 3.4 and Python's `virtualenv` to use this.  In Debian
 GNU/Linux ('Jessie' release) install these packages:
 
         $ sudo apt-get update
-        $ sudo apt-get install apache2 git libapache2-mod-wsgi-py3 python3 python3-dev python3-virtualenv virtualenv postgresql postgresql-client postgresql-server-dev-all gcc
+        $ sudo apt-get install apache2 git libapache2-mod-wsgi-py3 python3 python3-dev python3-setuptools python3-virtualenv virtualenv postgresql postgresql-client postgresql-server-dev-all gcc
 
 Database
 --------
@@ -29,9 +29,10 @@ You then need to add PostgreSQL to automatically start on boot:
 The StreetCRM application
 ------------------------
 
-In this document, we'll assume you're installing under `/var/www/`,
-but these instructions should be pretty easy to adjust to any other
-location.
+In this document, we'll assume you're installing under `/var/www/` for
+a production installation, but these instructions should be pretty
+easy to adjust to any other location (e.g., your home directory for a
+development installation).
 
 First get the source tree:
 
@@ -47,7 +48,7 @@ Build the virtual enviroment for the website:
         # this with `virtualenv --python=python3.5 .` or similar.
         $ source bin/activate
         $ pip install -U -r requirements.txt
-        $ pip install psycopg2
+        $ pip install psycopg2 # only necessary for production installs
 
 Make the config directory and copy the config file over:
 
@@ -58,14 +59,19 @@ Make the config directory and copy the config file over:
 under your home directory because you're doing a development
 deployment rather than a production deployment, then you might put the
 config file in a different location.  If so, just set the
-`STREETCRM_CONFIG` environment variable accordingly, e.g.,
-`STREETCRM_CONFIG=~/.config/streetcrm/config.ini; export STREETCRM_CONFIG`.
-If later on you get errors about StreetCRM being unable to find its
-config file, failure to set that environment variable is probably why.)
+`STREETCRM_CONFIG` environment variable accordingly, e.g., by running
+
+        $ STREETCRM_CONFIG=~/.config/streetcrm/config.ini; export
+STREETCRM_CONFIG
+
+Make sure to specify the path absolutely, not just relative to the
+current directory.  If later on you get errors about StreetCRM being
+unable to find its config file, failure to set that environment
+variable is probably why.)
 
 Wherever you put the `config.ini` file, make sure to change its access
 permissions to be readable only by the user the application will run
-as, for example
+as, for example:
 
         $ chmod go-rwx /var/www/.config/streetcrm/config.ini
 
@@ -97,13 +103,13 @@ needs -- at a minimum you probably want something like this:
         # fine to use SQLite3 as the database back end.  In that case,
         # say `django.db.backends.sqlite3` here instead:
         engine = django.db.backends.postgresql_psycopg2
-        # This is for PostgreSQL; for SQLite3, say `streetcrm_db`:
-        name = streetcrm
-        # This is for PostgreSQL; for SQLite3, just comment this out:
+        # 'host' is for PostgreSQL; for SQLite3, just comment this out:
         host = localhost
-        # This is for PostgreSQL; for SQLite3, just comment this out:
+        # 'name' is for PostgreSQL; for SQLite3, say `streetcrm_db`:
+        name = streetcrm
+        # 'user' is for PostgreSQL; for SQLite3, just comment this out:
         user = streetcrm
-        # This is for PostgreSQL; for SQLite3, just comment this out:
+        # 'user' is for PostgreSQL; for SQLite3, just comment this out:
         password = DB_PASSWORD_HERE
 
 Now create the tables in the database and setup the initial superuser:
@@ -118,11 +124,12 @@ solution is just to drop the database (`drop database` in PostgreSQL,
 or in SQLite just remove the database file) and run the
 `makemigration` and `migrate` steps again.
 
-If you've changed the organization name in the config file, you'll need
-to create a migration for it to take effect in the label (before you do
-that the label will show "Is this institution a member of StreetCRM
-Default Org?").  So, after you've set the org name in the config file,
-do the following:
+You've almost certainly changed the organization name in the config
+file from `_StreetCRM_Default_Org_`, so you'll need to create a
+migration for it to take effect in the label (before you do that, the
+label will show "Is this institution a member of StreetCRM Default
+Org?").  So, after you've set the org name in the config file, do the
+following:
 
         $ python manage.py makemigrations
         # you'll see something like the following:
@@ -199,8 +206,8 @@ as per
 StackOverflow questions.  Otherwise, people may get ""UNIQUE
 constraint failed" errors when trying to load the data.
 
-Running StreetCRM
-----------------
+Running StreetCRM (developer installation)
+------------------------------------------
 
 To run StreetCRM just for testing and development purposes, we
 recommend you use Python's built-in web server:
@@ -217,14 +224,33 @@ these two commands seen earlier:
 Now you can invoke `python manage.py runserver` from the proper
 environment.
 
+In your terminal, you'll see something like
+
+        $ python manage.py runserver
+        # Performing system checks...
+        #
+        # System check identified no issues (0 silenced).
+        # January 22, 2017 - 16:36:12
+        # Django version 1.8.17, using settings 'streetcrm.settings'
+        # Starting development server at http://127.0.0.1:8000/
+        # Quit the server with CONTROL-C.
+
+In your browser, visit the URL the terminal messages mention, e.g.,
+127.0.0.1:8000/ . You'll see the StreetCRM login screen. In order to
+log in, you'll need to create a user; see the superuser creation
+instructions in the sample data loading instructions above.
+
+To stop the server, use *Control-C* in the terminal where it's
+running.
+
 If you want to exit the `virtualenv` environment, run:
 
         $ deactivate
 
 To run StreetCRM for production use, see the "HTTP Server" section below.
 
-HTTP Server
------------
+HTTP Server (production installation)
+-------------------------------------
 
 Copy the HTTPD configuration file from the repository to wherever your HTTPD
 configuration lives.  We'll assume Debian-standard locations here:
