@@ -1,6 +1,14 @@
 {% load i18n %}
-  <h1>{% trans "Results" %}</h1>
-  <ul>
+<h1>{% trans "Results" %}</h1>
+<ul>
+  Results: {{ search_results }}<br>
+  Count: {{ result_count }}<br>
+  {% if not search_results %}
+  Sorry, there were no results for this search.  If you're not sure how
+  to spell someone's name, try using wildcards.  For example, to find
+  Martin Gonzalez, you could search by M* G*.
+  {% endif %}
+  
     {% if advanced and search_results and not result_count %}
     Sorry, there were no results for this search.  Try using fewer
     search terms to find more results. 
