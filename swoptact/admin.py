@@ -651,11 +651,6 @@ class LeaderGrowthInline(admin.TabularInline):
     
 class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, SearchAdmin):
     """ Admin UI for participant including listing event history """
-    search_fields = ("name", "primary_phone", "title", "email",
-                     "participant_street_address",
-                     "participant_city_address",
-                     "participant_state_address",
-                     "participant_zipcode_address")
     list_filter = (admin_filters.ArchivedFilter,)
     list_display = ("name", "US_primary_phone", "institution", "participant_street_address", "participant_city_address",)
     readonly_fields = ("action_history", "event_history_name")
@@ -771,7 +766,6 @@ class AjaxyInlineAdmin(SearchAdmin):
 
 
 class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
-    search_fields = ("name", "location")
     list_filter = (admin_filters.TagFilter,)
     list_display = ("name", "location", "date", "attendee_count",)
     change_form_template = "admin/event_change_form.html"
@@ -824,8 +818,6 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 
 
 class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
-    search_filter = ("name", "inst_street_address", "inst_city_address", "inst_state_address"
-                     "inst_zipcode_address")
     list_filter = (admin_filters.ArchivedFilter, admin_filters.TagFilter,)
     list_display = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
@@ -874,7 +866,6 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
 
 
 class TagAdmin(mixins.AdminArchiveMixin, SearchAdmin):
-    search_fields = ("name",)
     list_filter = (admin_filters.ArchivedFilter,)
     list_display = ("name", "description",)
     actions = None
