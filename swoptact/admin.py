@@ -182,10 +182,10 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # Perform the search, whether passed from header or the basic
         # form
         if not search_query:
-            results = self.search_engine.search(form.cleaned_data["query"])
-        else:
-            results = self.search_engine.search(search_query)
+            search_query = form.cleaned_data["query"]
 
+        results = self.search_engine.search(search_query)
+        
         # Process the results into their objects
         results = [result.object for result in results]
 
@@ -194,7 +194,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             request,
             self.search_template,
             {
-                "search_results": {None: results},
+                "search_results": {"results": results},
                 "form": form,
             }
         )
