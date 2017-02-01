@@ -1,19 +1,20 @@
 {% load i18n %}
+
+{% with helptext="Sorry, there were no results for this search.  If you're not sure how to spell someone's full name, try searching on just part of it.  For example, to find Martin Gonzalez, you could search by M* G*." %}
+
 <h1>{% trans "Results" %}</h1>
 <ul>
-  Results: {{ search_results }}<br>
-  Count: {{ result_count }}<br>
-  {% if not search_results %}
-  Sorry, there were no results for this search.  If you're not sure how
-  to spell someone's name, try using wildcards.  For example, to find
-  Martin Gonzalez, you could search by M* G*.
+
+  {% if not advanced and not search_results.results %}
+  {{helptext}}
   {% endif %}
   
-    {% if advanced and search_results and not result_count %}
-    Sorry, there were no results for this search.  Try using fewer
-    search terms to find more results. 
-    {% endif %}
-    
+  {% if advanced and search_results and not result_count %}
+  {{helptext}}
+  {% endif %}
+
+  {% endwith %}
+
   {% for section, objects in search_results.items %}
 
   <ul>
@@ -26,7 +27,7 @@
     
     {% if section != "No Event" %}
     <li><a href="{{ object.admin_change_url }}">{{ object }}</a>
-    {% if section %} ({{ section }}) {% endif %} </li>
+    {% if section and section != "results" %} ({{ section }}) {% endif %} </li>
     {% endif %}
     {% endfor %}
   </ul>

@@ -43,3 +43,13 @@ there has been shown to be a special case.
 - leader users can neither create nor edit Tags
 
 
+## Search
+
+- Basic and advanced search should always show helptext when a search
+  has no results.  They should not show this helptext before the user
+  performs a search.  Specifically, test for no results with:
+  - from the top search bar
+  - from the basic search page
+  - from the advanced search page
+  - after a prior search with results
+  - after a prior search with no results
