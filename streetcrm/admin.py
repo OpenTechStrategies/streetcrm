@@ -28,6 +28,12 @@ from django.contrib import admin, auth
 from django.template import loader
 from django.conf.urls import url
 from django.contrib.admin.views import main
+from django.contrib.admin.models import LogEntry
+
+# The LogEntry model defines three action_flags: ADDITION = 1,
+# CHANGE = 2, DELETION = 3.  I'm adding SEARCH so we can easily find all
+# the searches that have been logged.
+SEARCH=4
 
 from django.db.models import Q
 from django.template.response import TemplateResponse
@@ -175,6 +181,18 @@ class STREETCRMAdminSite(admin.AdminSite):
         else:
             return self.basic_search_view(request, form)
 
+    def log_basic_search(self, request, search_query):
+        # this is a crazy test.
+        # save the search:
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=None,
+            object_id=None,
+            object_repr=search_query,
+            action_flag=SEARCH,
+            change_message="Basic search.")
+        return;
+
     def basic_search_view(self, request, form, search_query=None):
         """
         View for the basic search for objects
@@ -183,6 +201,8 @@ class STREETCRMAdminSite(admin.AdminSite):
         # form
         if not search_query:
             search_query = form.cleaned_data["query"]
+
+        self.log_basic_search(request, search_query)
 
         results = self.search_engine.search(search_query)
         
