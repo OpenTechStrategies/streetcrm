@@ -182,7 +182,6 @@ class SWOPTACTAdminSite(admin.AdminSite):
             return self.basic_search_view(request, form)
 
     def log_basic_search(self, request, search_query):
-        # this is a crazy test.
         # save the search:
         LogEntry.objects.log_action(
             user_id=request.user.id,
