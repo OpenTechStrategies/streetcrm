@@ -793,6 +793,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     search_fields = ("name", "location")
     list_filter = (admin_filters.TagFilter,)
     list_display = ("name", "location", "date", "attendee_count",)
+    ordering = ("-date", )
     change_form_template = "admin/event_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Event,
@@ -846,6 +847,7 @@ class InstitutionAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
     search_fields = ("name",)
     list_filter = (admin_filters.ArchivedFilter, admin_filters.TagFilter,)
     list_display = ("name", )
+    ordering = ("name", )
     change_form_template = "admin/ajax_inline_change_form.html"
     form = st_forms.autocomplete_modelform_factory(
         model=models.Institution,
