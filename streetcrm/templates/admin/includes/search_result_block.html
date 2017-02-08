@@ -7,14 +7,11 @@
 
   {% if not advanced and not search_results.results %}
   {{helptext}}
-  {% endif %}
   
-  {% if advanced and search_results and not result_count %}
+  {% elif advanced and search_results and not result_count %}
   {{helptext}}
-  {% endif %}
 
-  {% endwith %}
-
+  {% else %}
   {% for section, objects in search_results.items %}
 
   <ul>
@@ -33,3 +30,15 @@
   </ul>
   {% endfor %}
 </ul>
+
+<form id="export-search-form" action="{% url 'export-search-results' %}" method="post">
+  <div class="input-group">
+    <input name="results" value="{{search_results}}" type="hidden">
+      <input id="export-button" class="btn btn-default" type="submit" value="Export Results">
+      <span class='glyphicon glyphicon-export' aria-hidden=true></span>
+  </div>
+</form>
+{% endif %}
+
+{% endwith %}
+

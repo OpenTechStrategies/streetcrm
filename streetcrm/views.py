@@ -29,6 +29,8 @@ from django.contrib.admin.models import (
     LogEntry, ADDITION, CHANGE, DELETION)
 from django.utils.encoding import force_text
 
+import csv
+
 from streetcrm import models
 from streetcrm.decorators import streetcrm_login_required
 
@@ -674,3 +676,22 @@ class AvailableTagsAPI(APIMixin, generic.ListView):
         context = super(AvailableTagsAPI, self).get_context_data(**context)
         context["available"] = [t.serialize() for t in self.get_queryset()]
         return context
+
+
+class ExportResults(generic.CreateView):
+    print("DEBUG: in export results")
+
+    # Take a search result set and an HTTP Request object and return a
+    # CSV file with the search results.  This will be called when a user
+    # clicks "export results" on a page of search results.
+    def post(request, results):
+        print("DEBUG: okay, testing")
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
+        
+        writer = csv.writer(response)
+        for result in results:
+            writer.writerow(result)
+            
+        return response        
