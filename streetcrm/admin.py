@@ -227,6 +227,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             {
                 "search_results": {"results": results},
                 "form": form,
+                "query": search_query,
             }
         )
 

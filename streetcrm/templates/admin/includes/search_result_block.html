@@ -31,15 +31,11 @@
   {% endfor %}
 </ul>
 
-<form id="export-search-form" action="{% url 'export-search-results' %}" method="post">
-   {% csrf_token %} 
-   <div class="input-group">
-    <input name="results" value="{{search_results.results}}" type="hidden">
-      <input id="export-button" class="btn btn-default" type="submit" value="Export Results">
-      <span class='glyphicon glyphicon-export' aria-hidden=true></span>
-  </div>
-</form>
-<a href="export/">Export results as CSV</a>
+<a href="export/?q={{query}}">
+  <span name="export-button" class="btn btn-default">Export
+  Results <span class='glyphicon glyphicon-export'
+  aria-hidden=true></span></span>
+</a>
 {% endif %}
 
 {% endwith %}
