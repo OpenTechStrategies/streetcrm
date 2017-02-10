@@ -202,8 +202,6 @@ class STREETCRMAdminSite(admin.AdminSite):
         # Perform the search, whether passed from header or the basic
         # form
 
-        self.log_basic_search(request, search_query)
-
         results = self.search_engine.search(search_query)
 
         # Process the results into their objects
@@ -220,6 +218,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             search_query = form.cleaned_data["query"]
 
         results = self.basic_search_do(request, search_query)
+        self.log_basic_search(request, search_query)
 
         # Display the results
         return TemplateResponse(
@@ -503,14 +502,15 @@ class STREETCRMAdminSite(admin.AdminSite):
             }
         )
 
-    def export_basic_search(self, request, search_query):
+    @staticmethod
+    def export_basic_search(request, search_query):
         """
         Export the set of search results in a CSV.
         """
         if not search_query:
             return
 
-        search_results = self.basic_search_do(request, search_query)
+        search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
         
         response = http.HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="search-results.csv"'

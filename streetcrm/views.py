@@ -33,6 +33,7 @@ import csv
 
 from streetcrm import models
 from streetcrm.decorators import streetcrm_login_required
+from streetcrm.admin import STREETCRMAdminSite as streetcrm_admin
 
 # Needed for reporting validation errors. Otherwise execution will
 # stumble when trying to serialize one of our models (e.g., Institution)
@@ -697,3 +698,8 @@ class ExportResults(generic.CreateView):
             writer.writerow(result)
             
         return response        
+
+    def get(self, request):
+        # get the query from the request
+        search_query = "R"
+        return streetcrm_admin.export_basic_search(request, search_query)
