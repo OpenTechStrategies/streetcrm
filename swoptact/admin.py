@@ -49,6 +49,9 @@ import autocomplete_light
 from swoptact import forms as st_forms
 from swoptact import mixins, models, admin_filters
 
+from django import http
+import csv
+
 
 class SWOPTACTAdminSite(admin.AdminSite):
 
@@ -192,21 +195,31 @@ class SWOPTACTAdminSite(admin.AdminSite):
             change_message="Basic search.")
         return;
 
-    def basic_search_view(self, request, form, search_query=None):
+    def basic_search_do(self, request, search_query):
         """
-        View for the basic search for objects
+        Return results from a basic search
         """
         # Perform the search, whether passed from header or the basic
         # form
-        if not search_query:
-            search_query = form.cleaned_data["query"]
 
         self.log_basic_search(request, search_query)
 
         results = self.search_engine.search(search_query)
-        
+
         # Process the results into their objects
         results = [result.object for result in results]
+        
+        return results
+
+    def basic_search_view(self, request, form, search_query=None):
+        """
+        Produce view for the basic search
+        """
+
+        if not search_query:
+            search_query = form.cleaned_data["query"]
+
+        results = self.basic_search_do(request, search_query)
 
         # Display the results
         return TemplateResponse(
@@ -490,7 +503,32 @@ class SWOPTACTAdminSite(admin.AdminSite):
             }
         )
 
+    def export_basic_search(self, request, search_query):
+        """
+        Export the set of search results in a CSV.
+        """
+        if not search_query:
+            return
 
+        search_results = self.basic_search_do(request, search_query)
+        
+        response = http.HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
+
+        writer = csv.writer(response)
+        for result in search_results:
+            # Convert the result object (participant, institution, etc.)
+            # to a row.
+            #
+            # add a title row
+            writer.writerow(result.__dict__)
+            new_row = []
+            for value in result.__dict__:
+                new_row.append(result.__dict__[value])
+            writer.writerow(new_row)
+
+        return response
+    
     def missing_data_view(self, request):
         """
         Missing data report
