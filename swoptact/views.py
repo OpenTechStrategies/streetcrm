@@ -674,3 +674,24 @@ class AvailableTagsAPI(APIMixin, generic.ListView):
         context = super(AvailableTagsAPI, self).get_context_data(**context)
         context["available"] = [t.serialize() for t in self.get_queryset()]
         return context
+
+
+class ExportResults(generic.CreateView):
+    print("DEBUG: in export results")
+
+    # Take a search result set and an HTTP Request object and return a
+    # CSV file with the search results.  This will be called when a user
+    # clicks "export results" on a page of search results.
+    def post(self, request):
+        print("DEBUG: okay, testing")
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = http.HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
+
+        result_list = request.POST['results']
+        
+        writer = csv.writer(response)
+        for result in result_list:
+            writer.writerow(result)
+            
+        return response        
