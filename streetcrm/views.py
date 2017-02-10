@@ -684,14 +684,16 @@ class ExportResults(generic.CreateView):
     # Take a search result set and an HTTP Request object and return a
     # CSV file with the search results.  This will be called when a user
     # clicks "export results" on a page of search results.
-    def post(request, results):
+    def post(self, request):
         print("DEBUG: okay, testing")
         # Create the HttpResponse object with the appropriate CSV header.
-        response = HttpResponse(content_type='text/csv')
+        response = http.HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
+
+        result_list = request.POST['results']
         
         writer = csv.writer(response)
-        for result in results:
+        for result in result_list:
             writer.writerow(result)
             
         return response        

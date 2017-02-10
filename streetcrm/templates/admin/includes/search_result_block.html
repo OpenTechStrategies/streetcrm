@@ -32,8 +32,9 @@
 </ul>
 
 <form id="export-search-form" action="{% url 'export-search-results' %}" method="post">
-  <div class="input-group">
-    <input name="results" value="{{search_results}}" type="hidden">
+   {% csrf_token %} 
+   <div class="input-group">
+    <input name="results" value="{{search_results.results}}" type="hidden">
       <input id="export-button" class="btn btn-default" type="submit" value="Export Results">
       <span class='glyphicon glyphicon-export' aria-hidden=true></span>
   </div>
