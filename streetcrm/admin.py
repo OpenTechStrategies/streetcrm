@@ -227,6 +227,10 @@ class STREETCRMAdminSite(admin.AdminSite):
 
         if not search_query:
             search_query = form.cleaned_data["query"]
+        else:
+            # Set the form query input to be equal to the search query, for
+            # more reliable export
+            form.fields['query'].initial = search_query
 
         results = self.basic_search_do(request, search_query)
         self.log_basic_search(request, search_query)
