@@ -702,4 +702,4 @@ class ExportResults(generic.CreateView):
     def get(self, request):
         # get the query from the request
         search_query = request.GET['q']
-        return streetcrm_admin.export_basic_search(request, search_query)
+        return streetcrm_admin.export_search(request, search_query)
