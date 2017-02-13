@@ -56,7 +56,4 @@ urlpatterns = patterns("",
     url(r'^autocomplete/', include('autocomplete_light.urls')
     ),
 
-    #export urls
-    url(r"^export/", views.ExportResults.as_view(), name="export-search-results"),
-    url(r"^search/export/", views.ExportResults.as_view(), name="export-basic-search"),
 )

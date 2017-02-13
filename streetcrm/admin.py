@@ -140,6 +140,10 @@ class STREETCRMAdminSite(admin.AdminSite):
         urls.append(
             url(r"^search/$", wrap(self.search_dispatcher), name="search"),
         )
+        urls.append(
+            url(r"^search/export$", wrap(self.export_search), name="export"),
+        )
+
 
         urls.extend([
             url(r"^missing_data/$", wrap(self.missing_data_view),
@@ -158,16 +162,19 @@ class STREETCRMAdminSite(admin.AdminSite):
         else:
             form = st_forms.SearchForm()
 
+        if request.method == "GET" and not advanced:
+            search_query = request.GET.get("q")
+        else:
+            search_query = None
+
         # If it's a GET request or the form is invalid, return now.
         if request.method == "GET" or not form.is_valid():
             # Show results from basic search, but still show the
             # advanced form when requested
-            if request.method == "GET" and not advanced:
-                search_query = request.GET.get("q")
-                
-                # If a search term is provided, show results
-                if search_query is not None and search_query is not "":
-                    return self.basic_search_view(request, form, search_query)
+            
+            # If a search term is provided, show results
+            if search_query is not None and search_query is not "":
+                return self.basic_search_view(request, form, search_query)
 
             return TemplateResponse(
                 request,
@@ -178,6 +185,10 @@ class STREETCRMAdminSite(admin.AdminSite):
                 }
             )
 
+        # if it's an export, do that
+        if request.POST.get("export_btn"):
+            return self.export_search(request, form, advanced, search_query)
+        
         # If it's advanced send it that view, else send it to the basic view
         if advanced:
             return self.advanced_search_view(request, form)
@@ -524,7 +535,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         )
     
     @staticmethod
-    def export_search(request, search_query=None, advanced=False):
+    def export_search(request, form, advanced, search_query):
         """
         Export the set of search results in a CSV.
         """
@@ -532,15 +543,13 @@ class STREETCRMAdminSite(admin.AdminSite):
         response = http.HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
         writer = csv.writer(response)
-        
-        if not search_query and not advanced:
-            print("DEBUG: there was no search query")
-            writer.writerow(["No results",])
-            return response
+
+        if not search_query:
+            search_query = form.cleaned_data["query"]
 
         if advanced:
-            print("DEBUG: this is an advanced export")
-            # TODO
+            results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form)
+            search_results = results_package["search_results"][None]
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
         
