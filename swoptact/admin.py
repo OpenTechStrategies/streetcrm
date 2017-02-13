@@ -231,7 +231,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             }
         )
 
-    def advanced_search_view(self, request, form):
+    def advanced_search_do(self, request, form):
         """
         This provides advanced searching options
         """
@@ -487,36 +487,63 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 lambda i: isinstance(i, models.Institution)
             ))
 
+        results_package = {"form": form,
+                           "search_results": results,
+                           "major_event_count": major_event_count,
+                           "prep_event_count": prep_event_count,
+                           "institution_count": institution_count,
+                           "participant_count": participant_count,
+                           "result_count": result_count
+        }
+            
+        return results_package
+
+
+
+    def advanced_search_view(self, request, form):
+        """
+        Return template for advanced search results.
+        """
+
+        adv_results = self.advanced_search_do(request, form)
+        
         # Return the response.
         return TemplateResponse(
             request,
             self.search_template,
             {
-                "form": form,
+                "form": adv_results['form'],
                 "advanced": True,
-                "search_results": results,
-                "major_event_count": major_event_count,
-                "prep_event_count": prep_event_count,
-                "institution_count": institution_count,
-                "participant_count": participant_count,
-                "result_count": result_count
+                "search_results": adv_results['search_results'],
+                "major_event_count": adv_results['major_event_count'],
+                "prep_event_count": adv_results['prep_event_count'],
+                "institution_count": adv_results['institution_count'],
+                "participant_count": adv_results['participant_count'],
+                "result_count": adv_results['result_count']
             }
         )
-
+    
     @staticmethod
-    def export_basic_search(request, search_query):
+    def export_search(request, search_query=None, advanced=False):
         """
         Export the set of search results in a CSV.
         """
-        if not search_query:
-            return
-
-        search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
-        
+        # Start CSV
         response = http.HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="search-results.csv"'
-
         writer = csv.writer(response)
+        
+        if not search_query and not advanced:
+            print("DEBUG: there was no search query")
+            writer.writerow(["No results",])
+            return response
+
+        if advanced:
+            print("DEBUG: this is an advanced export")
+            # TODO
+        else:
+            search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
+        
         for result in search_results:
             # Convert the result object (participant, institution, etc.)
             # to a row.
@@ -529,6 +556,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             writer.writerow(new_row)
 
         return response
+
     
     def missing_data_view(self, request):
         """
