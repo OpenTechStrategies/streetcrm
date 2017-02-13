@@ -102,7 +102,7 @@
     {% else %}
     {{ form.query }}
     {% endif %}
-    <button>{% trans "Search" %}</button>
+    <input name="search_btn" value="{% trans "Search" %}" type="submit">
     {% if advanced %}    
     <button id="clear_filters_button">{% trans "Clear filters" %}</button>
     {% endif %}
@@ -134,6 +134,10 @@
       {% endif %}
     </ul>
     {% endblock %}
+   <input class="btn btn-default" type="submit" name="export_btn" value="Export Results">
+       <span class='glyphicon glyphicon-export' aria-hidden=true></span>
+
+
   </form>
   {% include "admin/includes/search_result_block.html" with search_results=search_results %}
 </div>
