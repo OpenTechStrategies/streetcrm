@@ -134,11 +134,12 @@
       {% endif %}
     </ul>
     {% endblock %}
-   <input class="btn btn-default" type="submit" name="export_btn" value="Export Results">
-       <span class='glyphicon glyphicon-export' aria-hidden=true></span>
-
+    {% include "admin/includes/search_result_block.html" with search_results=search_results %}
+    {% if search_results.results or result_count %}
+    <input class="btn btn-default" type="submit" name="export_btn" value="Export Results">
+    <span class='glyphicon glyphicon-export' aria-hidden=true></span>
+    {% endif %}
 
   </form>
-  {% include "admin/includes/search_result_block.html" with search_results=search_results %}
 </div>
 {% endblock %}
