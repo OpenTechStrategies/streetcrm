@@ -31,9 +31,9 @@ from django.utils.encoding import force_text
 
 import csv
 
-from streetcrm import models
-from streetcrm.decorators import streetcrm_login_required
-from streetcrm.admin import STREETCRMAdminSite as streetcrm_admin
+from swoptact import models
+from swoptact.decorators import swoptact_login_required
+from swoptact.admin import SWOPTACTAdminSite as streetcrm_admin
 
 # Needed for reporting validation errors. Otherwise execution will
 # stumble when trying to serialize one of our models (e.g., Institution)

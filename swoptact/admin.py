@@ -581,7 +581,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             search_query = form.cleaned_data["query"]
 
         if advanced:
-            results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form, export=True)
+            results_package = SWOPTACTAdminSite.advanced_search_do(SWOPTACTAdminSite, request, form, export=True)
             try:
                 # If the results are participants:
                 search_results = results_package["search_results"][None]
@@ -589,7 +589,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 # If the results are actions:
                 search_results = results_package["event_results"]
         else:
-            search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
+            search_results = SWOPTACTAdminSite.basic_search_do(SWOPTACTAdminSite, request, search_query)
 
         # Special columns include: institution_id, organizer_id, and
         # major_action_id.  These should all display the name of the
