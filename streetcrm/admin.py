@@ -556,16 +556,65 @@ class STREETCRMAdminSite(admin.AdminSite):
             search_results = results_package["search_results"][None]
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
+
+        participant_header=[
+            {"column": "name", "heading": "Participant name"},
+            {"column": "primary_phone", "heading": "Phone number"},
+            {"column": "email", "heading": "Email address"},
+            {"column": "participant_street_address", "heading":
+            "Address"},
+            {"column": "institution_id", "heading": "Institution"}
+        ]
+        institution_header=[
+            {"column": "name", "heading": "Institution name"},
+            {"column": "inst_street_address", "heading": "Address"},
+            {"column": "is_member", "heading": "Is a member institution?"}
+        ]
+        event_header=[
+            {"column": "name", "heading": "Action name"},
+            {"column": "description", "heading": "Description"},
+            {"column": "date", "heading": "Date"},
+            {"column": "organizer_id", "heading": "Organizer"},
+            {"column": "location", "heading": "Location"},
+            {"column": "narrative", "heading": "Narrative"},
+            {"column": "major_action_id", "heading": "Major action"}
+        ]
         
+        last_header=[]
+        header=[]
         for result in search_results:
             # Convert the result object (participant, institution, etc.)
             # to a row.
             #
             # add a title row
-            writer.writerow(result.__dict__)
+            #
+            
+            # intended behavior: each model type is grouped together
+            # under one header row.  This header row matches the columns
+            # of data that are displayed.  Eventually, this will be
+            # user-editable.
+            
+            # The objects are already arranged by type.  So, check type
+            # and if it isn't the same insert the new header row.
+            last_header=header
+            if result._meta.model_name == 'participant':
+                header=participant_header
+            elif result._meta.model_name == 'institution':
+                header=institution_header
+            elif result._meta.model_name == 'event':
+                header=event_header
+
+
+            if header != last_header:
+                heading_list=[]
+                for col in header:
+                    heading_list.append(col['heading'])
+                writer.writerow([])
+                writer.writerow(heading_list)
+                
             new_row = []
-            for value in result.__dict__:
-                new_row.append(result.__dict__[value])
+            for col in header:
+                new_row.append(result.__dict__[col['column']])
             writer.writerow(new_row)
 
         return response
