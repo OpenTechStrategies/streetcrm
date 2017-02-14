@@ -591,6 +591,9 @@ class STREETCRMAdminSite(admin.AdminSite):
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
 
+        # Special columns include: institution_id, organizer_id, and
+        # major_action_id.  These should all display the name of the
+        # related object, not its id.
         participant_header=[
             {"column": "name", "heading": "Participant name"},
             {"column": "primary_phone", "heading": "Phone number"},
@@ -650,7 +653,18 @@ class STREETCRMAdminSite(admin.AdminSite):
                 
             new_row = []
             for col in header:
-                new_row.append(result.__dict__[col['column']])
+                # Display names of related objects, not IDs
+                if col['column'] == 'institution_id' and result.__dict__[col['column']] != None:
+                    this_inst = models.Institution.objects.get(id=result.__dict__[col['column']])
+                    new_row.append(this_inst.name)
+                elif col['column'] == 'organizer_id' and result.__dict__[col['column']] != None:
+                    this_organizer = models.Participant.objects.get(id=result.__dict__[col['column']])
+                    new_row.append(this_organizer.name)
+                elif col['column'] == 'major_action_id' and result.__dict__[col['column']] != None:
+                    this_action = models.Event.objects.get(id=result.__dict__[col['column']])
+                    new_row.append(this_action.name)
+                else:
+                    new_row.append(result.__dict__[col['column']])
             writer.writerow(new_row)
 
         return response
