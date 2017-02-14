@@ -246,7 +246,52 @@ class SWOPTACTAdminSite(admin.AdminSite):
             }
         )
 
-    def advanced_search_do(self, request, form):
+    def advanced_search_counts(self, results, form):
+        """
+        Returns counts of different result types for advanced search.
+        """
+        data = form.get_processed_data()
+        categorize = data["search_model"]
+
+        major_event_count = None
+        prep_event_count = None
+        institution_count = None
+        result_count = None
+        participant_count = None
+        if categorize == form.PARTICIPANT:
+            participant_count = len(results[None])
+            result_count = participant_count
+        
+        if categorize == form.EVENT:
+            prep_event_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event) and o.is_prep
+            ))
+            major_event_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event) and not o.is_prep
+            ))
+            result_count = len(self._nested_search(
+                results,
+                lambda o: isinstance(o, models.Event)
+            ))
+        elif categorize == form.INSTITUTION:
+            institution_count = len(self._nested_search(
+                results,
+                lambda i: isinstance(i, models.Institution)
+            ))
+
+        count_set = {
+            "major_event_count": major_event_count,
+            "prep_event_count": prep_event_count,
+            "institution_count": institution_count,
+            "participant_count": participant_count,
+            "result_count": result_count
+        }
+        return count_set
+
+    
+    def advanced_search_do(self, request, form, export):
         """
         This provides advanced searching options
         """
@@ -403,6 +448,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
             institutions += institution_query
 
         # Build the end results
+        event_list=[]
         if categorize == form.PARTICIPANT:
             # When searching just for participants don't show a section, just list
             # the participants on their own.
@@ -410,6 +456,9 @@ class SWOPTACTAdminSite(admin.AdminSite):
         elif categorize == form.EVENT:
             # Both participants and events, we actually want to group by event
             results = dict([(e, list()) for e, p in event_participants.items()])
+            # make a list of events only for export
+            for e, p in event_participants.items(): event_list.append(e)
+            
         elif categorize == form.INSTITUTION:
             results = dict([(i, set()) for i in institutions])
 
@@ -452,7 +501,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
                 results = results | set(participants)
             results = {None: results}
         if categorize == form.EVENT:
-            # Seperate the events up (yes i know we merged them above).
+            # Separate the events up (yes i know we merged them above).
             major = {}
             minor = {}
             no_event = []
@@ -473,43 +522,23 @@ class SWOPTACTAdminSite(admin.AdminSite):
         # Remove any without participants
         # results = self._remove_empty_values(results)
 
-        # Build the counts
-        major_event_count = None
-        prep_event_count = None
-        institution_count = None
-        result_count = None
-        participant_count = None
-        if categorize == form.PARTICIPANT:
-            participant_count = len(results[None])
-            result_count = participant_count
         
-        if categorize == form.EVENT:
-            prep_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and o.is_prep
-            ))
-            major_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and not o.is_prep
-            ))
-            result_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event)
-            ))
-        elif categorize == form.INSTITUTION:
-            institution_count = len(self._nested_search(
-                results,
-                lambda i: isinstance(i, models.Institution)
-            ))
-
-        results_package = {"form": form,
-                           "search_results": results,
-                           "major_event_count": major_event_count,
-                           "prep_event_count": prep_event_count,
-                           "institution_count": institution_count,
-                           "participant_count": participant_count,
-                           "result_count": result_count
-        }
+        # If this is not an export, get counts:
+        if not export:
+            count_set = self.advanced_search_counts(results, form)
+            results_package = {"form": form,
+                               "search_results": results,
+                               "major_event_count": count_set['major_event_count'],
+                               "prep_event_count": count_set['prep_event_count'],
+                               "institution_count": count_set['institution_count'],
+                               "participant_count": count_set['participant_count'],
+                               "result_count": count_set['result_count']
+            }
+        else:
+            results_package = {"form": form,
+                               "search_results": results,
+                               "event_results": event_list
+            }
             
         return results_package
 
@@ -520,7 +549,7 @@ class SWOPTACTAdminSite(admin.AdminSite):
         Return template for advanced search results.
         """
 
-        adv_results = self.advanced_search_do(request, form)
+        adv_results = self.advanced_search_do(request, form, export=False)
         
         # Return the response.
         return TemplateResponse(
@@ -552,8 +581,13 @@ class SWOPTACTAdminSite(admin.AdminSite):
             search_query = form.cleaned_data["query"]
 
         if advanced:
-            results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form)
-            search_results = results_package["search_results"][None]
+            results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form, export=True)
+            try:
+                # If the results are participants:
+                search_results = results_package["search_results"][None]
+            except KeyError:
+                # If the results are actions:
+                search_results = results_package["event_results"]
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
 
@@ -583,6 +617,8 @@ class SWOPTACTAdminSite(admin.AdminSite):
         last_header=[]
         header=[]
         for result in search_results:
+            if result is None:
+                continue
             # Convert the result object (participant, institution, etc.)
             # to a row.
             #
