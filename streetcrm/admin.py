@@ -576,7 +576,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         # Start CSV
         response = http.HttpResponse(content_type='text/csv')
         filetime = datetime.now()
-        filename="search-results-" + str(filetime.year) + str(filetime.month) + str(filetime.day) + "_" + str(filetime.hour) + ":" + str(filetime.minute) + ":" + str(filetime.second) + ".csv"
+        filename="search-results-" + str(filetime.year) + "-" + str(filetime.month) + "-" + str(filetime.day) + "-" + str(filetime.hour) + str(filetime.minute) + str(filetime.second) + ".csv"
         response['Content-Disposition'] = 'attachment; filename='+filename
         writer = csv.writer(response)
 
