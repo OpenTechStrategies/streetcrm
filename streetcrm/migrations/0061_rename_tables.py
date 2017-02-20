@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.utils.timezone
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('streetcrm', '0061_auto_20160420_1340'),
+    ]
+
+    operations = [
+        migrations.AlterModelTable('Event', 'streetcrm_event'),
+        migrations.AlterModelTable('Institution', 'streetcrm_institution'),
+        migrations.AlterModelTable('LeadershipGrowth', 'streetcrm_leadershipgrowth'),
+        migrations.AlterModelTable('LeaderStage', 'streetcrm_leaderstage'),
+        migrations.AlterModelTable('nonce_to_id', 'streetcrm_nonce_to_id'),
+        migrations.AlterModelTable('Participant', 'streetcrm_participant'),
+        migrations.AlterModelTable('Tag', 'streetcrm_tag'),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_event_id_seq RENAME TO streetcrm_event_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_event_id_seq RENAME TO swoptact_event_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_event_participants_id_seq RENAME TO streetcrm_event_participants_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_event_participants_id_seq RENAME TO swoptact_event_participants_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_event_tags_id_seq RENAME TO streetcrm_event_tags_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_event_tags_id_seq RENAME TO swoptact_event_tags_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_institution_contacts_id_seq RENAME TO streetcrm_institution_contacts_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_institution_contacts_id_seq RENAME TO swoptact_institution_contacts_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_institution_id_seq RENAME TO streetcrm_institution_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_institution_id_seq RENAME TO swoptact_institution_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_institution_tags_id_seq RENAME TO streetcrm_institution_tags_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_institution_tags_id_seq RENAME TO swoptact_institution_tags_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_leadershipgrowth_id_seq RENAME TO streetcrm_leadershipgrowth_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_leadershipgrowth_id_seq RENAME TO swoptact_leadershipgrowth_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_leaderstage_id_seq RENAME TO streetcrm_leaderstage_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_leaderstage_id_seq RENAME TO swoptact_leaderstage_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_nonce_to_id_id_seq RENAME TO streetcrm_nonce_to_id_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_nonce_to_id_id_seq RENAME TO swoptact_nonce_to_id_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_participant_id_seq RENAME TO streetcrm_participant_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_participant_id_seq RENAME TO swoptact_participant_id_seq"),
+        migrations.RunSQL(sql=
+                          "ALTER SEQUENCE swoptact_tag_id_seq RENAME TO streetcrm_tag_id_seq",
+                          reverse_sql="ALTER SEQUENCE streetcrm_tag_id_seq RENAME TO swoptact_tag_id_seq"),
+        
+        ]
+    
