@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% block extrahead %}
+{% load static i18n %}
+  <script type="text/javascript" src="{% static "js/tweak_buttons.js" %}"></script>
+  <script type="text/javascript">window.__admin_media_prefix__='/static/admin/'</script>
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block branding %}
+{% load staticfiles %}
+  <a id="logo-wrapper" href="{% url 'admin:index' %}" >
+    {% if logo %}
+        <img src="{% static "images/logo.png" %}" alt="organization's logo" height="50">
+    {% else %}
+        <img src="{% static "images/streetcrm-logo.png" %}" alt="streetcrm logo" height="50">
+    {% endif %}
+  </a>
+<a href="{% url 'admin:index' %}" class="navbar-brand">{% trans "Contacts" %}</a>
+<div id="top-right-wrapper">
+    <div id="welcome-message">
+        {% if user.is_active %}
+        {% block welcome-msg %}
+            {% trans 'Welcome,' %}
+            {% if user.get_short_name %}
+                {% if user.get_short_name|length > 15 %}
+                    {{ user.get_short_name|slice:":12" }}{% trans '...' %}
+                {% else %}
+                    {{ user.get_short_name }}
+                {% endif %}
+            {% elif user.get_username|length > 15 %}
+              {{ user.get_username|slice:":12" }}{% trans '...' %}
+            {% else %}
+              {{ user.get_username }}
+            {% endif %}
+        {% endblock %}
+        {% endif %}
+    </div>
+    {% if user.is_active %}
+    <div id="user-menu-link">
+      <!-- three-lines icon from https://www.iconfinder.com/icons/134216/hamburger_lines_menu_icon -->
+      <img src="{% static "images/three_lines_default.png" %}">
+      <div class="clearblock"></div>
+      <ul id="user-menu">
+        {% if user.has_usable_password and perms.auth.can_change_password %}
+        <li><a href="{% url 'admin:password_change' %}">{% trans 'Change&nbsp;password' %}</a></li>
+        {% endif %}
+        <li><a href="{% url 'admin:logout' %}">{% trans 'Log&nbsp;out' %}</a></li>
+      </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block nav-global %}{% endblock %}

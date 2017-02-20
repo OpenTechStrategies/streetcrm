@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# SWOPTACT is a list of contacts with a history of their event attendance
+# StreetCRM is a list of contacts with a history of their event attendance
 # Copyright (C) 2015  Local Initiatives Support Corporation (LISC)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "swoptact.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "streetcrm.settings")
 
     from django.core.management import execute_from_command_line
 
