@@ -172,7 +172,7 @@ GROUP_HIERARCHY = {
 
 # Specify the order in which models are present in the admin index page list.
 ADMIN_ORDERING = (
-    ("StreetCRM", ("Actions", "Institutions", "Participants", "Tags", "Activity Log",)),
+    ("Streetcrm", ("Actions", "Participants", "Institutions", "Tags", "Activity Log",)),
 )
 
 # This setting controls how many participants/contacts can be linked at any
