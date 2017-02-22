@@ -61,6 +61,13 @@ class STREETCRMAdminSite(admin.AdminSite):
     search_template = "admin/search.html"
     advanced_search_template = "admin/advanced_search.html"
 
+    # Thanks to
+    # http://stackoverflow.com/questions/11225163/how-to-change-dynamically-site-administration-string-in-djangos-admin
+    # for explaining how to change the title on the admin index page.
+    def index(self, *args, **kwargs):
+        return admin.site.__class__.index(self, extra_context={'title':''}, *args, **kwargs)
+    admin.site.index = index.__get__(admin.site, admin.site.__class__)
+    
     def _nested_search(self, haystack, test):
         """
         Find unique objects exist in the values of the structure
