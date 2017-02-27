@@ -1,7 +1,9 @@
+DEBUG: needed weakref here
 [
 {
+    "pk": 1,
+    "model": "auth.group",
     "fields": {
-        "name": "admin",
         "permissions": [
             [
                 "add_user",
@@ -24,16 +26,6 @@
                 "user"
             ],
             [
-                "add_leadershipgrowth",
-                "streetcrm",
-                "leadershipgrowth"
-            ],
-            [
-                "change_leadershipgrowth",
-                "streetcrm",
-                "leadershipgrowth"
-            ],
-            [
                 "delete_event",
                 "streetcrm",
                 "event"
@@ -42,6 +34,16 @@
                 "delete_institution",
                 "streetcrm",
                 "institution"
+            ],
+            [
+                "add_leadershipgrowth",
+                "streetcrm",
+                "leadershipgrowth"
+            ],
+            [
+                "change_leadershipgrowth",
+                "streetcrm",
+                "leadershipgrowth"
             ],
             [
                 "delete_participant",
@@ -63,25 +65,15 @@
                 "streetcrm",
                 "tag"
             ]
-        ]
-    },
-    "pk": 1,
-    "model": "auth.group"
+        ],
+        "name": "admin"
+    }
 },
 {
+    "pk": 2,
+    "model": "auth.group",
     "fields": {
-        "name": "staff",
         "permissions": [
-            [
-                "add_leadershipgrowth",
-                "streetcrm",
-                "leadershipgrowth"
-            ],
-            [
-                "change_leadershipgrowth",
-                "streetcrm",
-                "leadershipgrowth"
-            ],
             [
                 "add_event",
                 "streetcrm",
@@ -101,6 +93,16 @@
                 "change_institution",
                 "streetcrm",
                 "institution"
+            ],
+            [
+                "add_leadershipgrowth",
+                "streetcrm",
+                "leadershipgrowth"
+            ],
+            [
+                "change_leadershipgrowth",
+                "streetcrm",
+                "leadershipgrowth"
             ],
             [
                 "add_participant",
@@ -127,14 +129,14 @@
                 "streetcrm",
                 "tag"
             ]
-        ]
-    },
-    "pk": 2,
-    "model": "auth.group"
+        ],
+        "name": "staff"
+    }
 },
 {
+    "pk": 3,
+    "model": "auth.group",
     "fields": {
-        "name": "leader",
         "permissions": [
             [
                 "add_event",
@@ -166,914 +168,1150 @@
                 "streetcrm",
                 "participant"
             ]
-        ]
-    },
-    "pk": 3,
-    "model": "auth.group"
+        ],
+        "name": "leader"
+    }
 },
 {
+    "pk": 2,
+    "model": "auth.user",
+    "fields": {
+        "is_staff": true,
+        "is_superuser": true,
+        "last_name": "",
+        "is_active": true,
+        "username": "admin",
+        "first_name": "",
+        "password": "pbkdf2_sha256$20000$48wG2ey4TF8k$G/F0ifYLdPE7uhg+3hFzh58xnHLgRsIRgXE9BltUd34=",
+        "last_login": null,
+        "email": "",
+        "user_permissions": [],
+        "groups": [],
+        "date_joined": "2017-02-27T19:12:15.831Z"
+    }
+},
+{
+    "pk": 1,
+    "model": "streetcrm.tag",
     "fields": {
         "archived": null,
         "description": "testing the model",
         "date_created": "2015-06-11",
         "name": "ttm"
-    },
-    "pk": 1,
-    "model": "streetcrm.tag"
+    }
 },
 {
+    "pk": 2,
+    "model": "streetcrm.tag",
     "fields": {
         "archived": null,
         "description": "Illinois grant for children",
         "date_created": "2015-06-11",
         "name": "il4kids"
-    },
-    "pk": 2,
-    "model": "streetcrm.tag"
+    }
 },
 {
+    "pk": 4,
+    "model": "streetcrm.tag",
     "fields": {
         "archived": null,
         "description": "Swim lessons.",
         "date_created": "2015-06-11",
         "name": "swimming"
-    },
-    "pk": 4,
-    "model": "streetcrm.tag"
+    }
 },
 {
+    "pk": 5,
+    "model": "streetcrm.tag",
     "fields": {
         "archived": null,
         "description": "Day of the Dead",
         "date_created": "2015-06-11",
         "name": "dia_muertos"
-    },
-    "pk": 5,
-    "model": "streetcrm.tag"
+    }
 },
 {
+    "pk": 1,
+    "model": "streetcrm.institution",
     "fields": {
-        "inst_street_address": null,
-        "name": "St. James",
+        "archived": null,
+        "inst_city_address": null,
+        "is_member": false,
+        "inst_state_address": null,
         "contacts": [],
         "inst_zipcode_address": null,
+        "inst_street_address": null,
         "tags": [
             1,
             4
         ],
-        "inst_state_address": null,
-        "archived": null,
-        "inst_city_address": null,
-        "is_member": false
-    },
-    "pk": 1,
-    "model": "streetcrm.institution"
+        "name": "St. James"
+    }
 },
 {
+    "pk": 2,
+    "model": "streetcrm.institution",
     "fields": {
-        "inst_street_address": null,
-        "name": "YMCA",
+        "archived": null,
+        "inst_city_address": null,
+        "is_member": true,
+        "inst_state_address": null,
         "contacts": [],
         "inst_zipcode_address": null,
+        "inst_street_address": null,
         "tags": [
             2
         ],
-        "inst_state_address": null,
-        "archived": null,
-        "inst_city_address": null,
-        "is_member": true
-    },
-    "pk": 2,
-    "model": "streetcrm.institution"
+        "name": "YMCA"
+    }
 },
 {
+    "pk": 3,
+    "model": "streetcrm.institution",
     "fields": {
-        "inst_street_address": null,
-        "name": "Sister Mary School",
+        "archived": null,
+        "inst_city_address": null,
+        "is_member": false,
+        "inst_state_address": null,
         "contacts": [],
         "inst_zipcode_address": null,
+        "inst_street_address": null,
         "tags": [],
-        "inst_state_address": null,
-        "archived": null,
-        "inst_city_address": null,
-        "is_member": false
-    },
-    "pk": 3,
-    "model": "streetcrm.institution"
+        "name": "Sister Mary School"
+    }
 },
 {
+    "pk": 4,
+    "model": "streetcrm.institution",
     "fields": {
-        "secondary_phone": null,
+        "archived": "2017-02-01T21:50:43.592Z",
+        "inst_city_address": "",
+        "is_member": false,
+        "inst_state_address": null,
+        "contacts": [],
+        "inst_zipcode_address": "",
+        "inst_street_address": "",
+        "tags": [],
+        "name": "SPR"
+    }
+},
+{
+    "pk": 5,
+    "model": "streetcrm.institution",
+    "fields": {
+        "archived": null,
+        "inst_city_address": "",
+        "is_member": false,
+        "inst_state_address": null,
+        "contacts": [],
+        "inst_zipcode_address": "",
+        "inst_street_address": "",
+        "tags": [],
+        "name": "Rockefeller Chapel"
+    }
+},
+{
+    "pk": 9,
+    "model": "streetcrm.participant",
+    "fields": {
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "lbeethoven@test.com",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Lauren Russo",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 9,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 14,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": "+17737021233",
         "name": "Theodore Rose",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": 1,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": "+17737021233"
-    },
-    "pk": 14,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 24,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Daria Lagos",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 24,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 26,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Felicia Brown",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 26,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 27,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Simple Addition",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 27,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 28,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Chris Topher",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 28,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 30,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Eustace Solares",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 30,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 31,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Jill Martinez",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 31,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 32,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": "+13127726767",
         "name": "Dante Stallworth",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": "+13127726767"
-    },
-    "pk": 32,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 33,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Jesenya Guadalupe",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 33,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 35,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": "2017-02-27T19:09:58.913Z",
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": null,
         "name": "Harry Potter",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": 1,
-        "title": null,
-        "participant_city_address": null,
-        "archived": null,
-        "participant_state_address": null,
-        "primary_phone": null
-    },
-    "pk": 35,
-    "model": "streetcrm.participant"
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 36,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_phone": null,
+        "archived": null,
+        "participant_state_address": null,
+        "participant_city_address": null,
+        "title": null,
         "email": "",
+        "participant_zipcode_address": null,
+        "primary_phone": "+13127025434",
         "name": "Ted Neumann",
         "participant_street_address": null,
-        "participant_zipcode_address": null,
         "institution": null,
-        "title": null,
-        "participant_city_address": null,
+        "secondary_phone": null
+    }
+},
+{
+    "pk": 37,
+    "model": "streetcrm.participant",
+    "fields": {
         "archived": null,
         "participant_state_address": null,
-        "primary_phone": "+13127025434"
-    },
-    "pk": 36,
-    "model": "streetcrm.participant"
+        "participant_city_address": "",
+        "title": "",
+        "email": "",
+        "participant_zipcode_address": "",
+        "primary_phone": null,
+        "name": "Martin Gonzalez",
+        "participant_street_address": "",
+        "institution": null,
+        "secondary_phone": null
+    }
 },
 {
+    "pk": 38,
+    "model": "streetcrm.participant",
     "fields": {
-        "secondary_organizer": null,
-        "description": "A discussion group",
-        "time": null,
         "archived": null,
-        "location": "The Usual Place",
-        "date": "2015-05-11",
-        "name": "New Homeowners Support Group",
-        "narrative": null,
-        "tags": [],
-        "is_prep": false,
-        "participants": [
-            9,
-            32
-        ],
-        "major_action": null,
-        "organizer": null
-    },
+        "participant_state_address": null,
+        "participant_city_address": "",
+        "title": "",
+        "email": "",
+        "participant_zipcode_address": "",
+        "primary_phone": null,
+        "name": "Lucy Garcia",
+        "participant_street_address": "",
+        "institution": null,
+        "secondary_phone": null
+    }
+},
+{
     "pk": 2,
-    "model": "streetcrm.event"
-},
-{
+    "model": "streetcrm.event",
     "fields": {
-        "secondary_organizer": null,
-        "description": "",
-        "time": null,
         "archived": null,
-        "location": "Conference Center",
-        "date": null,
-        "name": "StreetCRM Initiation Forum",
-        "narrative": null,
-        "tags": [],
+        "time": null,
+        "secondary_organizer": null,
+        "date": "2015-05-11",
         "is_prep": false,
+        "narrative": null,
+        "major_action": null,
         "participants": [
+            32,
             9
         ],
-        "major_action": null,
-        "organizer": null
-    },
+        "tags": [],
+        "location": "The Usual Place",
+        "description": "A discussion group",
+        "organizer": null,
+        "name": "New Homeowners Support Group"
+    }
+},
+{
     "pk": 3,
-    "model": "streetcrm.event"
+    "model": "streetcrm.event",
+    "fields": {
+        "archived": null,
+        "time": null,
+        "secondary_organizer": null,
+        "date": null,
+        "is_prep": false,
+        "narrative": null,
+        "major_action": null,
+        "participants": [
+            9
+        ],
+        "tags": [],
+        "location": "Conference Center",
+        "description": "",
+        "organizer": null,
+        "name": "StreetCRM Initiation Forum"
+    }
 },
 {
-    "fields": {
-        "secondary_organizer": null,
-        "description": "",
-        "time": null,
-        "archived": null,
-        "location": "Global",
-        "date": null,
-        "name": "International Women's Day",
-        "narrative": null,
-        "tags": [],
-        "is_prep": false,
-        "participants": [],
-        "major_action": null,
-        "organizer": null
-    },
     "pk": 4,
-    "model": "streetcrm.event"
+    "model": "streetcrm.event",
+    "fields": {
+        "archived": null,
+        "time": null,
+        "secondary_organizer": null,
+        "date": null,
+        "is_prep": false,
+        "narrative": "",
+        "major_action": null,
+        "participants": [],
+        "tags": [],
+        "location": "Grant Park",
+        "description": "",
+        "organizer": null,
+        "name": "Women's March"
+    }
 },
 {
-    "fields": {
-        "secondary_organizer": null,
-        "description": "",
-        "time": null,
-        "archived": null,
-        "location": "The Auxiliary Office",
-        "date": null,
-        "name": "Organizer Retreat",
-        "narrative": null,
-        "tags": [],
-        "is_prep": false,
-        "participants": [
-            9
-        ],
-        "major_action": null,
-        "organizer": null
-    },
     "pk": 5,
-    "model": "streetcrm.event"
-},
-{
+    "model": "streetcrm.event",
     "fields": {
-        "secondary_organizer": null,
-        "description": "",
-        "time": null,
         "archived": null,
-        "location": "",
+        "time": null,
+        "secondary_organizer": null,
         "date": null,
-        "name": "MADD Meeting",
-        "narrative": null,
-        "tags": [],
         "is_prep": false,
+        "narrative": null,
+        "major_action": null,
         "participants": [
             9
         ],
-        "major_action": null,
-        "organizer": null
-    },
-    "pk": 6,
-    "model": "streetcrm.event"
+        "tags": [],
+        "location": "The Auxiliary Office",
+        "description": "",
+        "organizer": null,
+        "name": "Organizer Retreat"
+    }
 },
 {
+    "pk": 6,
+    "model": "streetcrm.event",
     "fields": {
-        "secondary_organizer": null,
-        "description": "",
-        "time": null,
         "archived": null,
-        "location": "",
+        "time": null,
+        "secondary_organizer": null,
         "date": null,
-        "name": "Kick-off Meeting",
-        "narrative": null,
-        "tags": [],
         "is_prep": false,
+        "narrative": null,
+        "major_action": null,
+        "participants": [
+            9
+        ],
+        "tags": [],
+        "location": "",
+        "description": "",
+        "organizer": null,
+        "name": "MADD Meeting"
+    }
+},
+{
+    "pk": 7,
+    "model": "streetcrm.event",
+    "fields": {
+        "archived": null,
+        "time": null,
+        "secondary_organizer": null,
+        "date": null,
+        "is_prep": false,
+        "narrative": null,
+        "major_action": null,
         "participants": [
             9,
             36
         ],
-        "major_action": null,
-        "organizer": null
-    },
-    "pk": 7,
-    "model": "streetcrm.event"
+        "tags": [],
+        "location": "",
+        "description": "",
+        "organizer": null,
+        "name": "Kick-off Meeting"
+    }
 },
 {
+    "pk": 8,
+    "model": "streetcrm.event",
     "fields": {
-        "secondary_organizer": null,
-        "description": "This is an example event with attendees.",
-        "time": null,
         "archived": null,
-        "location": "",
+        "time": null,
+        "secondary_organizer": null,
         "date": "2015-05-04",
-        "name": "Local Baseball Tournament",
-        "narrative": null,
-        "tags": [],
         "is_prep": true,
+        "narrative": null,
+        "major_action": 9,
         "participants": [
+            32,
             9,
             14,
             24,
             26,
             28,
             30,
-            31,
-            32
+            31
         ],
-        "major_action": 9,
-        "organizer": null
-    },
-    "pk": 8,
-    "model": "streetcrm.event"
-},
-{
-    "fields": {
-        "secondary_organizer": null,
-        "description": "This is a test of adding a new event with the sign in sheet.",
-        "time": null,
-        "archived": null,
-        "location": "Home Office",
-        "date": "2015-05-04",
-        "name": "Board Meeting",
-        "narrative": null,
         "tags": [],
-        "is_prep": true,
-        "participants": [
-            9,
-            30,
-            31,
-            32,
-            33
-        ],
-        "major_action": 3,
-        "organizer": null
-    },
-    "pk": 9,
-    "model": "streetcrm.event"
+        "location": "",
+        "description": "This is an example event with attendees.",
+        "organizer": null,
+        "name": "Local Baseball Tournament"
+    }
 },
 {
+    "pk": 9,
+    "model": "streetcrm.event",
+    "fields": {
+        "archived": null,
+        "time": null,
+        "secondary_organizer": null,
+        "date": "2015-05-04",
+        "is_prep": true,
+        "narrative": null,
+        "major_action": 3,
+        "participants": [
+            32,
+            9,
+            33,
+            30,
+            31
+        ],
+        "tags": [],
+        "location": "Home Office",
+        "description": "This is a test of adding a new event with the sign in sheet.",
+        "organizer": null,
+        "name": "Board Meeting"
+    }
+},
+{
+    "pk": 1,
+    "model": "streetcrm.leaderstage",
+    "fields": {
+        "name": "Primary"
+    }
+},
+{
+    "pk": 2,
+    "model": "streetcrm.leaderstage",
+    "fields": {
+        "name": "Secondary"
+    }
+},
+{
+    "pk": 3,
+    "model": "streetcrm.leaderstage",
+    "fields": {
+        "name": "Tertiary"
+    }
+},
+{
+    "pk": 4,
+    "model": "streetcrm.leaderstage",
+    "fields": {
+        "name": "Not applicable"
+    }
+},
+{
+    "pk": 1,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "ttm",
-        "description": "",
-        "object_id_int": 1,
-        "meta_encoded": "{}",
-        "object_id": "1",
         "content": "ttm",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "tag"
-        ]
-    },
-    "pk": 1,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 1,
+        "object_id": "1",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 2,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "il4kids",
-        "description": "",
-        "object_id_int": 2,
-        "meta_encoded": "{}",
-        "object_id": "2",
         "content": "il4kids",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "tag"
-        ]
-    },
-    "pk": 2,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 2,
+        "object_id": "2",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 3,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "test",
-        "description": "",
-        "object_id_int": 4,
-        "meta_encoded": "{}",
-        "object_id": "4",
         "content": "test",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "tag"
-        ]
-    },
-    "pk": 3,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 4,
+        "object_id": "4",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 4,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "New",
-        "description": "",
-        "object_id_int": 5,
-        "meta_encoded": "{}",
-        "object_id": "5",
         "content": "New",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "tag"
-        ]
-    },
-    "pk": 4,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 5,
+        "object_id": "5",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 5,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Lauren Russo",
-        "description": "",
-        "object_id_int": 9,
-        "meta_encoded": "{}",
-        "object_id": "9",
         "content": "Lauren Russo None None lbeethoven@test.com None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 5,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 9,
+        "object_id": "9",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 6,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Theodore Rose",
-        "description": "",
-        "object_id_int": 14,
-        "meta_encoded": "{}",
-        "object_id": "14",
         "content": "Theodore Rose +17737021233 None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 6,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 14,
+        "object_id": "14",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 7,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Daria Lagos",
-        "description": "",
-        "object_id_int": 24,
-        "meta_encoded": "{}",
-        "object_id": "24",
         "content": "Daria Lagos None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 7,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 24,
+        "object_id": "24",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 8,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Felicia Brown",
-        "description": "",
-        "object_id_int": 26,
-        "meta_encoded": "{}",
-        "object_id": "26",
         "content": "Felicia Brown None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 8,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 26,
+        "object_id": "26",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 9,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Simple Addition",
-        "description": "",
-        "object_id_int": 27,
-        "meta_encoded": "{}",
-        "object_id": "27",
         "content": "Simple Addition None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 9,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 27,
+        "object_id": "27",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 10,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Chris Topher",
-        "description": "",
-        "object_id_int": 28,
-        "meta_encoded": "{}",
-        "object_id": "28",
         "content": "Chris Topher None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 10,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 28,
+        "object_id": "28",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 11,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Eustace Solares",
-        "description": "",
-        "object_id_int": 30,
-        "meta_encoded": "{}",
-        "object_id": "30",
         "content": "Eustace Solares None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 11,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 30,
+        "object_id": "30",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 12,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Jill Martinez",
-        "description": "",
-        "object_id_int": 31,
-        "meta_encoded": "{}",
-        "object_id": "31",
         "content": "Jill Martinez None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 12,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 31,
+        "object_id": "31",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 13,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Dante Stallworth",
-        "description": "",
-        "object_id_int": 32,
-        "meta_encoded": "{}",
-        "object_id": "32",
         "content": "Dante Stallworth +13127726767 None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 13,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 32,
+        "object_id": "32",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 14,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Jesenya Guadalupe",
-        "description": "",
-        "object_id_int": 33,
-        "meta_encoded": "{}",
-        "object_id": "33",
         "content": "Jesenya Guadalupe None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 14,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 33,
+        "object_id": "33",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 15,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Harry Potter",
-        "description": "",
-        "object_id_int": 35,
-        "meta_encoded": "{}",
-        "object_id": "35",
         "content": "Harry Potter None None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 15,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 35,
+        "object_id": "35",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 16,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Ted Neumann",
-        "description": "",
-        "object_id_int": 36,
-        "meta_encoded": "{}",
-        "object_id": "36",
         "content": "Ted Neumann +13127025434 None  None None None None",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "participant"
-        ]
-    },
-    "pk": 16,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 36,
+        "object_id": "36",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 17,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "New Homeowners Support Group",
-        "description": "",
-        "object_id_int": 2,
-        "meta_encoded": "{}",
-        "object_id": "2",
         "content": "New Homeowners Support Group",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 17,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 2,
+        "object_id": "2",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 18,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "StreetCRM Initiation Forum",
+        "content": "StreetCRM Initiation Forum Conference Center",
+        "content_type": [
+            "streetcrm",
+            "event"
+        ],
         "description": "",
         "object_id_int": 3,
-        "meta_encoded": "{}",
         "object_id": "3",
-        "content": "StreetCRM Initiation Forum Conference Center",
         "engine_slug": "admin",
-        "content_type": [
-            "streetcrm",
-            "event"
-        ]
-    },
-    "pk": 18,
-    "model": "watson.searchentry"
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 19,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
-        "title": "International Women's Day",
-        "description": "",
-        "object_id_int": 4,
-        "meta_encoded": "{}",
-        "object_id": "4",
-        "content": "International Women's Day Global",
-        "engine_slug": "admin",
+        "title": "Women's March",
+        "content": "Women's March Grant Park",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 19,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 4,
+        "object_id": "4",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 20,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Organizer Retreat",
-        "description": "",
-        "object_id_int": 5,
-        "meta_encoded": "{}",
-        "object_id": "5",
         "content": "Organizer Retreat at the Auxiliary Office",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 20,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 5,
+        "object_id": "5",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 21,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "MADD Meeting",
-        "description": "",
-        "object_id_int": 6,
-        "meta_encoded": "{}",
-        "object_id": "6",
         "content": "MADD Meeting ",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 21,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 6,
+        "object_id": "6",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 22,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Kick-off Meeting",
-        "description": "",
-        "object_id_int": 7,
-        "meta_encoded": "{}",
-        "object_id": "7",
         "content": "Kick-off Meeting ",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 22,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 7,
+        "object_id": "7",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 23,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Local Baseball Tournament",
-        "description": "",
-        "object_id_int": 8,
-        "meta_encoded": "{}",
-        "object_id": "8",
         "content": "Local Baseball Tournament ",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 23,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 8,
+        "object_id": "8",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 },
 {
+    "pk": 24,
+    "model": "watson.searchentry",
     "fields": {
         "url": "",
         "title": "Board Meeting",
-        "description": "",
-        "object_id_int": 9,
-        "meta_encoded": "{}",
-        "object_id": "9",
         "content": "Board Meeting Home Office",
-        "engine_slug": "admin",
         "content_type": [
             "streetcrm",
             "event"
-        ]
-    },
-    "pk": 24,
-    "model": "watson.searchentry"
+        ],
+        "description": "",
+        "object_id_int": 9,
+        "object_id": "9",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 25,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "Lucy Garcia",
+        "content": "Lucy Garcia None     None ",
+        "content_type": [
+            "streetcrm",
+            "participant"
+        ],
+        "description": "",
+        "object_id_int": 38,
+        "object_id": "38",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 26,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "Rockefeller Chapel",
+        "content": "Rockefeller Chapel",
+        "content_type": [
+            "streetcrm",
+            "institution"
+        ],
+        "description": "",
+        "object_id_int": 5,
+        "object_id": "5",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 27,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "SPR",
+        "content": "SPR",
+        "content_type": [
+            "streetcrm",
+            "institution"
+        ],
+        "description": "",
+        "object_id_int": 4,
+        "object_id": "4",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 28,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "Fonsegrada Primitivo",
+        "content": "Fonsegrada Primitivo None     None ",
+        "content_type": [
+            "streetcrm",
+            "participant"
+        ],
+        "description": "",
+        "object_id_int": 39,
+        "object_id": "39",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 29,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "St. James",
+        "content": "St. James",
+        "content_type": [
+            "streetcrm",
+            "institution"
+        ],
+        "description": "",
+        "object_id_int": 1,
+        "object_id": "1",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 30,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "YMCA",
+        "content": "YMCA",
+        "content_type": [
+            "streetcrm",
+            "institution"
+        ],
+        "description": "",
+        "object_id_int": 2,
+        "object_id": "2",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
+},
+{
+    "pk": 31,
+    "model": "watson.searchentry",
+    "fields": {
+        "url": "",
+        "title": "Sister Mary School",
+        "content": "Sister Mary School",
+        "content_type": [
+            "streetcrm",
+            "institution"
+        ],
+        "description": "",
+        "object_id_int": 3,
+        "object_id": "3",
+        "engine_slug": "admin",
+        "meta_encoded": "{}"
+    }
 }
 ]
+DEBUG: needed weakref here

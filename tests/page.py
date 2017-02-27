@@ -8,6 +8,8 @@
 # results from the page.  A different function will compare those
 # results to the ones expected in the sample data.
 #
+# See also http://selenium-python.readthedocs.io/page-objects.html
+#
 # To run this script, you should have Selenium and a Chrome webdriver
 # installed.
 
@@ -17,47 +19,72 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 import time
 
-class StreetcrmLogin():
+from element import BasePageElement
+from locators import LoginPageLocators, MainPageLocators
 
-    def start_app(self, url):
-        driver = webdriver.Chrome()
-        driver.get(url)
-        # TODO: return false if this fails
-        return
+class SearchTextElement(BasePageElement):
+    """This class gets the search text from the specified locator"""
+
+    #The locator for search box where search string is entered
+    locator = 'q'
+
+class UsernameElement(BasePageElement):
+    """Why do I need a locator here when I have locators.py?"""
+
+    #The locator for the username input
+    locator = 'username'
     
+class PasswordElement(BasePageElement):
+    """Why do I need a locator here when I have locators.py?"""
 
-    def login_routine(self, url, username, password):
-        """
-        Log into an instance of StreetCRM using the credentials supplied in main().
-        """
-        usernameElement = driver.find_element_by_id("id_username")
-        passwordElement = driver.find_element_by_id("id_password")
-        
-        usernameElement.send_keys(username)
-        passwordElement.send_keys(password)
-        
-        # will this submit the form?
-        usernameElement.submit()
+    #The locator for the username input
+    locator = 'password'
 
-        # should return true if login was successful and false otherwise
-        return
+class BasePage(object):
+    """Base class to initialize the base page that will be called from all pages"""
 
-class BasicSearch():
-    def do_basic_search(self, driver, keyword):
-        """
-        Complete a basic search for the KEYWORD from the search bar at the
-        top right.
-        """
-        searchbarElement = driver.find_element_by_name("q")
-        searchbarElement.send_keys(keyword)
-        searchbarElement.submit()
-        return
+    def __init__(self, driver):
+        self.driver = driver
+
+
+class LoginPage(BasePage):
+    """
+    This is the only page visible when not logged in.  It is visible at /login.
+    """
+
+    username_element = UsernameElement()
+    password_element = PasswordElement()
     
-    def read_search_results(self, driver):
+    def click_login(self):
+        """ 
+        Logs in the user given correct credentials.
         """
-        Return the list of search results for KEYWORD.
+        submit_element = self.driver.find_element(*LoginPageLocators.LOGIN_BUTTON)
+        submit_element.click()
+        return MainPage(self.driver)
+
+    def login_success(self):
         """
-        return
+        Checks whether or not login was successful.  Returns true if it was and false if it was not.
+        """
+        return "<li>Home</li>" in self.driver.page_source
 
-    
+class MainPage(BasePage):
+    """Home page action methods come here. I.e. Python.org"""
 
+    #Declares a variable that will contain the retrieved text
+    search_text_element = SearchTextElement()
+
+    def click_go_button(self):
+        """Triggers the search"""
+        element = self.driver.find_element(*MainPageLocators.SEARCH_BUTTON)
+        element.click()
+
+
+class SearchResultsPage(BasePage):
+    """Search results page action methods come here"""
+
+    def is_results_found(self):
+        # Probably should search for this text in the specific page
+        # element, but as for now it works fine
+        return "Sorry, there were no results for this search." not in self.driver.page_source
