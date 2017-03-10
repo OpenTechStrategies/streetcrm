@@ -1,28 +1,27 @@
 {% load i18n %}
 <table class="table table-bordered">
 
-  {% for event in events %}
+{% for event in events %}
   {% comment %}
       We show the 5 most recent events by default.  Doubtless I want to
       set this as a limit somewhere instead of hardcoding "5".
   {% endcomment %}
   {% if forloop.counter <= 5 %}
-    <tr>
+        <tr>
+  {% elif forloop.counter == 6 %}
+        <tr>
+        <th id="toggle_more_actions">
+        <span id="right_arrow">&#9654;</span>
+        <span id="down_arrow">&#9660;</span>
+        <i>See more events</i></th>
+        <th></th>
+        </tr>
+        <tr class="more_actions">
   {% else %}
-    <tr class="more_actions">
+        <tr class="more_actions">
   {% endif %}
-    <th><a href="{{ event.admin_change_url }}">{{ event.name }} </th>
-    <th>{{ event.date }}</th>
-    </tr>
-    {% if forloop.counter == 5 %}
-  <tr>
-    <th id="toggle_more_actions">
-      <span id="right_arrow">&#9654;</span>
-      <span id="down_arrow">&#9660;</span>
-      <i>See more events</i></th>
-    <th></th>
-  </tr>
-  
-  {% endif %}    
-  {% endfor %}
+        <th><a href="{{ event.admin_change_url }}">{{ event.name }} </th>
+        <th>{{ event.date }}</th>
+        </tr>
+{% endfor %}
 </table>
