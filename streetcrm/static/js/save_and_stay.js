@@ -20,15 +20,21 @@ function addInstitutionLink() {
 
 function toggleExtraActions() {
     $("tr.more_actions").hide();
+    $("#down_arrow").hide();
     $("#toggle_more_actions").on("click", function () {
+        $("#down_arrow").toggle();
+        $("#right_arrow").toggle();
         $("tr.more_actions").toggle();
     });
 }
 
 function toggleLeaderStages() {
     $("#stages-table").hide();
+    $("#leader_down_arrow").hide();
     $("#stages-header").on("click", function () {
         $("#stages-table").toggle();
+        $("#leader_down_arrow").toggle();
+        $("#leader_right_arrow").toggle();
     });
 }
 
