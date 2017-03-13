@@ -53,7 +53,7 @@
         {% if user.is_active %}
         <form id="search-form" action="{% url 'admin:search' %}">
           <div class="input-group">
-            <input name="q" value="{{request.GET.q}}" type="text" class="form-control" placeholder="Search...">
+            <input id="search-input" name="q" value="{{request.GET.q}}" type="text" class="form-control" placeholder="Search...">
             <span class="input-group-btn">
               <button id="search-button" class="btn btn-default" type="button">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>

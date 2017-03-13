@@ -791,10 +791,19 @@ function setupInlinedModelCallbacks() {
     /* Since using "enter" to submit is one reason if not the main reason
      * for having <form> tags at all, one wonders if these might be done
      * away with entirely, with all network communication being done via
-     * ajax instead */
+     * ajax instead.
+     *
+     * I think <form> tags are also used by many accessibility aids, so
+     * we should keep them. -CD
+     */
     $("form").keypress(function(e){
         if (e.which == 13) {
-            return false;
+            if ($("#search-input").is(':focus')) {
+                $("#search-form").submit();
+            }
+            else {
+                return false;
+            }
         }
     });
 
