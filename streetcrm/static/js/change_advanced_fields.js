@@ -27,7 +27,8 @@ function clearFilters(){
     // table seemed to break that and the only fields that were affected
     // by the reset were the start and end dates, anyway.
     $("#id_start_date").val("");
-    $("#id_end_date").val("");    
+    $("#id_end_date").val("");
+    $("#id_leader_stage").val("");
 }
 
 $(document).ready( function () {
