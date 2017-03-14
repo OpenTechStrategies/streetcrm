@@ -111,6 +111,11 @@ class AutoCompleteModelForm(forms.ModelForm):
 # :\
 class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
     no_autocreate = set(["tags"])
+    
+    class Meta:
+        widgets = {
+            'name': django.forms.TextInput(attrs={'autocomplete': 'off'}),
+        }
 
 class ParticipantForm(django.forms.ModelForm):
     institution = formfields.BasicAutoCompleteField(
@@ -120,6 +125,10 @@ class ParticipantForm(django.forms.ModelForm):
         model = models.Participant
         fields = "__all__"
         exclude = ("archived",)
+        # Thanks to http://stackoverflow.com/a/36562872/6005068 for this solution!
+        widgets = {
+            'name': django.forms.TextInput(attrs={'autocomplete': 'off'}),
+        }
 
 
 def autocomplete_modelform_factory(model, *args, **kwargs):
