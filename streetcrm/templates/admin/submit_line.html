@@ -1,16 +1,16 @@
-{% load i18n admin_urls %}
+{% load i18n admin_urls st_admin_list %}
 <div class="pull-left">
   {% if show_delete_link %}
-
-  {% if original.archived %}
-  {% url opts|admin_urlname:'unarchive' original.pk|admin_urlquote as unarchive_url %}
-  <a class="btn btn-danger deletelink" href="{% add_preserved_filters unarchive_url %}">{% trans "Unarchive" %} {{ opts.model_name }}</a>
-  {% else %}
-  {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
-  <a class="btn btn-danger deletelink" href="{% add_preserved_filters delete_url %}">{% trans "Archive" %} {{ opts.model_name }}</a>
-
-  {% endif %}
-
+      {% if original.archived %}
+          {% url opts|admin_urlname:'unarchive' original.pk|admin_urlquote as unarchive_url %}
+          <a class="btn btn-danger deletelink" href="{% add_preserved_filters unarchive_url %}">{% trans "Unarchive" %} {{ opts.model_name }}</a>
+      {% else %}
+          {% url opts|admin_urlname:'archive' original.pk|admin_urlquote as archive_url %}
+          <a class="btn btn-danger deletelink" href="{% add_preserved_filters archive_url %}">{% trans "Archive" %} {{ opts.model_name }}</a>
+      {% endif %}
+          
+      {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+      <a class="btn btn-danger deletelink" href="{% add_preserved_filters delete_url %}">{% trans "Delete" %} {{ opts.model_name }}</a>
   {% endif %}
 </div>
 <div class="pull-right">

@@ -127,6 +127,10 @@ class AdminArchiveMixin:
             0,
             url(r"^(.+)/unarchive/$", self.unarchive_view, name="%s_%s_unarchive" % self.url_info)
         )
+        urls.insert(
+            0,
+            url(r"^(.+)/archive/$", self.archive_view, name="%s_%s_archive" % self.url_info),
+        )
         return urls
 
     def unarchive_view(self, request, object_id, *args, **kwargs):
@@ -142,13 +146,23 @@ class AdminArchiveMixin:
         return self.model.objects.unarchive()
 
     @transaction.atomic
-    def delete_view(self, request, *args, **kwargs):
+    def archive_view(self, request, object_id, *args, **kwargs):
         # If this is submitted with as a "POST" request then django
         # assumes the confirmation has occured.
-        request.POST = {"post": True}
-        return super(AdminArchiveMixin, self).delete_view(request, *args, **kwargs)
 
-    def response_delete(self, request, obj_display, obj_id):
+        # This won't work since each model will have a different
+        # permission
+        if not request.user.has_perm("streetcrm.archive_participant"):
+            print("DEBUG: permissions problem")
+            raise exceptions.PermissionDenied
+        
+        request.POST = {"post": True}
+        obj = self.model.objects.get(pk=object_id)
+        obj.archive()
+        return self.response_archive(request, obj.name, obj.id)
+    
+
+    def response_archive(self, request, obj_display, obj_id):
         opts = self.model._meta
 
         self.message_user(

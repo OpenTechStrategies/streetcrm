@@ -175,7 +175,7 @@ class ArchiveAbstract(StreetcrmModel):
     class Meta:
         abstract = True
 
-    def delete(self):
+    def archive(self):
         """ Archives the model """
         self.archived = timezone.now()
         self.save()
