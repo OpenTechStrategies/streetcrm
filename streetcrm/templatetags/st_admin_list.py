@@ -16,6 +16,9 @@
 
 from django.template import Library
 from django.contrib.admin.templatetags import admin_list
+from django.contrib.admin.templatetags.admin_modify import *
+from django.contrib.admin.templatetags.admin_modify import submit_row as original_submit_row
+
 
 register = Library()
 
@@ -34,3 +37,12 @@ def smart_result_list(cl):
     if len(result_list_context["result_headers"]):
         del result_list_context["result_headers"]
     return result_list_context
+
+# Thanks to inspiration from http://stackoverflow.com/a/13106661/6005068
+@register.inclusion_tag('admin/submit_line.html', takes_context=True)
+def submit_row(context):
+    ctx = original_submit_row(context)
+    ctx.update({
+        'can_archive': context.get('can_archive'),
+        })                                                                  
+    return ctx 

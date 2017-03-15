@@ -94,6 +94,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "streetcrm.context_processors.search_header",
     "streetcrm.context_processors.for_logo",
+    "streetcrm.context_processors.check_archive_permission",
 )
 
 

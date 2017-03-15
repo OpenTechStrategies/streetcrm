@@ -21,3 +21,11 @@ def for_logo(request):
     has_logo = os.path.exists("streetcrm/static/images/logo.png")
         
     return {"logo": has_logo}
+
+def check_archive_permission(request):
+    # TODO: Check type of model being shown and then check whether the
+    # user has permission to archive it.  For now, a user with
+    # permission to archive participants also has permission to archive
+    # institutions, so this is fine.
+    archive_permission =  request.user.has_perm("streetcrm.archive_participant")
+    return {"can_archive": archive_permission}
