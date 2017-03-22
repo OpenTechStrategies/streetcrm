@@ -200,6 +200,8 @@ class SearchForm(django.forms.Form):
     search_model = django.forms.ChoiceField(choices=MODELS, required=False)
     exclude_major_events = django.forms.BooleanField(required=False)
     exclude_minor_events = django.forms.BooleanField(required=False)
+
+    leader_stage = django.forms.ModelChoiceField(queryset=models.LeaderStage.objects, required=False)
     start_date = django.forms.DateField(
         required=False,
         widget=AdminDateWidget()

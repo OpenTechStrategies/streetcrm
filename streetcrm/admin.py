@@ -455,6 +455,12 @@ class STREETCRMAdminSite(admin.AdminSite):
             # build the institution list with all the institutions
             institutions += institution_query
 
+        if isinstance(data.get("leader_stage"), models.LeaderStage):
+            stage = data.get("leader_stage")
+            leader_set = set()
+            for participant in models.Participant.objects.filter(leadership=stage.id):
+                leader_set.add(participant)
+
         # Build the end results
         event_list=[]
         if categorize == form.PARTICIPANT:
@@ -507,6 +513,9 @@ class STREETCRMAdminSite(admin.AdminSite):
             results = set()
             for event, participants in event_participants.items():
                 results = results | set(participants)
+            # This should only happen if the person searched on leader_stage
+            if isinstance(data.get("leader_stage"), models.LeaderStage):
+                results = results.intersection(leader_set)
             results = {None: results}
         if categorize == form.EVENT:
             # Separate the events up (yes i know we merged them above).
