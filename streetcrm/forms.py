@@ -111,7 +111,12 @@ class AutoCompleteModelForm(forms.ModelForm):
 # :\
 class TagSkippingAutoCompleteModelForm(AutoCompleteModelForm):
     no_autocreate = set(["tags"])
-    
+
+    # Note: The autocomplete attribute below is an instruction to the
+    # browser about *not* offering suggestions for the name field on
+    # institutions and actions.  This is unrelated to the
+    # StreetCRM-specific autocomplete that is referenced in the name of
+    # this class.
     class Meta:
         widgets = {
             'name': django.forms.TextInput(attrs={'autocomplete': 'off'}),

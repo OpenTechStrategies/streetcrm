@@ -41,6 +41,11 @@ def smart_result_list(cl):
 # Thanks to inspiration from http://stackoverflow.com/a/13106661/6005068
 @register.inclusion_tag('admin/submit_line.html', takes_context=True)
 def submit_row(context):
+    """
+    Takes the default submit_row context.  Override this context in
+    order to add the new property "can_archive." Return the updated
+    context.
+    """
     ctx = original_submit_row(context)
     ctx.update({
         'can_archive': context.get('can_archive'),

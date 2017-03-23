@@ -23,9 +23,12 @@ def for_logo(request):
     return {"logo": has_logo}
 
 def check_archive_permission(request):
-    # TODO: Check type of model being shown and then check whether the
-    # user has permission to archive it.  For now, a user with
-    # permission to archive participants also has permission to archive
-    # institutions, so this is fine.
+    """
+    Takes a request object and extracts the user from it.  Checks the
+    database to see whether the user has permission to archive
+    participants (this depends on the user's group).  Sets can_archive
+    to this boolean value and returns.
+    """
+    # TODO: See issue #299
     archive_permission =  request.user.has_perm("streetcrm.archive_participant")
     return {"can_archive": archive_permission}
