@@ -217,6 +217,8 @@ class Institution(ArchiveAbstract, SerializeableMixin):
                                verbose_name="State")
     inst_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
                                verbose_name="Zip")
+    phone_number = modelfields.PhoneNumberField(null=True, blank=True,
+                                                verbose_name="Institution Phone")
     tags = models.ManyToManyField(
         Tag, blank=True,
         verbose_name="Tags",
