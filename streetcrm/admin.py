@@ -223,6 +223,10 @@ class STREETCRMAdminSite(admin.AdminSite):
 
         results = self.search_engine.search(search_query)
 
+        # Alphabetize basic search results by name (no matter what their
+        # object type: Participant, Event, or Institution)
+        results = results.order_by('title')
+
         # Process the results into their objects
         results = [result.object for result in results]
         
