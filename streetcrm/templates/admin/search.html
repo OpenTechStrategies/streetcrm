@@ -139,14 +139,14 @@
       {% endif %}
     </ul>
     {% endblock %}
-    {% include "admin/includes/search_result_block.html" with search_results=search_results %}
     {% if search_results.results or result_count %}
-    <div class="input-group">
+    <div class="input-group pull-right">
       <label for="submit-export" class="btn btn-default">Export Results <i class='glyphicon glyphicon-export'></i></label>
       <input id="submit-export" class="hidden" type="submit" name="export_btn" value="Export Results">
     </div>
     {% endif %}
 
+    {% include "admin/includes/search_result_block.html" with search_results=search_results %}
   </form>
 </div>
 {% endblock %}
