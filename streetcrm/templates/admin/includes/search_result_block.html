@@ -12,10 +12,9 @@
   {{helptext}}
 
   {% else %}
-  {% for section, objects in search_results.items %}
+  {% for object in search_results %}
 
   <ul>
-    {% for object in objects %}
 
     {% comment %}
     Exclude the participants who haven't attended any actions, since
@@ -26,7 +25,6 @@
     <li><a href="{{ object.admin_change_url }}">{{ object }}</a>
     {% if section and section != "results" %} ({{ section }}) {% endif %} </li>
     {% endif %}
-    {% endfor %}
   </ul>
   {% endfor %}
 </ul>

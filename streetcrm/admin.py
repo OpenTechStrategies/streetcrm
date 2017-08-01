@@ -271,7 +271,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         result_count = None
         participant_count = None
         if categorize == form.PARTICIPANT:
-            participant_count = len(results[None])
+            participant_count = len(results)
             result_count = participant_count
         
         if categorize == form.EVENT:
@@ -543,6 +543,13 @@ class STREETCRMAdminSite(admin.AdminSite):
         # Remove any without participants
         # results = self._remove_empty_values(results)
 
+        if (len(results) == 1):
+            results = results[None]
+        else:
+            print("DEBUG: length of results was greater than 1")
+            print("DEBUG: we're looking at action results")
+            
+        results = sorted(results, key=lambda object: object.name)
         
         # If this is not an export, get counts:
         if not export:
@@ -607,7 +614,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form, export=True)
             try:
                 # If the results are participants:
-                search_results = results_package["search_results"][None]
+                search_results = results_package["search_results"]
             except KeyError:
                 # If the results are actions:
                 search_results = results_package["event_results"]
