@@ -259,7 +259,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         Returns counts of different result types for advanced search.
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         major_event_count = None
         prep_event_count = None
@@ -304,7 +304,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         This provides advanced searching options
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         exclude_major = data["exclude_major_events"]
         exclude_minor = data["exclude_minor_events"]

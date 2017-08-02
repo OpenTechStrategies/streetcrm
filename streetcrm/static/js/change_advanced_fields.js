@@ -8,7 +8,7 @@ performed.
 */
 
 function displayCorrectFields(){
-    if ($("#id_search_model").val() == "event"){
+    if ($("#id_search_for").val() == "event"){
         $(".participant_search_fields").hide();
         $(".action_search_fields").show();
     }
@@ -33,7 +33,7 @@ function clearFilters(){
 
 $(document).ready( function () {
     displayCorrectFields();
-    $('#id_search_model').on("change", function() {
+    $('#id_search_for').on("change", function() {
         displayCorrectFields();
     });
     $('#clear_filters_button').on("click", function(event) {
