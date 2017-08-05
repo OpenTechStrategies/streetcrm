@@ -252,7 +252,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             request,
             self.search_template,
             {
-                "search_results": {"results": results},
+                "search_results": results,
                 "form": form,
                 "query": search_query,
             }
@@ -275,18 +275,15 @@ class STREETCRMAdminSite(admin.AdminSite):
             result_count = participant_count
         
         if categorize == form.EVENT:
-            prep_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and o.is_prep
-            ))
-            major_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and not o.is_prep
-            ))
-            result_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event)
-            ))
+            prep_event_count = len([
+                o for o in results if isinstance(o, models.Event) and o.is_prep
+            ])
+            major_event_count = len([
+                o for o in results if isinstance(o, models.Event) and not o.is_prep
+            ])
+            result_count = len([
+                o for o in results if isinstance(o, models.Event)
+            ])
         elif categorize == form.INSTITUTION:
             institution_count = len(self._nested_search(
                 results,
@@ -540,16 +537,14 @@ class STREETCRMAdminSite(admin.AdminSite):
                 (_("No Event"), no_event),
             ))
 
-        # Remove any without participants
-        # results = self._remove_empty_values(results)
-
         if (len(results) == 1):
             results = results[None]
+            results = sorted(results, key=lambda object: object.name)
         else:
-            print("DEBUG: length of results was greater than 1")
-            print("DEBUG: we're looking at action results")
-            
-        results = sorted(results, key=lambda object: object.name)
+            results = sorted(
+                list(results[_("Major")].keys()) + list(results[_("Minor")].keys()), 
+                key=lambda object: object.name
+            )
         
         # If this is not an export, get counts:
         if not export:

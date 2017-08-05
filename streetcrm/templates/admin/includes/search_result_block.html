@@ -1,11 +1,12 @@
 {% load i18n %}
+{% load search_result_tags %}
 
 {% with helptext="Sorry, there were no results for this search.  If you're not sure how to spell someone's full name, try searching on just part of it.  For example, to find Martin Gonzalez, you could search by M* G*." %}
 
 <h1>{% trans "Results" %}</h1>
 <ul>
 
-  {% if not advanced and not search_results.results %}
+  {% if not advanced and not search_results %}
   {{helptext}}
   
   {% elif advanced and search_results and not result_count %}
@@ -21,10 +22,9 @@
     we're just showing actions without attendees, now.
     {% endcomment %}
     
-    {% if section != "No Event" %}
-    <li><a href="{{ object.admin_change_url }}">{{ object }}</a>
-    {% if section and section != "results" %} ({{ section }}) {% endif %} </li>
-    {% endif %}
+    <li>
+      <a href="{{ object.admin_change_url }}">{{ object }}</a> {% section_display object %}
+    </li>
   </ul>
   {% endfor %}
 </ul>
@@ -32,4 +32,3 @@
 {% endif %}
 
 {% endwith %}
-
