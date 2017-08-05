@@ -1023,6 +1023,9 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
             {"descriptive_name": "Attendee's Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
+            {"descriptive_name": "Attendee's Email",
+             "form_name": "email",
+             "input_type": "text"}
          ],
     }
 
