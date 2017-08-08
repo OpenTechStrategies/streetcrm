@@ -519,32 +519,17 @@ class STREETCRMAdminSite(admin.AdminSite):
                 results = results.intersection(leader_set)
             results = {None: results}
         if categorize == form.EVENT:
-            # Separate the events up (yes i know we merged them above).
-            major = {}
-            minor = {}
-            no_event = []
-            for event, participants in event_participants.items():
-                if event is None:
-                    no_event += participants
-                elif event.is_prep:
-                    minor[event] = participants
-                else:
-                    major[event] = participants
+            if data.get("participant"):
+                results = []
+                for event, participants in event_participants.items():
+                    if participants.count():
+                        results.append(event)
+            else:
+                results = [e for e, p in event_participants.items() if e is not None]
 
-            results = collections.OrderedDict((
-                (_("Major"), major),
-                (_("Minor"), minor),
-                (_("No Event"), no_event),
-            ))
-
-        if (len(results) == 1):
+        if categorize != form.EVENT:
             results = results[None]
-            results = sorted(results, key=lambda object: object.name)
-        else:
-            results = sorted(
-                list(results[_("Major")].keys()) + list(results[_("Minor")].keys()), 
-                key=lambda object: object.name
-            )
+        results = sorted(results, key=lambda object: object.name)
         
         # If this is not an export, get counts:
         if not export:
