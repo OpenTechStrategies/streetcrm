@@ -47,7 +47,7 @@ class LocalPhoneNumberField(formfields.PhoneNumberField):
         # Check if phone number returned, and if it's valid. If invalid, check 
         # for the reason to return the specific error message or the default
         if phone_number is None:
-            raise exceptions.ValidationError(self.error_messages['invalid'])
+            return phone_number
         if phone_number and not phone_number.is_valid():
             reason = is_possible_number_with_reason(phone_number)
             raise exceptions.ValidationError(
