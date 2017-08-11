@@ -1020,9 +1020,12 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "institution",
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
-            {"descriptive_name": "Attendee's Phone Number",
+            {"descriptive_name": "Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
+            {"descriptive_name": "Email",
+             "form_name": "email",
+             "input_type": "text"}
          ],
     }
 
