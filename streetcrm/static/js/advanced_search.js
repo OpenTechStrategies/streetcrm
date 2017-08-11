@@ -5,7 +5,7 @@ function chooseSearchForm() {
     $("#id_event_search_form").css("display", "none");
 
     // Get the selected model
-    var selectedModel = $("#id_search_model option:selected").val()
+    var selectedModel = $("#id_search_for option:selected").val()
 
     // Find the form for the model
     var formObj = $("#id_" + selectedModel + "_search_form");
@@ -16,7 +16,7 @@ function chooseSearchForm() {
 
 $(document).ready(function () {
     // Set up callbacks.
-    $("#id_search_model").change(chooseSearchForm);
+    $("#id_search_for").change(chooseSearchForm);
 
     // Call chooseSearchForm to get the form to display on page load
     chooseSearchForm();
