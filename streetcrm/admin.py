@@ -656,7 +656,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         last_header=[]
         header=[]
         
-        search_title = 'Created: {} - Query: {}'.format(
+        search_title = 'Exported on: {} - Search terms: {}'.format(
             filetime.strftime('%Y-%m-%d'), search_header
         )
         writer.writerow([search_title])
