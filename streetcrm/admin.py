@@ -529,7 +529,10 @@ class STREETCRMAdminSite(admin.AdminSite):
 
         if categorize != form.EVENT:
             results = results[None]
-        results = sorted(results, key=lambda object: object.name)
+        results = sorted(
+            [r for r in results if r is not None],
+            key=lambda object: object.name
+        )
         
         # If this is not an export, get counts:
         if not export:
