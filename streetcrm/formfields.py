@@ -16,6 +16,7 @@
 
 import datetime
 import phonenumbers
+from phonenumbers.phonenumberutil import ValidationResult, is_possible_number_with_reason
 
 from django import forms
 from django.core import validators, exceptions
@@ -23,39 +24,36 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 from phonenumber_field import formfields
+from phonenumber_field.phonenumber import to_python
 
 from streetcrm import widgets
 
 class LocalPhoneNumberField(formfields.PhoneNumberField):
     """ National representation of phone number """
-
+    default_error_messages = {
+        "invalid": _("Enter a valid phone number."),
+        # If number is invalid but possible, means it failed region check
+        ValidationResult.IS_POSSIBLE: _("Region code is invalid."),
+        ValidationResult.INVALID_COUNTRY_CODE: _("Country code is invalid."),
+        ValidationResult.TOO_SHORT: _("Phone number is too short."),
+        ValidationResult.INVALID_LENGTH: _("Phone number length is invalid."),
+        ValidationResult.TOO_LONG: _("Phone number is too long.")
+    }
     widget = widgets.LocalPhoneNumberWidget
 
     def to_python(self, value, *args, **kwargs):
         """ Convert value from National US phone number to international """
-        if value in validators.EMPTY_VALUES:
-            value = None
-        else:
-            # Parse the value
-            try:
-                if value.startswith("+"):
-                    value = phonenumbers.parse(value)
-                else:
-                    value = phonenumbers.parse(value, "US")
-            except phonenumbers.phonenumberutil.NumberParseException:
-                value = phonenumbers.PhoneNumber(raw_input=value)
-
-            # Produce international format without formatting.
-            value = "+{country_code}{national_number}".format(
-                country_code=value.country_code,
-                national_number=value.national_number
+        phone_number = to_python(value)
+        # Check if phone number returned, and if it's valid. If invalid, check 
+        # for the reason to return the specific error message or the default
+        if phone_number is None:
+            return phone_number
+        if phone_number and not phone_number.is_valid():
+            reason = is_possible_number_with_reason(phone_number)
+            raise exceptions.ValidationError(
+                self.error_messages.get(reason, self.error_messages['invalid'])
             )
-
-        try: return super(LocalPhoneNumberField, self).to_python(
-            value, *args, **kwargs
-        )
-        except:
-            raise exceptions.ValidationError("Please enter a phone number in the format (xxx) xxx-xxxx", code="invalid")
+        return phone_number
 
 class TwelveHourTimeField(forms.TimeField):
     widget = widgets.TwelveHourTimeWidget

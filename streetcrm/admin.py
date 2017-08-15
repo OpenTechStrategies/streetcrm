@@ -263,7 +263,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         Returns counts of different result types for advanced search.
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         major_event_count = None
         prep_event_count = None
@@ -305,7 +305,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         This provides advanced searching options
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         exclude_major = data["exclude_major_events"]
         exclude_minor = data["exclude_minor_events"]
@@ -546,8 +546,24 @@ class STREETCRMAdminSite(admin.AdminSite):
                                "result_count": count_set['result_count']
             }
         else:
+            search_params = []
+            for key, value in data.items():
+                if isinstance(value, datetime):
+                    search_params.append('{} = {}'.format(key, value.strftime('%Y-%m-%d')))
+                elif isinstance(value, str) and len(value):
+                    search_params.append('{} = {}'.format(key, value))
+                elif isinstance(value, bool) and value:
+                    search_params.append(key)
+                elif hasattr(value, '__iter__') and len(value):
+                    search_params.append('{} = {}'.format(key, ','.join([str(v) for v in value])))
+                elif hasattr(value, 'pk'):
+                    search_params.append('{} = {}'.format(key, str(value)))
+
+            search_header = ', '.join(search_params)
+
             results_package = {"form": form,
                                "search_results": results,
+                               "search_header": search_header,
                                "event_results": event_list
             }
             
@@ -601,8 +617,10 @@ class STREETCRMAdminSite(admin.AdminSite):
             except KeyError:
                 # If the results are actions:
                 search_results = results_package["event_results"]
+            search_header = results_package['search_header']
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
+            search_header = search_query
 
         # Special columns include: institution_id, organizer_id, and
         # major_action_id.  These should all display the name of the
@@ -632,15 +650,18 @@ class STREETCRMAdminSite(admin.AdminSite):
         
         last_header=[]
         header=[]
+        
+        search_title = 'Exported on: {} - Search terms: {}'.format(
+            filetime.strftime('%Y-%m-%d'), search_header
+        )
+        writer.writerow([search_title])
+        
         for result in search_results:
             if result is None:
                 continue
             # Convert the result object (participant, institution, etc.)
             # to a row.
-            #
-            # add a title row
-            #
-            
+
             # intended behavior: each model type is grouped together
             # under one header row.  This header row matches the columns
             # of data that are displayed.  Eventually, this will be
@@ -1014,9 +1035,12 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "institution",
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
-            {"descriptive_name": "Attendee's Phone Number",
+            {"descriptive_name": "Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
+            {"descriptive_name": "Email",
+             "form_name": "email",
+             "input_type": "text"}
          ],
     }
 

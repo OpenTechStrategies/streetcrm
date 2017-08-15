@@ -202,7 +202,7 @@ class SearchForm(django.forms.Form):
     )
 
     # None autocomplete fields
-    search_model = django.forms.ChoiceField(choices=MODELS, required=False)
+    search_for = django.forms.ChoiceField(choices=MODELS, required=False)
     exclude_major_events = django.forms.BooleanField(required=False)
     exclude_minor_events = django.forms.BooleanField(required=False)
 
