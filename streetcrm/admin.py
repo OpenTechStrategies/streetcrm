@@ -252,7 +252,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             request,
             self.search_template,
             {
-                "search_results": {"results": results},
+                "search_results": results,
                 "form": form,
                 "query": search_query,
             }
@@ -263,7 +263,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         Returns counts of different result types for advanced search.
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         major_event_count = None
         prep_event_count = None
@@ -275,18 +275,15 @@ class STREETCRMAdminSite(admin.AdminSite):
             result_count = participant_count
         
         if categorize == form.EVENT:
-            prep_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and o.is_prep
-            ))
-            major_event_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event) and not o.is_prep
-            ))
-            result_count = len(self._nested_search(
-                results,
-                lambda o: isinstance(o, models.Event)
-            ))
+            prep_event_count = len([
+                o for o in results if isinstance(o, models.Event) and o.is_prep
+            ])
+            major_event_count = len([
+                o for o in results if isinstance(o, models.Event) and not o.is_prep
+            ])
+            result_count = len([
+                o for o in results if isinstance(o, models.Event)
+            ])
         elif categorize == form.INSTITUTION:
             institution_count = len(self._nested_search(
                 results,
@@ -308,7 +305,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         This provides advanced searching options
         """
         data = form.get_processed_data()
-        categorize = data["search_model"]
+        categorize = data["search_for"]
 
         exclude_major = data["exclude_major_events"]
         exclude_minor = data["exclude_minor_events"]
@@ -522,34 +519,20 @@ class STREETCRMAdminSite(admin.AdminSite):
                 results = results.intersection(leader_set)
             results = {None: results}
         if categorize == form.EVENT:
-            # Separate the events up (yes i know we merged them above).
-            major = {}
-            minor = {}
-            no_event = []
-            for event, participants in event_participants.items():
-                if event is None:
-                    no_event += participants
-                elif event.is_prep:
-                    minor[event] = participants
-                else:
-                    major[event] = participants
+            if data.get("participant"):
+                results = []
+                for event, participants in event_participants.items():
+                    if participants.count():
+                        results.append(event)
+            else:
+                results = [e for e, p in event_participants.items() if e is not None]
 
-            results = collections.OrderedDict((
-                (_("Major"), major),
-                (_("Minor"), minor),
-                (_("No Event"), no_event),
-            ))
-
-        # Remove any without participants
-        # results = self._remove_empty_values(results)
-
-        if (len(results) == 1):
+        if categorize != form.EVENT:
             results = results[None]
-        else:
-            print("DEBUG: length of results was greater than 1")
-            print("DEBUG: we're looking at action results")
-            
-        results = sorted(results, key=lambda object: object.name)
+        results = sorted(
+            [r for r in results if r is not None],
+            key=lambda object: object.name
+        )
         
         # If this is not an export, get counts:
         if not export:
@@ -563,8 +546,24 @@ class STREETCRMAdminSite(admin.AdminSite):
                                "result_count": count_set['result_count']
             }
         else:
+            search_params = []
+            for key, value in data.items():
+                if isinstance(value, datetime):
+                    search_params.append('{} = {}'.format(key, value.strftime('%Y-%m-%d')))
+                elif isinstance(value, str) and len(value):
+                    search_params.append('{} = {}'.format(key, value))
+                elif isinstance(value, bool) and value:
+                    search_params.append(key)
+                elif hasattr(value, '__iter__') and len(value):
+                    search_params.append('{} = {}'.format(key, ','.join([str(v) for v in value])))
+                elif hasattr(value, 'pk'):
+                    search_params.append('{} = {}'.format(key, str(value)))
+
+            search_header = ', '.join(search_params)
+
             results_package = {"form": form,
                                "search_results": results,
+                               "search_header": search_header,
                                "event_results": event_list
             }
             
@@ -618,8 +617,10 @@ class STREETCRMAdminSite(admin.AdminSite):
             except KeyError:
                 # If the results are actions:
                 search_results = results_package["event_results"]
+            search_header = results_package['search_header']
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
+            search_header = search_query
 
         # Special columns include: institution_id, organizer_id, and
         # major_action_id.  These should all display the name of the
@@ -649,15 +650,18 @@ class STREETCRMAdminSite(admin.AdminSite):
         
         last_header=[]
         header=[]
+        
+        search_title = 'Exported on: {} - Search terms: {}'.format(
+            filetime.strftime('%Y-%m-%d'), search_header
+        )
+        writer.writerow([search_title])
+        
         for result in search_results:
             if result is None:
                 continue
             # Convert the result object (participant, institution, etc.)
             # to a row.
-            #
-            # add a title row
-            #
-            
+
             # intended behavior: each model type is grouped together
             # under one header row.  This header row matches the columns
             # of data that are displayed.  Eventually, this will be
@@ -1031,9 +1035,12 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "form_name": "institution",
              "input_type": "fkey_autocomplete_name",
              "autocomplete_uri": "/autocomplete/InstitutionAutocomplete/"},
-            {"descriptive_name": "Attendee's Phone Number",
+            {"descriptive_name": "Phone Number",
              "form_name": "primary_phone",
              "input_type": "text"},
+            {"descriptive_name": "Email",
+             "form_name": "email",
+             "input_type": "text"}
          ],
     }
 

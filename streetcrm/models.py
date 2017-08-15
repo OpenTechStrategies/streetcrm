@@ -243,6 +243,9 @@ class Institution(ArchiveAbstract, SerializeableMixin):
 
 class Participant(ArchiveAbstract, SerializeableMixin):
     """ Representation of a person who can participate in a Event """
+    class Meta:
+        ordering = ['name']
+
     name = models.CharField(max_length=255, verbose_name="Participant Name")
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True,
                                                  verbose_name="Participant Phone")
