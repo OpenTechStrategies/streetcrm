@@ -313,7 +313,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         # convert each into the syntax required for the queryset
         if categorize == form.PARTICIPANT:
             if isinstance(data["institution"], str):
-                query_dict["institution__name__contains"] = data["institution"]
+                query_dict["institution__name__icontains"] = data["institution"]
             elif isinstance(data["institution"], models.Institution):
                 query_dict["institution"] = data["institution"]
 
@@ -324,17 +324,17 @@ class STREETCRMAdminSite(admin.AdminSite):
                 query_dict["leadership"] = data["leader_stage"]
 
             if isinstance(data["event"], str):
-                query_dict["event__name__contains"] = data["event"]
+                query_dict["event__name__icontains"] = data["event"]
             elif isinstance(data["event"], models.Event):
                 query_dict["event"] = data["event"]
 
             if isinstance(data["event_organizer"], str):
-                query_dict["event__organizer__name__contains"] = data["event_organizer"]
+                query_dict["event__organizer__name__icontains"] = data["event_organizer"]
             elif isinstance(data["event_organizer"], models.Participant):
                 query_dict["event__organizer"] = data["event_organizer"]
 
             if data.get("event_tags"):
-                query_dict["event__tags__in"] = data["event_tags"]
+                query_dict["event__tags"] = data["event_tags"]
 
             if data.get("start_date"):
                 query_dict["event__date__gte"] = data["start_date"]
@@ -347,22 +347,22 @@ class STREETCRMAdminSite(admin.AdminSite):
                 ).order_by("name")
         elif categorize == form.EVENT:
             if isinstance(data["participant"], str):
-                query_dict["participants__name__contains"] = data["participant"]
+                query_dict["participants__name__icontains"] = data["participant"]
             elif isinstance(data["participant"], models.Participant):
                 query_dict["participants"] = data["participant"]
 
             if isinstance(data["event_organizer"], str):
-                query_dict["organizer__name__contains"] = data["event_organizer"]
+                query_dict["organizer__name__icontains"] = data["event_organizer"]
             elif isinstance(data["event_organizer"], models.Participant):
                 query_dict["organizer"] = data["event_organizer"]
 
             if isinstance(data["connected_action"], str):
-                query_dict["major_action__name__contains"] = data["connected_action"]
+                query_dict["major_action__name__icontains"] = data["connected_action"]
             elif isinstance(data["connected_action"], models.Event):
                 query_dict["major_action"] = data["connected_action"]
 
             if data.get("event_tags"):
-                query_dict["tags__in"] = data["event_tags"]
+                query_dict["tags"] = data["event_tags"]
 
             if data.get("start_date"):
                 query_dict["date__gte"] = data["start_date"]
@@ -449,6 +449,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         if advanced:
             results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form, export=True)
             search_results = results_package["search_results"]
+            search_header = results_package["search_header"]
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
             search_header = search_query
