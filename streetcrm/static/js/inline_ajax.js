@@ -731,6 +731,7 @@ function putInlinedModel(form_data, model_id, row, cell) {
             cell.children(".static").children("span.static-span").text(cell.find("input").val());
             createProfileLink(updated_model, cell);
             row.data("model", updated_model);
+            fillTableRow(row);
             cell.find(".static").show();
             cell.find(".editable").hide();
         },

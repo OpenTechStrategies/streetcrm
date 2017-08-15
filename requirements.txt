@@ -4,3 +4,5 @@ django-admin-bootstrapped
 django-phonenumber-field
 django-autocomplete-light<3
 django-watson
+phonenumbers
+psycopg2

@@ -179,3 +179,6 @@ ADMIN_ORDERING = (
 # This setting controls how many participants/contacts can be linked at any
 # given time to an institution.
 CONTACT_LIMIT = config["contact"]["limit"]
+
+PHONENUMBER_DEFAULT_REGION = 'US'
+PHONENUMBER_DEFAULT_FORMAT = 'E164'
