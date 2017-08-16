@@ -37,6 +37,7 @@ from django.contrib.admin.models import LogEntry
 SEARCH=4
 
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -344,7 +345,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             results = models.Participant.objects.filter(**query_dict
                 ).select_related("institution").prefetch_related(
                     "event_set", "institution__tags", "leadership"
-                ).order_by("name")
+                ).order_by(Lower("name"))
         elif categorize == form.EVENT:
             if isinstance(data["participant"], str):
                 query_dict["participants__name__icontains"] = data["participant"]
@@ -372,7 +373,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             results = models.Event.objects.filter(**query_dict
                 ).select_related("organizer", "secondary_organizer"
                 ).prefetch_related("participants"
-                ).order_by("name")
+                ).order_by(Lower("name"))
 
         # If this is not an export, get counts:
         if not export:
