@@ -348,26 +348,58 @@ function turnOnAttendeeAutocomplete(tableRow) {
 }
 
 /*
-  Create a link to the change form of an inlined model with the given ID
+  Create a link to the change form of an inlined model with the given ID, or a
+  popup if it's a participant
 */
 function createProfileLink(model, cell) {
-    var id, url;
-    if (cell.data("form-name") == "name") {
-        id = model.id;
-        url = null;
+  var profileLink = cell.children(".static").children("a.profile-link");
+  if (cell.data("form-name") == "name") {
+    if (model.id != undefined) {
+      profileLink.on("click", function() { createPopup(model.id) });
+      profileLink.css("display", "inline");
     }
-    else if (cell.data("form-name") == "institution" && model.institution) {
-        id = model.institution.id;
-        url = "/streetcrm/institution/";
+  }
+  else if (cell.data("form-name") == "institution" && model.institution) {
+    if (model.institution.id != undefined) {
+      var id = model.institution.id;
+      var url = "/streetcrm/institution/";
+      // Give the profile link an href attribute and make it visible.
+      profileLink.attr("href", getExistingInlinedModelProfileUrl(id, url));
+      profileLink.css("display", "inline");
     }
-    if (id != undefined) {
-        // Give the profile link an href attribute and make it visible.
-        var profileLink = cell.children(".static").children("a.profile-link");
-        profileLink.attr("href", getExistingInlinedModelProfileUrl(id, url));
-        profileLink.css("visibility", "visible");
-    }
+  }
 }
 
+/*
+  Create a popup from the participant ID by querying the API for participants,
+  filling the existing modal element with its information, and then making it
+  visible
+*/
+function createPopup(model_id) {
+  var participantUrl = fillExistingInlinedModelUrl(model_id);
+  var popupConfig = getInlineConfig()["popup_fields"];
+
+  $.getJSON(participantUrl, function(result) {
+    $.each(popupConfig, function(i, p) {
+      var popupRow = $("#modal-results").append("<div class='row'></div>");
+      popupRow.append("<div class='col-sm-4 popup-field'>" + p.descriptive_name + ":</div>");
+      popupRow.append("<div class='col-sm-8'>" + (result[p.field_name] || "") + "</div>");
+    });
+    $("#popupLink").attr("href", getExistingInlinedModelProfileUrl(model_id, null));
+    $("#participantModal").css("display", "block");
+    // Prevent scrolling on body while pop up open
+    $("body").css("overflow", "hidden");
+  });
+}
+
+/*
+  Hide the popup, allow for scrolling on the body element, and empty the results
+*/
+function closePopup() {
+  $("#participantModal").css("display", "none");
+  $("body").css("overflow", "");
+  $("#modal-results").empty();
+}
 
 /* Populate the table row with values
 
