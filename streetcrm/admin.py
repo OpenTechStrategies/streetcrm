@@ -1032,7 +1032,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "descriptive_name": "Participant Name"},
             {"field_name": "primary_phone",
              "descriptive_name": "Participant Phone"},
-            {"field_name": "institution",
+            {"field_name": "institution.name",
              "descriptive_name": "Institution"},
             {"field_name": "title",
              "descriptive_name": "Participant's Title"},

@@ -383,7 +383,16 @@ function createPopup(model_id) {
     $.each(popupConfig, function(i, p) {
       var popupRow = $("#modal-results").append("<div class='row'></div>");
       popupRow.append("<div class='col-sm-4 popup-field'>" + p.descriptive_name + ":</div>");
-      popupRow.append("<div class='col-sm-8'>" + (result[p.field_name] || "") + "</div>");
+
+      var fieldStr = null;
+      if (p.field_name.indexOf(".") !== -1) {
+        var splitField = p.field_name.split(".");
+        fieldStr = result[splitField[0]][splitField[1]];
+      }
+      else if (result.hasOwnProperty(p.field_name)) {
+        fieldStr = result[p.field_name];
+      }
+      popupRow.append("<div class='col-sm-8'>" + (fieldStr || "") + "</div>");
     });
     $("#popupLink").attr("href", getExistingInlinedModelProfileUrl(model_id, null));
     $("#participantModal").css("display", "block");
