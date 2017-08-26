@@ -95,6 +95,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "streetcrm.context_processors.search_header",
     "streetcrm.context_processors.for_logo",
     "streetcrm.context_processors.check_archive_permission",
+    "streetcrm.context_processors.custom_theme",
 )
 
 
@@ -182,3 +183,5 @@ CONTACT_LIMIT = config["contact"]["limit"]
 
 PHONENUMBER_DEFAULT_REGION = 'US'
 PHONENUMBER_DEFAULT_FORMAT = 'E164'
+
+THEME_COLOR = config["general"].get("theme_color")
