@@ -1,4 +1,5 @@
 from streetcrm import forms
+from django.conf import settings
 import os.path
 
 def search_header(request):
@@ -32,3 +33,7 @@ def check_archive_permission(request):
     # TODO: See issue #299
     archive_permission =  request.user.has_perm("streetcrm.archive_participant")
     return {"can_archive": archive_permission}
+    
+def custom_theme(request):
+    """ Branding overrides for CSS configured in config.ini """
+    return {"theme_color": settings.THEME_COLOR}

@@ -152,13 +152,9 @@ Our logo image is 1029x273px, for reference.  Once your file is there it
 will show up in the app.  You can remove it or change it whenever you
 like.
 
-Everyone will need to do the following with the CSS file in order for
-the site to be styled correctly:
-
-       $ cp streetcrm/static/css/streetcrm.css.tmpl streetcrm/static/css/streetcrm.css
-
-Once you've done that, edit `streetcrm.css` to have whatever branding
-you'd like.
+To update the main theme color for the StreetCRM instance, change the
+`theme_color` setting in `config.ini` (the default in `config.example.ini`
+is `"#1e6b27"`).
 
 You might also want to update the colors of the three-line menu icon
 that is usually in the upper right of the screen.  The icon image is
