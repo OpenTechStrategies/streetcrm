@@ -22,10 +22,9 @@ body {
 }
 
 .container-fluid {
-    width: 60%;
     min-width: 600px;
-    max-width: 800px;
-    padding: 0px;
+    max-width: 1200px;
+    padding: 0 25px;
     margin: auto;
 }
 
@@ -664,4 +663,16 @@ h2#stages-header:hover {
     .popup-field {
       text-align: left;
     }
+}
+
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scroll-indication {
+  font-style: italic;
+  padding: 3px 1em 3px .4em;
+  min-height: 0;
 }

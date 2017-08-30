@@ -25,6 +25,33 @@
 		<link href="{% static "css/bootstrap.css"%}" rel="stylesheet" type="text/css" />
 		<link href="{% static "css/streetcrm.css" %}" rel="stylesheet" type="text/css" />
 		<link href="{% static "js/jquery-ui-1.11.4.custom/jquery-ui.css" %}" rel="stylesheet" type="text/css" />
+		
+		{% if theme_color %}
+		<style>
+			a,
+			a:hover,
+			a:focus,
+			.navbar-default .navbar-nav > li > a:hover,
+			.navbar-default .navbar-nav > li > a:focus,
+			.navbar-default .navbar-brand,
+			.navbar-default .navbar-text,
+			.navbar-default .navbar-nav > li > a,
+			h2#stages-header:hover,
+			#toggle_more_actions {
+				color: {{ theme_color }};
+			}
+			
+			#actual-navbar,
+			#content .hr {
+				background-color: {{ theme_color }};
+			}
+			
+			#content,
+			.large-info {
+				border-color: {{ theme_color }};
+			}
+		</style>
+		{% endif %}
 
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />

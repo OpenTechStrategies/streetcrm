@@ -28,6 +28,27 @@ Sounds confusing?  It's not too hard to use.  Take a look:
   var my_url = url_formatter({"<froob_id>": 35});
 */
 
+/* Extends the autocomplete widget to add an indication that the user should
+   scroll to see more results if a longer list, and to not treat this message
+   as another result option. */
+$.widget( "ui.autocomplete", $.ui.autocomplete, {
+  options: {items: "> *:not(.scroll-indication)"},
+  _create: function() {
+    $.ui.menu.prototype.options.items = this.options.items;
+    this._super();
+  },
+  _renderMenu: function(ul, items) {
+    var that = this;
+		$.each( items, function( index, item ) {
+			that._renderItemData( ul, item );
+		});
+    var count = $.map(items, function() { return 1; }).length;
+    if (count >= 4 && this.options.items === "> *:not(.scroll-indication)") {
+      ul.prepend("<li class='scroll-indication'>Scroll for more results</li>");
+    }
+  }
+});
+
 function gummyStringFormatter(string_pattern) {
     return function(replace_map) {
         var new_str = "";
