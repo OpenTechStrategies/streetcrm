@@ -387,7 +387,9 @@ function createPopup(model_id) {
       var fieldStr = null;
       if (p.field_name.indexOf(".") !== -1) {
         var splitField = p.field_name.split(".");
-        fieldStr = result[splitField[0]][splitField[1]];
+        if (result[splitField[0]]) {
+          fieldStr = result[splitField[0]][splitField[1]];
+        }
       }
       else if (result.hasOwnProperty(p.field_name)) {
         fieldStr = result[p.field_name];
