@@ -376,6 +376,7 @@ function createProfileLink(model, cell) {
   var profileLink = cell.children(".static").children("a.profile-link");
   if (cell.data("form-name") == "name") {
     if (model.id != undefined) {
+      profileLink.unbind("click");
       profileLink.on("click", function() { createPopup(model.id) });
       profileLink.css("display", "inline");
     }
