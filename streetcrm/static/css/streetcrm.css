@@ -478,10 +478,7 @@ table#inlined-model-table td.corrigendum {
      border: 2px solid #F22;
 }
 
-table#inlined-model-table .static a.profile-link {
-    visibility: hidden;
-}
-
+table#inlined-model-table .static a.profile-link,
 table#inlined-model-table .editable {
     display: none;
 }
@@ -617,6 +614,55 @@ h2#stages-header:hover {
 }
 .pull-right {
     float: right;
+}
+
+/* Participant modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    position: fixed;
+    left: 20%;
+    right: 20%;
+    top: 5%;
+    bottom: 5%;
+    padding: 20px;
+    border: 1px solid #888;
+    overflow: scroll;
+}
+
+#modal-results .row {
+  margin-bottom: 10px;
+}
+
+#closePopup {
+  text-align: right;
+}
+
+.popup-field {
+  font-weight: bold;
+  text-align: right;
+}
+
+@media screen and (max-width: 850px) {
+    .modal-content {
+        left: 5%;
+        right: 5%;
+    }
+    .popup-field {
+      text-align: left;
+    }
 }
 
 .ui-autocomplete {
