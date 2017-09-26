@@ -420,6 +420,11 @@ function createPopup(model_id) {
     });
     $("#popupLink").attr("href", getExistingInlinedModelProfileUrl(model_id, null));
     $("#participantModal").css("display", "block");
+
+    // Close popup if click is outside modal from https://stackoverflow.com/a/27759070
+    $("#participantModal").on("click", closePopup);
+    $("#participantModal .modal-content").on("click", function(e) { e.stopPropagation(); });
+
     // Prevent scrolling on body while pop up open
     $("body").css("overflow", "hidden");
   });
@@ -430,9 +435,20 @@ function createPopup(model_id) {
 */
 function closePopup() {
   $("#participantModal").css("display", "none");
+  $("#participantModal").unbind("click");
+  $("#participantModal .modal-content").unbind("click");
   $("body").css("overflow", "");
   $("#modal-results").empty();
 }
+
+/*
+  Add event listener to close modal if it is open and user presses escape key
+*/
+$(document).on("keyup", function(e) {
+  if (e.keyCode == 27 && $("#participantModal").css("display") !== "none") {
+    closePopup();
+  }
+});
 
 /* Populate the table row with values
 
