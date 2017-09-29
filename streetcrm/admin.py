@@ -37,6 +37,7 @@ from django.contrib.admin.models import LogEntry
 SEARCH=4
 
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -299,241 +300,81 @@ class STREETCRMAdminSite(admin.AdminSite):
         }
         return count_set
 
-    
     def advanced_search_do(self, request, form, export):
         """
-        This provides advanced searching options
+        This provides advanced searching options by parsing the processed form 
+        into kwargs for a Django queryset
         """
         data = form.get_processed_data()
         categorize = data["search_for"]
-
-        exclude_major = data["exclude_major_events"]
-        exclude_minor = data["exclude_minor_events"]
-
-        # Initially we should build up a list of Events that we could be
-        # be potentially searching through, these can come from Events with
-        # a specific tag, events which were specified as part of the form
-        major_events = []
-        minor_events = []
-
-        # Look up all of the events that could fit the search, since this is
-        # the only time we'll have a queryset and it's far faster to do this
-        # in the database we should handle the situation of tags here too.
-        event_query = models.Event.objects.all()
-        event_filtered = False
-        if data["event_tags"]:
-            event_filtered = True
-            event_query = event_query.filter(tags__in=data["event_tags"])
-
-        # If they've specified an organizer lets filter by that too.
-        if isinstance(data["event_organizer"], str):
-            event_filtered = True
-            event_query = event_query.filter(
-                organizer__name__contains=data["event_organizer"]
-            )
-        elif isinstance(data["event_organizer"], models.Participant):
-            event_filtered = True
-            event_query = event_query.filter(organizer=data["event_organizer"])
-
-        # If they've searched on a major event then we also filter by that.
-        if isinstance(data["connected_action"], str):
-            event_filtered = True
-            event_query = event_query.filter(
-                major_action__name__contains=data["connected_action"]
-            )
-        elif isinstance(data["connected_action"], models.Event):
-            event_filtered = True
-            event_query = event_query.filter(major_action=data["connected_action"])
-
-            
-        # Filter by the datetime constraints if they have been given
-        if data["start_date"] is not None:
-            event_filtered = True
-            event_query = event_query.filter(date__gte=data["start_date"])
-        if data["end_date"] is not None:
-            event_filtered = True
-            event_query = event_query.filter(date__lte=data["end_date"])
-
-        if isinstance(data["event"], str):
-            event_filtered = True
-            major_events += event_query.filter(
-                name__contains=data["event"],
-                is_prep=False
-            )
-            minor_events += event_query.filter(
-                name__contains=data["event"],
-                is_prep=True
-            )
-
-        # If there is an event found by the autocompletion
-        elif isinstance(data["event"], models.Event):
-            event_filtered = True
-            event_query = event_query.filter(pk=data["event"].pk)
-
-        major_events += event_query.filter(is_prep=True)
-        minor_events += event_query.filter(is_prep=False)
-
-        # If we are to include minor events we should look up all the minor
-        # events for the major events that we have found so far.
-        if not exclude_minor:
-            for major_event in major_events:
-                minor_events += major_event.minor_events
-
-        # Make a general Events list.
-        events = []
-        if not exclude_major:
-            events += major_events
-        if not exclude_minor:
-            events += minor_events
-
-        event_participants = []
-
-        # If a participant was specified then we need to filter the results
-        # to only show those which either match in the case of an object found
-        # with the autocompletion or if it contains the search string.
-        if isinstance(data.get("participant"), str):
-            event_participants = dict((
-                (e, e.participants.filter(name__contains=data["participant"]))
-                for e in events
-            ))
-        elif isinstance(data.get("participant"), models.Participant):
-            event_participants = dict((
-                (e, e.participants.filter(name__in=[data["participant"]]))
-                for e in events
-            ))
-        else:
-            event_participants = dict((
-                (event, event.participants.all()) for event in events
-            ))
-
-        # Find the participants which aren't related to any of the events.
-        if not event_filtered:
-            unique_participants = set()
-            for p in event_participants.values():
-                participant_ids = [p1.id for p1 in p]
-                unique_participants = unique_participants | set(participant_ids)
+        # Creating query dict to be passed as kwargs in queryset
+        query_dict = {}
         
-            non_event_participants = models.Participant.objects.exclude(
-                pk__in=unique_participants
-            )
-
-            if isinstance(data.get("participant"), str):
-                non_event_participants = non_event_participants.filter(
-                    name__contains=data["participant"]
-                )
-            elif isinstance(data.get("participant"), models.Participant):
-                non_event_participants = non_event_participants.filter(
-                    pk=data["participant"].pk
-                )
-
-            event_participants[None] = non_event_participants
-
-        # If there has been a query on the institution we need to filter on that
-        # unfortunately I can't think of any other way to do this so it'll be in
-        # python, which will make it a little slower than the rest.
-        institutions = []
-        institution_query = models.Institution.objects.all()
-        institution_filtered = False 
-        # Narrow the institutions down if there have been tags selected
-        if data["institution_tags"]:
-            institution_filtered = True
-            institution_query = institution_query.filter(
-                tags__in=data["institution_tags"]
-            )
-
-        if isinstance(data.get("institution"), str):
-            # Perform a search for the institution(s) which match
-            institution_filtered = True
-            institutions += institution_query.filter(
-                name__contains=data["institution"]
-            )
-        elif isinstance(data.get("institution"), models.Institution):
-            institution_filtered = True
-            # This is when the autocomplete has found one
-            institutions.append(data["institution"])
-        elif categorize == form.INSTITUTION:
-            # Because we're going to catagorise based on institution we need to
-            # build the institution list with all the institutions
-            institutions += institution_query
-
-        if isinstance(data.get("leader_stage"), models.LeaderStage):
-            stage = data.get("leader_stage")
-            leader_set = set()
-            for participant in models.Participant.objects.filter(leadership=stage.id):
-                leader_set.add(participant)
-
-        # Build the end results
-        event_list=[]
+        # Check each relevant form field depending on the search model, and 
+        # convert each into the syntax required for the queryset
         if categorize == form.PARTICIPANT:
-            # When searching just for participants don't show a section, just list
-            # the participants on their own.
-            results = {None: set()}
+            if isinstance(data["institution"], str):
+                query_dict["institution__name__icontains"] = data["institution"]
+            elif isinstance(data["institution"], models.Institution):
+                query_dict["institution"] = data["institution"]
+
+            if data.get("institution_tags"):
+                query_dict["institution__tags"] = data["institution_tags"]
+
+            if isinstance(data["leader_stage"], models.LeaderStage):
+                query_dict["leadership"] = data["leader_stage"]
+
+            if isinstance(data["event"], str):
+                query_dict["event__name__icontains"] = data["event"]
+            elif isinstance(data["event"], models.Event):
+                query_dict["event"] = data["event"]
+
+            if isinstance(data["event_organizer"], str):
+                query_dict["event__organizer__name__icontains"] = data["event_organizer"]
+            elif isinstance(data["event_organizer"], models.Participant):
+                query_dict["event__organizer"] = data["event_organizer"]
+
+            if data.get("event_tags"):
+                query_dict["event__tags"] = data["event_tags"]
+
+            if data.get("start_date"):
+                query_dict["event__date__gte"] = data["start_date"]
+            if data.get("end_date"):
+                query_dict["event__date__lte"] = data["end_date"]
+
+            results = models.Participant.objects.filter(**query_dict
+                ).select_related("institution").prefetch_related(
+                    "event_set", "institution__tags", "leadership"
+                ).order_by(Lower("name"))
         elif categorize == form.EVENT:
-            # Both participants and events, we actually want to group by event
-            results = dict([(e, list()) for e, p in event_participants.items()])
-            # make a list of events only for export
-            for e, p in event_participants.items(): event_list.append(e)
-            
-        elif categorize == form.INSTITUTION:
-            results = dict([(i, set()) for i in institutions])
+            if isinstance(data["participant"], str):
+                query_dict["participants__name__icontains"] = data["participant"]
+            elif isinstance(data["participant"], models.Participant):
+                query_dict["participants"] = data["participant"]
 
-        if categorize == form.INSTITUTION or data["institution"]:
-            # Look at the intersection between event_participants and contacts
-            for event, participants in event_participants.items():
-                for participant in participants:
-                    # If it's not in the institutions, skip it.
-                    if participant.institution not in institutions:
-                        continue
-   
-                    # Add it to the results depending what we're displaying by
-                    if categorize == form.PARTICIPANT:
-                        results[None].add(participant)
-                    elif categorize == form.EVENT:
-                        results[event].append(participant)
-                    elif categorize == form.INSTITUTION:
-                        results[participant.institution].add(participant)
+            if isinstance(data["event_organizer"], str):
+                query_dict["organizer__name__icontains"] = data["event_organizer"]
+            elif isinstance(data["event_organizer"], models.Participant):
+                query_dict["organizer"] = data["event_organizer"]
 
-            if categorize == form.INSTITUTION and not institution_filtered:
-                institution_participants = set()
-                for participants in results.values():
-                    pks = [p.pk for p in participants]
-                    institution_participants = institution_participants | set(pks)
-                non_institution_participants = models.Participant.objects.exclude(
-                    pk__in=institution_participants
-                )
-                if isinstance(data["participant"], str):
-                    non_institution_participants = non_institution_participants.filter(
-                        name__contains=data["participant"]
-                    )
-                elif isinstance(data["participant"], models.Participant):
-                    non_institution_participants = non_institution_participants.filter(
-                        pk=data["participant"].pk
-                    )
-                results[_("No Institution")] = non_institution_participants
-        elif categorize == form.PARTICIPANT:
-            results = set()
-            for event, participants in event_participants.items():
-                results = results | set(participants)
-            # This should only happen if the person searched on leader_stage
-            if isinstance(data.get("leader_stage"), models.LeaderStage):
-                results = results.intersection(leader_set)
-            results = {None: results}
-        if categorize == form.EVENT:
-            if data.get("participant"):
-                results = []
-                for event, participants in event_participants.items():
-                    if participants.count():
-                        results.append(event)
-            else:
-                results = [e for e, p in event_participants.items() if e is not None]
+            if isinstance(data["connected_action"], str):
+                query_dict["major_action__name__icontains"] = data["connected_action"]
+            elif isinstance(data["connected_action"], models.Event):
+                query_dict["major_action"] = data["connected_action"]
 
-        if categorize != form.EVENT:
-            results = results[None]
-        results = sorted(
-            [r for r in results if r is not None],
-            key=lambda object: object.name
-        )
-        
+            if data.get("event_tags"):
+                query_dict["tags"] = data["event_tags"]
+
+            if data.get("start_date"):
+                query_dict["date__gte"] = data["start_date"]
+            if data.get("end_date"):
+                query_dict["date__lte"] = data["end_date"]
+
+            results = models.Event.objects.filter(**query_dict
+                ).select_related("organizer", "secondary_organizer"
+                ).prefetch_related("participants"
+                ).order_by(Lower("name"))
+
         # If this is not an export, get counts:
         if not export:
             count_set = self.advanced_search_counts(results, form)
@@ -563,13 +404,10 @@ class STREETCRMAdminSite(admin.AdminSite):
 
             results_package = {"form": form,
                                "search_results": results,
-                               "search_header": search_header,
-                               "event_results": event_list
+                               "search_header": search_header
             }
-            
+
         return results_package
-
-
 
     def advanced_search_view(self, request, form):
         """
@@ -611,13 +449,8 @@ class STREETCRMAdminSite(admin.AdminSite):
 
         if advanced:
             results_package = STREETCRMAdminSite.advanced_search_do(STREETCRMAdminSite, request, form, export=True)
-            try:
-                # If the results are participants:
-                search_results = results_package["search_results"]
-            except KeyError:
-                # If the results are actions:
-                search_results = results_package["event_results"]
-            search_header = results_package['search_header']
+            search_results = results_package["search_results"]
+            search_header = results_package["search_header"]
         else:
             search_results = STREETCRMAdminSite.basic_search_do(STREETCRMAdminSite, request, search_query)
             search_header = search_query

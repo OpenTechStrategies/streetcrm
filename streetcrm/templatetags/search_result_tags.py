@@ -22,5 +22,5 @@ register = Library()
 @register.simple_tag
 def section_display(obj):
     if hasattr(obj, 'is_prep'):
-        return '(MINOR)' if obj.is_prep else '(MAJOR)'
+        return '(PREP)' if obj.is_prep else ''
     return ''
