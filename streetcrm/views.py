@@ -21,6 +21,7 @@ from django.conf import settings
 from django.views import generic
 from django.db.models.fields import related
 from django.contrib.auth import get_user_model
+from django.utils.dateparse import parse_date, parse_time
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
@@ -367,16 +368,19 @@ class LogChangeMixin:
 
 
 class FileImportMixin:
+    model = None
     field_processors = {}
     # Mapping of CSV header row names to model fields
+    # Lower-casing is applied by default
     field_map = {}
-    # Django query syntax for each field
+    # Django query syntax for each field, used to determine if
+    # an object already exists
     field_queries = {}
 
     def process_row(self, row):
         # Rename any fields in field_map, defaulting to existing key
         row = {
-            self.field_map.get(key, key): value for key, value in row.items() 
+            self.field_map.get(key, key.lower()): value for key, value in row.items()
         }
         for field, value in row.items():
             # Apply any applicable field_processors,
@@ -386,6 +390,26 @@ class FileImportMixin:
             else:
                 row[field] = value.strip()
         return row
+
+    def import_data(self, rows):
+        # Create list of objects to create in bulk
+        objects_to_create = []
+        for row in rows:
+            # Use field queries (with default of the key text) to check for
+            # record existence
+            object_query = self.model.objects.filter(
+                **{self.field_queries.get(key, key): value for key, value in row.items()}
+            )
+            # If no objects are returned, add the object to the list to create
+            if not object_query:
+                # objects_to_create.append(self.model(**row))
+                objects_to_create.append(row)
+
+        # Create all new objects
+        # FIXME: Would bulk create, but Django 1.8 doesn't return PKs
+        # new_objects = self.model.objects.bulk_create(objects_to_create)
+        new_objects = [self.model.objects.create(**o) for o in objects_to_create]
+        return {"created_objects": [o.serialize() for o in new_objects]}
 
     def post(self, request, *args, **kwargs):
         csv_file = codecs.iterdecode(request.FILES['file'], 'utf-8')
@@ -456,12 +480,15 @@ def process_institution_field(api_view, body, model, field_name, value):
 
     return
 
-# Essentially a case-insensitive get-or-create for institution names
-def process_institution_name(institution_name):
-    institution_query = models.Institution.objects.filter(name__iexact=institution_name)
-    if institution_query:
-        return institution_query[0]
-    return models.Institution.objects.create(name=institution_name)
+# Case-insensitive name lookup, with the option of
+# creating an object if it doesn't exist
+def process_object_name(model, name, create=False):
+    model_query = model.objects.filter(name__iexact=name)
+    if model_query:
+        return model_query[0]
+    if create:
+        return model.objects.create(name=name)
+    return None
 
 class ParticipantAPI(LogChangeMixin, APIMixin, generic.UpdateView):
     """
@@ -716,18 +743,42 @@ class AvailableTagsAPI(APIMixin, generic.ListView):
         return context
 
 
+class EventImport(FileImportMixin, generic.View):
+    model = models.Event
+    field_processors = {
+        "institution": lambda name: process_object_name(models.Institution, name, create=True),
+        "date": parse_date,
+        "organizer": lambda name: process_object_name(models.Participant, name)
+    }
+    field_queries = {
+        "name": "name__iexact",
+        "date": "date",
+        "time": "time",
+        "location": "location__iexact"
+    }
+
+
+class ParticipantImport(FileImportMixin, generic.View):
+    model = models.Participant
+    field_processors = {
+        "institution": lambda name: process_object_name(models.Institution, name, create=True)
+    }
+    field_map = {
+        "Phone Number": "primary_phone",
+    }
+    field_queries = {
+        "name": "name__iexact",
+        "email": "email__iexact"
+    }
+
+
 class EventParticipantsImport(FileImportMixin, generic.View):
     field_processors = {
-        "institution": process_institution_name
+        "institution": lambda name: process_object_name(models.Institution, name, create=True)
     }
-    # Mapping of CSV header row names to model fields
     field_map = {
-        "Name": "name",
-        "Institution": "institution",
         "Phone Number": "primary_phone",
-        "Email": "email"
     }
-    # Django query syntax for each field
     field_queries = {
         "name": "name__iexact",
         "email": "email__iexact"
@@ -737,7 +788,7 @@ class EventParticipantsImport(FileImportMixin, generic.View):
         event = models.Event.objects.get(pk=self.kwargs['pk'])
         event_participant_ids = event.participants.all().values_list('id', flat=True)
 
-        # Create list of participants to create and add for bulk 
+        # Create list of participants to create and add for bulk
         # create/update operatiosn
         participants_to_create = []
         participants_to_add = []
@@ -754,14 +805,21 @@ class EventParticipantsImport(FileImportMixin, generic.View):
                     participants_to_add.append(participant)
             # Otherwise add them to the list of participants to create
             else:
-                participants_to_create.append(models.Participant(**row))
-        
+                # PENDING BULK_CREATE W/IDs
+                # participants_to_create.append(models.Participant(**row))
+                participants_to_create.append(row)
+
         # Create all new participants, then add them as well as existing
         # participants not associated with the event to its participants
-        new_participants = models.Participant.objects.bulk_create(participants_to_create)
+        # FIXME: Would do bulk_create, but it doesn't return primary keys
+        # new_participants = models.Participant.objects.bulk_create(
+        #     participants_to_create
+        # )
+        new_participants = [models.Participant.objects.create(**p) for p in participants_to_create]
+
         participant_ids_to_add = (
-            [p.id for p in participants_to_add] +
-            [np.id for np in new_participants]
+            [p.pk for p in participants_to_add] +
+            [np.pk for np in new_participants]
         )
         event.participants.add(*participant_ids_to_add)
 
@@ -769,24 +827,3 @@ class EventParticipantsImport(FileImportMixin, generic.View):
             "created_objects": [o.serialize() for o in new_participants],
             "updated_objects": [o.serialize() for o in participants_to_add]
         }
-
-
-class EventImport(FileImportMixin, generic.View):
-    field_processors = {
-        "institution": process_institution_name
-    }
-    # Mapping of CSV header row names to model fields
-    field_map = {
-        "Name": "name",
-        "Institution": "institution",
-        "Phone Number": "primary_phone",
-        "Email": "email"
-    }
-    # Django query syntax for each field
-    field_queries = {
-        "name": "name__iexact",
-        "email": "email__iexact"
-    }
-
-    def import_data(self, rows):
-        pass

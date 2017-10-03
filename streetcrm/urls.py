@@ -28,6 +28,16 @@ urlpatterns = patterns("",
     # Admin site URLs
     url(r"^", admin.site.urls),
 
+    # Import URLs
+    url(r"^import/", include(patterns("",
+        url(r"^events/$", views.EventImport.as_view(), name="import-events"),
+        url(r"^events/(?P<pk>\w+)/participants/$",
+            views.EventParticipantsImport.as_view(),
+            name="import-event-participants"
+        ),
+        url(r"^participants/$", views.ParticipantImport.as_view(), name="import-participants")
+    ))),
+
     # API URLs
     url(r"^api/", include(patterns("",
         url(r"^participants/", include(patterns("",
@@ -41,7 +51,6 @@ urlpatterns = patterns("",
             url(r"^participants/$", views.EventParticipantsAPI.as_view(), name="api-event-participants"),
             url(r"^available-participants/$", views.EventAvailableAPI.as_view(), name="api-event-available"),
             url(r"participants/(?P<participant_id>\w+)/$", views.EventLinking.as_view(), name="api-event-linking"),
-            url(r"participants-import/$", views.EventParticipantsImport.as_view(), name="api-event-participants-import"),
         ))),
         url(r"^institutions/(?P<pk>\w+)/", include(patterns("",
             url(r"^contacts/$", views.InstitutionContactsAPI.as_view(), name="api-institution-contacts"),
