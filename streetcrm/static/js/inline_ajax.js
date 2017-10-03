@@ -828,6 +828,25 @@ function insertFieldsetHeader() {
     $("#js-fieldset-header").text(getNewInlinedModelNamePlural());
 }
 
+function setupFileImport() {
+    $("#file-input").on("change", function(event) {
+        var form = new FormData();
+        form.append("file", event.target.files[0]);
+        $.ajax({
+            url: $("#file-input").data("path"),
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: form,
+            success: function (data) {
+                console.log(data);
+                $("tr.form-row").remove();
+                loadInitialAttendees();
+            }
+        });
+    });
+}
+
 function insertFormHeaders() {
     getFieldsConfig().map(
         function(field) {
@@ -1023,4 +1042,5 @@ $(document).ready(function () {
     insertFormHeaders();
     insertFieldsetHeader();
     loadInitialAttendees();
+    setupFileImport();
 });

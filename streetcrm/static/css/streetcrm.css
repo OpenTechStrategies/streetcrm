@@ -451,6 +451,10 @@ table#inlined-model-table th.deleteButtonTH {
    width: 25px;
 }
 
+.fieldset-header-row h1 {
+    display: inline-block;
+}
+
 /* A click event in a static div makes the corresponding editable div
 appear (and makes the static div disappear) */
 
