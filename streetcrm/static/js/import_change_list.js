@@ -14,8 +14,10 @@ function setupChangelistFileImport() {
             contentType: false,
             data: form,
             success: function (data) {
-                // TODO: Modal popup indicating results, potentially refresh page?
-                console.log(data);
+                toastMessage(data.created_objects.length + " records created");
+            },
+            error: function (e) {
+                toastMessage("There was an error with your import");
             }
         });
     });

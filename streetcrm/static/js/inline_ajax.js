@@ -839,9 +839,12 @@ function setupFileImport() {
             contentType: false,
             data: form,
             success: function (data) {
-                console.log(data);
+                toastMessage(data.created_objects.length + " participants imported");
                 $("tr.form-row").remove();
                 loadInitialAttendees();
+            },
+            error: function(e) {
+                toastMessage("There was an error with your import");
             }
         });
     });
