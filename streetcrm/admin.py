@@ -40,7 +40,7 @@ from django.db.models import Q
 from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 
 from watson import search as watson
 from watson import admin as watson_admin
@@ -748,6 +748,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, S
             "fields": ("action_history",),
         }),
     )
+    import_path = reverse_lazy("import-participants")
 
     inlines = [LeaderGrowthInline,]
 
@@ -833,6 +834,11 @@ class AjaxyInlineAdmin(SearchAdmin):
             inline_form_config)
         return super(AjaxyInlineAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context)
+    
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["import_path"] = self.import_path
+        return super(AjaxyInlineAdmin, self).changelist_view(request, extra_context)
 
 
 class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
@@ -898,6 +904,7 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
              "input_type": "text"}
          ],
     }
+    import_path = reverse_lazy("import-events")
 
     def __init__(self, *args, **kwargs):
         super(EventAdmin, self).__init__(*args, **kwargs)
