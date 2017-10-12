@@ -15,6 +15,7 @@ function setupChangelistFileImport() {
             data: form,
             success: function (data) {
                 toastMessage(data.created_objects.length + " records created");
+                setTimeout(function() { window.location.href = window.location.href; }, 2500);
             },
             error: function (e) {
                 toastMessage("There was an error with your import");

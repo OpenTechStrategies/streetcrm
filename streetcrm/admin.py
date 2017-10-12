@@ -796,6 +796,11 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, S
         super(ParticipantAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = ''
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["import_path"] = self.import_path
+        return super(ParticipantAdmin, self).changelist_view(request, extra_context)
+
 class AjaxyInlineAdmin(SearchAdmin):
     """
     Base class for those using the ajax'y inline form stuff.

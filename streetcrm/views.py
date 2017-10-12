@@ -748,6 +748,7 @@ class EventImport(FileImportMixin, generic.View):
     field_processors = {
         "institution": lambda name: process_object_name(models.Institution, name, create=True),
         "date": parse_date,
+        "time": parse_time,
         "organizer": lambda name: process_object_name(models.Participant, name)
     }
     field_queries = {
