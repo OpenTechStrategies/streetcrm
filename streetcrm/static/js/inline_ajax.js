@@ -839,7 +839,9 @@ function setupFileImport() {
             contentType: false,
             data: form,
             success: function (data) {
-                toastMessage(data.created_objects.length + " participants imported");
+                var toastStr = data.created_objects.length + " participants imported and added to the event. " +
+                    + data.updated_objects.length + " existing participants added to the event.";
+                toastMessage(toastStr);
                 $("tr.form-row").remove();
                 loadInitialAttendees();
             },
