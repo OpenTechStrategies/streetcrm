@@ -798,7 +798,7 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, S
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        extra_context["import_path"] = self.import_path
+        extra_context["import_path"] = getattr(self, 'import_path', None)
         return super(ParticipantAdmin, self).changelist_view(request, extra_context)
 
 class AjaxyInlineAdmin(SearchAdmin):
@@ -842,7 +842,7 @@ class AjaxyInlineAdmin(SearchAdmin):
     
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        extra_context["import_path"] = self.import_path
+        extra_context["import_path"] = getattr(self, 'import_path', None)
         return super(AjaxyInlineAdmin, self).changelist_view(request, extra_context)
 
 
