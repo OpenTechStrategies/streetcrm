@@ -18,7 +18,8 @@ function setupChangelistFileImport() {
                 setTimeout(function() { window.location.href = window.location.href; }, 2500);
             },
             error: function (e) {
-                toastMessage("There was an error with your import");
+                toastMessage("There was an error with your import. See more information on imports " +
+                             "on <a href='/help'>the help page.</a>");
             }
         });
     });

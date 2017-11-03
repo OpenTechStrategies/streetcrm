@@ -43,6 +43,7 @@
         {% if user.has_usable_password and perms.auth.can_change_password %}
         <li><a href="{% url 'admin:password_change' %}">{% trans 'Change&nbsp;password' %}</a></li>
         {% endif %}
+        <li><a href="{% url 'help' %}">{% trans 'Help' %}</a></li>
         <li><a href="{% url 'admin:logout' %}">{% trans 'Log&nbsp;out' %}</a></li>
       </ul>
     </div>

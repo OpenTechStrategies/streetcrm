@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
+from django.views.generic import TemplateView
 
 from streetcrm import views, admin
 
@@ -27,6 +28,9 @@ urlpatterns = patterns("",
 
     # Admin site URLs
     url(r"^", admin.site.urls),
+
+    # Help page
+    url(r"^help/", TemplateView.as_view(template_name="admin/help.html"), name="help"),
 
     # Import URLs
     url(r"^import/", include(patterns("",
