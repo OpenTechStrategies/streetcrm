@@ -344,7 +344,7 @@ class STREETCRMAdminSite(admin.AdminSite):
 
             results = models.Participant.objects.filter(**query_dict
                 ).select_related("institution").prefetch_related(
-                    "event_set", "institution__tags", "leadership"
+                    "event_set", "institution__tags", "tracked_growth", "tracked_growth__stage"
                 ).order_by(Lower("name"))
         elif categorize == form.EVENT:
             if isinstance(data["participant"], str):
@@ -459,19 +459,23 @@ class STREETCRMAdminSite(admin.AdminSite):
         # major_action_id.  These should all display the name of the
         # related object, not its id.
         participant_header=[
+            {"column": "id", "heading": "ID"},
             {"column": "name", "heading": "Participant name"},
             {"column": "primary_phone", "heading": "Phone number"},
             {"column": "email", "heading": "Email address"},
             {"column": "participant_street_address", "heading":
             "Address"},
-            {"column": "institution_id", "heading": "Institution"}
+            {"column": "institution_id", "heading": "Institution"},
+            {"column": "leadership", "heading": "Leadership level"}
         ]
         institution_header=[
+            {"column": "id", "heading": "ID"},
             {"column": "name", "heading": "Institution name"},
             {"column": "inst_street_address", "heading": "Address"},
             {"column": "is_member", "heading": "Is a member institution?"}
         ]
         event_header=[
+            {"column": "id", "heading": "ID"},
             {"column": "name", "heading": "Action name"},
             {"column": "description", "heading": "Description"},
             {"column": "date", "heading": "Date"},
@@ -530,6 +534,12 @@ class STREETCRMAdminSite(admin.AdminSite):
                 elif col['column'] == 'major_action_id' and result.__dict__[col['column']] != None:
                     this_action = models.Event.objects.get(id=result.__dict__[col['column']])
                     new_row.append(this_action.name)
+                elif col['column'] == 'leadership':
+                    # If there are any leadership stages, convert them to a list so that the database
+                    # isn't queried again and pull the most recent
+                    if result.tracked_growth.all():
+                        stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
+                        new_row.append(stages[-1].name)
                 else:
                     new_row.append(result.__dict__[col['column']])
             writer.writerow(new_row)
