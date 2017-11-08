@@ -488,10 +488,11 @@ class STREETCRMAdminSite(admin.AdminSite):
         last_header=[]
         header=[]
         
-        search_title = 'Exported on: {} - Search terms: {}'.format(
-            filetime.strftime('%Y-%m-%d'), search_header
-        )
-        writer.writerow([search_title])
+        search_title = [
+            'Exported on {}'.format(filetime.strftime('%Y-%m-%d')),
+            'Search terms: {}'.format(search_header)
+        ]
+        writer.writerow(search_title)
         
         for result in search_results:
             if result is None:
