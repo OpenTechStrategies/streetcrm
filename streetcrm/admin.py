@@ -539,7 +539,7 @@ class STREETCRMAdminSite(admin.AdminSite):
                     # isn't queried again and pull the most recent
                     if result.tracked_growth.all():
                         stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
-                        new_row.append(stages[-1].name)
+                        new_row.append(stages[-1].stage.name)
                 else:
                     new_row.append(result.__dict__[col['column']])
             writer.writerow(new_row)
