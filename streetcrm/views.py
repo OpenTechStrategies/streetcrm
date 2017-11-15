@@ -388,6 +388,8 @@ class FileImportMixin:
         # If ID is in the row, that's the only thing that should be queried
         if isinstance(row.get('id'), str) and row.get('id').strip():
             return {'id': row['id']}
+        elif 'id' in row:
+            row.pop('id')
         for field, value in row.items():
             # Apply any applicable field_processors,
             # otherwise remove excess whitespace
@@ -424,7 +426,7 @@ class FileImportMixin:
     # Based on https://stackoverflow.com/a/26074856
     def create_dict_reader(self, csv_file):
         for line in csv_file:
-            if not line.startswith('Exported') and len(line.strip()):
+            if not line.startswith('Exported') and len(line.replace(',', '').strip()):
                 return csv.DictReader(csv_file, fieldnames=line.strip().split(','))
 
     def post(self, request, *args, **kwargs):
