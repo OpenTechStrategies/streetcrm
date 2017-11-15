@@ -373,17 +373,21 @@ class FileImportMixin:
     # Convert all empty strings to None, except for blank fields
     blank_fields = ['email', 'location']
     # Mapping of CSV header row names to model fields
-    # Lower-casing is applied by default
+    # Only fields listed in field_map will be queried, but if any
+    # of these are missing in the data they will be ignored
     field_map = {}
     # Django query syntax for each field, used to determine if
     # an object already exists
     field_queries = {}
 
     def process_row(self, row):
-        # Rename any fields in field_map, defaulting to existing key
+        # Pull all fields identified in field_map
         row = {
-            self.field_map.get(key, key.lower()): value for key, value in row.items()
+            value: row[key] for key, value in self.field_map.items() if key in row
         }
+        # If ID is in the row, that's the only thing that should be queried
+        if isinstance(row.get('id'), str) and row.get('id').strip():
+            return {'id': row['id']}
         for field, value in row.items():
             # Apply any applicable field_processors,
             # otherwise remove excess whitespace
@@ -767,7 +771,13 @@ class EventImport(FileImportMixin, generic.View):
         "major_action": lambda name: process_object_name(models.Event, name)
     }
     field_map = {
+        "ID": "id",
         "Action name": "name",
+        "Description": "description",
+        "Date": "date",
+        "Organizer": "organizer",
+        "Location": "location",
+        "Narrative": "narrative",
         "Major action": "major_action"
     }
     field_queries = {
@@ -784,10 +794,12 @@ class ParticipantImport(FileImportMixin, generic.View):
         "institution": lambda name: process_object_name(models.Institution, name, create=True)
     }
     field_map = {
+        "ID": "id",
         "Participant name": "name",
         "Phone number": "primary_phone",
         "Email address": "email",
-        "Address": "participant_street_address"
+        "Address": "participant_street_address",
+        "Institution": "institution"
     }
     field_queries = {
         "name": "name__iexact",
@@ -800,11 +812,12 @@ class EventParticipantsImport(FileImportMixin, generic.View):
         "institution": lambda name: process_object_name(models.Institution, name, create=True)
     }
     field_map = {
+        "ID": "id",
         "Participant name": "name",
         "Phone number": "primary_phone",
         "Email address": "email",
         "Address": "participant_street_address",
-        "Major action": "major_action"
+        "Institution": "institution"
     }
     field_queries = {
         "name": "name__iexact",
