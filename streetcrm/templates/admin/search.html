@@ -76,6 +76,10 @@
           <td>{% trans "Any action tagged:" %}</td>
           <td>{{ form.event_tags }}</td>
         </tr>
+        <tr class="participant_search_fields">
+          <td>{% trans "Attended this many actions:" %}</td>
+          <td>{{ form.event_count }}</td>
+        </tr>
         <tr class="action_search_fields">
           <td>{% trans "Attended by: " %}</td>
           <td>{{ form.participant }} </td>
@@ -135,7 +139,10 @@
       <li>{% trans "Prep Actions:" %} {{ prep_event_count }}</li>
       {% endif %}
       {% if participant_count %}
-      <li>{% trans "Unique Participants:" %} {{ participant_count }}</li>
+      <li>{% trans "Participants:" %} {{ participant_count }}</li>
+      {% endif %}
+      {% if unique_participant_count %}
+      <li>{% trans "Unique Participants:" %} {{ unique_participant_count }}</li>
       {% endif %}
     </ul>
     {% endblock %}
