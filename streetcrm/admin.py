@@ -355,7 +355,7 @@ class STREETCRMAdminSite(admin.AdminSite):
                 ).order_by(Lower("name"))
 
             if data.get("event_count"):
-                results = results.filter(event_count=data.get("event_count"))
+                results = results.filter(event_count__gte=data.get("event_count"))
         elif categorize == form.EVENT:
             if isinstance(data["participant"], str):
                 query_dict["participants__name__icontains"] = data["participant"]
@@ -478,7 +478,8 @@ class STREETCRMAdminSite(admin.AdminSite):
             {"column": "participant_street_address", "heading":
             "Address"},
             {"column": "institution_id", "heading": "Institution"},
-            {"column": "leadership", "heading": "Leadership level"}
+            {"column": "leadership", "heading": "Leadership level"},
+            {"column": "event_count", "heading": "Count attendances"}
         ]
         institution_header=[
             {"column": "id", "heading": "ID"},
