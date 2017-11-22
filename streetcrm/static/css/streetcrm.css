@@ -451,6 +451,10 @@ table#inlined-model-table th.deleteButtonTH {
    width: 25px;
 }
 
+.fieldset-header-row h1 {
+    display: inline-block;
+}
+
 /* A click event in a static div makes the corresponding editable div
 appear (and makes the static div disappear) */
 
@@ -675,4 +679,29 @@ h2#stages-header:hover {
   font-style: italic;
   padding: 3px 1em 3px .4em;
   min-height: 0;
+}
+
+.navbar-nav li > label.btn-file {
+  margin-left: 10px;
+  padding: 15px;
+}
+
+#toast {
+  display: none;
+  position: fixed;
+  top: 40%;
+  right: 50%;
+  margin-right: -175px;
+  width: 350px;
+  padding: 15px;
+  height: auto;
+  background-color: rgba(51, 122, 183, 0.8);
+  color: #fff;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+#toast a {
+  text-decoration: underline;
+  color: #fff;
 }

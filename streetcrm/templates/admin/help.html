@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+{% load custom_ordering %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+{% block content_title %}{% endblock %}
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>{% trans "Home" %}</li>
+</ul>
+{% endblock %}
+
+{% block content-navbar-collapse %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div id="content-main" class="col-sm-12">
+        <h2>File imports</h2>
+        <p>Use the following CSV templates for file imports. Importing from previously exported files will also work without deleting the first few rows.</p>
+        <ul>
+            <li><a download href="{% static 'sample_imports/sample_participant_import.csv' %}">Participants (including on sign in sheet)</a></li>
+            <li><a download href="{% static 'sample_imports/sample_event_import.csv' %}">Actions</a></li>
+        </ul>
+	</div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

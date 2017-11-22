@@ -23,6 +23,8 @@
 {% block extrahead %}
 {{ block.super }}
 {{ media.js }}
+<script type="text/javascript" src="{% static "js/toast_message.js" %}"></script>
+<script type="text/javascript" src="{% static "js/import_change_list.js" %}"></script>
 {% if action_form %}{% if actions_on_top or actions_on_bottom %}
 <script type="text/javascript">
 (function($) {
@@ -66,6 +68,14 @@
             {% blocktrans with cl.opts.verbose_name as name %}Create new {{ name }}{% endblocktrans %}
         </a>
         </li>
+        {% if import_path %}
+        <li>
+            <label class="btn btn-default btn-file">
+                {% blocktrans with cl.opts.verbose_name as name %}Import {{ name }}{% endblocktrans %}
+                <input id="file-input" type="file" style="display: none;" data-path="{{ import_path }}">
+            </label>
+        </li>
+        {% endif %}
         {% endif %}
         {% endblock %}
     </ul>
