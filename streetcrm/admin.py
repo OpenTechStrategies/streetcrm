@@ -20,7 +20,7 @@ import json
 import datetime
 import functools
 from collections import namedtuple
-from datetime import datetime
+from datetime import date, datetime
 
 from django import template
 from django.conf import settings
@@ -36,7 +36,7 @@ from django.contrib.admin.models import LogEntry
 # the searches that have been logged.
 SEARCH=4
 
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Case, When, IntegerField
 from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
@@ -347,8 +347,20 @@ class STREETCRMAdminSite(admin.AdminSite):
             if data.get("end_date"):
                 query_dict["event__date__lte"] = data["end_date"]
 
-            results = models.Participant.objects.annotate(
-                    event_count=Count("event")
+            # Filter count on event date if event date filters provided
+            event_count_dict = {}
+            for event_query in ["event__date__gte", "event__date__lte"]:
+                if query_dict.get(event_query):
+                    event_count_dict[event_query] = query_dict[event_query]
+            if event_count_dict:
+                event_count = Count(Case(
+                    When(**event_count_dict, then='event__id'),
+                    output_field=IntegerField()
+                ), distinct=True)
+            else:
+                event_count = Count('event', distinct=True)
+
+            results = models.Participant.objects.annotate(event_count=event_count
                 ).filter(**query_dict
                 ).select_related("institution").prefetch_related(
                     "event_set", "institution__tags", "tracked_growth", "tracked_growth__stage"
@@ -400,7 +412,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         else:
             search_params = []
             for key, value in data.items():
-                if isinstance(value, datetime):
+                if isinstance(value, datetime) or isinstance(value, date):
                     search_params.append('{} = {}'.format(key, value.strftime('%Y-%m-%d')))
                 elif isinstance(value, str) and len(value):
                     search_params.append('{} = {}'.format(key, value))
@@ -555,6 +567,8 @@ class STREETCRMAdminSite(admin.AdminSite):
                     if result.tracked_growth.all():
                         stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
                         new_row.append(stages[-1].stage.name)
+                    else:
+                        new_row.append(None)
                 elif col['column'] == 'attendance_count':
                     new_row.append(result.participants.all().count())
                 else:
