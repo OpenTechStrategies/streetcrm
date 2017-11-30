@@ -491,7 +491,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             "Address"},
             {"column": "institution_id", "heading": "Institution"},
             {"column": "leadership", "heading": "Leadership level"},
-            {"column": "event_count", "heading": "Count attendances"}
+            {"column": "event_count", "heading": "Number of attendances"}
         ]
         institution_header=[
             {"column": "id", "heading": "ID"},
@@ -508,7 +508,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             {"column": "location", "heading": "Location"},
             {"column": "narrative", "heading": "Narrative"},
             {"column": "major_action_id", "heading": "Major action"},
-            {"column": "attendance_count", "heading": "Count attendances"}
+            {"column": "attendance_count", "heading": "Count attendees"}
         ]
         
         last_header=[]
