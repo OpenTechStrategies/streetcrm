@@ -196,6 +196,11 @@ class SearchForm(django.forms.Form):
         required=False
     )
 
+    event_count = django.forms.IntegerField(
+        required=False,
+        min_value=1
+    )
+
     institution_tags = forms.ModelMultipleChoiceField(
         "ASTagAutocomplete",
         required=False

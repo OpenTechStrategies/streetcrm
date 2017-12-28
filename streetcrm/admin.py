@@ -20,7 +20,7 @@ import json
 import datetime
 import functools
 from collections import namedtuple
-from datetime import datetime
+from datetime import date, datetime
 
 from django import template
 from django.conf import settings
@@ -36,7 +36,7 @@ from django.contrib.admin.models import LogEntry
 # the searches that have been logged.
 SEARCH=4
 
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When, IntegerField
 from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
@@ -271,6 +271,7 @@ class STREETCRMAdminSite(admin.AdminSite):
         institution_count = None
         result_count = None
         participant_count = None
+        unique_participant_count = None
         if categorize == form.PARTICIPANT:
             participant_count = len(results)
             result_count = participant_count
@@ -285,6 +286,9 @@ class STREETCRMAdminSite(admin.AdminSite):
             result_count = len([
                 o for o in results if isinstance(o, models.Event)
             ])
+            unique_participant_count = len({
+                p.id for event in results for p in event.participants.all() if isinstance(event, models.Event)
+            })
         elif categorize == form.INSTITUTION:
             institution_count = len(self._nested_search(
                 results,
@@ -296,6 +300,7 @@ class STREETCRMAdminSite(admin.AdminSite):
             "prep_event_count": prep_event_count,
             "institution_count": institution_count,
             "participant_count": participant_count,
+            "unique_participant_count": unique_participant_count,
             "result_count": result_count
         }
         return count_set
@@ -342,10 +347,27 @@ class STREETCRMAdminSite(admin.AdminSite):
             if data.get("end_date"):
                 query_dict["event__date__lte"] = data["end_date"]
 
-            results = models.Participant.objects.filter(**query_dict
+            # Filter count on event date if event date filters provided
+            event_count_dict = {}
+            for event_query in ["event__date__gte", "event__date__lte"]:
+                if query_dict.get(event_query):
+                    event_count_dict[event_query] = query_dict[event_query]
+            if event_count_dict:
+                event_count = Count(Case(
+                    When(**event_count_dict, then='event__id'),
+                    output_field=IntegerField()
+                ), distinct=True)
+            else:
+                event_count = Count('event', distinct=True)
+
+            results = models.Participant.objects.annotate(event_count=event_count
+                ).filter(**query_dict
                 ).select_related("institution").prefetch_related(
                     "event_set", "institution__tags", "tracked_growth", "tracked_growth__stage"
                 ).order_by(Lower("name"))
+
+            if data.get("event_count"):
+                results = results.filter(event_count__gte=data.get("event_count"))
         elif categorize == form.EVENT:
             if isinstance(data["participant"], str):
                 query_dict["participants__name__icontains"] = data["participant"]
@@ -384,12 +406,13 @@ class STREETCRMAdminSite(admin.AdminSite):
                                "prep_event_count": count_set['prep_event_count'],
                                "institution_count": count_set['institution_count'],
                                "participant_count": count_set['participant_count'],
+                               "unique_participant_count": count_set['unique_participant_count'],
                                "result_count": count_set['result_count']
             }
         else:
             search_params = []
             for key, value in data.items():
-                if isinstance(value, datetime):
+                if isinstance(value, datetime) or isinstance(value, date):
                     search_params.append('{} = {}'.format(key, value.strftime('%Y-%m-%d')))
                 elif isinstance(value, str) and len(value):
                     search_params.append('{} = {}'.format(key, value))
@@ -428,6 +451,7 @@ class STREETCRMAdminSite(admin.AdminSite):
                 "prep_event_count": adv_results['prep_event_count'],
                 "institution_count": adv_results['institution_count'],
                 "participant_count": adv_results['participant_count'],
+                "unique_participant_count": adv_results['unique_participant_count'],
                 "result_count": adv_results['result_count']
             }
         )
@@ -466,7 +490,8 @@ class STREETCRMAdminSite(admin.AdminSite):
             {"column": "participant_street_address", "heading":
             "Address"},
             {"column": "institution_id", "heading": "Institution"},
-            {"column": "leadership", "heading": "Leadership level"}
+            {"column": "leadership", "heading": "Leadership level"},
+            {"column": "event_count", "heading": "Number of attendances"}
         ]
         institution_header=[
             {"column": "id", "heading": "ID"},
@@ -482,7 +507,8 @@ class STREETCRMAdminSite(admin.AdminSite):
             {"column": "organizer_id", "heading": "Organizer"},
             {"column": "location", "heading": "Location"},
             {"column": "narrative", "heading": "Narrative"},
-            {"column": "major_action_id", "heading": "Major action"}
+            {"column": "major_action_id", "heading": "Major action"},
+            {"column": "attendance_count", "heading": "Count attendees"}
         ]
         
         last_header=[]
@@ -541,6 +567,10 @@ class STREETCRMAdminSite(admin.AdminSite):
                     if result.tracked_growth.all():
                         stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
                         new_row.append(stages[-1].stage.name)
+                    else:
+                        new_row.append(None)
+                elif col['column'] == 'attendance_count':
+                    new_row.append(result.participants.all().count())
                 else:
                     new_row.append(result.__dict__[col['column']])
             writer.writerow(new_row)
