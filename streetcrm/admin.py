@@ -354,7 +354,7 @@ class STREETCRMAdminSite(admin.AdminSite):
                     event_count_dict[event_query] = query_dict[event_query]
             if event_count_dict:
                 event_count = Count(Case(
-                    When(**event_count_dict, then='event__id'),
+                    When(then='event__id', **event_count_dict),
                     output_field=IntegerField()
                 ), distinct=True)
             else:
