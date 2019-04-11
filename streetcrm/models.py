@@ -136,7 +136,7 @@ class InspectMixin:
     @classmethod
     def get_field(cls, name):
         """ Gets a field by it's name """
-        return cls._meta.get_field_by_name(name)[0]
+        return cls._meta.get_field(name)
 
 class StreetcrmModel(models.Model):
     """
