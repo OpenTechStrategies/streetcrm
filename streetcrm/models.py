@@ -266,7 +266,7 @@ class Participant(ArchiveAbstract, SerializeableMixin):
                                                  verbose_name="Participant State")
     participant_zipcode_address = models.CharField(null=True, blank=True, max_length=10,
                                verbose_name="Participant Zipcode")
-    institution = models.ForeignKey(Institution, null=True, blank=True,
+    institution = models.ForeignKey(Institution, null=True, blank=True, on_delete=models.CASCADE,
                                     verbose_name="Participant's Institution")
     title = models.CharField(null=True, blank=True, max_length=255,
                              help_text="e.g. Pastor, Director",
@@ -298,9 +298,9 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
                             verbose_name="Date of Action")
     time = modelfields.TwelveHourTimeField(null=True, blank=True,
                                            verbose_name="Time of Action")
-    organizer = models.ForeignKey(Participant, related_name="Organizer",
+    organizer = models.ForeignKey(Participant, related_name="Organizer", on_delete=models.CASCADE,
                                   blank=True, null=True)
-    secondary_organizer = models.ForeignKey(Participant, related_name="Organizer2",
+    secondary_organizer = models.ForeignKey(Participant, related_name="Organizer2", on_delete=models.CASCADE,
                                   blank=True, null=True)
     location = models.CharField(max_length=255, blank=True,
                                 verbose_name="Action Location")
@@ -315,7 +315,7 @@ class Event(ArchiveAbstract, mixins.AdminURLMixin, SerializeableMixin):
         blank=True,
         verbose_name="Is this directly related to a future action?"
     )
-    major_action = models.ForeignKey("self", null=True, blank=True,
+    major_action = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE,
                                      verbose_name="Connected Action")
 
     def __str__(self):
@@ -340,8 +340,8 @@ class LeaderStage(models.Model):
         return self.name
 
 class LeadershipGrowth(models.Model):
-    stage = models.ForeignKey(LeaderStage, related_name="growth_step")
-    person = models.ForeignKey(Participant, related_name="tracked_growth")
+    stage = models.ForeignKey(LeaderStage, related_name="growth_step", on_delete=models.CASCADE)
+    person = models.ForeignKey(Participant, related_name="tracked_growth", on_delete=models.CASCADE)
     date_reached = models.DateField(null=True, blank=True,
                                     default=timezone.now)
     def __str__(self):

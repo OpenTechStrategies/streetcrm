@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
-                ('institution', models.ForeignKey(related_name='organization', to='streetcrm.Institution')),
-                ('participant', models.ForeignKey(related_name='leaders', to='streetcrm.Participant')),
+                ('institution', models.ForeignKey(related_name='organization', to='streetcrm.Institution', on_delete=models.CASCADE)),
+                ('participant', models.ForeignKey(related_name='leaders', to='streetcrm.Participant', on_delete=models.CASCADE)),
             ],
             options={
             },

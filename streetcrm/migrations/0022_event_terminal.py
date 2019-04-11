@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='terminal',
-            field=models.ForeignKey(blank=True, null=True, to='streetcrm.Event'),
+            field=models.ForeignKey(blank=True, null=True, to='streetcrm.Event', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

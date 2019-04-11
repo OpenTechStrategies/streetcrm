@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tag',
             name='group',
-            field=models.ForeignKey(to='auth.Group', verbose_name='Group Assignment'),
+            field=models.ForeignKey(to='auth.Group', verbose_name='Group Assignment', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='tag',

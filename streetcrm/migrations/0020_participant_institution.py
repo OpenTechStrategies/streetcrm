@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='participant',
             name='institution',
-            field=models.ForeignKey(blank=True, null=True, to='streetcrm.Institution'),
+            field=models.ForeignKey(blank=True, null=True, to='streetcrm.Institution', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

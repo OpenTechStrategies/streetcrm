@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institution',
             name='address',
-            field=models.ForeignKey(to='streetcrm.Address', blank=True, null=True),
+            field=models.ForeignKey(to='streetcrm.Address', blank=True, null=True, on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='institution',

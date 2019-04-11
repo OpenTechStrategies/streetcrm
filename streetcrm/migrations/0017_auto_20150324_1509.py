@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='address',
-            field=models.ForeignKey(to='streetcrm.Address', blank=True),
+            field=models.ForeignKey(to='streetcrm.Address', blank=True, on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='event',

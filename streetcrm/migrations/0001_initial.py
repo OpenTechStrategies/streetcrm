@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('date', models.DateTimeField()),
                 ('site', models.CharField(max_length=255)),
-                ('address', models.ForeignKey(to='streetcrm.Address')),
+                ('address', models.ForeignKey(to='streetcrm.Address', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=255)),
                 ('phone_number', models.IntegerField()),
                 ('email', models.EmailField(max_length=75)),
-                ('address', models.ForeignKey(to='streetcrm.Address')),
+                ('address', models.ForeignKey(to='streetcrm.Address', on_delete=models.CASCADE)),
             ],
             options={
             },

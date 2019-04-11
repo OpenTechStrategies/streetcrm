@@ -23,12 +23,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='secondary_organizer',
-            field=models.ForeignKey(blank=True, related_name='Organizer2', null=True, to='streetcrm.Participant'),
+            field=models.ForeignKey(blank=True, related_name='Organizer2', null=True, to='streetcrm.Participant', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='event',
             name='major_action',
-            field=models.ForeignKey(blank=True, null=True, verbose_name='Connected Action', to='streetcrm.Event'),
+            field=models.ForeignKey(blank=True, null=True, verbose_name='Connected Action', to='streetcrm.Event', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='event',

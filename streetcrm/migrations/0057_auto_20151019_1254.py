@@ -44,12 +44,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='leadershipgrowth',
             name='person',
-            field=models.ForeignKey(to='streetcrm.Participant', related_name='tracked_growth'),
+            field=models.ForeignKey(to='streetcrm.Participant', related_name='tracked_growth', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='leadershipgrowth',
             name='stage',
-            field=models.ForeignKey(to='streetcrm.LeaderStage', related_name='growth_step'),
+            field=models.ForeignKey(to='streetcrm.LeaderStage', related_name='growth_step', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='participant',

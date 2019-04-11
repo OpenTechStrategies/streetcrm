@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='participant',
             name='institution',
-            field=models.ForeignKey(verbose_name="Participant's Institution", to='streetcrm.Institution', blank=True, null=True),
+            field=models.ForeignKey(verbose_name="Participant's Institution", to='streetcrm.Institution', blank=True, null=True, on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='participant',

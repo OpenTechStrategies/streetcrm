@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
                 ('name', models.CharField(max_length=255)),
-                ('address', models.ForeignKey(blank=True, to='streetcrm.Address')),
+                ('address', models.ForeignKey(blank=True, to='streetcrm.Address', on_delete=models.CASCADE)),
             ],
             options={
             },
