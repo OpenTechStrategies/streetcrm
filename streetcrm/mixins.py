@@ -17,7 +17,7 @@
 from django import http
 from django.db import transaction
 from django.contrib import messages
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.urls import reverse
 from django.shortcuts import render_to_response
 from django.forms.models import modelform_factory
@@ -49,9 +49,9 @@ class SignInSheetAdminMixin:
 
         # Define the sign in sheet URL
         sheet_view = self.admin_site.admin_view(self.sheet_view)
-        sheet_url = patterns("",
+        sheet_url = ["",
             url(r"sign-in-sheet/$", sheet_view, name="sign-in-sheet"),
-        )
+        ]
 
         return sheet_url + urls
 
