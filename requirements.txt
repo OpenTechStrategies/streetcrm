@@ -1,8 +1,8 @@
-django<1.9
+django<2.3
 configobj
 django-admin-bootstrapped
-django-phonenumber-field<2
-django-autocomplete-light<2.3.4
+django-phonenumber-field
+django-autocomplete-light
 django-watson
 phonenumbers
 psycopg2
