@@ -18,7 +18,6 @@ from django.contrib import auth
 
 from django.conf import settings
 from django.db.models import signals
-from django.contrib.auth.models import Group
 
 def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
                                **kwargs):
@@ -30,6 +29,8 @@ def group_hierarchy_maintainer(sender, instance, action, reverse, model, pk_set,
     level of lower groups and add those, this signal will be re-trigged on those
     adds to add them to the levels below those.
     """
+    from django.contrib.auth.models import Group
+
     # Only do this once the user has been added to the group
     if action != "post_add":
         return
