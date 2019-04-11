@@ -40,7 +40,7 @@ from django.db.models import Q, Count, Case, When, IntegerField
 from django.db.models.functions import Lower
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from watson import search as watson
 from watson import admin as watson_admin

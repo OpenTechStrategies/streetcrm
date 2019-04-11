@@ -17,9 +17,8 @@
 from django import http
 from django.db import transaction
 from django.contrib import messages
-from django.core import urlresolvers
 from django.conf.urls import patterns, url
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import render_to_response
 from django.forms.models import modelform_factory
 from django.utils.translation import ugettext as _
@@ -97,7 +96,7 @@ class AdminURLMixin:
             model_name=self._meta.model_name,
             url=url
         )
-        return urlresolvers.reverse(url_name, args=(self.pk,))
+        return reverse(url_name, args=(self.pk,))
 
     @property
     def admin_change_url(self):
@@ -240,7 +239,7 @@ class AdminArchiveMixin:
 
         if self.has_change_permission(request, None):
             url_name = "admin:%s_%s_changelist" % self.url_info
-            post_url = urlresolvers.reverse(
+            post_url = reverse(
                 url_name,
                 current_app=self.admin_site.name
             )
@@ -250,7 +249,7 @@ class AdminArchiveMixin:
                 post_url
             )
         else:
-            post_url = urlresolvers.reverse(
+            post_url = reverse(
                 "admin:index",
                 current_app=self.admin_site.name
             )

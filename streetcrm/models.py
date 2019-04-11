@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db import models
-from django.core import urlresolvers
+from django.urls import reverse
 from django.contrib.auth import models as auth_models
 from django.contrib.admin.models import LogEntry
 from django.utils import timezone
@@ -155,7 +155,7 @@ class StreetcrmModel(models.Model):
         )
 
         # Lookup and return URL for current object
-        return urlresolvers.reverse(url_name, args=(self.pk,))
+        return reverse(url_name, args=(self.pk,))
 
 class ArchiveAbstract(StreetcrmModel):
     """

@@ -18,7 +18,7 @@ import json
 
 from django import test
 from django.contrib import auth
-from django.core import urlresolvers
+from django.urls import reverse
 
 from streetcrm import models
 
@@ -55,7 +55,7 @@ class APITest(test.TestCase):
         participant.save()
 
         # Try to fetch participant
-        endpoint = urlresolvers.reverse(
+        endpoint = reverse(
             "api-participants",
             kwargs={"pk": participant.pk}
         )
@@ -78,7 +78,7 @@ class APITest(test.TestCase):
         }
 
         # Post the participant
-        endpoint = urlresolvers.reverse("api-create-participants")
+        endpoint = reverse("api-create-participants")
         response = self.client.post(
             endpoint,
             content_type="application/json",
@@ -114,7 +114,7 @@ class APITest(test.TestCase):
         }
 
         # Submit it via a PUT
-        endpoint = urlresolvers.reverse(
+        endpoint = reverse(
             "api-participants",
             kwargs={"pk": participant.pk}
         )

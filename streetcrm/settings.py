@@ -31,7 +31,8 @@ import warnings
 import configobj
 import validate
 
-from django.core import exceptions, urlresolvers
+from django.core import exceptions
+from django.urls import reverse_lazy
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -126,7 +127,7 @@ ROOT_URLCONF = 'streetcrm.urls'
 
 WSGI_APPLICATION = 'streetcrm.wsgi.application'
 
-LOGIN_URL = urlresolvers.reverse_lazy("login")
+LOGIN_URL = reverse_lazy("login")
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
