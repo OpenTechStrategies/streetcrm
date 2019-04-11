@@ -101,7 +101,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 
 INSTALLED_APPS = (
-    'autocomplete_light',
+    'dal',
     'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',

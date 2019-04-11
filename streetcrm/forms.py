@@ -22,7 +22,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
-from autocomplete_light import forms
+from dal import forms
 
 from streetcrm import models, widgets, formfields
 

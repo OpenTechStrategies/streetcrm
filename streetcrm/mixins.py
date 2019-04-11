@@ -24,7 +24,7 @@ from django.forms.models import modelform_factory
 from django.utils.translation import ugettext as _
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 
-from autocomplete_light import widgets as dacl_widgets
+from dal import widgets as dacl_widgets
 
 import datetime
 from datetime import date, datetime

@@ -1,9 +1,9 @@
-import autocomplete_light
+import dal
 from django.db.models import Q
 
 from streetcrm import models
 
-class BaseAutocomplete(autocomplete_light.AutocompleteModelBase):
+class BaseAutocomplete(dal.AutocompleteModelBase):
     attrs = {
         "placeholder": "",
         "data-autocomplete-minimum-characters": 1,
@@ -32,14 +32,14 @@ class InstitutionAutocomplete(BaseAutocomplete):
     search_fields = ["name"]
     model = models.Institution
 
-autocomplete_light.register(InstitutionAutocomplete)
+dal.register(InstitutionAutocomplete)
 
 # Register the Tag
 class TagAutocomplete(BaseAutocomplete):
     search_fields = ["name"]
     model = models.Tag
 
-autocomplete_light.register(TagAutocomplete)
+dal.register(TagAutocomplete)
 
 # Register the Contact
 class ContactAutocomplete(BaseAutocomplete):
@@ -54,12 +54,12 @@ class ContactAutocomplete(BaseAutocomplete):
     def create(cls, data):
         model = cls.model(name=data)
         return model
-autocomplete_light.register(ContactAutocomplete)
+dal.register(ContactAutocomplete)
 
 class EventAutocomplete(BaseAutocomplete):
     search_fields = ["name"]
     model = models.Event
-autocomplete_light.register(EventAutocomplete)
+dal.register(EventAutocomplete)
 
 ##
 # Advanced search autocompletes
@@ -68,19 +68,19 @@ class ASInstitutionAutocomplete(InstitutionAutocomplete):
     attrs = {
         "placeholder": "Institution",
     }
-autocomplete_light.register(ASInstitutionAutocomplete)
+dal.register(ASInstitutionAutocomplete)
 
 class ASTagAutocomplete(TagAutocomplete):
     attrs = {
         "placeholder": "Tags",
     }
-autocomplete_light.register(ASTagAutocomplete)
+dal.register(ASTagAutocomplete)
 
 class ASContactAutocomplete(ContactAutocomplete):
     attrs = {
         "placeholder": "Participant",
     }
-autocomplete_light.register(ASContactAutocomplete)
+dal.register(ASContactAutocomplete)
 
 class ASEventAutocomplete(BaseAutocomplete):
     search_fields = ["name"]
@@ -88,4 +88,4 @@ class ASEventAutocomplete(BaseAutocomplete):
     attrs = {
         "placeholder": "Action",
     }
-autocomplete_light.register(ASEventAutocomplete)
+dal.register(ASEventAutocomplete)

@@ -24,7 +24,7 @@ from streetcrm import views, admin
 
 urlpatterns = patterns("",
     # Autocomplete app URLs
-    url(r"^autocomplete/", include("autocomplete_light.urls")),
+    url(r"^autocomplete/", include("dal.urls")),
 
     # Admin site URLs
     url(r"^", admin.site.urls),
@@ -66,8 +66,8 @@ urlpatterns = patterns("",
             url(r"^available-tags/$", views.AvailableTagsAPI.as_view(), name="api-tags-available"),
         ))),
     ))),
-    #autocomplete_light urls
-    url(r'^autocomplete/', include('autocomplete_light.urls')
+    #dal urls
+    url(r'^autocomplete/', include('dal.urls')
     ),
 
 )

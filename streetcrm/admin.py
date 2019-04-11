@@ -46,7 +46,7 @@ from watson import search as watson
 from watson import admin as watson_admin
 from watson.admin import SearchAdmin
 
-import autocomplete_light
+import dal
 
 from streetcrm import forms as st_forms
 from streetcrm import mixins, models, admin_filters
