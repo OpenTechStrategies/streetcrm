@@ -36,17 +36,17 @@ class LocalPhoneNumberWidget(forms.TextInput):
             name, value, *args, **kwargs
         )
 
-class ForeignKeyRadioRenderer(widgets.RadioFieldRenderer):
+#class ForeignKeyRadioRenderer(widgets.RadioFieldRenderer):
+#
+#    def __init__(self, *args, **kwargs):
+#        super(ForeignKeyRadioRenderer, self).__init__(*args, **kwargs)
+#        # Remove the None value which is "---------" (it's always the first one)
+#        self.choices = self.choices[1:]
 
-    def __init__(self, *args, **kwargs):
-        super(ForeignKeyRadioRenderer, self).__init__(*args, **kwargs)
-        # Remove the None value which is "---------" (it's always the first one)
-        self.choices = self.choices[1:]
 
-
-class ForeignKeyRadioWidget(forms.RadioSelect):
-    """ Radio widget that provides radio buttons """
-    renderer = ForeignKeyRadioRenderer
+#class ForeignKeyRadioWidget(forms.RadioSelect):
+    #""" Radio widget that provides radio buttons """
+    #renderer = ForeignKeyRadioRenderer
 
 class TwelveHourTimeWidget(forms.MultiWidget):
     """ 12 Hour time widget that gives back a datetime.time object """

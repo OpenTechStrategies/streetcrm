@@ -57,10 +57,10 @@ class TagAdminForm(django.forms.ModelForm):
             "name": django.forms.TextInput(
                 attrs={"size": models.Tag.get_field("name").max_length}
             ),
-            "group": widgets.ForeignKeyRadioWidget(),
+            "group": django.forms.RadioSelect(),
         }
 
-class AutoCompleteModelForm(forms.ModelForm):
+class AutoCompleteModelForm(django.forms.ModelForm):
     """ Creation of new objects from text field of autocomplete fields
 
     When a field is using an autocomplete field and the object they're entering
@@ -167,7 +167,7 @@ class SearchForm(django.forms.Form):
     )
 
     # Autocomplete fields
-    participant = forms.ModelChoiceField(
+    participant = django.forms.ModelChoiceField(
         "ASContactAutocomplete",
         required=False
     )
