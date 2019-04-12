@@ -690,6 +690,15 @@ h2#stages-header:hover {
   padding: 15px;
 }
 
+.navbar-nav li > a.btn-export {
+  margin-left: 10px;
+}
+
+.navbar-nav li a.btn-export:hover {
+  background-color: #e6e6e6 !important;
+  border-color: #adadad !important;
+}
+
 #toast {
   display: none;
   position: fixed;

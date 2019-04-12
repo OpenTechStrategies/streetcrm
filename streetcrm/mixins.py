@@ -27,6 +27,11 @@ from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 
 from autocomplete_light import widgets as dacl_widgets
 
+import datetime
+from datetime import date, datetime
+from streetcrm import models
+
+import csv
 
 class SignInSheetAdminMixin:
     """
@@ -108,6 +113,65 @@ class AdminURLMixin:
     def admin_history_url(self):
         """ Admin page to see the history of the object """
         return self.__admin_url("history")
+
+class AdminExportMixin:
+    """
+    Admin mixin for exporting models as CSV
+
+    This provides both the url for the model, as well as working with the
+    changelist_view to make the export button show up.  Requires the Admin
+    to provide the headers/fields for the export via self.export_header.
+    """
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["export_link"] = "admin:%s_%s_export" % self.url_info
+        return super(AdminExportMixin, self).changelist_view(request, extra_context)
+
+    def get_urls(self, *args, **kwargs):
+        urls = super(AdminExportMixin, self).get_urls(*args, **kwargs)
+        urls.insert(
+            0,
+            url(r"^export/$", self.export_as_csv, name="%s_%s_export" % self.url_info)
+        )
+        return urls
+
+    # This is based on STREETCRMAdminSite.export_search, but was different enough
+    # that abstracting out the common underlying looked to be too great an effort.
+    def export_as_csv(self, request):
+        response = http.HttpResponse(content_type='text/csv')
+        filetime = datetime.now()
+
+        filename=self.model.__name__ + "List-" + str(filetime.year) + "-" + str(filetime.month) + "-" + str(filetime.day) + "-" + str(filetime.hour) + str(filetime.minute) + str(filetime.second) + ".csv"
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        writer = csv.writer(response)
+
+        writer.writerow([ col['heading'] for col in self.export_header ])
+
+        for result in self.model.objects.all():
+            if result is None:
+                continue
+
+            new_row = []
+            # Special columns include: institution_id, leadership
+            for col in self.export_header:
+                # Display names of related objects, not IDs
+                if col['column'] == 'institution_id' and result.__dict__[col['column']] != None:
+                    this_inst = models.Institution.objects.get(id=result.__dict__[col['column']])
+                    new_row.append(this_inst.name)
+                elif col['column'] == 'leadership':
+                    # If there are any leadership stages, convert them to a list so that the database
+                    # isn't queried again and pull the most recent
+                    if result.tracked_growth.all():
+                        stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
+                        new_row.append(stages[-1].stage.name)
+                    else:
+                        new_row.append(None)
+                else:
+                    new_row.append(result.__dict__[col['column']])
+            writer.writerow(new_row)
+
+        return response
 
 class AdminArchiveMixin:
     """

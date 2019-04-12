@@ -76,6 +76,13 @@
             </label>
         </li>
         {% endif %}
+        {% if export_link %}
+        <li>
+          <a role="button" href="{% url export_link %}" class="btn-export btn-default btn">
+              {% blocktrans with cl.opts.verbose_name as name %}Export {{ name }} list{% endblocktrans %}
+          </a>
+        </li>
+        {% endif %}
         {% endif %}
         {% endblock %}
     </ul>
