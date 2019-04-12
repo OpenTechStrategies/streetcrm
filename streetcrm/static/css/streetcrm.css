@@ -537,20 +537,24 @@ ul#id_group {
     padding-left: 0;
 }
 
-ul#id_time_1,
+ul#id_time_2,
 .timeblock li {
     list-style-type: none;
     padding-left: 10px;
     float: left;
 }
 
-ul#id_time_1 li,
+ul#id_time_2 li,
 .timeblock li {
   float: left;
   margin-right: 1em;
 }
 
 select#id_time_0 {
+    float: left;
+}
+
+select#id_time_1 {
     float: left;
 }
 

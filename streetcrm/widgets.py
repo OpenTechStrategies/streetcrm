@@ -57,7 +57,7 @@ class TwelveHourTimeWidget(forms.MultiWidget):
     # Time choices could be generated programatically however, I think for
     # constant values (which is essencially what choices are) they should
     # remain verbosely laid out like this.
-    TIME_CHOICES = (
+    HOUR_CHOICES = (
         ("", "--"), # Blank - no time specified.
         (1, "1"),
         (2, "2"),
@@ -73,26 +73,36 @@ class TwelveHourTimeWidget(forms.MultiWidget):
         (12, "12"),
     )
 
+    MINUTE_CHOICES = (
+        ("", "--"), # Blank - no time specified.  This defaults to 00
+        (0, "00"),
+        (15, "15"),
+        (30, "30"),
+        (45, "45")
+    )
+
     TIME_SUFFIXES = (
         (AM_SUFFIX, "am"),
         (PM_SUFFIX, "pm"),
     )
 
     def __init__(self, attrs=None):
-        time = forms.Select(choices=self.TIME_CHOICES)
+        hour = forms.Select(choices=self.HOUR_CHOICES)
+        minute = forms.Select(choices=self.MINUTE_CHOICES)
         suffix = forms.RadioSelect(choices=self.TIME_SUFFIXES)
 
-        super(TwelveHourTimeWidget, self).__init__((time, suffix), attrs)
+        super(TwelveHourTimeWidget, self).__init__((hour, minute, suffix), attrs)
 
     def decompress(self, value):
         # Check for no value and return back
         if value is None:
-            return [None, None]
+            return [None, None, None]
 
         hours = int(value.strftime("%I"))
+        minutes = value.minute - (value.minute % 15)
         suffix = self.AM_SUFFIX if value.hour < 12 else self.PM_SUFFIX
 
-        return [hours, suffix]
+        return [hours, minutes, suffix]
 
 
 PERSISTENT_AUTOCOMPLETE_TEMPLATE = """\

@@ -64,27 +64,26 @@ class TwelveHourTimeField(forms.TimeField):
 
     def to_python(self, value):
         """ Convert time to datetime.time object """
-        time, suffix = value
+        hour, minute, suffix = value
 
-        # If no time has been specified we'll get ["", ""]
-        if time in self.empty_values and suffix in self.empty_values:
-            return None
-
-        # As you can't deselect radio buttons, assume no search on time is
-        # desired if we have no time but we have a suffix selected.
-        if time in self.empty_values and suffix not in self.empty_values:
+        # If no hour has been specified, we'll just assume the field isn't filled out
+        if hour in self.empty_values:
             return None
 
         # If no suffix has been supplied then we should display an error
-        if time not in self.empty_values and suffix in self.empty_values:
+        if suffix in self.empty_values:
             raise exceptions.ValidationError(
                 self.error_messages["invalid_suffix"],
                 code="invalid"
             )
 
-        # Convert time and suffix to values
-        time, suffix = int(time), int(suffix)
-        twentyfour_hour = time + suffix
+        # If no minute, just assume the top of the hour
+        if minute in self.empty_values:
+            minute = 0
+
+        # Convert hour and suffix to values
+        hour, minute, suffix = int(hour), int(minute), int(suffix)
+        twentyfour_hour = hour + suffix
 
         # 12am and 12pm are kind of swapped (though 12pm is 24)
         if twentyfour_hour == 12:
@@ -93,7 +92,7 @@ class TwelveHourTimeField(forms.TimeField):
             twentyfour_hour = 12
 
         # Feed this into datetime.time and return
-        return datetime.time(hour=twentyfour_hour)
+        return datetime.time(hour=twentyfour_hour, minute=minute)
 
 
 def model_from_field(fieldname, create_if_not_found=True):
