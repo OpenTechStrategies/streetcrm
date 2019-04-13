@@ -160,6 +160,10 @@ a:focus,
     color: white;
 }
 
+.breadcrumb a:hover {
+    color: white;
+}
+
 #search-form {
     width: 35%;
     padding: 0px;
