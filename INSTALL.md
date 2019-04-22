@@ -11,7 +11,7 @@ Database
 
 For production use, we recommend PostgreSQL as the database (for development, SQLite3 is fine, and you don't need to do anything special here).  To set up PostgreSQL, first switch to the "postgres" user:
 
-        $ su - postgres
+        root# su - postgres
 
 Now create the user and db:
 
@@ -20,11 +20,11 @@ Now create the user and db:
 
 Now we need to reload PostgreSQL:
 
-        $ systemctl restart postgresql
+        root# systemctl restart postgresql
 
 You then need to add PostgreSQL to automatically start on boot:
 
-        $ systemctl enable postgresql
+        root# systemctl enable postgresql
 
 The StreetCRM application
 ------------------------
@@ -42,79 +42,44 @@ First get the source tree:
 Build the virtual enviroment for the website:
 
         $ cd streetcrm
-        $ virtualenv --python=python3.4 .
-        # Note: if you don't have python 3.4, check which version you
-        # have by running python3 --version.  You might want to replace
-        # this with `virtualenv --python=python3.5 .` or similar.
+        # Note: `python3` needs to be at least Python 3.4:
+        $ python3 -m venv venv
         $ source bin/activate
         $ pip install -U -r requirements.txt
-        $ pip install psycopg2 # only necessary for production installs
 
 Make the config directory and copy the config file over:
 
         $ mkdir -p /var/www/.config/streetcrm/
         $ cp config.example.ini /var/www/.config/streetcrm/config.ini
 
-(If you're somewhere other than `/var/www/streetcrm/`, for example
-under your home directory because you're doing a development
-deployment rather than a production deployment, then you might put the
-config file in a different location.  If so, just set the
-`STREETCRM_CONFIG` environment variable accordingly, e.g., by running
+If this is a development rather than a production deployment, then
+put it somewhere like `~/.config/streetcrm/config.ini` instead.
 
-        $ STREETCRM_CONFIG=~/.config/streetcrm/config.ini; export
-STREETCRM_CONFIG
+Wherever you put the file, set the `STREETCRM_CONFIG` environment
+variable accordingly:
+
+        # Or STREETCRM_CONFIG=~/.config/streetcrm/config.ini:
+        $ STREETCRM_CONFIG=/var/www/.config/streetcrm/config.ini
+        $ export STREETCRM_CONFIG
 
 Make sure to specify the path absolutely, not just relative to the
 current directory.  If later on you get errors about StreetCRM being
-unable to find its config file, failure to set that environment
-variable is probably why.)
+unable to find its config file, failure to set the `STREETCRM_CONFIG`
+environment variable correctly is probably why.
 
-Wherever you put the `config.ini` file, make sure to change its access
+Wherever you put `config.ini`, make sure to change its access
 permissions to be readable only by the user the application will run
 as, for example:
 
         $ chmod go-rwx /var/www/.config/streetcrm/config.ini
 
-otherwise you will see a warning every time you launch the app.
+Otherwise, you will see a warning every time you launch the app.
 
 Now edit the `config.ini` file and modify the contents to suit your
-needs -- at a minimum you probably want something like this:
+installation; the comments in the file will guide you.
 
-        [general]
-        # The secret key is just a random string of characters that you
-        # make up.  It is used by Django for cryptographic signing,
-        # session management, etc.  For more information about it, see
-        # https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key.
-        secret_key = THIS_SHOULD_BE_CHANGED
-        # If this is not a production instance, set `debug` to `true`:
-        debug = false
-        time_zone = "America/Chicago"
-        # Set "allowed_hosts" to the domain of the URL people will access
-        # the site on (only needed for PostgreSQL, not for SQLite3):
-        allowed_hosts = ["example.com"]
-        
-        # This will be used to construct one of the labels (on
-        # Institution), so you may want to use a shorter version of your
-        # org name.
-        org_name = __YOUR_ORG_HERE__
+Next, create the tables in the database and setup the initial superuser:
 
-        [database]
-        # This is for PostgreSQL.  But for development purposes, it's
-        # fine to use SQLite3 as the database back end.  In that case,
-        # say `django.db.backends.sqlite3` here instead:
-        engine = django.db.backends.postgresql_psycopg2
-        # 'host' is for PostgreSQL; for SQLite3, just comment this out:
-        host = localhost
-        # 'name' is for PostgreSQL; for SQLite3, say `streetcrm_db`:
-        name = streetcrm
-        # 'user' is for PostgreSQL; for SQLite3, just comment this out:
-        user = streetcrm
-        # 'password' is for PostgreSQL; for SQLite3, just comment this out:
-        password = DB_PASSWORD_HERE
-
-Now create the tables in the database and setup the initial superuser:
-
-        $ export STREETCRM_CONFIG=/var/www/.config/streetcrm/config.ini
         $ python manage.py migrate auth
         $ python manage.py migrate
 
@@ -124,18 +89,18 @@ solution is just to drop the database (`drop database` in PostgreSQL,
 or in SQLite just remove the database file) and run the
 `makemigration` and `migrate` steps again.
 
-You've almost certainly changed the organization name in the config
-file from `_StreetCRM_Default_Org_`, so you'll need to create a
-migration for it to take effect in the label (before you do that, the
-label will show "Is this institution a member of StreetCRM Default
-Org?").  So, after you've set the org name in the config file, do the
-following:
+You've most likely set a custom org_name in the config file, so you'll
+need to create a migration for it to take effect in the label (until
+you do that, the label will show "Is this institution a member of
+StreetCRM Default Org?").  So, after you've set the org name in the
+config file, do the following:
 
         $ python manage.py makemigrations
         # you'll see something like the following:
         # Migrations for 'streetcrm':
         #  MIGRATION-FILE-NAME.py:
         #    - Alter field is_member on institution
+
         $ python manage.py migrate
         # Running migrations:
         #  Rendering model states... DONE
@@ -153,8 +118,7 @@ will show up in the app.  You can remove it or change it whenever you
 like.
 
 To update the main theme color for the StreetCRM instance, change the
-`theme_color` setting in `config.ini` (the default in `config.example.ini`
-is `"#1e6b27"`).
+`theme_color` setting in `config.ini`.
 
 You might also want to update the colors of the three-line menu icon
 that is usually in the upper right of the screen.  The icon image is
@@ -166,8 +130,8 @@ colors programmatically like this:
 
 This is not yet a very good story for how to change the menu colors,
 since the result is that a versioned file is modified.  We'll fix that
-soon, but in the meantime, the above will at least let you control
-your menu icon's color.
+soon (see issue #283), but in the meantime, the above will at least
+let you control your menu icon's color.
 
 Load sample data if necessary
 -----------------------------
