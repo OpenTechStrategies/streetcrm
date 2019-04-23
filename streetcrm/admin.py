@@ -755,7 +755,7 @@ class LeaderGrowthInline(admin.TabularInline):
     verbose_name_plural = "Leader Stages"
     readonly_fields = ("date_reached", )
     
-class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, SearchAdmin):
+class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, mixins.AdminExportMixin, SearchAdmin):
     """ Admin UI for participant including listing event history """
     search_fields = ("name", "primary_phone", "title", "email",
                      "participant_street_address",
@@ -790,6 +790,25 @@ class ParticipantAdmin(mixins.AdminArchiveMixin, mixins.SignInSheetAdminMixin, S
         }),
     )
     import_path = reverse_lazy("import-participants")
+
+    export_header = [
+            {"column": "id", "heading": "ID"},
+            {"column": "name", "heading": "Participant name"},
+            {"column": "primary_phone", "heading": "Phone number"},
+            {"column": "secondary_phone", "heading": "Secondary Phone"},
+            {"column": "email", "heading": "Email address"},
+            {"column": "participant_street_address", "heading":
+            "Address"},
+            {"column": "participant_city_address", "heading":
+            "City"},
+            {"column": "participant_state_address", "heading":
+            "State"},
+            {"column": "participant_zipcode_address", "heading":
+            "Zip"},
+            {"column": "institution_id", "heading": "Institution"},
+            {"column": "title", "heading": "Title"},
+            {"column": "leadership", "heading": "Leadership level"}
+        ]
 
     inlines = [LeaderGrowthInline,]
 

@@ -246,6 +246,8 @@ class Participant(ArchiveAbstract, SerializeableMixin):
     class Meta:
         ordering = ['name']
 
+    # When adding fields here, also make sure to add them to the spreadsheet output
+    # in the admin.ParticipantAdmin export_header field
     name = models.CharField(max_length=255, verbose_name="Participant Name")
     primary_phone = modelfields.PhoneNumberField(null=True, blank=True,
                                                  verbose_name="Participant Phone")
