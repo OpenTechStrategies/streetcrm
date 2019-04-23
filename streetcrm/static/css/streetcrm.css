@@ -338,6 +338,19 @@ value. */
     clear: both;
 }
 
+/* Special hover formatting for links in help blocks */
+.help-block a {
+    text-decoration: underline;
+    padding: 2px;
+    margin-left: -2px;
+    margin-right: -2px;
+    border: 2px solid transparent;
+}
+
+.help-block a:hover {
+    border: 2px solid #1e6b27;
+}
+
 /* Hide the "save an add another" and "save and continue editing" buttons */
 input[name="_addanother"],input[name="_continue"],input[name="_saveasnew"]{
     display: none;
