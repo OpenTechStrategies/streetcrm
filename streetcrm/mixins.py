@@ -28,9 +28,7 @@ from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 from autocomplete_light import widgets as dacl_widgets
 
 import datetime
-from datetime import date, datetime
-from streetcrm import models
-
+from datetime import datetime
 import csv
 
 class SignInSheetAdminMixin:
@@ -139,6 +137,8 @@ class AdminExportMixin:
     # This is based on STREETCRMAdminSite.export_search, but was different enough
     # that abstracting out the common underlying looked to be too great an effort.
     def export_as_csv(self, request):
+        from streetcrm import models
+
         response = http.HttpResponse(content_type='text/csv')
         filetime = datetime.now()
 
