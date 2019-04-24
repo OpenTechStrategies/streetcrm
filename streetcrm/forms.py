@@ -22,7 +22,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
-from dal import forms
+from dal import forms, autocomplete
 
 from streetcrm import models, widgets, formfields
 
@@ -141,7 +141,7 @@ def autocomplete_modelform_factory(model, *args, **kwargs):
     if kwargs.get("form") is None:
         kwargs["form"] = AutoCompleteModelForm
 
-    return forms.modelform_factory(model, *args, **kwargs)
+    return django.forms.modelform_factory(model, *args, **kwargs)
 
 class SearchForm(django.forms.Form):
     """
@@ -168,31 +168,37 @@ class SearchForm(django.forms.Form):
 
     # Autocomplete fields
     participant = django.forms.ModelChoiceField(
-        "ASContactAutocomplete",
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASContactAutocomplete"),
         required=False
     )
-    event = forms.ModelChoiceField(
-        "ASEventAutocomplete",
-        required=False
-    )
-
-    institution = forms.ModelChoiceField(
-        "ASInstitutionAutocomplete",
+    event = django.forms.ModelChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASEventAutocomplete"),
         required=False
     )
 
-    event_organizer = forms.ModelChoiceField(
-        "ASContactAutocomplete",
+    institution = django.forms.ModelChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASInstitutionAutocomplete"),
         required=False
     )
 
-    connected_action = forms.ModelChoiceField(
-        "ASEventAutocomplete",
+    event_organizer = django.forms.ModelChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASContactAutocomplete"),
         required=False
     )
 
-    event_tags = forms.ModelMultipleChoiceField(
-        "ASTagAutocomplete",
+    connected_action = django.forms.ModelChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASEventAutocomplete"),
+        required=False
+    )
+
+    event_tags = django.forms.ModelMultipleChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASTagAutocomplete"),
         required=False
     )
 
@@ -201,8 +207,9 @@ class SearchForm(django.forms.Form):
         min_value=1
     )
 
-    institution_tags = forms.ModelMultipleChoiceField(
-        "ASTagAutocomplete",
+    institution_tags = django.forms.ModelMultipleChoiceField(
+        queryset=None,
+        widget=autocomplete.ModelSelect2(url="ASTagAutocomplete"),
         required=False
     )
 

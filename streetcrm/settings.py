@@ -102,6 +102,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 INSTALLED_APPS = (
     'dal',
+    'dal_select2',
     'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -24,7 +24,7 @@ from streetcrm import views, admin
 
 urlpatterns = ["",
     # Autocomplete app URLs
-    url(r"^autocomplete/", include("dal.urls")),
+    # url(r"^autocomplete/", include("dal.urls")),
 
     # Admin site URLs
     url(r"^", admin.site.urls),
@@ -67,7 +67,6 @@ urlpatterns = ["",
         ])),
     ])),
     #dal urls
-    url(r'^autocomplete/', include('dal.urls')
-    ),
+    # url(r'^autocomplete/', include('dal.urls')),
 
 ]
