@@ -22,7 +22,7 @@ from django.views.generic import TemplateView
 
 from streetcrm import views, admin
 
-urlpatterns = ["",
+urlpatterns = [
     # Autocomplete app URLs
     # url(r"^autocomplete/", include("dal.urls")),
 
@@ -33,7 +33,7 @@ urlpatterns = ["",
     url(r"^help/", TemplateView.as_view(template_name="admin/help.html"), name="help"),
 
     # Import URLs
-    url(r"^import/", include(["",
+    url(r"^import/", include([
         url(r"^events/$", views.EventImport.as_view(), name="import-events"),
         url(r"^events/(?P<pk>\w+)/participants/$",
             views.EventParticipantsImport.as_view(),
@@ -43,26 +43,26 @@ urlpatterns = ["",
     ])),
 
     # API URLs
-    url(r"^api/", include(["",
-        url(r"^participants/", include(["",
+    url(r"^api/", include([
+        url(r"^participants/", include([
             url(r"^$", views.CreateParticipantAPI.as_view(), name="api-create-participants"),
             url(r"^(?P<pk>\w+)/$", views.ParticipantAPI.as_view(), name="api-participants"),
             url(r"^([\w-]+)/$", views.ParticipantAPI.as_view(), name="api-participants"),
             url(r"^contact/(?P<pk>\w+)/$", views.ContactParticipantAPI.as_view(), name="api-participants"),
         ])),
         url(r"^contacts/", views.CreateContactAPI.as_view(), name="api-create-contacts"),
-        url(r"^events/(?P<pk>\w+)/", include(["",
+        url(r"^events/(?P<pk>\w+)/", include([
             url(r"^participants/$", views.EventParticipantsAPI.as_view(), name="api-event-participants"),
             url(r"^available-participants/$", views.EventAvailableAPI.as_view(), name="api-event-available"),
             url(r"participants/(?P<participant_id>\w+)/$", views.EventLinking.as_view(), name="api-event-linking"),
         ])),
-        url(r"^institutions/(?P<pk>\w+)/", include(["",
+        url(r"^institutions/(?P<pk>\w+)/", include([
             url(r"^contacts/$", views.InstitutionContactsAPI.as_view(), name="api-institution-contacts"),
             url(r"contacts/(?P<participant_id>\w+)/$", views.ContactLinking.as_view(), name="api-contact-linking"),
         ])),
 
         # This section covers endpoints for the current authenticated user
-        url(r"^current/", include(["",
+        url(r"^current/", include([
             url(r"^available-tags/$", views.AvailableTagsAPI.as_view(), name="api-tags-available"),
         ])),
     ])),

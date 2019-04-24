@@ -49,7 +49,7 @@ class SignInSheetAdminMixin:
 
         # Define the sign in sheet URL
         sheet_view = self.admin_site.admin_view(self.sheet_view)
-        sheet_url = ["",
+        sheet_url = [
             url(r"sign-in-sheet/$", sheet_view, name="sign-in-sheet"),
         ]
 
