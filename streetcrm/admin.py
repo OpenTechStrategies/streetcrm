@@ -577,6 +577,39 @@ class STREETCRMAdminSite(admin.AdminSite):
 
         return response
 
+    # This is based on export_search, but is different enough that abstracting out the common
+    # underlying looked to be too great an effort.  That could be reworked to collapse them well
+    @staticmethod
+    def export_results(csv_writer, header, results):
+        """
+        Export the set of search results in the given CSV.
+        """
+        from streetcrm import models
+
+        csv_writer.writerow([ col['heading'] for col in header ])
+
+        for result in results:
+            if result is None:
+                continue
+
+            new_row = []
+            # Special columns include: institution_id, leadership
+            for col in header:
+                # Display names of related objects, not IDs
+                if col['column'] == 'institution_id' and result.__dict__[col['column']] != None:
+                    this_inst = models.Institution.objects.get(id=result.__dict__[col['column']])
+                    new_row.append(this_inst.name)
+                elif col['column'] == 'leadership':
+                    # If there are any leadership stages, convert them to a list so that the database
+                    # isn't queried again and pull the most recent
+                    if result.tracked_growth.all():
+                        stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
+                        new_row.append(stages[-1].stage.name)
+                    else:
+                        new_row.append(None)
+                else:
+                    new_row.append(result.__dict__[col['column']])
+            csv_writer.writerow(new_row)
     
     def missing_data_view(self, request):
         """
@@ -970,6 +1003,33 @@ class EventAdmin(mixins.AdminArchiveMixin, AjaxyInlineAdmin):
          ],
     }
     import_path = reverse_lazy("import-events")
+
+    def get_urls(self, *args, **kwargs):
+        urls = super(EventAdmin, self).get_urls(*args, **kwargs)
+
+        urls.insert(
+            0,
+            url(r"^^(.+)/attendees", self.export_attendees, name="%s_%s_export" % self.url_info)
+        )
+
+        return urls
+
+    def export_attendees(self, request, event_id, *args, **kwargs):
+        response = http.HttpResponse(content_type='text/csv')
+        filetime = datetime.now()
+
+        filename=self.model.__name__ + "-Attendees-" + str(filetime.year) + "-" + str(filetime.month) + "-" + str(filetime.day) + "-" + str(filetime.hour) + str(filetime.minute) + str(filetime.second) + ".csv"
+
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        writer = csv.writer(response)
+
+        STREETCRMAdminSite.export_results(
+            writer,
+            ParticipantAdmin.export_header,
+            self.model.objects.get(pk=event_id).participants.all()
+        )
+
+        return response
 
     def __init__(self, *args, **kwargs):
         super(EventAdmin, self).__init__(*args, **kwargs)
