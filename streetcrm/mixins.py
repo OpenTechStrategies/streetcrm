@@ -134,10 +134,9 @@ class AdminExportMixin:
         )
         return urls
 
-    # This is based on STREETCRMAdminSite.export_search, but was different enough
-    # that abstracting out the common underlying looked to be too great an effort.
     def export_as_csv(self, request):
         from streetcrm import models
+        from streetcrm import admin
 
         response = http.HttpResponse(content_type='text/csv')
         filetime = datetime.now()
@@ -146,30 +145,7 @@ class AdminExportMixin:
         response['Content-Disposition'] = 'attachment; filename='+filename
         writer = csv.writer(response)
 
-        writer.writerow([ col['heading'] for col in self.export_header ])
-
-        for result in self.model.objects.all():
-            if result is None:
-                continue
-
-            new_row = []
-            # Special columns include: institution_id, leadership
-            for col in self.export_header:
-                # Display names of related objects, not IDs
-                if col['column'] == 'institution_id' and result.__dict__[col['column']] != None:
-                    this_inst = models.Institution.objects.get(id=result.__dict__[col['column']])
-                    new_row.append(this_inst.name)
-                elif col['column'] == 'leadership':
-                    # If there are any leadership stages, convert them to a list so that the database
-                    # isn't queried again and pull the most recent
-                    if result.tracked_growth.all():
-                        stages = sorted([growth for growth in result.tracked_growth.all()], key=lambda g: g.date_reached)
-                        new_row.append(stages[-1].stage.name)
-                    else:
-                        new_row.append(None)
-                else:
-                    new_row.append(result.__dict__[col['column']])
-            writer.writerow(new_row)
+        admin.STREETCRMAdminSite.export_results(writer, self.export_header, self.model.objects.all())
 
         return response
 

@@ -11,6 +11,9 @@
           <h1 id="js-fieldset-header"></h1>
           {% if opts.model_name == 'event' %}
           <div class="pull-right">
+            <a role="button" href="attendees" class="btn-export btn-default btn">
+                Export Attendees
+            </a>
             <label class="btn btn-default btn-file">
                 Import Attendees <input id="file-input" type="file" style="display: none;" data-path="{% url 'import-event-participants' pk=object_id %}">
             </label>
