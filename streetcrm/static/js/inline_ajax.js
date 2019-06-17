@@ -215,25 +215,10 @@ function getFieldsConfig() {
     return getInlineConfig()["fields"];
 }
 
-/* Isn't it rare and beautiful to use a switch statement with
- * intentional fall-through? Yes, yes it is.
- * This function associates a numerical value with each rank
- * so that ranks may be more easily compared to each other. */
-function getUserRank(userGroup) {
-    var rank = 0;
-    switch (userGroup) {
-      case "developer": rank++;
-      case "admin": rank++;
-      case "staff": rank++;
-      case "leader": rank++;
-    }
-    return rank;
-}
-
 /* Check if the current user can edit the ajax tables based on user rank
  * and model. */
 function userCanEdit() {
-    var userRank = getUserRank(getInlineConfig()["user_group"]);
+    var userRank = getInlineConfig()["role_rank"];
     var model = $("#model_name").val();
     switch (model) {
       case "event": return true;
@@ -245,7 +230,7 @@ function userCanEdit() {
 /* Check if the current user can delete a user row from an ajax table,
    based on user rank and model. */
 function userCanDelete() {
-    var userRank = getUserRank(getInlineConfig()["user_group"]);
+    var userRank = getInlineConfig()["role_rank"];
     var model = $("#model_name").val();
     switch (model) {
       case "event":

@@ -907,6 +907,22 @@ class AjaxyInlineAdmin(SearchAdmin):
         # appropriate groups
         return user.is_superuser or user.is_staff
 
+    # This rank is based on the exact name of group, which is not optimal.
+    # The correct solution would be to move the rank into the database as part
+    # of the groups, but that requires a bit more effort by way of extending
+    # the base django auth system
+    def get_user_role_rank(self, userGroups):
+        if len(userGroups) == 0:
+            return 4
+        elif "admin" in userGroups:
+            return 3
+        elif "staff" in userGroups:
+            return 2
+        elif "leader" in userGroups:
+            return 1
+        else:
+            return 0
+
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if self.inline_form_config is None:
             raise ValueError("inline_form_config not set D:")
@@ -925,7 +941,8 @@ class AjaxyInlineAdmin(SearchAdmin):
 
         # Add the current user's group to the inline config.
         userGroups = list(request.user.groups.values_list('name',flat=True))
-        inline_form_config["user_group"] = userGroups[0] if len(userGroups) > 0 else "developer"
+
+        inline_form_config["role_rank"] = self.get_user_role_rank(userGroups)
 
         extra_context["user_can_edit_inline"] = inline_form_config["user_can_edit"]
         extra_context["inline_form_config"] = json.dumps(
