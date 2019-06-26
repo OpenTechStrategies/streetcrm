@@ -911,6 +911,9 @@ class AjaxyInlineAdmin(SearchAdmin):
     # The correct solution would be to move the rank into the database as part
     # of the groups, but that requires a bit more effort by way of extending
     # the base django auth system
+    #
+    # See https://github.com/OpenTechStrategies/streetcrm/issues/356 for more
+    # information
     def get_user_role_rank(self, userGroups):
         if len(userGroups) == 0:
             return 4
